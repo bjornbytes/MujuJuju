@@ -2,23 +2,27 @@ require 'app/enemies/enemy'
 
 Peon = extend(Enemy)
 
-function Peon:init()
-	Enemy.init(self)
-	self.target = ctx.shrine
-end
+Peon.width = 24
+Peon.height = 24
+Peon.speed = 50
+Peon.damage = 5
+Peon.fireRate = 2
+Peon.health = 100
+Peon.attackRange = Peon.width
 
 function Peon:update()
 	self:chooseTarget()
+	Enemy.update(self)
 end
 
 function Peon:chooseTarget()
 	local minion
-  local playerDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
-	local shrineDistance = math.distance(self.x, self.y, ctx.shrine.x, ctx.shrine.y)
+  local playerDistance = math.abs(self.x - ctx.player.x)
+	local shrineDistance = math.abs(self.x - ctx.shrine.x)
 
 	local minionDistance = math.huge
 	table.each(ctx.player.minions, function(m)
-		local distance = math.distance(self.x, self.y, m.x, m.y)
+		local distance = self.x - m.x
 		if distance < minionDistance then
 			minionDistance = distance
 			minion = m
@@ -27,17 +31,22 @@ function Peon:chooseTarget()
 
 	local closest = math.min(playerDistance, shrineDistance, minionDistance)
 
-	if closest == playerDistance then
+	if playerDistance < 64 + 16 and not ctx.player.dead then
 		self.target = ctx.player
-	elseif closest == minionDistance then
+	elseif minionDistance < self.width * 2 then
 		self.target = minion
+		minion.target = self
 	else
 		self.target = ctx.shrine
 	end
 
-	self.x = self.x + self.speed * math.sign(self.target.x - self.x) * tickRate
+	local dif = self.target.x - self.x
+	if math.abs(dif) > self.attackRange then
+		self.x = self.x + self.speed * math.sign(self.target.x - self.x) * tickRate
+	end
 end
 
 function Peon:attack()
-	self.target:hurt(self.damage)
+	if self.target:hurt(self.damage) then self.target = false end
+	self.fireTimer = self.fireRate
 end

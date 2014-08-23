@@ -3,14 +3,16 @@ Shrine = class()
 Shrine.width = 128 
 Shrine.height = 128 
 
+Shrine.maxHealth = 10000
+
 Shrine.depth = 5
 
 function Shrine:init()
 	local w, h = love.graphics.getDimensions()
 
-	self.x = w / 2 - self.width / 2
+	self.x = w / 2
 	self.y = h - ctx.environment.groundHeight - self.height
-	self.health = 100
+	self.health = self.maxHealth
 
 	ctx.view:register(self)
 end
@@ -26,10 +28,10 @@ function Shrine:draw()
 	local g = love.graphics
 
 	g.setColor(0, 200, 200, 160)
-	g.rectangle('fill', self.x, self.y, self.width, self.height)
+	g.rectangle('fill', self.x - self.width / 2, self.y, self.width, self.height)
 
 	g.setColor(0, 200, 200)
-	g.rectangle('line', self.x, self.y, self.width, self.height)
+	g.rectangle('line', self.x - self.width / 2, self.y, self.width, self.height)
 end
 
 function Shrine:hurt(value)

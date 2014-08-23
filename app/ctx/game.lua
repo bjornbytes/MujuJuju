@@ -7,7 +7,7 @@ function Game:load()
 	self.player = Player()
 	self.shrine = Shrine()
 	self.jujuJuices = JujuJuices()
-	
+	self.hud = Hud()
 end
 
 function Game:update()

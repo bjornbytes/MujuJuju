@@ -8,6 +8,8 @@ Minion.speed = 10
 
 Minion.fireRate = .8
 
+Minion.depth = -10
+
 function Minion:init(data)
 	self.target = nil
 	self.fireTimer = 0
@@ -17,7 +19,18 @@ function Minion:init(data)
 end
 
 function Minion:update()
-	--
+	if not self.target then
+		self.x = self.x + self.direction * self.speed * tickRate
+	else
+		if self.fireTimer == 0 then
+			if self.target:hurt(self.damage) then
+				self.target = nil
+			end
+			self.fireTimer = self.fireRate
+		end
+	end
+	
+	self.fireTimer = timer.rot(self.fireTimer)
 end
 
 function Minion:draw()
