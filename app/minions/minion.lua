@@ -23,9 +23,13 @@ function Minion:update()
 			self.x = self.x + self.direction * self.speed * tickRate
 		end
 	else
+		if math.abs(self.x - self.target.x) > self.attackRange + self.target.width / 2 then
+			self.x = self.x + self.direction * self.speed * tickRate
+		end
+
 		if self.fireTimer == 0 then
 			local dif = math.abs(self.target.x - self.x)
-			if dif > self.attackRange + self.target.width / 2 then
+			if dif <= self.attackRange + self.target.width / 2 then
 				if self.target:hurt(self.damage) then
 					self.target = nil
 				end
