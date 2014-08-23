@@ -39,16 +39,16 @@ function Juju:update()
 	self.y = self.y + math.sin(self.sinState)
 	if ctx.player.jujuRealm > 0 then
 		--If Muju dead
-		if (love.mouse.getX() >= self.x-self.amount-15) and (love.mouse.getX() <= self.x+self.amount+15) and (love.mouse.getY() >= self.y-self.amount-15) and (love.mouse.getY() <= self.y+self.amount+15) then
+		if (ctx.player.ghost.x >= self.x-self.amount-15) and (ctx.player.ghost.x <= self.x+self.amount+15) and (ctx.player.ghost.y >= self.y-self.amount-15) and (ctx.player.ghost.y<= self.y+self.amount+15) then
 			--If mouse close to Juju
-			local angle = math.atan2((love.mouse.getY() - self.y), (love.mouse.getX() - self.x))
+			local angle = math.atan2((ctx.player.ghost.y - self.y), (ctx.player.ghost.x - self.x))
 			local dx = 50 * math.cos(angle)
 			local dy = 50 * math.sin(angle)
 			self.x = self.x + (dx * tickRate)
 			self.y = self.y + (dy * tickRate)
 			--Move Juju towards mouse
 		end
-		if (love.mouse.getX() >= self.x-self.amount/1.5) and (love.mouse.getX() <= self.x+self.amount/1.5) and (love.mouse.getY() >= self.y-self.amount/1.5) and (love.mouse.getY() <= self.y+self.amount/1.5) then
+		if (ctx.player.ghost.x >= self.x-self.amount/1.5) and (ctx.player.ghost.x <= self.x+self.amount/1.5) and (ctx.player.ghost.y >= self.y-self.amount/1.5) and (ctx.player.ghost.y <= self.y+self.amount/1.5) then
 			--If mouse is over Juju
 			ctx.player.juju = ctx.player.juju + self.amount/2
 			--Give Muju dat Juju
