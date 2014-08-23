@@ -12,9 +12,9 @@ function Player:init()
 end
 
 function Player:update()
-	if love.keyboard.isDown('left') then
+	if love.keyboard.isDown('left,a') then
 		self.x = self.x - self.speed * tickRate
-	elseif love.keyboard.isDown('right') then
+	elseif love.keyboard.isDown('right,d') then
 		self.x = self.x + self.speed * tickRate
 	end
 end
