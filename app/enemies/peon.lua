@@ -5,7 +5,7 @@ Peon = extend(Enemy)
 Peon.width = 24
 Peon.height = 24
 Peon.speed = 50
-Peon.damage = 5
+Peon.damage = 40
 Peon.fireRate = 2
 Peon.maxHealth = 100
 Peon.attackRange = Peon.width / 2
@@ -31,11 +31,10 @@ function Peon:chooseTarget()
 
 	local closest = math.min(playerDistance, shrineDistance, minionDistance)
 
-	if playerDistance < 64 + 16 and not ctx.player.dead then
-		self.target = ctx.player
-	elseif minionDistance < self.width * 2 then
+	if minionDistance < self.width * 2 then
 		self.target = minion
-		minion.target = self
+	elseif playerDistance < 64 + 16 and not ctx.player.dead then
+		self.target = ctx.player
 	else
 		self.target = ctx.shrine
 	end
