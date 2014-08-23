@@ -44,7 +44,7 @@ function GhostPlayer:update()
 	end
 
 	self.x = math.clamp(self.x, 0, love.graphics.getWidth())
-	self.y = math.clamp(self.y, 0, love.graphics.getHeight())
+	self.y = math.clamp(self.y, 0, love.graphics.getHeight() - self.radius - ctx.environment.groundHeight)
 end
 
 function GhostPlayer:despawn()
