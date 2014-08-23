@@ -49,13 +49,16 @@ function Juju:update()
 			--Move Juju towards mouse
 		end
 		if math.distance(ctx.player.ghost.x, ctx.player.ghost.y, self.x, self.y) < self.amount + ctx.player.ghost.radius then
-		--if (ctx.player.ghost.x >= self.x-self.amount/1.5) and (ctx.player.ghost.x <= self.x+self.amount/1.5) and (ctx.player.ghost.y >= self.y-self.amount/1.5) and (ctx.player.ghost.y <= self.y+self.amount/1.5) then
 			--If mouse is over Juju
 			ctx.player.juju = ctx.player.juju + self.amount/2
 			--Give Muju dat Juju
 			ctx.jujus:remove(self)
 			--Remove da Juju mon!
 		end
+	end
+
+	if not math.inside(self.x, self.y, 0, 0, love.graphics.getDimensions()) then
+		ctx.jujus:remove(self)
 	end
 end
 
