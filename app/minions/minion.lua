@@ -43,7 +43,10 @@ end
 
 function Minion:hurt(amount)
 	self.health = self.health - amount
-	if self.health <= 0 then return true end
+	if self.health <= 0 then
+		ctx.minions:remove(self)
+		return true
+	end
 end
 
 function Minion:draw()
