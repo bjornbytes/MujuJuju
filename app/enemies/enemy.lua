@@ -21,6 +21,10 @@ function Enemy:update()
 	end
 
 	self.fireTimer = timer.rot(self.fireTimer)
+
+	if self.target and ctx.minions.minions[self.target] then
+		self.target.target = self.target.target or self
+	end
 end
 
 function Enemy:hurt(amount)
