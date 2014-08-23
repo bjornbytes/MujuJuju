@@ -6,6 +6,8 @@ Player.height = 60
 Player.walkSpeed = 65
 Player.maxHealth = 100
 
+Player.depth = 0
+
 function Player:init()
 	self.health = 100
 	self.x = 100
@@ -15,6 +17,7 @@ function Player:init()
 	self.speed = 0
 	self.jujuRealm = 0
 	self.jujuJuice = 100
+	self.dead = false
 	self.minions = {}
 
 	ctx.view:register(self)
@@ -36,6 +39,7 @@ function Player:update()
 
 	self.jujuRealm = timer.rot(self.jujuRealm, function()
 		self.health = self.maxHealth
+		self.dead = false
 	end)
 end
 
@@ -55,10 +59,10 @@ function Player:draw()
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 
 	g.setColor(128, 0, 255, 160)
-	g.rectangle('fill', x, y, self.width, self.height)
+	g.rectangle('fill', x - self.width / 2, y, self.width, self.height)
 
 	g.setColor(128, 0, 255)
-	g.rectangle('line', x, y, self.width, self.height)
+	g.rectangle('line', x - self.width / 2, y, self.width, self.height)
 end
 
 function Player:summon()
@@ -71,6 +75,7 @@ function Player:hurt(amount)
 	if self.health < 0 and self.jujuRealm == 0 then
   	-- We jujuin'
 		self.jujuRealm = 5
+		self.dead = true
 		return true
 	end
 

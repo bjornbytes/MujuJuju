@@ -1,11 +1,5 @@
 Enemy = class()
 
-Enemy.width = 24
-Enemy.height = 24
-Enemy.speed = 50
-Enemy.damage = 5
-Enemy.fireRate = 2
-Enemy.health = 100
 Enemy.depth = -5
 
 function Enemy:init(data)
@@ -19,16 +13,19 @@ function Enemy:init(data)
 end
 
 function Enemy:update()
-	--
+	if self.target and self.fireTimer == 0 and math.abs(self.x - self.target.x) <= self.attackRange then
+		self:attack()
+	end
+
+	self.fireTimer = timer.rot(self.fireTimer)
 end
 
 function Enemy:draw()
 	local g = love.graphics
 
 	g.setColor(255, 0, 0, 160)
-	g.rectangle('fill', self.x, self.y, self.width, self.height)
+	g.rectangle('fill', self.x - self.width / 2, self.y, self.width, self.height)
 
 	g.setColor(255, 0, 0)
-	g.rectangle('line', self.x, self.y, self.width, self.height)
-
+	g.rectangle('line', self.x - self.width / 2, self.y, self.width, self.height)
 end
