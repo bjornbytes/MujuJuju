@@ -10,7 +10,7 @@ Player.depth = 0
 
 function Player:init()
 	self.health = 100
-	self.x = 100
+	self.x = love.graphics.getWidth() / 2
 	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
 	self.prevx = self.x
 	self.prevy = self.y

@@ -31,7 +31,11 @@ function Shrine:draw()
 	g.rectangle('fill', self.x - self.width / 2, self.y, self.width, self.height)
 
 	g.setColor(0, 200, 200)
+	if math.abs(self.x - ctx.player.x) < ctx.player.width then
+		g.setLineWidth(5)
+	end
 	g.rectangle('line', self.x - self.width / 2, self.y, self.width, self.height)
+	g.setLineWidth(1)
 end
 
 function Shrine:hurt(value)
