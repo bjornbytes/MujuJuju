@@ -14,6 +14,7 @@ function Player:init()
 	self.prevy = self.y
 	self.speed = 0
 	self.jujuRealm = 0
+	self.jujuJuice = 100
 
 	ctx.view:register(self)
 end
@@ -45,6 +46,16 @@ function Player:update()
 	self.jujuRealm = timer.rot(self.jujuRealm)
 end
 
+function Player:spend(amount)
+	-- Check if Juju is broke
+	if self.jujuJuice <= amount then
+		-- He's not broke!
+		return true
+	else 
+		-- He's broke!
+		return false
+	end
+end
 function Player:draw()
 	local g = love.graphics
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
