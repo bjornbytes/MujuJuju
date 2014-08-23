@@ -7,9 +7,8 @@ function Game:load()
 	self.minions = Minions()
 	self.player = Player()
 	self.shrine = Shrine()
+	self.jujuJuices = JujuJuices()
 	self.hud = Hud()
-
-	self.jujujuice = JujuJuice({amount = love.math.random(1, 50), x = love.math.random(1, 500), y = love.math.random(1, 500), velocity = love.math.random(-1, 1),speed = love.math.random(1, 15)})
 end
 
 function Game:update()
@@ -17,8 +16,7 @@ function Game:update()
 	self.minions:update()
 	self.player:update()
 	self.shrine:update()
-	
-	self.jujujuice:update()
+	self.jujuJuices:update()
 	self.view:update()
 end
 
