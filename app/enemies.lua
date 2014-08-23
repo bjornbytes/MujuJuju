@@ -24,6 +24,6 @@ end
 
 function Enemies:remove(enemy)
 	ctx.view:unregister(enemy)
-	jujuJuices:add({amount = love.math.random(1, 50), x = enemy.x, y = enemy.y + love.math.random(50, 250), velocity = love.math.random(-1, 1),speed = love.math.random(1, 15)})
+	ctx.jujuJuices:add({amount = love.math.random(1, 50), x = enemy.x, y = enemy.y + love.math.random(50, 250), velocity = love.math.random(-1, 1),speed = love.math.random(1, 15)})
 	self.enemies[enemy] = nil
 end
