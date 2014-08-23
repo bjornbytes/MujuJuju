@@ -30,6 +30,7 @@ function JujuJuice:update()
 	self.x = self.x + self.speed * tickRate
 	if player.jujuRealm > 0 then
 		if (love.mouse.getX >= self.x-self.amount) and (love.mouse.getX <= self.x+self.amount) and (love.mouse.getY >= self.y-self.amount) and (love.mouse.getY <= self.y+self.amount) then
+			player.jujuJuice = player.jujuJuice + self.amount
 			jujuJuices:Remove(self)
 		end
 	end
