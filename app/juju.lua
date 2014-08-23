@@ -11,8 +11,9 @@ function Juju:init(data)
 	self.y = 100
 	self.prevx = self.x
 	self.prevy = self.y
-	self.velocity = 1
-	self.speed = 10
+	self.sinState = math.pi - 1
+	--self.velocity = 1
+	--self.speed = 20
 	table.merge(data, self)
 	ctx.view:register(self)
 end
@@ -20,8 +21,13 @@ end
 function Juju:update()
 	self.prevx = self.x
 	self.prevy = self.y
+	if self.sinState < math.pi then
+		self.sinState = self.sinState + 0.1
+	else
+		self.sinState = 0
+	end
 
-	if self.velocity <= 0 then
+	if self.velocity < 0 then
 		self.speed = math.lerp(self.speed, -self.moveSpeed, math.min(10 * tickRate, 1))
 	elseif self.velocity > 0 then
 		self.speed = math.lerp(self.speed, self.moveSpeed, math.min(10 * tickRate, 1))
@@ -29,11 +35,25 @@ function Juju:update()
 		self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
 	end
 	self.x = self.x + self.speed * tickRate
-	self.y = self.y + math.sin(self.speed * love.math.random(0,10))
+	self.y = self.y - (self.y/6) * tickRate
+	self.y = self.y + math.sin(self.sinState)
 	if ctx.player.jujuRealm > 0 then
-		if (love.mouse.getX() >= self.x-self.amount) and (love.mouse.getX() <= self.x+self.amount) and (love.mouse.getY() >= self.y-self.amount) and (love.mouse.getY() <= self.y+self.amount) then
+		--If Muju dead
+		if (love.mouse.getX() >= self.x-self.amount-15) and (love.mouse.getX() <= self.x+self.amount+15) and (love.mouse.getY() >= self.y-self.amount-15) and (love.mouse.getY() <= self.y+self.amount+15) then
+			--If mouse close to Juju
+			local angle = math.atan2((love.mouse.getY() - self.y), (love.mouse.getX() - self.x))
+			local dx = 50 * math.cos(angle)
+			local dy = 50 * math.sin(angle)
+			self.x = self.x + (dx * tickRate)
+			self.y = self.y + (dy * tickRate)
+			--Move Juju towards mouse
+		end
+		if (love.mouse.getX() >= self.x-self.amount/1.5) and (love.mouse.getX() <= self.x+self.amount/1.5) and (love.mouse.getY() >= self.y-self.amount/1.5) and (love.mouse.getY() <= self.y+self.amount/1.5) then
+			--If mouse is over Juju
 			ctx.player.juju = ctx.player.juju + self.amount/2
+			--Give Muju dat Juju
 			ctx.jujus:remove(self)
+			--Remove da Juju mon!
 		end
 	end
 end
