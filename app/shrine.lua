@@ -33,7 +33,7 @@ function Shrine:draw()
 end
 
 function Shrine:hurt(value)
-	self.health -= value
+	self.health = self.health - value
 	if self.health < 0 then
 		return true
 	end
