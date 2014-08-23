@@ -1,17 +1,18 @@
 Enemy = class()
 
-Enemy.x = 0
-Enemy.y = 0
-Enemy.width = 64
-Enemy.height = 64
+Enemy.width = 24
+Enemy.height = 24
 Enemy.speed = 50
 Enemy.damage = 5
 Enemy.fireRate = 10
 Enemy.health = 100
-Enemy.depth = .5
+Enemy.depth = -5
 
 function Enemy:init(data)
 	self.target = ctx.shrine
+	self.x = 0
+	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
+
 	table.merge(data, self)	
 
 	ctx.view:register(self)

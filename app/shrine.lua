@@ -3,19 +3,23 @@ Shrine = class()
 Shrine.width = 128 
 Shrine.height = 128 
 
-function Shrine:init()
-	local g = love.graphics
+Shrine.depth = 5
 
-	self.x = g.getWidth() / 2 - self.width / 2;
-	self.y = g.getHeight() / 2 - self.height / 2;
-	self.speed = 20
+function Shrine:init()
+	local w, h = love.graphics.getDimensions()
+
+	self.x = w / 2 - self.width / 2
+	self.y = h - ctx.environment.groundHeight - self.height
 	self.health = 100
 
 	ctx.view:register(self)
 end
 
 function Shrine:update()
-	--
+	if self.health <= 0 then
+		Context:remove(ctx)
+		Context:add(Game)
+	end
 end
 
 function Shrine:draw()
