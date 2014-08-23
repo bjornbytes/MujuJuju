@@ -20,6 +20,7 @@ function Player:init()
 	self.dead = false
 	self.minions = {Imp}
 	self.selectedMinion = 1
+	self.summoned = false
 	self.direction = 1
 	ctx.view:register(self)
 end
@@ -132,4 +133,17 @@ end
 
 function Player:keyreleased(key)
 	--
+end
+
+function Player:mousepressed(x, y, button)
+	if button == 'r' and not summoned then
+		self:summon()
+		self.summoned = true
+	end
+end
+
+function Player:mousereleased(x, y, button)
+	if button == 'r' then
+		self.summoned = false
+	end
 end
