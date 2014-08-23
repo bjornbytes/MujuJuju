@@ -3,7 +3,7 @@ Enemies = class()
 function Enemies:init()
 	self.enemies = {}
 	self.nextEnemy = 1
-	self.enemyRate = 5
+	self.enemyRate = 7
 end
 
 function Enemies:update()
@@ -23,5 +23,6 @@ function Enemies:add(kind, data)
 end
 
 function Enemies:remove(enemy)
+	ctx.view:unregister(enemy)
 	self.enemies[enemy] = nil
 end

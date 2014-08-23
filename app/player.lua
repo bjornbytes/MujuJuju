@@ -18,7 +18,9 @@ function Player:init()
 	self.jujuRealm = 0
 	self.jujuJuice = 100
 	self.dead = false
-	self.minions = {}
+	self.minions = {Imp}
+	self.selectedMinion = 1
+	self.direction = 1
 
 	ctx.view:register(self)
 end
@@ -36,6 +38,7 @@ function Player:update()
 	end
 
 	self.x = self.x + self.speed * tickRate
+	self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
 
 	self.jujuRealm = timer.rot(self.jujuRealm, function()
 		self.health = self.maxHealth
@@ -45,8 +48,9 @@ end
 
 function Player:spend(amount)
 	-- Check if Muju is broke
-	if self.jujuJuice <= amount then
+	if self.jujuJuice >= amount then
 		-- He's not broke!
+		self.jujuJuice = self.jujuJuice - amount
 		return true
 	else 
 		-- He's broke!
@@ -66,7 +70,10 @@ function Player:draw()
 end
 
 function Player:summon()
-  -- Summon minions
+	local minion = self.minions[self.selectedMinion]
+	if self:spend(minion.cost) then
+		ctx.minions:add(minion, {x = self.x + love.math.random(-10, 20), direction = self.direction})
+	end
 end
 
 function Player:hurt(amount)
@@ -85,7 +92,16 @@ function Player:hurt(amount)
 end
 
 function Player:keypressed(key)
-	--
+	for i = 1, #self.minions do
+		if tonumber(key) == i then
+			self.selectedMinion = i
+			return
+		end
+	end
+
+	if key == ' ' then
+		self:summon()
+	end
 end
 
 function Player:keyreleased(key)

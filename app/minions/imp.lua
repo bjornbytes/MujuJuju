@@ -2,16 +2,12 @@ require('app/minions/minion')
 
 Imp = extend(Minion)
 
-function Imp:init()
-	--
-end
+Imp.cost = 10
+Imp.cooldown = 5
 
-function Imp:update()
-	--
-end
-
-function Imp:draw()
-	--
-end
-
+Imp.speed = 60
+Imp.damage = 10
+Imp.fireRate = 1.7
+Imp.attackRange = Imp.width / 2
+Imp.maxHealth = 70
 

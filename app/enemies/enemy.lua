@@ -9,15 +9,26 @@ function Enemy:init(data)
 	self.fireTimer = 0
 
 	table.merge(data, self)	
+
+	self.health = self.maxHealth
+
 	ctx.view:register(self)
 end
 
 function Enemy:update()
-	if self.target and self.fireTimer == 0 and math.abs(self.x - self.target.x) <= self.attackRange then
+	if self.target and self.fireTimer == 0 and math.abs(self.x - self.target.x) <= self.attackRange + self.target.width / 2 then
 		self:attack()
 	end
 
 	self.fireTimer = timer.rot(self.fireTimer)
+end
+
+function Enemy:hurt(amount)
+	self.health = self.health - amount
+	if self.health <= 0 then
+		ctx.enemies:remove(self)
+		return true
+	end
 end
 
 function Enemy:draw()

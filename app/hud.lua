@@ -16,4 +16,12 @@ function Hud:gui()
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
 	g.print(ctx.player.health .. ' / ' .. ctx.player.maxHealth, px, py)
 	g.print(ctx.shrine.health .. ' / ' .. ctx.shrine.maxHealth, ctx.shrine.x, ctx.shrine.y)
+
+	table.each(ctx.enemies.enemies, function(enemy)
+		g.print(enemy.health .. ' / ' .. enemy.maxHealth, enemy.x, enemy.y)
+	end)
+
+	table.each(ctx.minions.minions, function(minion)
+		g.print(minion.health .. ' / ' .. minion.maxHealth, minion.x, minion.y)
+	end)
 end

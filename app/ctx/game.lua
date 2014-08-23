@@ -4,6 +4,7 @@ function Game:load()
 	self.view = View()
 	self.environment = Environment()
 	self.enemies = Enemies()
+	self.minions = Minions()
 	self.player = Player()
 	self.shrine = Shrine()
 	self.hud = Hud()
@@ -13,6 +14,7 @@ end
 
 function Game:update()
 	self.enemies:update()
+	self.minions:update()
 	self.player:update()
 	self.shrine:update()
 	

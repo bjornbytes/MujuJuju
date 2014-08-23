@@ -7,8 +7,8 @@ Peon.height = 24
 Peon.speed = 50
 Peon.damage = 5
 Peon.fireRate = 2
-Peon.health = 100
-Peon.attackRange = Peon.width
+Peon.maxHealth = 100
+Peon.attackRange = Peon.width / 2
 
 function Peon:update()
 	self:chooseTarget()
@@ -21,8 +21,8 @@ function Peon:chooseTarget()
 	local shrineDistance = math.abs(self.x - ctx.shrine.x)
 
 	local minionDistance = math.huge
-	table.each(ctx.player.minions, function(m)
-		local distance = self.x - m.x
+	table.each(ctx.minions.minions, function(m)
+		local distance = math.abs(self.x - m.x)
 		if distance < minionDistance then
 			minionDistance = distance
 			minion = m
@@ -41,8 +41,8 @@ function Peon:chooseTarget()
 	end
 
 	local dif = self.target.x - self.x
-	if math.abs(dif) > self.attackRange then
-		self.x = self.x + self.speed * math.sign(self.target.x - self.x) * tickRate
+	if math.abs(dif) > self.attackRange + self.target.width / 2 then
+		self.x = self.x + self.speed * math.sign(dif) * tickRate
 	end
 end
 
