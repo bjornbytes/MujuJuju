@@ -57,6 +57,7 @@ function Player:spend(amount)
 		return false
 	end
 end
+
 function Player:draw()
 	local g = love.graphics
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)

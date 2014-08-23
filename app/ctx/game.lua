@@ -6,6 +6,7 @@ function Game:load()
 	self.enemies = Enemies()
 	self.player = Player()
 	self.shrine = Shrine()
+	self.hud = Hud()
 end
 
 function Game:update()
