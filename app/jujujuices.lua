@@ -8,8 +8,8 @@ function JujuJuices:update()
 	table.with(self.jujuJuices, 'update')
 end
 
-function JujuJuices:add(kind, data)
-	local jujuJuice = kind(data)
+function JujuJuices:add(data)
+	local jujuJuice = jujuJuice(data)
 	self.jujuJuices[jujuJuice] = jujuJuice
 end
 
