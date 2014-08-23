@@ -34,17 +34,9 @@ function Player:update()
 
 	self.x = self.x + self.speed * tickRate
 
-	-- Check whether or not to enter Juju Realm
-	if self.health == 0 and self.jujuRealm == 0 then
-  	-- We jujuin'
-		self.jujuRealm = 5
-	end
-
-	if self.jujuRealm > 0 then
-		-- What's going on in the Juju Realm
-	end
-
-	self.jujuRealm = timer.rot(self.jujuRealm)
+	self.jujuRealm = timer.rot(self.jujuRealm, function()
+		self.health = self.maxHealth
+	end)
 end
 
 function Player:spend(amount)
@@ -70,6 +62,20 @@ end
 
 function Player:summon()
   -- Summon minions
+end
+
+function Player:hurt(amount)
+	self.health = self.health - amount
+	-- Check whether or not to enter Juju Realm
+	if self.health < 0 and self.jujuRealm == 0 then
+  	-- We jujuin'
+		self.jujuRealm = 5
+		return true
+	end
+
+	if self.jujuRealm > 0 then
+		-- What's going on in the Juju Realm
+	end
 end
 
 function Player:keypressed(key)
