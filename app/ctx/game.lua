@@ -23,8 +23,8 @@ function Game:resize()
 	self.view:resize()
 end
 
-function Game:keypressed(...)
-	self.player:keypressed(...)
+function Game:keypressed(key)
+	self.player:keypressed(key)
 
 	if key == 'escape' then
 		love.event.quit()
