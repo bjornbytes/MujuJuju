@@ -31,7 +31,7 @@ function JujuJuice:update()
 	self.x = self.x + self.speed * tickRate
 	if ctx.player.jujuRealm > 0 then
 		if (love.mouse.getX() >= self.x-self.amount) and (love.mouse.getX() <= self.x+self.amount) and (love.mouse.getY() >= self.y-self.amount) and (love.mouse.getY() <= self.y+self.amount) then
-			ctx.player.jujuJuice = ctx.player.jujuJuice + self.amount
+			ctx.player.jujuJuice = ctx.player.jujuJuice + self.amount/2
 			ctx.jujuJuices:remove(self)
 		end
 	end
@@ -42,8 +42,10 @@ function JujuJuice:draw()
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 
 	g.setColor(64, 0, 128, 160)
-	g.circle('fill', x, y, math.min(5,self.amount*2))
+	--g.circle('fill', x, y, math.max(20,self.amount*3))
+	g.circle('fill', x, y, self.amount)
 
 	g.setColor(128, 0, 128)
-	g.circle('line', x, y, math.min(5,self.amount*2))
+	--g.circle('line', x, y, math.max(20,self.amount*3))
+	g.circle('line', x, y, self.amount)
 end
