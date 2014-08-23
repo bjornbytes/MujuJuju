@@ -40,7 +40,7 @@ function Player:update()
 end
 
 function Player:spend(amount)
-	-- Check if Juju is broke
+	-- Check if Muju is broke
 	if self.jujuJuice <= amount then
 		-- He's not broke!
 		return true
@@ -49,6 +49,7 @@ function Player:spend(amount)
 		return false
 	end
 end
+
 function Player:draw()
 	local g = love.graphics
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
