@@ -8,10 +8,10 @@ function Peon:init()
 end
 
 function Peon:update()
-	self:target()
+	self:chooseTarget()
 end
 
-function Peon:target()
+function Peon:chooseTarget()
 	local minion
   local playerDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
 	local shrineDistance = math.distance(self.x, self.y, ctx.shrine.x, ctx.shrine.y)
