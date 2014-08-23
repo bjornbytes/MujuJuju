@@ -16,7 +16,7 @@ function Player:init()
 	self.prevy = self.y
 	self.speed = 0
 	self.jujuRealm = 0
-	self.jujuJuice = 100
+	self.jujuJuice = 40
 	self.dead = false
 	self.minions = {Imp}
 	self.selectedMinion = 1
