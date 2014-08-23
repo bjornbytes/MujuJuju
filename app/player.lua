@@ -18,7 +18,7 @@ function Player:init()
 	self.jujuRealm = 0
 	self.juju = 70
 	self.dead = false
-	self.minions = {Imp}
+	self.minions = {Imp, Voodoo}
 	self.selectedMinion = 1
 	self.summoned = false
 	self.direction = 1
