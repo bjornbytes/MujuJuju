@@ -1,14 +1,14 @@
 GhostPlayer = class()
 
-GhostPlayer.width = 64
-GhostPlayer.height = 64
+GhostPlayer.width = 30
+GhostPlayer.height = 60
 
 function GhostPlayer:init()
 	self.x = ctx.player.x
 	self.y = 10
 	self.prevx = self.x
 	self.prevy = self.y
-	self.force = 300
+	self.force = 400
 
 	ctx.view:register(self)
 end
