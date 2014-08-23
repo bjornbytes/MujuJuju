@@ -7,7 +7,7 @@ function Game:load()
 	self.targets = {}
 
 	for i = 1, 10 do
-		table.insert(self.targets, i, Enemy())
+		table.insert(self.targets, i, Peon())
 	end
 end
 
