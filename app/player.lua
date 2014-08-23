@@ -103,7 +103,7 @@ function Player:keypressed(key)
 		end
 	end
 
-	if key == ' ' then
+	if key == ' ' and not self.dead then
 		self:summon()
 	end
 end
