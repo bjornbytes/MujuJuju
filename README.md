@@ -1,9 +1,9 @@
 Muju Juju
 ===
 
-Genre: Platform Defense Game
-Summary: You are a shaman named Muju protecting your juju shrine from scary beasts.
-Controls: Arrow keys to move, number keys and mouse to cast spells.
+- **Genre**: Platform Defense Game
+- **Summary**: You are a shaman named Muju protecting your juju shrine from scary beasts.
+- **Controls**: Arrow keys to move, number keys and mouse to cast spells.
 
 Description
 ---
@@ -40,5 +40,10 @@ Another interesting decision making is budgeting your juju juice between upgrade
 Muju doesn't really do anything, he's just this super old guy limping around that throws his arms up in the air dramatically every once in a while to summon some shit.
 
 The upgrades will be very minimal and simple, because fucking upgrades.
+
+How To Speak Juju
+---
+
+Take the first consonant(s) and add uju to the end. If it starts with a vowel, it's just uju.
 
 MUJU JUJU
