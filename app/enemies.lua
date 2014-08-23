@@ -11,7 +11,7 @@ function Enemies:update()
 		local spawnType
 		local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
 		local spawnChance = math.ceil(math.random() * 100)
-
+	
 		if spawnChance > 50 and spawnChance < 60 then
 			spawnType = SpiritBomb
 		-- Add more enemies with ranges or specifc spawn numbers
