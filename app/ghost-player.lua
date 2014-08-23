@@ -5,7 +5,7 @@ GhostPlayer.radius = 16
 function GhostPlayer:init()
 	self.x = ctx.player.x
 	self.y = ctx.player.y
-
+	self.magnetRange = 15
 	self.prevx = self.x
 	self.prevy = self.y
 
