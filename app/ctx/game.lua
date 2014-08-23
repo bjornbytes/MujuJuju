@@ -3,10 +3,20 @@ Game = class()
 function Game:load()
 	self.view = View()
 	self.player = Player()
+	self.shrine = Shrine()
+	self.targets = {}
+
+	for i = 1, 10 do
+		table.insert(self.targets, i, Enemy())
+	end
 end
 
 function Game:update()
 	self.player:update()
+	self.shrine:update()
+	table.each(self.targets, function(target)
+		target:update()	
+	end)
 	self.view:update()
 end
 
