@@ -31,3 +31,10 @@ function Shrine:draw()
 	g.setColor(0, 200, 200)
 	g.rectangle('line', self.x, self.y, self.width, self.height)
 end
+
+function Shrine:hurt(value)
+	self.health = self.health - value
+	if self.health < 0 then
+		return true
+	end
+end

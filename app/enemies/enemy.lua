@@ -4,7 +4,7 @@ Enemy.width = 24
 Enemy.height = 24
 Enemy.speed = 50
 Enemy.damage = 5
-Enemy.fireRate = 10
+Enemy.fireRate = 2
 Enemy.health = 100
 Enemy.depth = -5
 

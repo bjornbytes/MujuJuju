@@ -37,3 +37,7 @@ function Peon:chooseTarget()
 
 	self.x = self.x + self.speed * math.sign(self.target.x - self.x) * tickRate
 end
+
+function Peon:attack()
+	self.target:hurt(self.damage)
+end
