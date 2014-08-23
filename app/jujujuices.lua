@@ -14,5 +14,6 @@ function JujuJuices:add(data)
 end
 
 function JujuJuices:remove(jujuJuice)
+	ctx.view:unregister(self)
 	self.jujuJuices[jujuJuice] = nil
 end

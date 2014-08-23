@@ -2,6 +2,7 @@ JujuJuice = class()
 
 JujuJuice.maxHealth = 100
 JujuJuice.moveSpeed = 10
+JujuJuice.depth = -6
 
 function JujuJuice:init(data)
 	-- Data = ({amount, x, y,, velocity,speed})
@@ -29,9 +30,9 @@ function JujuJuice:update()
 	end
 	self.x = self.x + self.speed * tickRate
 	if ctx.player.jujuRealm > 0 then
-		if (love.mouse.getX >= self.x-self.amount) and (love.mouse.getX <= self.x+self.amount) and (love.mouse.getY >= self.y-self.amount) and (love.mouse.getY <= self.y+self.amount) then
+		if (love.mouse.getX() >= self.x-self.amount) and (love.mouse.getX() <= self.x+self.amount) and (love.mouse.getY() >= self.y-self.amount) and (love.mouse.getY() <= self.y+self.amount) then
 			ctx.player.jujuJuice = ctx.player.jujuJuice + self.amount
-			ctx.jujuJuices:Remove(self)
+			ctx.jujuJuices:remove(self)
 		end
 	end
 end
