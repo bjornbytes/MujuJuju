@@ -3,22 +3,18 @@ require 'app/enemies/enemy'
 Peon = extend(Enemy)
 
 function Peon:init()
-	Enemy:init(self)
+	Enemy.init(self)
 	self.target = ctx.shrine
 end
 
 function Peon:update()
-	self:target()
+	self:chooseTarget()
 end
 
-function Peon:draw()
-	--
-end
-
-function Peon:target()
+function Peon:chooseTarget()
 	local minion
   local playerDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
-	local shrineDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
+	local shrineDistance = math.distance(self.x, self.y, ctx.shrine.x, ctx.shrine.y)
 
 	local minionDistance = math.huge
 	table.each(ctx.player.minions, function(m)
@@ -35,7 +31,7 @@ function Peon:target()
 		self.target = ctx.player
 	elseif closest == minionDistance then
 		self.target = minion
-	elseif closest == shrineDistance then
+	else
 		self.target = ctx.shrine
 	end
 
