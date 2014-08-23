@@ -14,5 +14,6 @@ function Minions:add(kind, data)
 end
 
 function Minions:remove(minion)
+	ctx.view:unregister(minion)
 	self.minions[minion] = nil
 end
