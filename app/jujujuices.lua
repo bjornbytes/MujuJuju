@@ -9,7 +9,7 @@ function JujuJuices:update()
 end
 
 function JujuJuices:add(data)
-	local jujuJuice = jujuJuice(data)
+	local jujuJuice = JujuJuice(data)
 	self.jujuJuices[jujuJuice] = jujuJuice
 end
 
