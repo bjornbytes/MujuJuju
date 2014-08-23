@@ -11,7 +11,7 @@ function Hud:gui()
 	g.setFont(self.font)
 	g.setColor(255, 255, 255)
 
-	g.print(math.floor(ctx.player.jujuJuice) .. ' jujuJuice', 2, 0)
+	g.print(math.floor(ctx.player.juju) .. ' juju', 2, 0)
 	
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
 	g.print(ctx.player.health .. ' / ' .. ctx.player.maxHealth, px, py)

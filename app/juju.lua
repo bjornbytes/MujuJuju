@@ -1,10 +1,10 @@
-JujuJuice = class()
+Juju = class()
 
-JujuJuice.maxHealth = 100
-JujuJuice.moveSpeed = 10
-JujuJuice.depth = -6
+Juju.maxHealth = 100
+Juju.moveSpeed = 10
+Juju.depth = -6
 
-function JujuJuice:init(data)
+function Juju:init(data)
 	-- Data = ({amount, x, y, velocity,speed})
 	--self.amount = 20
 	self.x = 100
@@ -17,7 +17,7 @@ function JujuJuice:init(data)
 	ctx.view:register(self)
 end
 
-function JujuJuice:update()
+function Juju:update()
 	self.prevx = self.x
 	self.prevy = self.y
 
@@ -32,13 +32,13 @@ function JujuJuice:update()
 	self.y = self.y + math.sin(self.speed * love.math.random(0,10))
 	if ctx.player.jujuRealm > 0 then
 		if (love.mouse.getX() >= self.x-self.amount) and (love.mouse.getX() <= self.x+self.amount) and (love.mouse.getY() >= self.y-self.amount) and (love.mouse.getY() <= self.y+self.amount) then
-			ctx.player.jujuJuice = ctx.player.jujuJuice + self.amount/2
-			ctx.jujuJuices:remove(self)
+			ctx.player.juju = ctx.player.juju + self.amount/2
+			ctx.jujus:remove(self)
 		end
 	end
 end
 
-function JujuJuice:draw()
+function Juju:draw()
 	local g = love.graphics
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 

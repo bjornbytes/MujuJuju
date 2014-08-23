@@ -16,7 +16,7 @@ function Player:init()
 	self.prevy = self.y
 	self.speed = 0
 	self.jujuRealm = 0
-	self.jujuJuice = 70
+	self.juju = 70
 	self.dead = false
 	self.minions = {Imp}
 	self.selectedMinion = 1
@@ -52,9 +52,9 @@ end
 
 function Player:spend(amount)
 	-- Check if Muju is broke
-	if self.jujuJuice >= amount then
+	if self.juju >= amount then
 		-- He's not broke!
-		self.jujuJuice = self.jujuJuice - amount
+		self.juju = self.juju - amount
 		return true
 	else 
 		-- He's broke!
