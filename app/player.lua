@@ -40,7 +40,7 @@ function Player:update()
 end
 
 function Player:spend(amount)
-	-- Check if Juju is broke
+	-- Check if Muju is broke
 	if self.jujuJuice <= amount then
 		-- He's not broke!
 		return true
