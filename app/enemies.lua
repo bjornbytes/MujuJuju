@@ -8,8 +8,18 @@ end
 
 function Enemies:update()
 	self.nextEnemy = timer.rot(self.nextEnemy, function()
+		local spawnType
 		local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
-		self:add(Peon, {x = x})
+		local spawnChance = math.ceil(math.random() * 100)
+
+		if spawnChance > 50 and spawnChance < 60 then
+			spawnType = SpiritBomb
+		-- Add more enemies with ranges or specifc spawn numbers
+		else
+			spawnType = Peon
+		end
+
+		self:add(spawnType, {x = x})
 		self.enemyRate = math.max(self.enemyRate - .1, 1)
 		return self.enemyRate
 	end)
