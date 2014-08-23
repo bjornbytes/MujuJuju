@@ -15,6 +15,7 @@ function Player:init()
 	self.speed = 0
 	self.jujuRealm = 0
 	self.jujuJuice = 100
+	self.minions = {}
 
 	ctx.view:register(self)
 end

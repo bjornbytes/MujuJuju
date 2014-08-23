@@ -8,18 +8,36 @@ function Peon:init()
 end
 
 function Peon:update()
-  local playerDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
-	local shrineDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
-
-	if playerDistance < shrineDistance then 
-		self.target = ctx.player	
-	else
-		self.target = ctx.shrine
-	end
-
-	self.x = self.x + self.speed * math.sign(self.target.x - self.x) * tickRate
+	self:target()
 end
 
 function Peon:draw()
 	--
+end
+
+function Peon:target()
+	local minion
+  local playerDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
+	local shrineDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
+
+	local minionDistance = math.huge
+	table.each(ctx.player.minions, function(m)
+		local distance = math.distance(self.x, self.y, m.x, m.y)
+		if distance < minionDistance then
+			minionDistance = distance
+			minion = m
+		end
+	end)
+
+	local closest = math.min(playerDistance, shrineDistance, minionDistance)
+
+	if closest == playerDistance then
+		self.target = ctx.player
+	elseif closest == minionDistance then
+		self.target = minion
+	elseif closest == shrineDistance then
+		self.target = ctx.shrine
+	end
+
+	self.x = self.x + self.speed * math.sign(self.target.x - self.x) * tickRate
 end
