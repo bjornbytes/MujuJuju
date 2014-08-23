@@ -29,16 +29,20 @@ function Player:update()
 	self.prevx = self.x
 	self.prevy = self.y
 
-	if love.keyboard.isDown('left', 'a') then
-		self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
-	elseif love.keyboard.isDown('right', 'd') then
-		self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
+	if self.dead then
+		self.speed = 0
 	else
-		self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
-	end
+		if love.keyboard.isDown('left', 'a') then
+			self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
+		elseif love.keyboard.isDown('right', 'd') then
+			self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
+		else
+			self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
+		end
 
-	self.x = self.x + self.speed * tickRate
-	self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
+		self.x = self.x + self.speed * tickRate
+		self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
+	end
 
 	self.jujuRealm = timer.rot(self.jujuRealm, function()
 		self.health = self.maxHealth
@@ -62,7 +66,7 @@ function Player:draw()
 	local g = love.graphics
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 
-	g.setColor(128, 0, 255, 160)
+	g.setColor(128, 0, 255, self.dead and 80 or 160)
 	g.rectangle('fill', x - self.width / 2, y, self.width, self.height)
 
 	g.setColor(128, 0, 255)
@@ -77,9 +81,9 @@ function Player:summon()
 end
 
 function Player:hurt(amount)
-	self.health = self.health - amount
+	self.health = math.max(self.health - amount, 0)
 	-- Check whether or not to enter Juju Realm
-	if self.health < 0 and self.jujuRealm == 0 then
+	if self.health <= 0 and self.jujuRealm == 0 then
   	-- We jujuin'
 		self.jujuRealm = 5
 		self.dead = true
