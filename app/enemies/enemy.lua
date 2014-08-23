@@ -12,6 +12,7 @@ function Enemy:init(data)
 	self.target = ctx.shrine
 	self.x = 0
 	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
+	self.fireTimer = 0
 
 	table.merge(data, self)	
 	ctx.view:register(self)
