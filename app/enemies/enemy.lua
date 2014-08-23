@@ -14,21 +14,11 @@ function Enemy:init(data)
 	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
 
 	table.merge(data, self)	
-
 	ctx.view:register(self)
 end
 
 function Enemy:update()
-	local playerDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
-	local shrineDistance = math.distance(self.x, self.y, ctx.player.x, ctx.player.y)
-
-	if playerDistance < shrineDistance then 
-		self.target = ctx.player	
-	else
-		self.target = ctx.shrine
-	end
-
-	self.x = self.x + self.speed * math.sign(self.target.x - self.x) * tickRate
+	--
 end
 
 function Enemy:draw()

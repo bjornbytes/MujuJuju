@@ -9,7 +9,7 @@ end
 function Enemies:update()
 	self.nextEnemy = timer.rot(self.nextEnemy, function()
 		local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
-		self:add(Enemy)
+		self:add(Peon)
 		self.enemyRate = math.max(self.enemyRate - .1, 1)
 		return self.enemyRate
 	end)

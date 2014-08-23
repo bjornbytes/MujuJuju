@@ -13,5 +13,8 @@ load 'lib/deps/lutil'
 load 'lib/deps/slam'
 load 'lib'
 
+load 'app/enemies'
+load 'app/minions'
+
 load 'app/ctx'
 load 'app'

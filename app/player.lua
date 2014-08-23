@@ -56,6 +56,10 @@ function Player:draw()
 	g.rectangle('line', x, y, self.width, self.height)
 end
 
+function Player:summon()
+  -- Summon minions
+end
+
 function Player:keypressed(key)
 	--
 end
