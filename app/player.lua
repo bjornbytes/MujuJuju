@@ -1,17 +1,17 @@
 Player = class()
 
-Player.x = 100
-Player.y = 100
 Player.width = 64
 Player.height = 64
 
 Player.speed = 20
-Player.health = 100
 Player.maxHealth = 100
 
-Player.jujuRealm = 0
-
 function Player:init()
+	self.health = 100
+	self.x = 100
+	self.y = 100
+	self.jujuRealm = 0
+
 	ctx.view:register(self)
 end
 
