@@ -8,6 +8,7 @@ function GhostPlayer:init()
 	self.y = 10
 	self.prevx = self.x
 	self.prevy = self.y
+	self.force = 300
 
 	ctx.view:register(self)
 end
@@ -17,11 +18,16 @@ function GhostPlayer:update()
 	self.prevy = self.y
 
 	local angle = math.direction(self.x, self.y, ctx.player.x, ctx.player.y)
+	local angle2 = math.direction(self.x, self.y, love.mouse.getX(), love.mouse.getY())
 	local dx = 100 * math.cos(angle)
 	local dy = 100 * math.sin(angle)
-
 	self.x = self.x + dx * tickRate
 	self.y = self.y + dy * tickRate
+	dx = self.force * math.cos(angle2)
+	dy = self.force * math.sin(angle2)
+	self.x = self.x + dx * tickRate
+	self.y = self.y + dy * tickRate
+	self.force = self.force - 1
 end
 
 function GhostPlayer:despawn()

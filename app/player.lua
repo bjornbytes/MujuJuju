@@ -90,7 +90,7 @@ function Player:hurt(amount)
 	-- Check whether or not to enter Juju Realm
 	if self.health <= 0 and self.jujuRealm == 0 then
   	-- We jujuin'
-		self.jujuRealm = 5
+		self.jujuRealm = 10
 		self.dead = true
 		self.ghost = GhostPlayer()
 		return true
