@@ -5,7 +5,7 @@ JujuJuice.moveSpeed = 10
 JujuJuice.depth = -6
 
 function JujuJuice:init(data)
-	-- Data = ({amount, x, y,, velocity,speed})
+	-- Data = ({amount, x, y, velocity,speed})
 	--self.amount = 20
 	self.x = 100
 	self.y = 100
@@ -42,8 +42,8 @@ function JujuJuice:draw()
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 
 	g.setColor(64, 0, 128, 160)
-	g.circle('fill', x, y, self.amount)
+	g.circle('fill', x, y, math.min(5,self.amount*2))
 
 	g.setColor(128, 0, 128)
-	g.circle('line', x, y, self.amount)
+	g.circle('line', x, y, math.min(5,self.amount*2))
 end
