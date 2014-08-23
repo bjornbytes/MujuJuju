@@ -21,11 +21,6 @@ function Player:init()
 	self.minions = {Imp}
 	self.selectedMinion = 1
 	self.direction = 1
-	--
-	self.range = 150
-	self.lastMouseX = love.mouse.getX()
-	self.lastMouseY = love.mouse.getY()
-	--
 	ctx.view:register(self)
 end
 
@@ -35,22 +30,6 @@ function Player:update()
 
 	if self.dead then
 		self.speed = 0
-		--
-		local angle = math.atan2((love.mouse.getY() - self.y), (love.mouse.getX() - self.x))
-		local dx = 300/self.jujuRealm * math.cos(angle)
-		local dy = 300/self.jujuRealm * math.sin(angle)
-		--self.range = self.jujuRealm*50		
-		self.range = self.jujuRealm*50
-		if (love.mouse.getX() >= self.x-self.range) and (love.mouse.getX() <= self.x+self.range) and (love.mouse.getY() >= self.y-self.range) and (love.mouse.getY() <= self.y+self.range) then
-
-		else
-			self.lastMouseX = (love.mouse.getX() - (dx * tickRate))
-			self.lastMouseY = (love.mouse.getY() - (dy * tickRate))
-			love.mouse.setX(self.lastMouseX)
-			love.mouse.setY(self.lastMouseY)
-			print(self.lastMouseX .. ", " .. self.lastMouseY)
-		end
-		--
 	else
 		if love.keyboard.isDown('left', 'a') then
 			self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
@@ -67,7 +46,13 @@ function Player:update()
 	self.jujuRealm = timer.rot(self.jujuRealm, function()
 		self.health = self.maxHealth
 		self.dead = false
+		self.ghost:despawn()
+		self.ghost = nil
 	end)
+
+	if self.ghost then
+		self.ghost:update()
+	end
 end
 
 function Player:spend(amount)
@@ -105,8 +90,9 @@ function Player:hurt(amount)
 	-- Check whether or not to enter Juju Realm
 	if self.health <= 0 and self.jujuRealm == 0 then
   	-- We jujuin'
-		self.jujuRealm = 5
+		self.jujuRealm = 10
 		self.dead = true
+		self.ghost = GhostPlayer()
 		return true
 	end
 
