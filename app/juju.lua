@@ -39,7 +39,7 @@ function Juju:update()
 	self.y = self.y + math.sin(self.sinState)
 	if ctx.player.jujuRealm > 0 then
 		--If Muju dead
-		if (ctx.player.ghost.x >= self.x-self.amount-15) and (ctx.player.ghost.x <= self.x+self.amount+15) and (ctx.player.ghost.y >= self.y-self.amount-15) and (ctx.player.ghost.y<= self.y+self.amount+15) then
+		if (ctx.player.ghost.x >= self.x-self.amount-ctx.player.ghost.magnetRange) and (ctx.player.ghost.x <= self.x+self.amount+ctx.player.ghost.magnetRange) and (ctx.player.ghost.y >= self.y-self.amount-ctx.player.ghost.magnetRange) and (ctx.player.ghost.y<= self.y+self.amount+ctx.player.ghost.magnetRange) then
 			--If mouse close to Juju
 			local angle = math.atan2((ctx.player.ghost.y - self.y), (ctx.player.ghost.x - self.x))
 			local dx = 50 * math.cos(angle)
@@ -49,13 +49,16 @@ function Juju:update()
 			--Move Juju towards mouse
 		end
 		if math.distance(ctx.player.ghost.x, ctx.player.ghost.y, self.x, self.y) < self.amount + ctx.player.ghost.radius then
-		--if (ctx.player.ghost.x >= self.x-self.amount/1.5) and (ctx.player.ghost.x <= self.x+self.amount/1.5) and (ctx.player.ghost.y >= self.y-self.amount/1.5) and (ctx.player.ghost.y <= self.y+self.amount/1.5) then
 			--If mouse is over Juju
 			ctx.player.juju = ctx.player.juju + self.amount/2
 			--Give Muju dat Juju
 			ctx.jujus:remove(self)
 			--Remove da Juju mon!
 		end
+	end
+
+	if not math.inside(self.x, self.y, 0, 0, love.graphics.getDimensions()) then
+		ctx.jujus:remove(self)
 	end
 end
 

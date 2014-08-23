@@ -32,15 +32,31 @@ function Player:update()
 	if self.dead then
 		self.speed = 0
 	else
-		if love.keyboard.isDown('left', 'a') then
-			self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
-		elseif love.keyboard.isDown('right', 'd') then
-			self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
+		if love.mouse.isDown('l') then
+			local sign = math.sign(love.mouse.getX() - self.x)
+			if sign < 0 then
+				self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
+			elseif sign > 0 then
+				self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
+			else
+				self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
+			end
 		else
-			self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
+			if love.keyboard.isDown('left', 'a') then
+				self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
+			elseif love.keyboard.isDown('right', 'd') then
+				self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
+			else
+				self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
+			end
 		end
 
-		self.x = self.x + self.speed * tickRate
+		local delta = self.x + self.speed * tickRate
+		if love.mouse.isDown('l') and self.speed * tickRate > math.abs(self.x - love.mouse.getX()) then
+			self.x = love.mouse.getX()
+		else
+			self.x = self.x + self.speed * tickRate
+		end
 		self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
 	end
 

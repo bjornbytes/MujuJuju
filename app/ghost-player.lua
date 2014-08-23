@@ -5,7 +5,7 @@ GhostPlayer.radius = 16
 function GhostPlayer:init()
 	self.x = ctx.player.x
 	self.y = ctx.player.y
-
+	self.magnetRange = 15
 	self.prevx = self.x
 	self.prevy = self.y
 
@@ -22,15 +22,15 @@ function GhostPlayer:update()
 	if love.mouse.isDown('l') then
 		local dir = math.anglediff(self.direction, math.direction(self.x, self.y, love.mouse.getPosition()))
 		if dir < 0 then
-			self.direction = self.direction - 5 * tickRate
+			self.direction = self.direction - 12 * tickRate
 		elseif dir > 0 then
-			self.direction = self.direction + 5 * tickRate
+			self.direction = self.direction + 12 * tickRate
 		end
 	else
 		if love.keyboard.isDown('left', 'a') then
-			self.direction = self.direction - 5 * tickRate
+			self.direction = self.direction - 8 * tickRate
 		elseif love.keyboard.isDown('right', 'd') then
-			self.direction = self.direction + 5 * tickRate
+			self.direction = self.direction + 8 * tickRate
 		end
 	end
 
@@ -43,8 +43,8 @@ function GhostPlayer:update()
 		self.x, self.y = ctx.player.x + math.dx(self.maxDis, angle), ctx.player.y + math.dy(self.maxDis, angle)
 	end
 
-	self.x = math.clamp(self.x, 0, love.graphics.getWidth())
-	self.y = math.clamp(self.y, 0, love.graphics.getHeight() - self.radius - ctx.environment.groundHeight)
+	self.x = math.clamp(self.x, self.radius, love.graphics.getWidth() - self.radius)
+	self.y = math.clamp(self.y, self.radius, love.graphics.getHeight() - self.radius - ctx.environment.groundHeight)
 end
 
 function GhostPlayer:despawn()
