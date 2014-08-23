@@ -1,0 +1,3 @@
+[submodule "lib/deps/lutil"]
+	path = lib/deps/lutil
+	url = https://github.com/bjornswenson/lutil
