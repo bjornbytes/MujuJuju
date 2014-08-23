@@ -46,7 +46,13 @@ function Player:update()
 	self.jujuRealm = timer.rot(self.jujuRealm, function()
 		self.health = self.maxHealth
 		self.dead = false
+		self.ghost:despawn()
+		self.ghost = nil
 	end)
+
+	if self.ghost then
+		self.ghost:update()
+	end
 end
 
 function Player:spend(amount)
@@ -86,6 +92,7 @@ function Player:hurt(amount)
   	-- We jujuin'
 		self.jujuRealm = 5
 		self.dead = true
+		self.ghost = GhostPlayer()
 		return true
 	end
 
