@@ -22,15 +22,15 @@ function GhostPlayer:update()
 	if love.mouse.isDown('l') then
 		local dir = math.anglediff(self.direction, math.direction(self.x, self.y, love.mouse.getPosition()))
 		if dir < 0 then
-			self.direction = self.direction - 5 * tickRate
+			self.direction = self.direction - 12 * tickRate
 		elseif dir > 0 then
-			self.direction = self.direction + 5 * tickRate
+			self.direction = self.direction + 12 * tickRate
 		end
 	else
 		if love.keyboard.isDown('left', 'a') then
-			self.direction = self.direction - 5 * tickRate
+			self.direction = self.direction - 8 * tickRate
 		elseif love.keyboard.isDown('right', 'd') then
-			self.direction = self.direction + 5 * tickRate
+			self.direction = self.direction + 8 * tickRate
 		end
 	end
 
