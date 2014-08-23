@@ -39,3 +39,11 @@ end
 function Game:keyreleased(...)
 	self.player:keyreleased(...)
 end
+
+function Game:mousepressed(...)
+	self.player:mousepressed(...)
+end
+
+function Game:mousereleased(...)
+	self.player:mousereleased(...)
+end
