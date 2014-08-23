@@ -21,7 +21,7 @@ function JujuJuice:update()
 	self.prevx = self.x
 	self.prevy = self.y
 
-	if self.velocity < 0 then
+	if self.velocity <= 0 then
 		self.speed = math.lerp(self.speed, -self.moveSpeed, math.min(10 * tickRate, 1))
 	elseif self.velocity > 0 then
 		self.speed = math.lerp(self.speed, self.moveSpeed, math.min(10 * tickRate, 1))
@@ -29,6 +29,7 @@ function JujuJuice:update()
 		self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
 	end
 	self.x = self.x + self.speed * tickRate
+	self.y = self.y + math.sin(self.speed * love.math.random(0,10))
 	if ctx.player.jujuRealm > 0 then
 		if (love.mouse.getX() >= self.x-self.amount) and (love.mouse.getX() <= self.x+self.amount) and (love.mouse.getY() >= self.y-self.amount) and (love.mouse.getY() <= self.y+self.amount) then
 			ctx.player.jujuJuice = ctx.player.jujuJuice + self.amount/2
