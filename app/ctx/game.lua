@@ -30,6 +30,10 @@ end
 
 function Game:keypressed(...)
 	self.player:keypressed(...)
+
+	if key == 'escape' then
+		love.event.quit()
+	end
 end
 
 function Game:keyreleased(...)

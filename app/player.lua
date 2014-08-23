@@ -1,13 +1,17 @@
 Player = class()
 
+Player.x = 100
+Player.y = 100
 Player.width = 64
 Player.height = 64
 
-function Player:init()
-	self.x = 100
-	self.y = 100
-	self.speed = 20
+Player.speed = 20
+Player.health = 100
+Player.maxHealth = 100
 
+Player.jujuRealm = 0
+
+function Player:init()
 	ctx.view:register(self)
 end
 
@@ -17,6 +21,18 @@ function Player:update()
 	elseif love.keyboard.isDown('right', 'd') then
 		self.x = self.x + self.speed * tickRate
 	end
+
+	-- Check whether or not to enter Juju Realm
+	if self.health == 0 then
+  	-- We jujuin'
+		self.jujuRealm = 5
+	end
+
+	if self.jujuRealm > 0 then
+		-- What's going on in the Juju Realm
+	end
+
+	-- self.jujuRealm = timer.rot(self.jujuRealm)
 end
 
 function Player:draw()
