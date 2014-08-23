@@ -28,6 +28,11 @@ function JujuJuice:update()
 		self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
 	end
 	self.x = self.x + self.speed * tickRate
+	if player.jujuRealm > 0 then
+		if (love.mouse.getX >= self.x-self.amount) and (love.mouse.getX <= self.x+self.amount) and (love.mouse.getY >= self.y-self.amount) and (love.mouse.getY <= self.y+self.amount) then
+			jujuJuices:Remove(self)
+		end
+	end
 end
 
 function JujuJuice:draw()

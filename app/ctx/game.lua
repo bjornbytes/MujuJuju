@@ -6,8 +6,7 @@ function Game:load()
 	self.enemies = Enemies()
 	self.player = Player()
 	self.shrine = Shrine()
-
-	self.jujujuice = JujuJuice({amount = love.math.random(1, 50), x = love.math.random(1, 500), y = love.math.random(1, 500), velocity = love.math.random(-1, 1),speed = love.math.random(1, 15)})
+	self.jujuJuices = JujuJuices()
 	
 end
 
@@ -15,8 +14,7 @@ function Game:update()
 	self.enemies:update()
 	self.player:update()
 	self.shrine:update()
-	
-	self.jujujuice:update()
+	self.jujuJuices:update()
 	self.view:update()
 end
 
