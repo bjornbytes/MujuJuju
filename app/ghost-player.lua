@@ -19,10 +19,19 @@ function GhostPlayer:update()
 	self.prevx = self.x
 	self.prevy = self.y
 
-	if love.keyboard.isDown('left') then
-		self.direction = self.direction - 5 * tickRate
-	elseif love.keyboard.isDown('right') then
-		self.direction = self.direction + 5 * tickRate
+	if love.mouse.isDown('l') then
+		local dir = math.anglediff(self.direction, math.direction(self.x, self.y, love.mouse.getPosition()))
+		if dir < 0 then
+			self.direction = self.direction - 5 * tickRate
+		elseif dir > 0 then
+			self.direction = self.direction + 5 * tickRate
+		end
+	else
+		if love.keyboard.isDown('left', 'a') then
+			self.direction = self.direction - 5 * tickRate
+		elseif love.keyboard.isDown('right', 'd') then
+			self.direction = self.direction + 5 * tickRate
+		end
 	end
 
 	self.x = self.x + math.dx(300, self.direction) * tickRate
