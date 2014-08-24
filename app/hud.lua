@@ -193,6 +193,10 @@ function Hud:keypressed(key)
 		self.upgrading = not self.upgrading
 		return true
 	end
+
+	if key == 'escape' and self.upgrading then
+		self.upgrading = false
+	end
 end
 
 function Hud:keyreleased(key)
