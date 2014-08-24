@@ -8,7 +8,7 @@ SpiritBomb.height = 35
 SpiritBomb.maxHealth = 200
 SpiritBomb.damage = 100
 SpiritBomb.attackRange = 100
-SpiritBomb.speed = 47
+SpiritBomb.speed = 7
 
 function SpiritBomb:update()
 	self.timeScale = 1 / (1 + ctx.upgrades.muju.warp * (ctx.player.dead and 1 or 0))

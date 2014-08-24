@@ -19,7 +19,6 @@ function Enemies:update()
 			end
 		end
 
-		spawnType = SpiritBomb
 		self:add(spawnType, {x = x})
 		self.minEnemyRate = math.max(self.minEnemyRate - .05, 1.5)
 		self.maxEnemyRate = math.max(self.maxEnemyRate - .08, 2.5)
