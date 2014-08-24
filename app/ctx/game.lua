@@ -9,6 +9,7 @@ function Game:load()
 	self.player = Player()
 	self.shrine = Shrine()
 	self.jujus = Jujus()
+	self.particles = Particles()
 	self.hud = Hud()
 	self.upgrades = Upgrades
 	self.upgrades:clear()

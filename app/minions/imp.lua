@@ -10,4 +10,3 @@ Imp.damage = 35
 Imp.fireRate = 1.7
 Imp.attackRange = Imp.width / 2
 Imp.maxHealth = 70
-
