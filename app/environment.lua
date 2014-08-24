@@ -20,6 +20,7 @@ function Environment:draw()
 	g.setColor(255, 255, 255)
 	g.draw(self.bg)
 
+	local alpha = self.spiritAlpha * 255
 	g.setColor(255, 255, 255, self.spiritAlpha * 255)
 	g.draw(self.bgSpirit)
 end

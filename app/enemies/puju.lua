@@ -3,13 +3,18 @@ require 'app/enemies/enemy'
 Puju = extend(Enemy)
 
 Puju.code = 'puju'
-Puju.width = 24
+Puju.width = 64
 Puju.height = 24
 Puju.speed = 40
 Puju.damage = 18
 Puju.fireRate = 1.1
 Puju.maxHealth = 100
 Puju.attackRange = Puju.width / 2
+
+function Puju:init(data)
+	self.image = love.graphics.newImage('media/skeletons/puju/puju.png')
+	Enemy.init(self, data)
+end
 
 function Puju:update()
 	Enemy.update(self)
@@ -32,4 +37,16 @@ end
 function Puju:attack()
 	if self.target:hurt(self.damage) then self.target = false end
 	self.fireTimer = self.fireRate
+end
+
+function Puju:draw()
+	local g = love.graphics
+	g.setColor(255, 255, 255)
+	local xscale = 1
+	local dif = self.target.x - self.x
+	if math.sign(dif) > 0 then
+		xscale = -xscale
+	end
+
+	g.draw(self.image, self.x, self.y + 5 * math.sin(tick * tickRate * 4), 0, xscale, 1, self.image:getWidth() / 2, self.image:getHeight() / 2)
 end

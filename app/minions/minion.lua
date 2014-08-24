@@ -1,7 +1,7 @@
 Minion = class()
 
-Minion.width = 20
-Minion.height = 20
+Minion.width = 48
+Minion.height = 48
 
 Minion.depth = -10
 
