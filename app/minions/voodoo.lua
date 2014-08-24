@@ -46,7 +46,7 @@ function Voodoo:init(data)
 
 	self.animationSpeeds = table.map({
 		idle = .4 * tickRate,
-		cast = 1 * tickRate,
+		cast = .8 * tickRate,
 		death = .8 * tickRate
 	}, f.val)
 end
@@ -67,7 +67,6 @@ function Voodoo:update()
 		self:attack()
 	end
 
-	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 	self.curseFireTimer = self.curseFireTimer - math.min(self.curseFireTimer, tickRate * self.timeScale)
 
 	self.skeleton.skeleton.x = self.x
@@ -104,3 +103,13 @@ function Voodoo:attack()
 	end
 end
 
+function Voodoo:hurt(amount)
+	self.health = math.max(self.health - amount, 0)
+	if self.health <= 0 then
+		if self.animationState ~= 'death' then
+			self.animationState = 'death'
+			self.animator:set('death', false)
+		end
+		return true
+	end
+end

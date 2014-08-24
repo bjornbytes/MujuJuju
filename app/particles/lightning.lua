@@ -31,7 +31,7 @@ end
 function Lightning:randomLine(start, range)
 	local ending = {}
 	ending.x = start.x + love.math.random(-range, range)
-	ending.y = start.y + love.math.random(0, range)
+	ending.y = start.y + love.math.random(0, range * 2)
 
 	return ending.x, ending.y
 end
@@ -47,7 +47,7 @@ function Lightning:draw()
 	g.setColor(255, 255, 220, 128 + (self.health / self.maxHealth) * 128)
 
 	table.each(self.path, function(path, index)
-		g.setLineWidth(5)
+		g.setLineWidth(3)
 		if index < #self.path then
 			g.line(path.x, path.y, self.path[index + 1].x, self.path[index + 1].y)
 		end
