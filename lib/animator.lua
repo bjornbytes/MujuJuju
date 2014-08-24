@@ -8,7 +8,6 @@ function Skeleton:init(data)
 	self.skeleton = spine.Skeleton.new(self.data)
 
 	function self.skeleton:createImage(attachment)
-		print('media/skeletons/' .. data.name .. '/' .. attachment.name .. '.png')
 		return love.graphics.newImage('media/skeletons/' .. data.name .. '/' .. attachment.name .. '.png')
 	end
 
@@ -44,7 +43,6 @@ end
 function Animator:add(name, loop, track)
 	if not track then track = 0 end
 	if self.state then
-		print(track, name, loop)
 		self.state:addAnimationByName(track, name, loop, 0)
 	end
 end
