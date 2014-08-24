@@ -44,13 +44,15 @@ end
 
 function Voodoo:attack()
 	if self.fireTimer == 0 then
-		local dif = math.abs(self.target.x - self.x)
-		if dif <= self.attackRange + self.target.width / 2 then
-			ctx.particles:add(Lightning, {x = self.target.x})
-			if self.target:hurt(self.damage) then
-				self.target = nil
+		if self.target ~= nil then
+			local dif = math.abs(self.target.x - self.x)
+			if dif <= self.attackRange + self.target.width / 2 then
+				ctx.particles:add(Lightning, {x = self.target.x})
+				if self.target:hurt(self.damage) then
+					self.target = nil
+				end
+				self.fireTimer = self.fireRate
 			end
-			self.fireTimer = self.fireRate
 		end
 	end
 
