@@ -18,7 +18,7 @@ function Minion:init(data)
 end
 
 function Minion:update()
-	self.timeScale = 1 / (1 + ctx.upgrades.muju.warp)
+	self.timeScale = 1 / (1 + ctx.upgrades.muju.warp * (ctx.player.dead and 1 or 0))
 
 	
 		--[[if self.x > self.width * 2 and self.x < love.graphics.getWidth() - 3 * self.width then
