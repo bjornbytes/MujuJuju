@@ -26,7 +26,7 @@ function Minion:update()
 	
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 	self:hurt(2 * tickRate)
-	self.speed = self.speed - 1 * tickRate
+	self.speed = math.max(self.speed - 1 * tickRate, 25)
 end
 
 function Minion:attack()
