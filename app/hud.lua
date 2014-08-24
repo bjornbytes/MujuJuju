@@ -18,9 +18,9 @@ function Hud:health(x, y, health, max)
 	health = (100 * health) / max
 
 	g.setColor(0, 0, 0, 160)
-	g.rectangle('fill', x, y, 100 * .6, 5)
+	g.rectangle('fill', x, y, 100 * .6, 3)
 	g.setColor(255, 0, 0)
-	g.rectangle('fill', x, y, health * .6, 5)
+	g.rectangle('fill', x, y, health * .6, 3)
 
 end
 
