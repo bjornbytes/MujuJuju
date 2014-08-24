@@ -48,4 +48,21 @@ Upgrades.clear = function()
 		vuju = {'chain', 'curse', 'fortify'},
 		muju = {'warp', 'harvest', 'magnet'}
 	}
+
+	Upgrades.tooltips = {
+		zuju = {
+			cleave = {
+				'Cleave\nZuju cleave enemies around their original target.\nLevel 0\nNext Level: 1 extra target\nCost: 80',
+				'Cleave\nZuju damage enemies around their original target.\nLevel 1: 1 extra target\nNext Level: 2 extra targets\nCost: 100',
+				'Cleave\nZuju damage enemies around their original target.\nLevel 2: 2 extra target\nNext Level: 3 extra targets\nCost: 120',
+				'Cleave\nZuju damage enemies around their original target.\nLevel 3: 3 extra target\nMax Level'
+			},
+			burst = {
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 0\nNext Level: 30 damage, 100 radius\nCost: 100',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 1: 30 damage, 100 radius\nNext Level: 60 damage, 200 radius\nCost: 125',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 2: 60 damage, 200 radius\nNext Level: 90 damage, 300 radius\nCost: 150',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 3: 90 damage, 300 radius\nMax Level'
+			}
+		}
+	}
 end

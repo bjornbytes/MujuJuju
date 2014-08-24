@@ -6,11 +6,14 @@ function Hud:init()
 	self.font = g.newFont('media/fonts/pixel.ttf', 8)
 	self.upgrading = false
 	self.upgradeAlpha = 0
+	self.tooltip = ''
+	self.tooltipAlpha = 0
 	ctx.view:register(self, 'gui')
 end
 
 function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
+	self.tooltipAlpha = math.lerp(self.tooltipAlpha, self.tooltip == '' and 0 or 1, 12 * tickRate)
 end
 
 function Hud:gui()
@@ -34,6 +37,7 @@ function Hud:gui()
 	end)
 
 	if self.upgradeAlpha > .001 then
+		local mx, my = love.mouse.getPosition()
 		local w2, h2 = w / 2, h / 2
 		local x1, y1 = w2 - 300, h2 - 200
 		local w, h = 600, 400
@@ -45,13 +49,24 @@ function Hud:gui()
 
 		local xx
 		local idx
+		self.tooltip = self.tooltipAlpha > .1 and self.tooltip or ''
 
 		-- Juju box
 		g.rectangle('line', w2 - 32, h2 - 184, 64, 64)
 		g.print(math.floor(ctx.player.juju), w2 - 32 + 3, h2 - 184)
+		if math.inside(mx, my, w2 - 32, h2 - 184, 64, 64) then
+			self.tooltip = [[
+				Juju!
+			]]
+		end
 
-		-- Fetish
+		-- Zuju
 		g.rectangle('line', x1 + (w * .25) - 32, h2 - 144, 64, 64)
+		if math.inside(mx, my, x1 + (w * .25) - 32, h2 - 144, 64, 64) then
+			self.tooltip = [[
+				Zuju
+			]]
+		end
 		xx = x1 + (w * .25)
 		idx = 1
 		for i = xx - 64, xx + 64, 64 do
@@ -60,6 +75,9 @@ function Hud:gui()
 			local name = ctx.upgrades.names.zuju[key]
 			local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1] or ''
 			g.print(name .. '\n' .. cost, i - 24 + 3, h2 - 144 + 80)
+			if math.inside(mx, my, i - 24, h2 - 144 + 80, 48, 48) then
+				self.tooltip = ctx.upgrades.tooltips.zuju[key][ctx.upgrades.zuju[key] + 1]
+			end
 			idx = idx + 1
 		end
 
@@ -90,6 +108,14 @@ function Hud:gui()
 			local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1] or ''
 			g.print(name .. '\n' .. cost, i - 24 + 3, h2 + 16 + 80)
 			idx = idx + 1
+		end
+
+		if self.tooltip ~= '' then
+			g.setColor(0, 0, 0, self.tooltipAlpha * 255)
+			local textWidth, lines = g.getFont():getWrap(self.tooltip, 250)
+			g.rectangle('fill', mx + 8, my + 8, textWidth + 16, lines * g.getFont():getHeight() + 16)
+			g.setColor(255, 255, 255, self.tooltipAlpha * 255)
+			g.print(self.tooltip, mx + 16, my + 16)
 		end
 	end
 end
