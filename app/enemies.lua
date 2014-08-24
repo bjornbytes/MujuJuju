@@ -2,8 +2,8 @@ Enemies = class()
 
 function Enemies:init()
 	self.enemies = {}
-	self.nextEnemy = 2
-	self.minEnemyRate = 4
+	self.nextEnemy = 5
+	self.minEnemyRate = 7
 	self.maxEnemyRate = 10
 end
 
