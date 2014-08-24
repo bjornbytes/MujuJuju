@@ -10,7 +10,7 @@ function Burst:init(data)
 end
 
 function Burst:update()
-	self.health = timer.rot(self.health, f.cur(self.remove, self))
+	self.health = timer.rot(self.health, function() ctx.particles:remove(self) end)
 end
 
 function Burst:draw()
