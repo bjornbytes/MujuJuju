@@ -29,7 +29,7 @@ function Game:load()
 		menuClick = 'menuClick'
 	}
 
-	backgroundSound = self.sound:play({sound = self.sounds.background})
+	backgroundSound = self.sound:loop({sound = self.sounds.background})
 end
 
 function Game:update()

@@ -10,12 +10,12 @@ function Sound:play(data)
 
   local name = data.sound
 
-	if not self.sounds[name] and love.filesystem.exists('medua/sounds/' .. name .. '.ogg') then
+	if not self.sounds[name] and love.filesystem.exists('media/sounds/' .. name .. '.ogg') then
 		self.sounds[name] = love.audio.newSource('media/sounds/' .. name .. '.ogg')
 	end
 
 	if self.sounds[name] then
-		return data.media.sounds[name]:play()
+		return self.sounds[name]:play()
 	end
 
 	return nil

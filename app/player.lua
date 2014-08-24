@@ -194,7 +194,7 @@ function Player:hurt(amount)
 		self.animationState = 'death'
 		self.animationLock = true
 		self.animator:set('death', false)
-		ctx.sound:play({sound = ctx.sounds.dead})
+		ctx.sound:play({sound = ctx.sounds.death})
 		self.spiritSounds = ctx.sound:loop({sound = ctx.sounds.spirit})
 		return true
 	end
