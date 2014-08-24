@@ -13,6 +13,17 @@ function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
 end
 
+function Hud:health(x, y, health, max)
+	local g = love.graphics
+	health = (100 * health) / max
+
+	g.setColor(0, 0, 0, 160)
+	g.rectangle('fill', x, y, 100 * .6, 5)
+	g.setColor(255, 0, 0)
+	g.rectangle('fill', x, y, health * .6, 5)
+
+end
+
 function Hud:gui()
 	local w, h = love.graphics.getDimensions()
 
@@ -22,15 +33,16 @@ function Hud:gui()
 	g.print(math.floor(ctx.player.juju) .. ' juju', 2, 0)
 	
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
-	g.print(ctx.player.health .. ' / ' .. ctx.player.maxHealth, px, py - 30)
-	g.print(ctx.shrine.health .. ' / ' .. ctx.shrine.maxHealth, ctx.shrine.x, ctx.shrine.y)
+
+	self:health(px - 30, py - 20, ctx.player.health, ctx.player.maxHealth)
+	self:health(ctx.shrine.x - 30, ctx.shrine.y - 65, ctx.shrine.health, ctx.shrine.maxHealth)
 
 	table.each(ctx.enemies.enemies, function(enemy)
-		g.print(math.floor(enemy.health) .. ' / ' .. enemy.maxHealth, enemy.x, enemy.y)
+		self:health(enemy.x - 25, enemy.y - 25, enemy.health, enemy.maxHealth)
 	end)
 
 	table.each(ctx.minions.minions, function(minion)
-		g.print(math.floor(minion.health) .. ' / ' .. minion.maxHealth, minion.x, minion.y)
+		self:health(minion.x - 25, minion.y - 45, minion.health, minion.maxHealth)
 	end)
 
 	if self.upgradeAlpha > .001 then
