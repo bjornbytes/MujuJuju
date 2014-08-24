@@ -23,9 +23,42 @@ function Player:init()
 	self.selectedMinion = 1
 	self.summoned = false
 	self.direction = 1
-	self.skeleton = Skeleton({name = 'muju', x = self.x, y = self.y})
-	self.animator = Animator({skeleton = self.skeleton})
-	self.animator:add('idle', true)
+
+	self.skeleton = Skeleton({name = 'muju', x = self.x, y = self.y, scale = .4})
+
+	self.animator = Animator({
+		skeleton = self.skeleton,
+		mixes = {
+			{from = 'walk', to = 'idle', time = .2},
+			{from = 'idle', to = 'walk', time = .2},
+			{from = 'walk', to = 'summon', time = .1},
+			{from = 'summon', to = 'walk', time = .2},
+			{from = 'idle', to = 'summon', time = .1},
+			{from = 'summon', to = 'idle', time = .2},
+			{from = 'death', to = 'resurrect', time = .2},
+			{from = 'idle', to = 'death', time = .2},
+			{from = 'walk', to = 'death', time = .2},
+			{from = 'death', to = 'idle', time = .2}
+		}
+	})
+
+	self.animationState = 'idle'
+	self.animator:add(self.animationState, true)
+	self.animator.state.onComplete = function(trackIndex)
+		local name = self.animator.state:getCurrent(trackIndex).animation.name
+		if name == 'summon' or name == 'death' or name == 'resurrect' then
+			self.animationLock = nil
+		end
+	end
+
+	self.animationSpeeds = table.map({
+		walk = function() return tickRate * math.abs(self.speed / self.walkSpeed) end,
+		idle = tickRate * .4,
+		summon = tickRate * 1.85,
+		resurrect = tickRate,
+		death = tickRate
+	}, f.val)
+
 	ctx.view:register(self)
 end
 
@@ -33,7 +66,7 @@ function Player:update()
 	self.prevx = self.x
 	self.prevy = self.y
 
-	if self.dead then
+	if self.dead or self.animationState == 'summon' then
 		self.speed = 0
 	else
 		if love.mouse.isDown('l') then
@@ -69,6 +102,10 @@ function Player:update()
 		self.dead = false
 		self.ghost:despawn()
 		self.ghost = nil
+
+		self.animationState = 'resurrect'
+		self.animationLock = true
+		self.animator:set('resurrect', false)
 	end)
 
 	table.each(self.minioncds, function(cooldown, index)
@@ -78,10 +115,31 @@ function Player:update()
 	if self.ghost then
 		self.ghost:update()
 	end
+	
+	self:animate()
+end
+
+function Player:animate()
+	if not self.animationLock then
+		local old = self.animationState
+		if self.animationState ~= 'walk' and math.abs(self.speed) > .1 then
+			self.animationState = 'walk'
+		elseif self.animationState ~= 'idle' and math.abs(self.speed) <= .1 then
+			self.animationState = 'idle'
+		end
+
+		if old ~= self.animationState then
+			self.animator:set(self.animationState, true)
+		end
+	end
 
 	self.skeleton.skeleton.x = self.x
-	self.skeleton.skeleton.y = self.y
-	self.animator:update()
+	self.skeleton.skeleton.y = self.y + self.height / 2
+	if self.speed ~= 0 then
+		self.skeleton.skeleton.flipX = self.speed > 0
+	end
+	
+	self.animator:update(self.animationSpeeds[self.animationState]())
 end
 
 function Player:spend(amount)
@@ -97,15 +155,6 @@ function Player:spend(amount)
 end
 
 function Player:draw()
-	local g = love.graphics
-	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
-
-	g.setColor(128, 0, 255, self.dead and 80 or 160)
-	g.rectangle('fill', x - self.width / 2, y, self.width, self.height)
-
-	g.setColor(128, 0, 255)
-	g.rectangle('line', x - self.width / 2, y, self.width, self.height)
-
 	self.animator:draw()
 end
 
@@ -119,6 +168,10 @@ function Player:summon()
 	if self:spend(minion.cost) and cooldown == 0 then
 		ctx.minions:add(minion, {x = self.x + love.math.random(-10, 20), direction = self.direction})
 		self.minioncds[self.selectedMinion] = minion.cooldown
+
+		self.animationLock = true
+		self.animationState = 'summon'
+		self.animator:set('summon', false)
 	end
 end
 
@@ -130,6 +183,10 @@ function Player:hurt(amount)
 		self.jujuRealm = 10
 		self.dead = true
 		self.ghost = GhostPlayer()
+
+		self.animationState = 'death'
+		self.animationLock = true
+		self.animator:set('death', false)
 		return true
 	end
 

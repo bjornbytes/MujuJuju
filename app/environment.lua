@@ -1,5 +1,7 @@
 Environment = class()
 
+Environment.depth = 5
+
 function Environment:init()
 	self.groundHeight = 128
 	ctx.view:register(self)

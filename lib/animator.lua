@@ -2,7 +2,7 @@ Skeleton = class()
 
 function Skeleton:init(data)
 	local json = spine.SkeletonJson.new()
-	json.scale = 1
+	json.scale = data.scale 
 
 	self.data = json:readSkeletonDataFile('media/skeletons/' .. data.name .. '/' .. data.name .. '.json')
 	self.skeleton = spine.Skeleton.new(self.data)
@@ -14,7 +14,6 @@ function Skeleton:init(data)
 
 	self.x = data.x
 	self.skeleton.x = data.x
-
 	self.y = data.y
 	self.skeleton.y = data.y
 
@@ -57,9 +56,9 @@ function Animator:set(name, loop, track)
 	end
 end
 
-function Animator:update()
+function Animator:update(delta)
 	if self.state and self.skeleton then
-		self.state:update(tickRate)
+		self.state:update(delta)
 		self.state:apply(self.skeleton)
 		self.skeleton:updateWorldTransform()
 	end

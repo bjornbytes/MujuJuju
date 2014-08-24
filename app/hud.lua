@@ -22,7 +22,7 @@ function Hud:gui()
 	g.print(math.floor(ctx.player.juju) .. ' juju', 2, 0)
 	
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
-	g.print(ctx.player.health .. ' / ' .. ctx.player.maxHealth, px, py)
+	g.print(ctx.player.health .. ' / ' .. ctx.player.maxHealth, px, py - 30)
 	g.print(ctx.shrine.health .. ' / ' .. ctx.shrine.maxHealth, ctx.shrine.x, ctx.shrine.y)
 
 	table.each(ctx.enemies.enemies, function(enemy)
