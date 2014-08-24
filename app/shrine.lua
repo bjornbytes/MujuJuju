@@ -3,7 +3,7 @@ Shrine = class()
 Shrine.width = 128 
 Shrine.height = 128 
 
-Shrine.maxHealth = 2500
+Shrine.maxHealth = 25000
 
 Shrine.depth = 5
 

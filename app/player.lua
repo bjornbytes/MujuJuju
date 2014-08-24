@@ -4,7 +4,7 @@ Player.width = 45
 Player.height = 90
 
 Player.walkSpeed = 65
-Player.maxHealth = 100
+Player.maxHealth = 10000
 
 Player.depth = 0
 
