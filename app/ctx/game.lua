@@ -13,6 +13,7 @@ function Game:load()
 	self.hud = Hud()
 	self.upgrades = Upgrades
 	self.upgrades:clear()
+	self.target = Target()
 end
 
 function Game:update()
