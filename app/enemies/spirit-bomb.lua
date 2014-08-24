@@ -2,6 +2,7 @@ require 'app/enemies/enemy'
 
 SpiritBomb = extend(Enemy)
 
+SpiritBomb.code = 'spirit-bomb'
 SpiritBomb.width = 35
 SpiritBomb.height = 35
 SpiritBomb.maxHealth = 200
