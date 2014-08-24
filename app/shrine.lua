@@ -36,6 +36,14 @@ function Shrine:draw()
 	local scale = self.width / self.image:getWidth()
 	g.setColor(self.color)
 	g.draw(self.image, self.x, self.y + self.height + 12, 0, scale, scale, self.image:getWidth() / 2, self.image:getHeight())
+
+	if math.abs(ctx.player.x - ctx.shrine.x) < ctx.player.width then
+		g.setBlendMode('additive')
+		g.setColor(255, 255, 255, 128)
+		g.draw(self.image, self.x, self.y + self.height + 12, 0, scale, scale, self.image:getWidth() / 2, self.image:getHeight())
+		g.setColor(255, 255, 255, 255)
+		g.setBlendMode('alpha')
+	end
 end
 
 function Shrine:hurt(value)
