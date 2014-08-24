@@ -96,18 +96,15 @@ function Hud:gui()
 		g.rectangle('line', w2 - 32, h2 - 184, 64, 64)
 		g.print(math.floor(ctx.player.juju), w2 - 32 + 3, h2 - 184)
 		if math.inside(mx, my, w2 - 32, h2 - 184, 64, 64) then
-			self.tooltip = [[
-				Juju!
-			]]
+			self.tooltip = [[Juju!]]
 			self.tooltipHover = true
 		end
 
 		-- Zuju
 		g.rectangle('line', x1 + (w * .25) - 32, h2 - 144, 64, 64)
 		if math.inside(mx, my, x1 + (w * .25) - 32, h2 - 144, 64, 64) then
-			self.tooltip = [[
-				Zuju
-			]]
+			self.tooltip = [[Zuju
+				Unlocked!]]
 			self.tooltipHover = true
 		end
 		xx = x1 + (w * .25)
@@ -127,6 +124,16 @@ function Hud:gui()
 
 		-- Voodoo
 		g.rectangle('line', x1 + (w * .75) - 32, h2 - 144, 64, 64)
+		if math.inside(mx, my, x1 + (w * .75) - 32, h2 - 144, 64, 64) then
+			if #ctx.player.minions < 2 then
+				self.tooltip = [[Vuju
+					Cost: 250]]
+			else
+				self.tooltip = [[Vuju
+					Unlocked!]]
+			end
+			self.tooltipHover = true
+		end
 		if #ctx.player.minions < 2 then
 			g.print('vuju\n250', x1 + (w * .75) - 32 + 3, h2 - 144)
 		end
@@ -138,11 +145,19 @@ function Hud:gui()
 			local name = ctx.upgrades.names.vuju[key]
 			local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1] or ''
 			g.print(name .. '\n' .. cost, i - 24 + 3, h2 - 144 + 80)
+			if math.inside(mx, my, i - 24, h2 - 144 + 80, 48, 48) then
+				self.tooltip = ctx.upgrades.tooltips.vuju[key][ctx.upgrades.vuju[key] + 1]
+				self.tooltipHover = true
+			end
 			idx = idx + 1
 		end
 
 		-- MUUUUUUUUUUUUJU
 		g.rectangle('line', x1 + (w * .5) - 32, h2 + 16, 64, 64)
+		if math.inside(mx, my, x1 + (w * .5) - 32, h2 + 16, 64, 64) then
+			self.tooltip = [[MUUUUUUUUUUJUUU]]
+			self.tooltipHover = true
+		end
 		xx = x1 + (w * .5)
 		idx = 1
 		for i = xx - 64, xx + 64, 64 do
@@ -151,15 +166,20 @@ function Hud:gui()
 			local name = ctx.upgrades.names.muju[key]
 			local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1] or ''
 			g.print(name .. '\n' .. cost, i - 24 + 3, h2 + 16 + 80)
+			if math.inside(mx, my, i - 24, h2 + 16 + 80, 48, 48) then
+				self.tooltip = ctx.upgrades.tooltips.muju[key][ctx.upgrades.muju[key] + 1]
+				self.tooltipHover = true
+			end
 			idx = idx + 1
 		end
 
 		if self.tooltip ~= '' then
 			g.setColor(0, 0, 0, self.tooltipAlpha * 255)
 			local textWidth, lines = g.getFont():getWrap(self.tooltip, 250)
-			g.rectangle('fill', mx + 8, my + 8, textWidth + 16, lines * g.getFont():getHeight() + 16)
+			local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
+			g.rectangle('fill', xx, my + 8, textWidth + 16, lines * g.getFont():getHeight() + 16)
 			g.setColor(255, 255, 255, self.tooltipAlpha * 255)
-			g.printf(self.tooltip, mx + 16, my + 16, 250)
+			g.printf(self.tooltip, xx + 8, my + 16, 250)
 		end
 	end
 end
