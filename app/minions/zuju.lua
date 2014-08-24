@@ -15,12 +15,12 @@ Zuju.maxHealth = 80
 function Zuju:init(data)
 	Minion.init(self, data)
 	self.depth = self.depth + love.math.random()
-	self.skeleton = Skeleton({name = 'zuju', x = self.x, y = self.y + self.height, scale = .5})
+	self.skeleton = Skeleton({name = 'zuju', x = self.x, y = self.y + self.height + 8, scale = .5})
 
 	self.animator = Animator({
 		skeleton = self.skeleton,
 		mixes = {
-			{from = 'spawn', to = 'walk', time = .2},
+			{from = 'spawn', to = 'walk', time = .4},
 			{from = 'walk', to = 'cast', time = .2},
 			{from = 'cast', to = 'walk', time = .2},
 			{from = 'cast', to = 'death', time = .2},
