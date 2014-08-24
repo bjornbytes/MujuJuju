@@ -13,6 +13,7 @@ function Shrine:init()
 	self.x = w / 2
 	self.y = h - ctx.environment.groundHeight - self.height
 	self.health = self.maxHealth
+	self.image = love.graphics.newImage('media/graphics/shrine-v3.png')
 
 	ctx.view:register(self)
 end
@@ -27,15 +28,9 @@ end
 function Shrine:draw()
 	local g = love.graphics
 
-	g.setColor(0, 200, 200, 160)
-	g.rectangle('fill', self.x - self.width / 2, self.y, self.width, self.height)
-
-	g.setColor(0, 200, 200)
-	if math.abs(self.x - ctx.player.x) < ctx.player.width then
-		g.setLineWidth(5)
-	end
-	g.rectangle('line', self.x - self.width / 2, self.y, self.width, self.height)
-	g.setLineWidth(1)
+	local scale = self.width / self.image:getWidth()
+	g.setColor(150, 150, 150)
+	g.draw(self.image, self.x, self.y + self.height + 12, 0, scale, scale, self.image:getWidth() / 2, self.image:getHeight())
 end
 
 function Shrine:hurt(value)
