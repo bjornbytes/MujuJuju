@@ -21,7 +21,9 @@ function Game:load()
 	self.sound = Sound()
 	self.sounds = {
 		background = 'background',
-		summon = 'summon',
+		summon1 = 'summon1',
+		summon2 = 'summon2',
+		summon3 = 'summon3',
 		spirit = 'spirit',
 		juju = 'juju',
 		combat = 'combat',
