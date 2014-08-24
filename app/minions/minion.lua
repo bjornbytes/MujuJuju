@@ -31,16 +31,21 @@ function Minion:attack()
 	if self.fireTimer == 0 then		
 		if self.target ~= nil then
 			local dif = math.abs(self.target.x - self.x)
+			local targets = ctx.target:getEnemiesInRange(self, dif + self.attackRange * (ctx.upgrades.zuju.cleave+1))
 			if dif <= self.attackRange + self.target.width / 2 then				
 				if ctx.upgrades.zuju.cleave == 0 then
 					if self.target:hurt(self.damage) then
 						self.target = nil
 					end
 				else
-					local targets = ctx.target:getEnemiesInRange(self, self.attackRange)
+					if self.target:hurt(self.damage) then
+						self.target = nil
+					end					
 					for i=1, ctx.upgrades.zuju.cleave+1,1 do
-						if targets[i]:hurt(self.damage) then
-							targets[i] = nil
+						if targets[i] ~= nil and targets[i] ~= self.target then
+							if targets[i]:hurt(self.damage) then
+								targets[i] = nil
+							end
 						end
 					end
 				end

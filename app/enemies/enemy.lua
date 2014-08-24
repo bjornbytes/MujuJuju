@@ -24,9 +24,6 @@ function Enemy:update()
 
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 
-	if self.target and ctx.minions.minions[self.target] then
-		self.target.target = self.target.target or self
-	end
 end
 
 function Enemy:hurt(amount)
