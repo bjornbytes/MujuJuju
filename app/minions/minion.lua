@@ -20,15 +20,25 @@ end
 function Minion:update()
 	self.timeScale = 1 / (1 + ctx.upgrades.muju.warp)
 
-	if not self.target then
-		if self.x > self.width * 2 and self.x < love.graphics.getWidth() - 3 * self.width then
+	
+		--[[if self.x > self.width * 2 and self.x < love.graphics.getWidth() - 3 * self.width then
 			self.x = self.x + self.direction * self.speed * tickRate * self.timeScale
 		end
+		
 	else
 		if math.abs(self.x - self.target.x) > self.attackRange + self.target.width / 2 then
 			self.x = self.x + self.direction * self.speed * tickRate * self.timeScale
 		end
-
+		]]
+	self.target = ctx.target:getClosestEnemy(self)
+	if self.target == nil then
+		self.target = ctx.target:getShrine(self)
+	end
+	local dif = self.target.x - self.x
+	if math.abs(dif) > self.attackRange + self.target.width / 2 then
+			self.x = self.x + self.speed * math.sign(dif) * tickRate * self.timeScale
+	end
+	if self.target ~= ctx.shrine then
 		self:attack()
 	end
 	
