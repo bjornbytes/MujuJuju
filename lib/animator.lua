@@ -2,21 +2,23 @@ Skeleton = class()
 
 function Skeleton:init(data)
 	local json = spine.SkeletonJson.new()
+	json.scale = 1
 
-	self.data = json:readSkeletonDataFile(data.location)
+	self.data = json:readSkeletonDataFile('media/skeletons/' .. data.name .. '/' .. data.name .. '.json')
 	self.skeleton = spine.Skeleton.new(self.data)
 
 	function self.skeleton:createImage(attachment)
+		print('media/skeletons/' .. data.name .. '/' .. attachment.name .. '.png')
 		return love.graphics.newImage('media/skeletons/' .. data.name .. '/' .. attachment.name .. '.png')
 	end
 
 	self.x = data.x
-	skeleton.x = data.x
+	self.skeleton.x = data.x
 
 	self.y = data.y
-	skeleton.y = data.y
+	self.skeleton.y = data.y
 
-	skeleton:setToSetupPose()
+	self.skeleton:setToSetupPose()
 end
 
 Animator = class()
@@ -24,8 +26,8 @@ Animator = class()
 function Animator:init(data)
 	if data then
 		if getmetatable(data.skeleton).__index == Skeleton then
-			self.skeleton = data.skeleton
-			self.stateData = spine.AnimationStateData.new(data.skeleton)
+			self.skeleton = data.skeleton.skeleton
+			self.stateData = spine.AnimationStateData.new(data.skeleton.data)
 
 			if data.mixes then
 				table.each(data.mixes, function(mix)
@@ -41,14 +43,17 @@ function Animator:init(data)
 end
 
 function Animator:add(name, loop, track)
+	if not track then track = 0 end
 	if self.state then
-		self.state:addAnimationByName(track, name, loop)
+		print(track, name, loop)
+		self.state:addAnimationByName(track, name, loop, 0)
 	end
 end
 
 function Animator:set(name, loop, track)
+	if not track then track = 0 end
 	if self.state then
-		self.state:setAnimationByName(track, name, loop)
+		self.state:setAnimationByName(track, name, loop, 0)
 	end
 end
 
