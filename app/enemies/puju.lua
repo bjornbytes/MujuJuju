@@ -25,7 +25,7 @@ function Puju:chooseTarget()
 
 	local dif = self.target.x - self.x
 	if math.abs(dif) > self.attackRange + self.target.width / 2 then
-		self.x = self.x + self.speed * math.sign(dif) * tickRate * self.timeScale
+		self.x = self.x + self.speed * math.sign(dif) * tickRate * self.timeScale * (1 - self.slow)
 	end
 end
 
