@@ -21,6 +21,7 @@ function Environment:draw()
 	g.draw(self.bg)
 
 	local alpha = self.spiritAlpha * 255
-	g.setColor(255, 255, 255, self.spiritAlpha * 255)
+	alpha = math.lerp(alpha, (1 - (ctx.player.healthDisplay / ctx.player.maxHealth)) * 255, .5)
+	g.setColor(255, 255, 255, alpha)
 	g.draw(self.bgSpirit)
 end
