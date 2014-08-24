@@ -94,10 +94,16 @@ function Hud:mousereleased(x, y, b)
 		local w, h = 600, 400
 
 		xx = x1 + (w * .25)
+		local idx = 1
 		for i = xx - 64, xx + 64, 64 do
 			if math.inside(x, y, i - 24, h2 - 144 + 80, 48, 48) then
-				-- upgrade
+				local key = ctx.upgrades.keys.zuju[idx]
+				local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1]
+				if cost and ctx.player:spend(cost) then
+					ctx.upgrades.zuju[key] = ctx.upgrades.zuju[key] + 1
+				end
 			end
+			idx = idx + 1
 		end
 	end
 end

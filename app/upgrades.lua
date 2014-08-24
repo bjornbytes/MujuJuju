@@ -20,9 +20,9 @@ Upgrades.clear = function()
 	}
 
 	Upgrades.names = {
-		zuju = {Cleave = 'cleave', Burst = 'burst', Fortify = 'fortify'},
-		vuju = {Chain = 'chain', Curse = 'curse', Fortify = 'fortify'},
-		muju = {Warp = 'warp', Harvest = 'harvest', Magnet = 'magnet'}
+		zuju = {cleave = 'Cleave', burst = 'Burst', fortify = 'Fortify'},
+		vuju = {chain = 'Chain', curse = 'Curse', fortify = 'Fortify'},
+		muju = {warp = 'Warp', harvest = 'Harvest', magnet = 'Magnet'}
 	}
 
 	Upgrades.costs = {
@@ -41,5 +41,11 @@ Upgrades.clear = function()
 			harvest = {500, 500, 500},
 			magnet = {200, 300, 400}
 		}
+	}
+
+	Upgrades.keys = {
+		zuju = {'cleave', 'burst', 'fortify'},
+		vuju = {'chain', 'curse', 'fortify'},
+		muju = {'warp', 'harvest', 'magnet'}
 	}
 end
