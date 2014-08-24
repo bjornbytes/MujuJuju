@@ -19,6 +19,8 @@ function Foreground:draw()
 	g.setColor(200, 200, 200)
 	g.draw(self.grass, 0, 32)
 
-	g.setColor(200, 200, 200, self.spiritAlpha * 200)
+	local alpha = self.spiritAlpha * 255
+	alpha = math.lerp(alpha, (1 - (ctx.player.healthDisplay / ctx.player.maxHealth)) * 255, .5)
+	g.setColor(200, 200, 200, alpha)
 	g.draw(self.spiritGrass, 0, 32)
 end
