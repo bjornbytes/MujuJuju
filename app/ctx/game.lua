@@ -30,6 +30,7 @@ function Game:update()
 	self.jujus:update()
 	self.view:update()
 	self.hud:update()
+	self.particles:update()
 end
 
 function Game:draw()
