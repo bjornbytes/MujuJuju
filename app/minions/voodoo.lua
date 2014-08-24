@@ -16,30 +16,67 @@ Voodoo.curseFireRate = 6
 function Voodoo:init(data)
 	self.curseFireTimer = 0
 	Minion.init(self, data)
+
+	self.depth = self.depth + love.math.random()
+	self.skeleton = Skeleton({name = 'vuju', x = self.x, y = self.y + self.height, scale = .5})
+
+	self.animator = Animator({
+		skeleton = self.skeleton,
+		mixes = {
+			{from = 'idle', to = 'cast', time = .2},
+			{from = 'cast', to = 'idle', time = .2},
+			{from = 'cast', to = 'death', time = .2},
+			{from = 'idle', to = 'death', time = .2}
+		}
+	})
+
+	self.animationState = 'idle'
+	self.animator:add(self.animationState, true)
+	self.animator.state.onComplete = function(trackIndex)
+		local name = self.animator.state:getCurrent(trackIndex).animation.name
+		if name == 'death' then
+			ctx.minions:remove(self)
+		elseif name == 'cast' then
+			self.animationState = 'idle'
+			self.animator:add(self.animationState, true)
+		end
+	end
+
+	self.skeleton.skeleton.flipX = not ctx.player.skeleton.skeleton.flipX
+
+	self.animationSpeeds = table.map({
+		idle = .4 * tickRate,
+		cast = 1 * tickRate,
+		death = .8 * tickRate
+	}, f.val)
 end
 
 function Voodoo:update()
+	if self.animationState == 'death' then
+		self.animator:update(self.animationSpeeds[self.animationState]())
+		return
+	end
+
 	Minion.update(self)
 	self.target = ctx.target:getClosestEnemy(self)
 	if self.target then
+		if self.fireTimer == 0 and self.animationState ~= 'cast' and math.abs(self.target.x - self.x) <= self.attackRange + self.target.width / 2 then
+			self.animationState = 'cast'
+			self.animator:set(self.animationState, false)
+		end
 		self:attack()
 	end
 
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 	self.curseFireTimer = self.curseFireTimer - math.min(self.curseFireTimer, tickRate * self.timeScale)
+
+	self.skeleton.skeleton.x = self.x
+	self.skeleton.skeleton.y = self.y + self.height + 8
+	self.animator:update(self.animationSpeeds[self.animationState]())
 end
 
 function Voodoo:draw()
-	local g = love.graphics
-
-	g.setColor(255, 255, 0, 160)
-	g.rectangle('fill', self.x - self.width / 2, self.y, self.width, self.height)
-
-	g.setColor(255, 255, 0)
-	g.rectangle('line', self.x - self.width / 2, self.y, self.width, self.height)
-
-	g.setColor(255, 255, 255, 75)
-	g.circle('line', self.x, self.y, self.attackRange)
+	self.animator:draw()
 end
 
 function Voodoo:attack()
