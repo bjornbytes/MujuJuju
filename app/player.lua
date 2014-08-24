@@ -123,9 +123,9 @@ end
 function Player:animate()
 	if not self.animationLock then
 		local old = self.animationState
-		if self.animationState ~= 'walk' and math.abs(self.speed) > .1 then
+		if self.animationState ~= 'walk' and math.abs(self.speed) > self.walkSpeed / 2 then
 			self.animationState = 'walk'
-		elseif self.animationState ~= 'idle' and math.abs(self.speed) <= .1 then
+		elseif self.animationState ~= 'idle' and math.abs(self.speed) <= self.walkSpeed / 2 then
 			self.animationState = 'idle'
 		end
 

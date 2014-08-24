@@ -14,6 +14,7 @@ function Shrine:init()
 	self.y = h - ctx.environment.groundHeight - self.height - 7 
 	self.health = self.maxHealth
 	self.image = love.graphics.newImage('media/graphics/shrine-v3.png')
+	self.color = {255, 255, 255}
 
 	ctx.view:register(self)
 end
@@ -23,13 +24,15 @@ function Shrine:update()
 		Context:remove(ctx)
 		Context:add(Game)
 	end
+
+	self.color = table.interpolate(self.color, ctx.player.dead and {160, 100, 225} or {255, 255, 255}, .6 * tickRate)
 end
 
 function Shrine:draw()
 	local g = love.graphics
 
 	local scale = self.width / self.image:getWidth()
-	g.setColor(255, 255, 255)
+	g.setColor(self.color)
 	g.draw(self.image, self.x, self.y + self.height + 12, 0, scale, scale, self.image:getWidth() / 2, self.image:getHeight())
 end
 

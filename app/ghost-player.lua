@@ -61,7 +61,4 @@ function GhostPlayer:draw()
 
 	g.setColor(128, 0, 255)
 	g.circle('line', x, y, self.radius)
-
-	g.setColor(0, 255, 255, 128)
-	g.circle('line', ctx.player.x, ctx.player.y, self.maxDis)
 end
