@@ -56,6 +56,7 @@ end
 function Zuju:update()
 	if self.animationState == 'death' or self.animationState == 'spawn' then
 		self.animator:update(self.animationSpeeds[self.animationState]())
+		self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 		return
 	end
 
