@@ -44,29 +44,52 @@ function Hud:gui()
 		g.rectangle('line', x1, y1, w, h)
 
 		local xx
+		local idx
 
 		-- Juju box
 		g.rectangle('line', w2 - 32, h2 - 184, 64, 64)
+		g.print(math.floor(ctx.player.juju), w2 - 32 + 3, h2 - 184)
 
 		-- Fetish
 		g.rectangle('line', x1 + (w * .25) - 32, h2 - 144, 64, 64)
 		xx = x1 + (w * .25)
+		idx = 1
 		for i = xx - 64, xx + 64, 64 do
 			g.rectangle('line', i - 24, h2 - 144 + 80, 48, 48)
+			local key = ctx.upgrades.keys.zuju[idx]
+			local name = ctx.upgrades.names.zuju[key]
+			local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1] or ''
+			g.print(name .. '\n' .. cost, i - 24 + 3, h2 - 144 + 80)
+			idx = idx + 1
 		end
 
 		-- Voodoo
 		g.rectangle('line', x1 + (w * .75) - 32, h2 - 144, 64, 64)
+		if #ctx.player.minions < 2 then
+			g.print('vuju\n250', x1 + (w * .75) - 32 + 3, h2 - 144)
+		end
 		xx = x1 + (w * .75)
+		idx = 1
 		for i = xx - 64, xx + 64, 64 do
 			g.rectangle('line', i - 24, h2 - 144 + 80, 48, 48)
+			local key = ctx.upgrades.keys.vuju[idx]
+			local name = ctx.upgrades.names.vuju[key]
+			local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1] or ''
+			g.print(name .. '\n' .. cost, i - 24 + 3, h2 - 144 + 80)
+			idx = idx + 1
 		end
 
 		-- MUUUUUUUUUUUUJU
 		g.rectangle('line', x1 + (w * .5) - 32, h2 + 16, 64, 64)
 		xx = x1 + (w * .5)
+		idx = 1
 		for i = xx - 64, xx + 64, 64 do
 			g.rectangle('line', i - 24, h2 + 16 + 80, 48, 48)
+			local key = ctx.upgrades.keys.muju[idx]
+			local name = ctx.upgrades.names.muju[key]
+			local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1] or ''
+			g.print(name .. '\n' .. cost, i - 24 + 3, h2 + 16 + 80)
+			idx = idx + 1
 		end
 	end
 end
