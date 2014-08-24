@@ -3,7 +3,7 @@ require 'app/minions/minion'
 Voodoo = extend(Minion)
 
 Voodoo.code = 'vuju'
-Voodoo.cost = 10
+Voodoo.cost = 30 
 Voodoo.cooldown = 5
 
 Voodoo.damage = 17
