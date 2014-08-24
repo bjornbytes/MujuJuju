@@ -16,29 +16,6 @@ function Peon:update()
 end
 
 function Peon:chooseTarget()
-	--[[local minion
-	local playerDistance = math.abs(self.x - ctx.player.x)
-	local shrineDistance = math.abs(self.x - ctx.shrine.x)
-
-	local minionDistance = math.huge
-	table.each(ctx.minions.minions, function(m)
-		local distance = math.abs(self.x - m.x)
-		if distance < minionDistance then
-			minionDistance = distance
-			minion = m
-		end
-	end)
-
-	local closest = math.min(playerDistance, shrineDistance, minionDistance)
-
-	if minionDistance < self.width * 2 then
-		self.target = minion
-	elseif playerDistance < 64 + 16 and not ctx.player.dead then
-		self.target = ctx.player
-	else
-		self.target = ctx.shrine
-	end
-	]]
 	if not ctx.player.dead then
 		self.target = ctx.target:getClosestTarget(self)
 	else
