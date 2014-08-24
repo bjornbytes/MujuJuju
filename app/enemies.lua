@@ -2,26 +2,27 @@ Enemies = class()
 
 function Enemies:init()
 	self.enemies = {}
-	self.nextEnemy = 1
-	self.enemyRate = 7
+	self.nextEnemy = 5
+	self.minEnemyRate = 3
+	self.maxEnemyRate = 6
 end
 
 function Enemies:update()
 	self.nextEnemy = timer.rot(self.nextEnemy, function()
 		local spawnType
 		local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
-		local spawnChance = math.ceil(math.random() * 100)
-	
-		if spawnChance > 0 and spawnChance < 60 then
-			spawnType = SpiritBomb
-		-- Add more enemies with ranges or specifc spawn numbers
-		else
-			spawnType = Peon
+
+		spawnType = Peon
+		if maxEnemyRate < 5 then
+			if love.math.random() < .3 then
+				spawnType = SpiritBomb
+			end
 		end
 
 		self:add(spawnType, {x = x})
-		self.enemyRate = math.max(self.enemyRate - .1, 1)
-		return self.enemyRate
+		self.minEnemyRate = math.max(self.minEnemyRate - .05, 1.5)
+		self.maxEnemyRate = math.max(self.maxEnemyRate - .08, 2.5)
+		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
 	end)
 
 	table.with(self.enemies, 'update')

@@ -4,9 +4,9 @@ Peon = extend(Enemy)
 
 Peon.width = 24
 Peon.height = 24
-Peon.speed = 50
-Peon.damage = 40
-Peon.fireRate = 2
+Peon.speed = 40
+Peon.damage = 24
+Peon.fireRate = 1.2
 Peon.maxHealth = 100
 Peon.attackRange = Peon.width / 2
 
