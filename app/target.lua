@@ -71,19 +71,19 @@ function Target:getClosestMinion(source)
 	return closestMinion, minionDistance
 end
 
-function Target:getMinionsInRange(source, range)
-	if not next(ctx.minions.minions) then
+function Target:getEnemiesInRange(source, range)
+	if not next(ctx.enemies.enemies) then
 		return nil
 	end
-	local minionsInRange = {}
-	local minionDistance = math.huge
-	table.each(ctx.minions.minions, function(m)
-		local distance = math.abs(source.x - m.x)
+	local enemiesInRange = {}
+	local enemyDistance = math.huge
+	table.each(ctx.enemies.enemies, function(e)
+		local distance = math.abs(source.x - e.x)
 		if distance < range then
-			table.insert(minionsInRange,m)
+			table.insert(enemiesInRange,e)
 		end
 	end)
-	return minionsInRange
+	return enemiesInRange
 end
 
 function Target:getPlayer(source)
