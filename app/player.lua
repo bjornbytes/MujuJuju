@@ -166,7 +166,7 @@ end
 function Player:summon()
 	local minion = self.minions[self.selectedMinion]
 	local cooldown = self.minioncds[self.selectedMinion]
-	if self:spend(minion.cost) and cooldown == 0 then
+	if cooldown == 0 and self:spend(minion.cost) then
 		ctx.minions:add(minion, {x = self.x + love.math.random(-10, 20), direction = self.direction})
 		self.minioncds[self.selectedMinion] = minion.cooldown
 
@@ -181,7 +181,7 @@ function Player:hurt(amount)
 	-- Check whether or not to enter Juju Realm
 	if self.health <= 0 and self.jujuRealm == 0 then
   	-- We jujuin'
-		self.jujuRealm = 10
+		self.jujuRealm = 6 + math.min(tick / tickRate / 60, 4)
 		self.dead = true
 		self.ghost = GhostPlayer()
 

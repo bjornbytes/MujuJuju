@@ -3,8 +3,8 @@ Enemies = class()
 function Enemies:init()
 	self.enemies = {}
 	self.nextEnemy = 5
-	self.minEnemyRate = 3
-	self.maxEnemyRate = 6
+	self.minEnemyRate = 4.5
+	self.maxEnemyRate = 7
 end
 
 function Enemies:update()
@@ -35,16 +35,12 @@ end
 
 function Enemies:remove(enemy)
 	ctx.view:unregister(enemy)
-	local randomNum = love.math.random(10, 45)
-	if randomNum <= 20 then
+	local randomNum = love.math.random(20, 40)
+	if randomNum <= 30 then
 		ctx.jujus:add({amount = randomNum, x = enemy.x, y = enemy.y, velocity = math.floor(love.math.random(-0.9, 1.9)),speed = love.math.random(1, 15)})
-	elseif randomNum > 20 and randomNum <= 30 then
+	elseif randomNum > 30 and randomNum <= 40 then
 		ctx.jujus:add({amount = randomNum*0.25, x = enemy.x, y = enemy.y, velocity = -1,speed = love.math.random(1, 25)})
 		ctx.jujus:add({amount = randomNum*0.75, x = enemy.x, y = enemy.y, velocity = 1,speed = love.math.random(1, 25)})
-	elseif randomNum > 30 then
-		ctx.jujus:add({amount = randomNum*0.15, x = enemy.x, y = enemy.y, velocity = 1,speed = love.math.random(1, 25)})
-		ctx.jujus:add({amount = randomNum*0.35, x = enemy.x, y = enemy.y, velocity = -1,speed = love.math.random(1, 25)})
-		ctx.jujus:add({amount = randomNum*0.50, x = enemy.x, y = enemy.y, velocity = 0,speed = love.math.random(1, 25)})
 	end
 
 	table.each(ctx.minions.minions, function(minion)

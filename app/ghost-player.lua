@@ -37,7 +37,8 @@ function GhostPlayer:update()
 	self.x = self.x + math.dx(300, self.direction) * tickRate
 	self.y = self.y + math.dy(300, self.direction) * tickRate
 
-	self.maxDis = math.lerp(self.maxRange, 0, (1 - (ctx.player.jujuRealm / 10)) ^ 3)
+	local maxJuju = 6 + math.min(tick / tickRate / 10, 4)
+	self.maxDis = math.lerp(self.maxRange, 0, (1 - (ctx.player.jujuRealm / maxJuju)) ^ 3)
 	if math.distance(self.x, self.y, ctx.player.x, ctx.player.y) > self.maxDis then
 		local angle = math.direction(ctx.player.x, ctx.player.y, self.x, self.y)
 		self.x, self.y = ctx.player.x + math.dx(self.maxDis, angle), ctx.player.y + math.dy(self.maxDis, angle)
