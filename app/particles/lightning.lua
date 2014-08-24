@@ -15,7 +15,7 @@ end
 function Lightning:randomLine(range)
 	local ending = {}
 	ending.x = self.x + love.math.random(-range, range)
-	ending.y = self.y + love.math.random(0, ctx.environment.groundHeight)
+	ending.y = self.y + love.math.random(0, range)
 
 	return ending.x, ending.y
 end
@@ -23,6 +23,7 @@ end
 function Lightning:update()
 	if self.health < .1 then
 		self.range = 0
+		self.y = ctx.environment.groundHeight
 		self.x = self.targetX
 	end
 
@@ -33,7 +34,7 @@ end
 
 function Lightning:draw()
 	local g = love.graphics
-	g.setColor(200, 200, 0, (self.health / self.maxHealth) * 255)
+	g.setColor(255, 255, 220, 128 + (self.health / self.maxHealth) * 128)
 	local x, y = self:randomLine(self.range)
 	g.setLineWidth(love.math.random(4, 10))
 	g.line(self.x, self.y, x, y)
