@@ -24,6 +24,7 @@ function Player:init()
 	self.selectedMinion = 1
 	self.summoned = false
 	self.direction = 1
+	self.invincible = 0
 
 	self.skeleton = Skeleton({name = 'muju', x = self.x, y = self.y, scale = .6})
 
@@ -100,6 +101,7 @@ function Player:update()
 	end
 
 	self.jujuRealm = timer.rot(self.jujuRealm, function()
+		self.invincible = 3
 		self.health = self.maxHealth
 		self.dead = false
 		self.ghost:despawn()
@@ -110,6 +112,7 @@ function Player:update()
 		self.animator:set('resurrect', false)
 		if self.spiritSounds then self.spiritSounds:stop() end
 	end)
+	self.invincible = timer.rot(self.invincible)
 
 	table.each(self.minioncds, function(cooldown, index)
 		self.minioncds[index] = timer.rot(cooldown)
@@ -185,7 +188,9 @@ function Player:summon()
 end
 
 function Player:hurt(amount)
-	self.health = math.max(self.health - amount, 0)
+	if self.invincible == 0 then
+		self.health = math.max(self.health - amount, 0)
+	end
 	-- Check whether or not to enter Juju Realm
 	if self.health <= 0 and self.jujuRealm == 0 then
   	-- We jujuin'
