@@ -22,6 +22,7 @@ function Player:init()
 	self.selectedMinion = 1
 	self.summoned = false
 	self.direction = 1
+	self.warningTimer = 0
 	ctx.view:register(self)
 end
 
@@ -70,6 +71,8 @@ function Player:update()
 	if self.ghost then
 		self.ghost:update()
 	end
+
+	self.warningTimer = timer.rot(self.warningTimer)
 end
 
 function Player:spend(amount)
@@ -93,10 +96,21 @@ function Player:draw()
 
 	g.setColor(128, 0, 255)
 	g.rectangle('line', x - self.width / 2, y, self.width, self.height)
+
+	if self.warningTimer > 0 then
+		g.setColor(255, 0, 0)
+		g.print('Can\'t summon Vuju. He must be unlocked first.', love.graphics.getWidth() / 2 - 115, 25)
+	end
 end
 
 function Player:summon()
 	local minion = self.minions[self.selectedMinion]
+
+	if minion.code == 'vuju' and ctx.upgrades.vuju.unlock == 0 then
+		self.warningTimer = 3
+		return
+	end
+
 	if self:spend(minion.cost) then
 		ctx.minions:add(minion, {x = self.x + love.math.random(-10, 20), direction = self.direction})
 	end
