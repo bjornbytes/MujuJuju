@@ -16,11 +16,13 @@ function Enemy:init(data)
 end
 
 function Enemy:update()
+	self.timeScale = 1 / (1 + ctx.upgrades.muju.warp)
+
 	if self.target and self.fireTimer == 0 and math.abs(self.x - self.target.x) <= self.attackRange + self.target.width / 2 then
 		self:attack()
 	end
 
-	self.fireTimer = timer.rot(self.fireTimer)
+	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 
 	if self.target and ctx.minions.minions[self.target] then
 		self.target.target = self.target.target or self

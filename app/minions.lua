@@ -15,8 +15,8 @@ end
 
 function Minions:remove(minion)
 	ctx.view:unregister(minion)
-	if ctx.upgrades.muju.harvest then
-		local randomNum = love.math.random(10, 45)
+	if ctx.upgrades.muju.harvest > 0 then
+		local randomNum = love.math.random(10 * ctx.upgrades.muju.harvest, 45 * ctx.upgrades.muju.harvest)
 		if randomNum <= 20 then
 			ctx.jujus:add({amount = randomNum, x = minion.x, y = minion.y, velocity = math.floor(love.math.random(-0.9, 1.9)),speed = love.math.random(1, 15)})
 		elseif randomNum > 20 and randomNum <= 30 then

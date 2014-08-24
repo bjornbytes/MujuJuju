@@ -92,6 +92,7 @@ function Hud:mousereleased(x, y, b)
 		local w2, h2 = w / 2, h / 2
 		local x1, y1 = w2 - 300, h2 - 200
 		local w, h = 600, 400
+		local xx
 
 		xx = x1 + (w * .25)
 		local idx = 1
@@ -104,6 +105,39 @@ function Hud:mousereleased(x, y, b)
 				end
 			end
 			idx = idx + 1
+		end
+
+		xx = x1 + (w * .75)
+		local idx = 1
+		for i = xx - 64, xx + 64, 64 do
+			if math.inside(x, y, i - 24, h2 - 144 + 80, 48, 48) then
+				local key = ctx.upgrades.keys.vuju[idx]
+				local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1]
+				if cost and ctx.player:spend(cost) then
+					ctx.upgrades.vuju[key] = ctx.upgrades.vuju[key] + 1
+				end
+			end
+			idx = idx + 1
+		end
+
+		xx = x1 + (w * .5)
+		local idx = 1
+		for i = xx - 64, xx + 64, 64 do
+			if math.inside(x, y, i - 24, h2 + 16 + 80, 48, 48) then
+				local key = ctx.upgrades.keys.muju[idx]
+				local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1]
+				if cost and ctx.player:spend(cost) then
+					ctx.upgrades.muju[key] = ctx.upgrades.muju[key] + 1
+				end
+			end
+			idx = idx + 1
+		end
+
+		g.rectangle('line', x1 + (w * .75) - 32, h2 - 144, 64, 64)
+		if #ctx.player.minions < 2 and math.inside(x, y, x1 + (w * .75) - 32, h2 - 144, 64, 64) then
+			if ctx.player:spend(350) then
+				table.insert(ctx.player.minions, Voodoo)
+			end
 		end
 	end
 end

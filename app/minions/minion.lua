@@ -18,19 +18,21 @@ function Minion:init(data)
 end
 
 function Minion:update()
+	self.timeScale = 1 / (1 + ctx.upgrades.muju.warp)
+
 	if not self.target then
 		if self.x > self.width * 2 and self.x < love.graphics.getWidth() - 3 * self.width then
-			self.x = self.x + self.direction * self.speed * tickRate
+			self.x = self.x + self.direction * self.speed * tickRate * self.timeScale
 		end
 	else
 		if math.abs(self.x - self.target.x) > self.attackRange + self.target.width / 2 then
-			self.x = self.x + self.direction * self.speed * tickRate
+			self.x = self.x + self.direction * self.speed * tickRate * self.timeScale
 		end
 
 		self:attack()
 	end
 	
-	self.fireTimer = timer.rot(self.fireTimer)
+	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 end
 
 function Minion:attack()

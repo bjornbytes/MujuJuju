@@ -39,7 +39,7 @@ function Juju:update()
 	self.y = self.y + math.sin(self.sinState)
 	if ctx.player.jujuRealm > 0 then
 		--If Muju dead
-		if (ctx.player.ghost.x >= self.x-self.amount-ctx.player.ghost.magnetRange) and (ctx.player.ghost.x <= self.x+self.amount+ctx.player.ghost.magnetRange) and (ctx.player.ghost.y >= self.y-self.amount-ctx.player.ghost.magnetRange) and (ctx.player.ghost.y<= self.y+self.amount+ctx.player.ghost.magnetRange) then
+		--[[if (ctx.player.ghost.x >= self.x-self.amount-ctx.player.ghost.magnetRange) and (ctx.player.ghost.x <= self.x+self.amount+ctx.player.ghost.magnetRange) and (ctx.player.ghost.y >= self.y-self.amount-ctx.player.ghost.magnetRange) and (ctx.player.ghost.y<= self.y+self.amount+ctx.player.ghost.magnetRange) then
 			--If mouse close to Juju
 			local angle = math.atan2((ctx.player.ghost.y - self.y), (ctx.player.ghost.x - self.x))
 			local dx = 50 * math.cos(angle)
@@ -47,8 +47,15 @@ function Juju:update()
 			self.x = self.x + (dx * tickRate)
 			self.y = self.y + (dy * tickRate)
 			--Move Juju towards mouse
+		end]]
+
+		local ghost = ctx.player.ghost
+		if math.distance(self.x, self.y, ghost.x, ghost.y) < self.amount + (65 * ctx.upgrades.muju.magnet) then
+			local magnetStrength = 2 * ctx.upgrades.muju.magnet * tickRate
+			self.x, self.y = math.lerp(self.x, ghost.x, magnetStrength), math.lerp(self.y, ghost.y, magnetStrength)
 		end
-		if math.distance(ctx.player.ghost.x, ctx.player.ghost.y, self.x, self.y) < self.amount + ctx.player.ghost.radius then
+
+		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
 			--If mouse is over Juju
 			ctx.player.juju = ctx.player.juju + self.amount/2
 			--Give Muju dat Juju

@@ -10,6 +10,8 @@ SpiritBomb.attackRange = 0
 SpiritBomb.speed = 7
 
 function SpiritBomb:update()
+	Enemy.update(self)
+
 	local dif
 	local minion
 	local minionDistance = math.huge
@@ -30,10 +32,8 @@ function SpiritBomb:update()
 
 	dif = self.target.x - self.x
 	if math.abs(dif) > self.attackRange + self.target.width / 2 then
-		self.x = self.x + self.speed * math.sign(dif) * tickRate
+		self.x = self.x + self.speed * math.sign(dif) * tickRate * self.timeScale
 	end
-
-	Enemy.update(self)
 end
 
 function SpiritBomb:attack()
