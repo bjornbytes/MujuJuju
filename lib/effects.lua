@@ -3,7 +3,6 @@ Effects = class()
 function Effects:init()
   self.active = love.graphics.isSupported('shader')
   self.effects = {}
-	self:add(Vignette)
 end
 
 function Effects:update()
