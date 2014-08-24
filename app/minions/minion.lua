@@ -27,18 +27,22 @@ function Minion:update()
 			self.x = self.x + self.direction * self.speed * tickRate
 		end
 
-		if self.fireTimer == 0 then
-			local dif = math.abs(self.target.x - self.x)
-			if dif <= self.attackRange + self.target.width / 2 then
-				if self.target:hurt(self.damage) then
-					self.target = nil
-				end
-				self.fireTimer = self.fireRate
-			end
-		end
+		self:attack()
 	end
 	
 	self.fireTimer = timer.rot(self.fireTimer)
+end
+
+function Minion:attack()
+	if self.fireTimer == 0 then
+		local dif = math.abs(self.target.x - self.x)
+		if dif <= self.attackRange + self.target.width / 2 then
+			if self.target:hurt(self.damage) then
+				self.target = nil
+			end
+			self.fireTimer = self.fireRate
+		end
+	end
 end
 
 function Minion:hurt(amount)

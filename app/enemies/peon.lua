@@ -17,7 +17,7 @@ end
 
 function Peon:chooseTarget()
 	local minion
-  local playerDistance = math.abs(self.x - ctx.player.x)
+	local playerDistance = math.abs(self.x - ctx.player.x)
 	local shrineDistance = math.abs(self.x - ctx.shrine.x)
 
 	local minionDistance = math.huge
