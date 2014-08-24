@@ -32,6 +32,7 @@ function Game:update()
 	self.effects:update()
 	self.view:update()
 	self.hud:update()
+	self.particles:update()
 end
 
 function Game:draw()
