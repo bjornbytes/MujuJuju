@@ -67,21 +67,21 @@ Upgrades.clear = function()
 				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 0\nNext Level: +50 health\nCost: 50',
 				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 1: +50 health\nNext Level: +100 health\nCost: 100',
 				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 2: +100 health\nNext Level: +150 health\nCost: 150',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 3: +150 health\nMax Level',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 3: +150 health\nMax Level'
 			}
 		},
 		vuju = {
 			chain = {
-				'???',
-				'???',
-				'???',
-				'???'
+				'Chain\nEmpower your Vuju with the two lightning bolts, increasing its damage.\nLevel 0\nNext Level: 20% to strike twice.\nCost: 100',
+				'Chain\nEmpower your Vuju with the two lightning bolts, increasing its damage.\nLevel 1: 20% to strike twice.\nNext Level: 40% to strike twice.\nCost: 150',
+				'Chain\nEmpower your Vuju with the two lightning bolts, increasing its damage.\nLevel 2: 40% to strike twice.\nNext Level: 60% to strike twice.\nCost: 200',
+				'Chain\nEmpower your Vuju with the two lightning bolts, increasing its damage.\nLevel 3: 60% to strike twice.\nMax Level'
 			},
 			curse = {
-				'???',
-				'???',
-				'???',
-				'???'
+				'Curse\nInfect your enemies with lightning sickness, slowing their speed.\nLevel 0\nNext Level: 20% chance to slow.\nCost: 60',
+				'Curse\nInfect your enemies with lightning sickness, slowing their speed.\nLevel 1: 20% chance to slow.\nNext Level: 40% chance to slow.\nCost: 100',
+				'Curse\nInfect your enemies with lightning sickness, slowing their speed.\nLevel 2: 40% chance to slow.\nNext Level: 60% chance to slow.\nCost: 140',
+				'Curse\nInfect your enemies with lightning sickness, slowing their speed.\nLevel 3: 60% chance to slow.\nMax Level',
 			},
 			fortify = {
 				'Fortify\nImbue the Vuju with spiritual energy, increasing their maximum health.\nLevel 0\nNext Level: +50 health\nCost: 50',
