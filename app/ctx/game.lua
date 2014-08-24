@@ -10,6 +10,7 @@ function Game:load()
 	self.shrine = Shrine()
 	self.jujus = Jujus()
 	self.particles = Particles()
+	self.effects = Effects()
 	self.hud = Hud()
 	self.upgrades = Upgrades
 	self.upgrades:clear()
@@ -28,8 +29,10 @@ function Game:update()
 	self.player:update()
 	self.shrine:update()
 	self.jujus:update()
+	self.effects:update()
 	self.view:update()
 	self.hud:update()
+	self.particles:update()
 end
 
 function Game:draw()

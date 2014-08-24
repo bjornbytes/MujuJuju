@@ -3,6 +3,7 @@ Effects = class()
 function Effects:init()
   self.active = love.graphics.isSupported('shader')
   self.effects = {}
+	self:add(Vignette)
 end
 
 function Effects:update()
@@ -15,12 +16,12 @@ function Effects:resize()
   for i = 1, #self.effects do f.exe(self.effects[i].resize, self.effects[i]) end
 end
 
-function Effects:add(code)
+function Effects:add(kind)
   if not self.active then return end
-  local effect = new(data.effect[code])
+  local effect = new(kind)
   f.exe(effect.activate, effect)
   table.insert(self.effects, effect)
-  self.effects[code] = effect
+  self.effects[kind] = effect
   ctx.view:register(effect, 'effect')
 end
 

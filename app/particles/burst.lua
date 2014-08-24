@@ -15,7 +15,7 @@ end
 
 function Burst:draw()
 	local g = love.graphics
-	g.setColor(200, 0, 0, self.health / self.maxHealth)
+	g.setColor(200, 0, 0, (self.health / self.maxHealth) * 255)
 	g.circle('fill', self.x, self.y, self.radius)
 end
 

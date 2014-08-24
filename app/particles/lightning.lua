@@ -15,7 +15,7 @@ end
 
 function Lightning:draw()
 	local g = love.graphics
-	g.setColor(200, 200, 0, self.health / self.maxHealth)
+	g.setColor(200, 200, 0, (self.health / self.maxHealth) * 255)
 	g.line(self.x, 0, self.x, love.graphics.getHeight() - ctx.environment.groundHeight)
 end
 

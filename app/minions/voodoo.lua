@@ -6,32 +6,23 @@ Voodoo.code = 'vuju'
 Voodoo.cost = 30 
 Voodoo.cooldown = 5
 Voodoo.maxHealth = 70
+Voodoo.speed = 0
 
 Voodoo.damage = 17
 Voodoo.fireRate = 1.7
 Voodoo.attackRange = Voodoo.width * 8 
 Voodoo.curseFireRate = 6
 
-function Voodoo:init()
+function Voodoo:init(data)
 	self.curseFireTimer = 0
-	Minion.init(self)
+	Minion.init(self, data)
 end
 
 function Voodoo:update()
 	Minion.update(self)
-
-	local distance = math.huge
-	table.each(ctx.enemies.enemies, function(enemy)
-		local dif = math.abs(enemy.x - self.x)
-		if dif < distance then
-			distance = dif
-			self.target = enemy
-		end
-	end)
-	
+	self.target = ctx.target:getClosestEnemy(self)
 	if self.target then
 		self:attack()
-		ctx.particles:add(Lightning, {x = self.target.x})
 	end
 
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
@@ -52,7 +43,16 @@ function Voodoo:draw()
 end
 
 function Voodoo:attack()
-	Minion.attack(self)
+	if self.fireTimer == 0 then
+		local dif = math.abs(self.target.x - self.x)
+		if dif <= self.attackRange + self.target.width / 2 then
+			ctx.particles:add(Lightning, {x = self.target.x})
+			if self.target:hurt(self.damage) then
+				self.target = nil
+			end
+			self.fireTimer = self.fireRate
+		end
+	end
 
 	if self.curseFireTimer == 0 and ctx.upgrades.vuju.curse > 0 then
 		ctx.particles:add(Curse, {x = self.target.x - Curse.width / 2, y = self.target.y - 16})

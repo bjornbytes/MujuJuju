@@ -11,26 +11,8 @@ SpiritBomb.speed = 7
 
 function SpiritBomb:update()
 	Enemy.update(self)
-
-	local dif
-	local minion
-	local minionDistance = math.huge
-	table.each(ctx.minions.minions, function(m)
-		local distance = math.abs(self.x - m.x)
-		if distance < minionDistance then
-			minionDistance = distance
-			minion = m
-		end
-	end)
-
-	if minion then
-		dif = minion.x - self.x
-		if math.abs(dif) < self.width / 2 then
-			minion.target = self
-		end
-	end
-
-	dif = self.target.x - self.x
+	local dif = self.target.x - self.x
+	self.target = ctx.target:getShrine(self)
 	if math.abs(dif) > self.attackRange + self.target.width / 2 then
 		self.x = self.x + self.speed * math.sign(dif) * tickRate * self.timeScale
 	end
