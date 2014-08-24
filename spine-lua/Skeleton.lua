@@ -176,6 +176,7 @@ function Skeleton.new (skeletonData)
 		table.insert(self.drawOrder, slot)
 	end
 
+	print(self)
 	return self
 end
 return Skeleton

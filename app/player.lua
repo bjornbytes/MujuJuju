@@ -23,6 +23,9 @@ function Player:init()
 	self.selectedMinion = 1
 	self.summoned = false
 	self.direction = 1
+	self.skeleton = Skeleton({name = 'muju', x = self.x, y = self.y})
+	self.animator = Animator({skeleton = self.skeleton})
+	self.animator:add('idle', true)
 	ctx.view:register(self)
 end
 
@@ -75,6 +78,10 @@ function Player:update()
 	if self.ghost then
 		self.ghost:update()
 	end
+
+	self.skeleton.skeleton.x = self.x
+	self.skeleton.skeleton.y = self.y
+	self.animator:update()
 end
 
 function Player:spend(amount)
@@ -98,6 +105,8 @@ function Player:draw()
 
 	g.setColor(128, 0, 255)
 	g.rectangle('line', x - self.width / 2, y, self.width, self.height)
+
+	self.animator:draw()
 end
 
 function Player:cooldown()
