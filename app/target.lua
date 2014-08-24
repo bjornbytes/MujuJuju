@@ -76,7 +76,6 @@ function Target:getEnemiesInRange(source, range)
 		return nil
 	end
 	local enemiesInRange = {}
-	local enemyDistance = math.huge
 	table.each(ctx.enemies.enemies, function(e)
 		local distance = math.abs(source.x - e.x)
 		if distance < range then

@@ -26,11 +26,11 @@ function Hud:gui()
 	g.print(ctx.shrine.health .. ' / ' .. ctx.shrine.maxHealth, ctx.shrine.x, ctx.shrine.y)
 
 	table.each(ctx.enemies.enemies, function(enemy)
-		g.print(enemy.health .. ' / ' .. enemy.maxHealth, enemy.x, enemy.y)
+		g.print(math.floor(enemy.health) .. ' / ' .. enemy.maxHealth, enemy.x, enemy.y)
 	end)
 
 	table.each(ctx.minions.minions, function(minion)
-		g.print(minion.health .. ' / ' .. minion.maxHealth, minion.x, minion.y)
+		g.print(math.floor(minion.health) .. ' / ' .. minion.maxHealth, minion.x, minion.y)
 	end)
 
 	if self.upgradeAlpha > .001 then

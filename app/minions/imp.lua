@@ -4,13 +4,13 @@ Imp = extend(Minion)
 
 Imp.code = 'zuju'
 Imp.cost = 10
-Imp.cooldown = 3
+Imp.cooldown = 2.5
 
 Imp.speed = 45
 Imp.damage = 20
 Imp.fireRate = 1
 Imp.attackRange = Imp.width / 2
-Imp.maxHealth = 70
+Imp.maxHealth = 80
 
 function Imp:update()
 	Minion.update(self)
