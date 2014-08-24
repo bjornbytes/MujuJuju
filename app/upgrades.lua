@@ -58,30 +58,30 @@ Upgrades.clear = function()
 				'Cleave\nZuju damage enemies around their original target.\nLevel 3: 3 extra target\nMax Level'
 			},
 			burst = {
-				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 0\nNext Level: 30 damage, 100 radius\nCost: 100',
-				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 1: 30 damage, 100 radius\nNext Level: 60 damage, 200 radius\nCost: 125',
-				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 2: 60 damage, 200 radius\nNext Level: 90 damage, 300 radius\nCost: 150',
-				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 3: 90 damage, 300 radius\nMax Level'
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 0\nNext Level: 20 damage, 75 radius\nCost: 100',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 1: 20 damage, 75 radius\nNext Level: 40 damage, 125 radius\nCost: 125',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 2: 40 damage, 125 radius\nNext Level: 60 damage, 175 radius\nCost: 150',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 3: 60 damage, 175 radius\nMax Level'
 			},
 			fortify = {
 				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 0\nNext Level: +50 health\nCost: 50',
 				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 1: +50 health\nNext Level: +100 health\nCost: 100',
 				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 2: +100 health\nNext Level: +150 health\nCost: 150',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 3: +150 health\nMax Level',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 3: +150 health\nMax Level'
 			}
 		},
 		vuju = {
 			chain = {
-				'???',
-				'???',
-				'???',
-				'???'
+				'Chain\nEmpower your Vuju with the two lightning bolts, increasing its damage.\nLevel 0\nNext Level: 20% to strike twice.\nCost: 100',
+				'Chain\nEmpower your Vuju with the two lightning bolts, increasing its damage.\nLevel 1: 20% to strike twice.\nNext Level: 40% to strike twice.\nCost: 150',
+				'Chain\nEmpower your Vuju with the two lightning bolts, increasing its damage.\nLevel 2: 40% to strike twice.\nNext Level: 60% to strike twice.\nCost: 200',
+				'Chain\nEmpower your Vuju with the two lightning bolts, increasing its damage.\nLevel 3: 60% to strike twice.\nMax Level'
 			},
 			curse = {
-				'???',
-				'???',
-				'???',
-				'???'
+				'Curse\nInfect your enemies with lightning sickness, slowing their speed.\nLevel 0\nNext Level: 20% chance to slow.\nCost: 60',
+				'Curse\nInfect your enemies with lightning sickness, slowing their speed.\nLevel 1: 20% chance to slow.\nNext Level: 40% chance to slow.\nCost: 100',
+				'Curse\nInfect your enemies with lightning sickness, slowing their speed.\nLevel 2: 40% chance to slow.\nNext Level: 60% chance to slow.\nCost: 140',
+				'Curse\nInfect your enemies with lightning sickness, slowing their speed.\nLevel 3: 60% chance to slow.\nMax Level',
 			},
 			fortify = {
 				'Fortify\nImbue the Vuju with spiritual energy, increasing their maximum health.\nLevel 0\nNext Level: +50 health\nCost: 50',

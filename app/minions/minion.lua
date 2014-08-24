@@ -54,6 +54,7 @@ function Minion:attack()
 						end
 					end)
 				end
+				ctx.sound:play({sound = ctx.sounds.combat})
 			end
 		end
 	end

@@ -5,10 +5,13 @@ local g = love.graphics
 function Hud:init()
 	self.font = g.newFont('media/fonts/pixel.ttf', 8)
 	self.upgrading = false
+	self.upgradeBg = g.newImage('media/graphics/upgrade-menu.png')
+	self.lock = g.newImage('media/graphics/lock.png')
 	self.upgradeAlpha = 0
 	self.tooltip = ''
 	self.tooltipAlpha = 0
 	self.tooltipHover = false
+	self.jujuIcon = g.newImage('media/graphics/juju-icon.png')
 	ctx.view:register(self, 'gui')
 end
 
@@ -42,9 +45,12 @@ function Hud:gui()
 	local w, h = love.graphics.getDimensions()
 
 	g.setFont(self.font)
-	g.setColor(255, 255, 255)
-
-	g.print(math.floor(ctx.player.juju) .. ' juju', 2, 0)
+	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
+	g.print('Zuju', 16, 100)
+	if #ctx.player.minions == 2 then
+		g.setColor(ctx.player.selectedMinion == 2 and {255, 255, 255} or {150, 150, 150})
+		g.print('Vuju', 16, 100 + g.getFont():getHeight() + 2)
+	end
 	
 	-- Health Bars
 
@@ -82,40 +88,34 @@ function Hud:gui()
 		local w2, h2 = w / 2, h / 2
 		local x1, y1 = w2 - 300, h2 - 200
 		local w, h = 600, 400
-		g.setColor(0, 0, 0, self.upgradeAlpha * 220)
-		g.rectangle('fill', x1, y1, w, h)
-
-		g.setColor(255, 255, 255, self.upgradeAlpha * 255)
-		g.rectangle('line', x1, y1, w, h)
+		g.setColor(255, 255, 255, self.upgradeAlpha * 240)
+		g.draw(self.upgradeBg, 400, 300, 0, .85, .85, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
 
 		local xx
 		local idx
 		self.tooltipHover = false
 
 		-- Juju box
-		g.rectangle('line', w2 - 32, h2 - 184, 64, 64)
-		g.print(math.floor(ctx.player.juju), w2 - 32 + 3, h2 - 184)
-		if math.inside(mx, my, w2 - 32, h2 - 184, 64, 64) then
-			self.tooltip = [[Juju!]]
+		if math.inside(mx, my, w2 - 22, h2 - 250, 48, 48) then
+			self.tooltip = math.floor(ctx.player.juju) .. ' Juju!'
 			self.tooltipHover = true
 		end
 
 		-- Zuju
-		g.rectangle('line', x1 + (w * .25) - 32, h2 - 144, 64, 64)
-		if math.inside(mx, my, x1 + (w * .25) - 32, h2 - 144, 64, 64) then
+		if math.inside(mx, my, x1 + (w * .235) - 32, h2 - 144, 64, 64) then
 			self.tooltip = [[Zuju
 				Unlocked!]]
 			self.tooltipHover = true
 		end
-		xx = x1 + (w * .25)
+		xx = x1 + (w * .235)
 		idx = 1
-		for i = xx - 64, xx + 64, 64 do
-			g.rectangle('line', i - 24, h2 - 144 + 80, 48, 48)
+		for i = xx - 80, xx + 80, 78 do
+			local yy = h2 - 144 + 80
+			if idx == 1 or idx == 3 then yy = yy - 12 end
 			local key = ctx.upgrades.keys.zuju[idx]
 			local name = ctx.upgrades.names.zuju[key]
 			local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1] or ''
-			g.print(name .. '\n' .. cost, i - 24 + 3, h2 - 144 + 80)
-			if math.inside(mx, my, i - 24, h2 - 144 + 80, 48, 48) then
+			if math.inside(mx, my, i - 24, yy, 50, 50) then
 				self.tooltip = ctx.upgrades.tooltips.zuju[key][ctx.upgrades.zuju[key] + 1]
 				self.tooltipHover = true
 			end
@@ -123,8 +123,11 @@ function Hud:gui()
 		end
 
 		-- Voodoo
-		g.rectangle('line', x1 + (w * .75) - 32, h2 - 144, 64, 64)
-		if math.inside(mx, my, x1 + (w * .75) - 32, h2 - 144, 64, 64) then
+		if #ctx.player.minions < 2 then
+			g.draw(self.lock, x1 + (w * .775) - 20, h2 - 144, 0, .6, .6)
+		end
+
+		if math.inside(mx, my, x1 + (w * .775) - 32, h2 - 144, 64, 64) then
 			if #ctx.player.minions < 2 then
 				self.tooltip = [[Vuju
 					Cost: 250]]
@@ -134,18 +137,15 @@ function Hud:gui()
 			end
 			self.tooltipHover = true
 		end
-		if #ctx.player.minions < 2 then
-			g.print('vuju\n250', x1 + (w * .75) - 32 + 3, h2 - 144)
-		end
-		xx = x1 + (w * .75)
+		xx = x1 + (w * .78)
 		idx = 1
-		for i = xx - 64, xx + 64, 64 do
-			g.rectangle('line', i - 24, h2 - 144 + 80, 48, 48)
+		for i = xx - 78, xx + 78, 78 do
+			local yy = h2 - 144 + 80
+			if idx == 1 or idx == 3 then yy = yy - 12 end
 			local key = ctx.upgrades.keys.vuju[idx]
 			local name = ctx.upgrades.names.vuju[key]
 			local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1] or ''
-			g.print(name .. '\n' .. cost, i - 24 + 3, h2 - 144 + 80)
-			if math.inside(mx, my, i - 24, h2 - 144 + 80, 48, 48) then
+			if math.inside(mx, my, i - 24, yy, 48, 48) then
 				self.tooltip = ctx.upgrades.tooltips.vuju[key][ctx.upgrades.vuju[key] + 1]
 				self.tooltipHover = true
 			end
@@ -153,20 +153,15 @@ function Hud:gui()
 		end
 
 		-- MUUUUUUUUUUUUJU
-		g.rectangle('line', x1 + (w * .5) - 32, h2 + 16, 64, 64)
-		if math.inside(mx, my, x1 + (w * .5) - 32, h2 + 16, 64, 64) then
-			self.tooltip = [[MUUUUUUUUUUJUUU]]
-			self.tooltipHover = true
-		end
 		xx = x1 + (w * .5)
 		idx = 1
-		for i = xx - 64, xx + 64, 64 do
-			g.rectangle('line', i - 24, h2 + 16 + 80, 48, 48)
+		for i = xx - 156, xx + 140, 138 do
+			local yy = h2 + 16 + 70
+			if idx == 1 or idx == 3 then yy = yy - 12 end
 			local key = ctx.upgrades.keys.muju[idx]
 			local name = ctx.upgrades.names.muju[key]
 			local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1] or ''
-			g.print(name .. '\n' .. cost, i - 24 + 3, h2 + 16 + 80)
-			if math.inside(mx, my, i - 24, h2 + 16 + 80, 48, 48) then
+			if math.inside(mx, my, i - 24, yy, 80, 80) then
 				self.tooltip = ctx.upgrades.tooltips.muju[key][ctx.upgrades.muju[key] + 1]
 				self.tooltipHover = true
 			end
@@ -177,17 +172,27 @@ function Hud:gui()
 			g.setColor(0, 0, 0, self.tooltipAlpha * 255)
 			local textWidth, lines = g.getFont():getWrap(self.tooltip, 250)
 			local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
-			g.rectangle('fill', xx, my + 8, textWidth + 16, lines * g.getFont():getHeight() + 16)
+			g.rectangle('fill', xx, my + 8, textWidth + 14, lines * g.getFont():getHeight() + 16)
 			g.setColor(255, 255, 255, self.tooltipAlpha * 255)
 			g.printf(self.tooltip, xx + 8, my + 16, 250)
 		end
 	end
+
+	g.setColor(255, 255, 255)
+	g.draw(self.jujuIcon, 16, 16, 0, .75, .75)
+	g.setColor(0, 0, 0)
+	g.printf(math.floor(ctx.player.juju), 16, 16 + self.jujuIcon:getHeight() * .375 - (g.getFont():getHeight() / 2), self.jujuIcon:getWidth() * .75, 'center')
+	g.setColor(255, 255, 255)
 end
 
 function Hud:keypressed(key)
 	if (key == 'tab' or key == 'e') and math.abs(ctx.player.x - ctx.shrine.x) < ctx.player.width then
 		self.upgrading = not self.upgrading
 		return true
+	end
+
+	if key == 'escape' and self.upgrading then
+		self.upgrading = false
 	end
 end
 
@@ -196,7 +201,14 @@ function Hud:keyreleased(key)
 end
 
 function Hud:mousepressed(x, y, b)
-
+	if not self.upgrading then return end
+	local w, h = love.graphics.getDimensions()
+	local w2, h2 = w / 2, h / 2
+	local x1, y1 = w2 - 300, h2 - 200
+	local w, h = 600, 400
+	if math.inside(x, y, w2 - 50, h2 + 216, 100, 40) then
+		self.upgrading = false
+	end
 end
 
 function Hud:mousereleased(x, y, b)
@@ -215,6 +227,7 @@ function Hud:mousereleased(x, y, b)
 				local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1]
 				if cost and ctx.player:spend(cost) then
 					ctx.upgrades.zuju[key] = ctx.upgrades.zuju[key] + 1
+					ctx.sound:play({sound = 'menuClick'})
 				end
 			end
 			idx = idx + 1
@@ -228,6 +241,7 @@ function Hud:mousereleased(x, y, b)
 				local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1]
 				if cost and ctx.player:spend(cost) then
 					ctx.upgrades.vuju[key] = ctx.upgrades.vuju[key] + 1
+					ctx.sound:play({sound = 'menuClick'})
 				end
 			end
 			idx = idx + 1
@@ -241,6 +255,7 @@ function Hud:mousereleased(x, y, b)
 				local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1]
 				if cost and ctx.player:spend(cost) then
 					ctx.upgrades.muju[key] = ctx.upgrades.muju[key] + 1
+					ctx.sound:play({sound = 'menuClick'})
 				end
 			end
 			idx = idx + 1
@@ -251,6 +266,7 @@ function Hud:mousereleased(x, y, b)
 			if ctx.player:spend(350) then
 				table.insert(ctx.player.minions, Voodoo)
 				table.insert(ctx.player.minioncds, 0)
+					ctx.sound:play({sound = 'menuClick'})
 			end
 		end
 	end

@@ -17,7 +17,7 @@ function Player:init()
 	self.prevy = self.y
 	self.speed = 0
 	self.jujuRealm = 0
-	self.juju = 5000
+	self.juju = 50
 	self.dead = false
 	self.minions = {Zuju}
 	self.minioncds = {0}
@@ -57,7 +57,7 @@ function Player:init()
 		walk = function() return tickRate * math.abs(self.speed / self.walkSpeed) end,
 		idle = tickRate * .4,
 		summon = tickRate * 1.85,
-		resurrect = tickRate,
+		resurrect = tickRate * 2,
 		death = tickRate
 	}, f.val)
 
@@ -108,6 +108,7 @@ function Player:update()
 		self.animationState = 'resurrect'
 		self.animationLock = true
 		self.animator:set('resurrect', false)
+		if self.spiritSounds then self.spiritSounds:stop() end
 	end)
 
 	table.each(self.minioncds, function(cooldown, index)
@@ -139,6 +140,7 @@ function Player:animate()
 
 	self.skeleton.skeleton.x = self.x
 	self.skeleton.skeleton.y = self.y + self.height / 2
+	if self.animationState == 'resurrect' then self.skeleton.skeleton.y = self.skeleton.skeleton.y - 16 end
 	if self.speed ~= 0 then
 		self.skeleton.skeleton.flipX = self.speed > 0
 	end
@@ -177,6 +179,7 @@ function Player:summon()
 		self.animationLock = true
 		self.animationState = 'summon'
 		self.animator:set('summon', false)
+		ctx.sound:play({sound = ctx.sounds.summon})
 	end
 end
 
@@ -192,6 +195,8 @@ function Player:hurt(amount)
 		self.animationState = 'death'
 		self.animationLock = true
 		self.animator:set('death', false)
+		ctx.sound:play({sound = ctx.sounds.death})
+		self.spiritSounds = ctx.sound:loop({sound = ctx.sounds.spirit})
 		return true
 	end
 

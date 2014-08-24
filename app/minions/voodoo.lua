@@ -52,6 +52,7 @@ end
 function Voodoo:update()
 	if self.animationState == 'death' then
 		self.animator:update(self.animationSpeeds[self.animationState]())
+		self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 		return
 	end
 

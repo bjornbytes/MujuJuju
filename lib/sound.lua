@@ -7,9 +7,18 @@ end
 
 function Sound:play(data)
   if self.mute then return end
+
   local name = data.sound
-	self.sounds[name] = self.sounds[name] or love.audio.newSource('media/sounds/' .. name .. '.ogg')
-  return data.media.sounds[name]:play()
+
+	if not self.sounds[name] and love.filesystem.exists('media/sounds/' .. name .. '.ogg') then
+		self.sounds[name] = love.audio.newSource('media/sounds/' .. name .. '.ogg')
+	end
+
+	if self.sounds[name] then
+		return self.sounds[name]:play()
+	end
+
+	return nil
 end
 
 function Sound:loop(data)

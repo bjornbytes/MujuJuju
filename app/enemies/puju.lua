@@ -37,6 +37,7 @@ end
 function Puju:attack()
 	if self.target:hurt(self.damage) then self.target = false end
 	self.fireTimer = self.fireRate
+	ctx.sound:play({sound = ctx.sounds.combat})
 end
 
 function Puju:draw()

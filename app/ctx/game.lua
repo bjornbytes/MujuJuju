@@ -19,6 +19,17 @@ function Game:load()
 	self.upgrades:clear()
 	self.target = Target()
 	self.sound = Sound()
+	self.sounds = {
+		background = 'background',
+		summon = 'summon',
+		spirit = 'spirit',
+		juju = 'juju',
+		combat = 'combat',
+		death = 'death',
+		menuClick = 'menuClick'
+	}
+
+	backgroundSound = self.sound:loop({sound = self.sounds.background})
 end
 
 function Game:update()
@@ -41,6 +52,10 @@ function Game:update()
 	self.foreground:update()
 end
 
+function Game:unload()
+	backgroundSound:stop()
+end
+
 function Game:draw()
 	self.view:draw()
 end
@@ -50,7 +65,9 @@ function Game:resize()
 end
 
 function Game:keypressed(key)
-	if self.hud:keypressed(key) or self.paused then return end
+	if key == 'p' then self.paused = not self.paused end
+	if self.hud.upgrading or self.paused then return self.hud:keypressed(key) end
+	self.hud:keypressed(key)
 	self.player:keypressed(key)
 
 	if key == 'escape' then

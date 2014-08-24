@@ -29,8 +29,8 @@ function Minions:remove(minion)
 		end
 	end
 	if minion.code == 'zuju' and ctx.upgrades.zuju.burst > 0 then
-		local radius = 100 * ctx.upgrades.zuju.burst
-		local damage = 30 * ctx.upgrades.zuju.burst
+		local radius = 25 + (50 * ctx.upgrades.zuju.burst)
+		local damage = 20 * ctx.upgrades.zuju.burst
 		ctx.particles:add(Burst, {x = minion.x, y = minion.y, radius = radius})
 		local enemiesInRadius = ctx.target:getEnemiesInRange(minion, radius)
 		table.each(enemiesInRadius, function(enemy)

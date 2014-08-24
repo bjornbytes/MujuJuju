@@ -1,7 +1,7 @@
 require 'require'
 
 function love.load()
-	Context:add(Game)
+	Context:add(Menu)
 end
 
 love.update = Context.update
