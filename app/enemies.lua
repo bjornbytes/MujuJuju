@@ -12,7 +12,7 @@ function Enemies:update()
 		local spawnType
 		local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
 
-		spawnType = Peon
+		spawnType = Puju
 		if self.maxEnemyRate < 5 then
 			if love.math.random() < .3 then
 				spawnType = SpiritBomb

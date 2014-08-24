@@ -23,7 +23,6 @@ function Enemy:update()
 	end
 
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
-
 end
 
 function Enemy:hurt(amount)

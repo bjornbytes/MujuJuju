@@ -18,7 +18,7 @@ function Player:init()
 	self.jujuRealm = 0
 	self.juju = 50
 	self.dead = false
-	self.minions = {Imp}
+	self.minions = {Zuju}
 	self.minioncds = {0}
 	self.selectedMinion = 1
 	self.summoned = false
@@ -121,7 +121,7 @@ function Player:update()
 end
 
 function Player:animate()
-	if not self.animationLock then
+	if not self.animationLock and not self.dead then
 		local old = self.animationState
 		if self.animationState ~= 'walk' and math.abs(self.speed) > self.walkSpeed / 2 then
 			self.animationState = 'walk'
@@ -156,6 +156,7 @@ function Player:spend(amount)
 end
 
 function Player:draw()
+	love.graphics.setColor(255, 255, 255)
 	self.animator:draw()
 end
 

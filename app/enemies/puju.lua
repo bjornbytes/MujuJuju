@@ -1,21 +1,21 @@
 require 'app/enemies/enemy'
 
-Peon = extend(Enemy)
+Puju = extend(Enemy)
 
-Peon.width = 24
-Peon.height = 24
-Peon.speed = 40
-Peon.damage = 18
-Peon.fireRate = 1.1
-Peon.maxHealth = 100
-Peon.attackRange = Peon.width / 2
+Puju.width = 24
+Puju.height = 24
+Puju.speed = 40
+Puju.damage = 18
+Puju.fireRate = 1.1
+Puju.maxHealth = 100
+Puju.attackRange = Puju.width / 2
 
-function Peon:update()
+function Puju:update()
 	Enemy.update(self)
 	self:chooseTarget()
 end
 
-function Peon:chooseTarget()
+function Puju:chooseTarget()
 	if not ctx.player.dead then
 		self.target = ctx.target:getClosestTarget(self)
 	else
@@ -28,7 +28,7 @@ function Peon:chooseTarget()
 	end
 end
 
-function Peon:attack()
+function Puju:attack()
 	if self.target:hurt(self.damage) then self.target = false end
 	self.fireTimer = self.fireRate
 end
