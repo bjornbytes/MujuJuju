@@ -10,10 +10,7 @@ function Lightning:init(data)
 end
 
 function Lightning:update()
-	self.health = self.health - tickRate
-	if self.health <= 0 then
-		ctx.particles:remove(self)
-	end
+	self.health = timer.rot(self.health, function() ctx.particles:remove(self) end)
 end
 
 function Lightning:draw()
