@@ -19,6 +19,17 @@ function Game:load()
 	self.upgrades:clear()
 	self.target = Target()
 	self.sound = Sound()
+	self.sounds = {
+		background = 'background',
+		summon = 'summon',
+		spirit = 'spirit',
+		juju = 'juju',
+		combat = 'combat',
+		death = 'death',
+		menuClick = 'menuClick'
+	}
+
+	backgroundSound = self.sound:loop({sound = self.sounds.background})
 end
 
 function Game:update()
@@ -39,6 +50,10 @@ function Game:update()
 	self.particles:update()
 	self.environment:update()
 	self.foreground:update()
+end
+
+function Game:unload()
+	backgroundSound:stop()
 end
 
 function Game:draw()

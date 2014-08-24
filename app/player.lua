@@ -108,6 +108,7 @@ function Player:update()
 		self.animationState = 'resurrect'
 		self.animationLock = true
 		self.animator:set('resurrect', false)
+		if self.spiritSounds then self.spiritSounds:stop() end
 	end)
 
 	table.each(self.minioncds, function(cooldown, index)
@@ -177,6 +178,7 @@ function Player:summon()
 		self.animationLock = true
 		self.animationState = 'summon'
 		self.animator:set('summon', false)
+		ctx.sound:play({sound = ctx.sounds.summon})
 	end
 end
 
@@ -192,6 +194,8 @@ function Player:hurt(amount)
 		self.animationState = 'death'
 		self.animationLock = true
 		self.animator:set('death', false)
+		ctx.sound:play({sound = ctx.sounds.death})
+		self.spiritSounds = ctx.sound:loop({sound = ctx.sounds.spirit})
 		return true
 	end
 
