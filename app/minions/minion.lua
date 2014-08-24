@@ -28,12 +28,21 @@ function Minion:update()
 end
 
 function Minion:attack()
-	if self.fireTimer == 0 then
+	if self.fireTimer == 0 then		
 		if self.target ~= nil then
 			local dif = math.abs(self.target.x - self.x)
-			if dif <= self.attackRange + self.target.width / 2 then
-				if self.target:hurt(self.damage) then
-					self.target = nil
+			if dif <= self.attackRange + self.target.width / 2 then				
+				if ctx.upgrades.zuju.cleave == 0 then
+					if self.target:hurt(self.damage) then
+						self.target = nil
+					end
+				else
+					local targets = ctx.target:getEnemiesInRange(self, self.attackRange)
+					for i=1, ctx.upgrades.zuju.cleave+1,1 do
+						if targets[i]:hurt(self.damage) then
+							targets[i] = nil
+						end
+					end
 				end
 				self.fireTimer = self.fireRate
 			end
