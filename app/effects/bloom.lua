@@ -41,6 +41,7 @@ function Bloom:applyEffect(source, target)
 
 	if ctx.player.dead then
 		ctx.player.ghost:draw()
+		table.each(ctx.jujus.jujus, function(juju) juju:draw() end)
 	end
 
   g.setCanvas()

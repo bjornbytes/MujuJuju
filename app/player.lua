@@ -164,8 +164,10 @@ function Player:spend(amount)
 end
 
 function Player:draw()
-	love.graphics.setColor(255, 255, 255)
-	self.animator:draw()
+	if math.floor(self.invincible * 2) % 2 == 0 then
+		love.graphics.setColor(255, 255, 255)
+		self.animator:draw()
+	end
 end
 
 function Player:cooldown()

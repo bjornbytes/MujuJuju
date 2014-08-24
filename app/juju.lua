@@ -3,6 +3,7 @@ Juju = class()
 Juju.maxHealth = 100
 Juju.moveSpeed = 10
 Juju.depth = -6
+Juju.image = love.graphics.newImage('media/graphics/juju-icon.png')
 
 function Juju:init(data)
 	-- Data = ({amount, x, y, velocity,speed})
@@ -12,6 +13,7 @@ function Juju:init(data)
 	self.prevx = self.x
 	self.prevy = self.y
 	self.sinState = math.pi - 1
+	self.angle = love.math.random() * 2 * math.pi
 	--self.velocity = 1
 	--self.speed = 20
 	table.merge(data, self)
@@ -69,17 +71,13 @@ function Juju:update()
 		ctx.jujus:remove(self)
 		ctx.sound:play({sound = ctx.sounds.juju})
 	end
+	self.angle = self.angle + (math.sin(tick * tickRate) * math.cos(tick * tickRate)) / 10
 end
 
 function Juju:draw()
 	local g = love.graphics
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 
-	g.setColor(64, 0, 128, 160)
-	--g.circle('fill', x, y, math.max(20,self.amount*3))
-	g.circle('fill', x, y, self.amount)
-
-	g.setColor(128, 0, 128)
-	--g.circle('line', x, y, math.max(20,self.amount*3))
-	g.circle('line', x, y, self.amount)
+	g.setColor(255, 255, 255, 180)
+	g.draw(self.image, self.x, self.y, self.angle, (self.amount / 50), (self.amount / 50), self.image:getWidth() / 2, self.image:getHeight() / 2)
 end
