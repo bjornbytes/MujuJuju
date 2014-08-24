@@ -9,6 +9,7 @@ function Hud:init()
 	self.tooltip = ''
 	self.tooltipAlpha = 0
 	self.tooltipHover = false
+	self.jujuIcon = g.newImage('media/graphics/juju-icon.png')
 	ctx.view:register(self, 'gui')
 end
 
@@ -42,9 +43,12 @@ function Hud:gui()
 	local w, h = love.graphics.getDimensions()
 
 	g.setFont(self.font)
-	g.setColor(255, 255, 255)
 
-	g.print(math.floor(ctx.player.juju) .. ' juju', 2, 0)
+	g.draw(self.jujuIcon, 16, 16, 0, .75, .75)
+	g.setColor(0, 0, 0)
+	g.printf(math.floor(ctx.player.juju), 16, 16 + self.jujuIcon:getHeight() * .375 - (g.getFont():getHeight() / 2), self.jujuIcon:getWidth() * .75, 'center')
+
+	g.setColor(255, 255, 255)
 	
 	-- Health Bars
 
