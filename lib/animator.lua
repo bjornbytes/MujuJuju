@@ -43,7 +43,6 @@ end
 function Animator:add(name, loop, track)
 	if not track then track = 0 end
 	if self.state then
-		print(track, name, loop)
 		self.state:addAnimationByName(track, name, loop, 0)
 	end
 end
