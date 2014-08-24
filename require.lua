@@ -18,5 +18,7 @@ load 'lib'
 load 'app/enemies'
 load 'app/minions'
 
+load 'app/particles'
+
 load 'app/ctx'
 load 'app'
