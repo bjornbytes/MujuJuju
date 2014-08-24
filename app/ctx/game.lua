@@ -4,6 +4,7 @@ function Game:load()
 	self.paused = false
 	self.view = View()
 	self.environment = Environment()
+	self.foreground = Foreground()
 	self.enemies = Enemies()
 	self.minions = Minions()
 	self.player = Player()
@@ -34,6 +35,8 @@ function Game:update()
 	self.view:update()
 	self.hud:update()
 	self.particles:update()
+	self.environment:update()
+	self.foreground:update()
 end
 
 function Game:draw()

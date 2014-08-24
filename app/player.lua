@@ -1,7 +1,7 @@
 Player = class()
 
-Player.width = 30
-Player.height = 60
+Player.width = 45
+Player.height = 90
 
 Player.walkSpeed = 65
 Player.maxHealth = 100
@@ -24,7 +24,7 @@ function Player:init()
 	self.summoned = false
 	self.direction = 1
 
-	self.skeleton = Skeleton({name = 'muju', x = self.x, y = self.y, scale = .4})
+	self.skeleton = Skeleton({name = 'muju', x = self.x, y = self.y, scale = .6})
 
 	self.animator = Animator({
 		skeleton = self.skeleton,

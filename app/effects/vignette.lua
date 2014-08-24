@@ -7,7 +7,7 @@ function Vignette:init()
 end
 
 function Vignette:update()
-	self.radius = math.lerp(self.radius, ctx.player.dead and .875 or 1, 3 * tickRate)
+	self.radius = math.lerp(self.radius, ctx.player.dead and .85 or 1, 3 * tickRate)
 	self.shader:send('radius', self.radius)
 end
 
