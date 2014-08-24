@@ -38,6 +38,7 @@ function Minion:attack()
 			if dif <= self.attackRange + self.target.width / 2 then
 				self.target:hurt(self.damage)
 				self.fireTimer = self.fireRate
+				ctx.sound:play({sound = ctx.sounds.combat})
 			end
 		end
 	end
