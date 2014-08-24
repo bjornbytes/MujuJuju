@@ -11,10 +11,8 @@ Voodoo.speed = 0
 Voodoo.damage = 17
 Voodoo.fireRate = 1.7
 Voodoo.attackRange = Voodoo.width * 8 
-Voodoo.curseFireRate = 6
 
 function Voodoo:init(data)
-	self.curseFireTimer = 0
 	Minion.init(self, data)
 
 	self.depth = self.depth + love.math.random()
@@ -67,8 +65,6 @@ function Voodoo:update()
 		self:attack()
 	end
 
-	self.curseFireTimer = self.curseFireTimer - math.min(self.curseFireTimer, tickRate * self.timeScale)
-
 	self.skeleton.skeleton.x = self.x
 	self.skeleton.skeleton.y = self.y + self.height + 8
 	self.animator:update(self.animationSpeeds[self.animationState]())
@@ -106,16 +102,6 @@ function Voodoo:attack()
 				self.fireTimer = self.fireRate
 			end
 		end
-	end
-
-	if self.curseFireTimer == 0 and ctx.upgrades.vuju.curse > 0 then
-		ctx.particles:add(Curse, {x = self.target.x - Curse.width / 2, y = self.target.y - 16})
-		table.each(ctx.enemies.enemies, function(enemy)
-			if self.curseFireTimer > 0 then
-				
-			end
-		end)
-		self.curseFireTimer = self.curseFireRate - (.5 * ctx.upgrades.vuju.curse)
 	end
 end
 

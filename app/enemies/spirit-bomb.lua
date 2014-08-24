@@ -15,7 +15,7 @@ function SpiritBomb:update()
 	local dif = self.target.x - self.x
 	self.target = ctx.target:getShrine(self)
 	if math.abs(dif) > 20 then
-		self.x = self.x + self.speed * math.sign(dif) * tickRate * self.timeScale
+		self.x = self.x + self.speed * math.sign(dif) * tickRate * self.timeScale * (1 - self.slow)
 	else
 		self:attack()
 	end

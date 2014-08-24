@@ -26,7 +26,7 @@ function Enemy:update()
 
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
-	self.slow = math.lerp(self.slow, 0, 5 * tickRate)
+	self.slow = math.lerp(self.slow, 0, 1 * tickRate)
 end
 
 function Enemy:hurt(amount)
