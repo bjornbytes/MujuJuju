@@ -61,11 +61,13 @@ function Juju:update()
 			--Give Muju dat Juju
 			ctx.jujus:remove(self)
 			--Remove da Juju mon!
+			ctx.sound:play({sound = ctx.sounds.juju})
 		end
 	end
 
 	if not math.inside(self.x, self.y, -self.amount, -self.amount, love.graphics.getWidth() + self.amount, love.graphics.getHeight() + self.amount) then
 		ctx.jujus:remove(self)
+		ctx.sound:play({sound = ctx.sounds.juju})
 	end
 end
 

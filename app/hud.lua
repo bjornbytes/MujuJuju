@@ -215,6 +215,7 @@ function Hud:mousereleased(x, y, b)
 				local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1]
 				if cost and ctx.player:spend(cost) then
 					ctx.upgrades.zuju[key] = ctx.upgrades.zuju[key] + 1
+					ctx.sound:play({sound = 'menuClick'})
 				end
 			end
 			idx = idx + 1
@@ -228,6 +229,7 @@ function Hud:mousereleased(x, y, b)
 				local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1]
 				if cost and ctx.player:spend(cost) then
 					ctx.upgrades.vuju[key] = ctx.upgrades.vuju[key] + 1
+					ctx.sound:play({sound = 'menuClick'})
 				end
 			end
 			idx = idx + 1
@@ -241,6 +243,7 @@ function Hud:mousereleased(x, y, b)
 				local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1]
 				if cost and ctx.player:spend(cost) then
 					ctx.upgrades.muju[key] = ctx.upgrades.muju[key] + 1
+					ctx.sound:play({sound = 'menuClick'})
 				end
 			end
 			idx = idx + 1
@@ -251,6 +254,7 @@ function Hud:mousereleased(x, y, b)
 			if ctx.player:spend(350) then
 				table.insert(ctx.player.minions, Voodoo)
 				table.insert(ctx.player.minioncds, 0)
+					ctx.sound:play({sound = 'menuClick'})
 			end
 		end
 	end
