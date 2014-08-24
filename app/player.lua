@@ -29,6 +29,7 @@ function Player:init()
 	self.animator = Animator({
 		skeleton = self.skeleton,
 		mixes = {
+			{from = 'idle', to = 'idle', time = .1},
 			{from = 'walk', to = 'idle', time = .2},
 			{from = 'idle', to = 'walk', time = .2},
 			{from = 'walk', to = 'summon', time = .1},
