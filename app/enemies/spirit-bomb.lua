@@ -10,6 +10,12 @@ SpiritBomb.damage = 100
 SpiritBomb.attackRange = 100
 SpiritBomb.speed = 7
 
+function SpiritBomb:init(data)
+	self.depth = self.depth + love.math.random()
+	self.image = love.graphics.newImage('media/skeletons/spirit-bomb/spuju.png')
+	Enemy.init(self, data)
+end
+
 function SpiritBomb:update()
 	self.timeScale = 1 / (1 + ctx.upgrades.muju.warp * (ctx.player.dead and 1 or 0))
 	local dif = self.target.x - self.x
@@ -19,6 +25,20 @@ function SpiritBomb:update()
 	else
 		self:attack()
 	end
+
+	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+	self.slow = math.lerp(self.slow, 0, 1 * tickRate)
+end
+
+function SpiritBomb:draw()
+	local g = love.graphics
+	g.setColor(255, 255, 255)
+	local scalex = .8 
+	local dif = self.target.x - self.x
+	if math.sign(dif) > 0 then
+		scalex = -scalex
+	end
+	g.draw(self.image, self.x, self.y + 5 * math.sin(tick * tickRate * 4), 0, scalex, .8, self.image:getWidth() / 2, self.image:getHeight() / 2)
 end
 
 function SpiritBomb:attack()
