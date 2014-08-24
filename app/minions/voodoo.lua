@@ -5,13 +5,21 @@ Voodoo = extend(Minion)
 Voodoo.code = 'vuju'
 Voodoo.cost = 30 
 Voodoo.cooldown = 5
+Voodoo.maxHealth = 70
 
 Voodoo.damage = 17
 Voodoo.fireRate = 1.7
 Voodoo.attackRange = Voodoo.width * 8 
-Voodoo.maxHealth = 70
+Voodoo.curseFireRate = 6
+
+function Voodoo:init()
+	self.curseFireTimer = 0
+	Minion.init(self)
+end
 
 function Voodoo:update()
+	Minion.update(self)
+
 	local distance = math.huge
 	table.each(ctx.enemies.enemies, function(enemy)
 		local dif = math.abs(enemy.x - self.x)
@@ -23,9 +31,10 @@ function Voodoo:update()
 	
 	if self.target then
 		self:attack()
+		ctx.particles:add(Lightning, {x = self.target.x})
 	end
 
-	self.fireTimer = timer.rot(self.fireTimer)
+	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 end
 
 function Voodoo:draw()
@@ -39,5 +48,9 @@ function Voodoo:draw()
 
 	g.setColor(255, 255, 255, 75)
 	g.circle('line', self.x, self.y, self.attackRange)
+end
+
+function Voodoo:attack()
+	Minion.attack(self)
 end
 
