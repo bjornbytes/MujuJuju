@@ -82,6 +82,7 @@ function Target:getEnemiesInRange(source, range)
 			table.insert(enemiesInRange,e)
 		end
 	end)
+	print(#enemiesInRange..","..table.count(enemiesInRange))
 	return enemiesInRange
 end
 

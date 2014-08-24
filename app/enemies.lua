@@ -2,8 +2,8 @@ Enemies = class()
 
 function Enemies:init()
 	self.enemies = {}
-	self.nextEnemy = 5
-	self.minEnemyRate = 7
+	self.nextEnemy = 2
+	self.minEnemyRate = 4
 	self.maxEnemyRate = 10
 end
 
@@ -48,17 +48,5 @@ function Enemies:remove(enemy)
 			minion.target = nil
 		end
 	end)
-
-	--[[if enemy.code == 'zuju' and ctx.upgrades.zuju.burst > 0 then
-		local radius = 100 * ctx.upgrades.zuju.burst
-		local damage = 30 * ctx.upgrades.zuju.burst
-		ctx.particles:add(Burst, {x = self.x, y = self.y, radius = radius})
-		table.each(ctx.enemies.enemies, function(enemy)
-			if math.distance(self.x, self.y, enemy.x, enemy.y) < radius then
-				enemy:hurt(damage)
-			end
-		end)
-	end
-	]]
 	self.enemies[enemy] = nil
 end

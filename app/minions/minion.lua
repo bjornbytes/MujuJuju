@@ -39,6 +39,22 @@ function Minion:attack()
 			if dif <= self.attackRange + self.target.width / 2 then
 				self.target:hurt(self.damage)
 				self.fireTimer = self.fireRate
+				local cleaveLevel = ctx.upgrades.zuju.cleave
+				if self.code == 'zuju' and cleaveLevel > 0 then
+					local cleaveRadius = (self.width/2 + self.attackRange) + (15 * cleaveLevel)
+					local cleaveDamage = self.damage/2
+					ctx.particles:add(Cleave, {x = self.x, y = self.y+self.height/2, radius = cleaveRadius})
+					local enemiesInRadius = ctx.target:getEnemiesInRange(self, cleaveRadius)
+					local count = 0
+					table.each(enemiesInRadius, function(enemy)
+						if enemy ~= self.target then
+							if count < cleaveLevel then
+								enemy:hurt(cleaveDamage)
+							end
+							count = count+1
+						end
+					end)
+				end
 				ctx.sound:play({sound = ctx.sounds.combat})
 			end
 		end

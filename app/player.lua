@@ -4,7 +4,7 @@ Player.width = 45
 Player.height = 90
 
 Player.walkSpeed = 65
-Player.maxHealth = 100
+Player.maxHealth = 10000
 
 Player.depth = 0
 
@@ -140,6 +140,7 @@ function Player:animate()
 
 	self.skeleton.skeleton.x = self.x
 	self.skeleton.skeleton.y = self.y + self.height / 2
+	if self.animationState == 'resurrect' then self.skeleton.skeleton.y = self.skeleton.skeleton.y - 16 end
 	if self.speed ~= 0 then
 		self.skeleton.skeleton.flipX = self.speed > 0
 	end
