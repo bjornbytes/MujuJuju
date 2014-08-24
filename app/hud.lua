@@ -268,7 +268,7 @@ function Hud:mousereleased(x, y, b)
 		end
 
 		if #ctx.player.minions < 2 and math.inside(x, y, x1 + (w * .775) - 32, h2 - 144, 64, 64) then
-			if ctx.player:spend(350) then
+			if ctx.player:spend(250) then
 				table.insert(ctx.player.minions, Voodoo)
 				table.insert(ctx.player.minioncds, 0)
 					ctx.sound:play({sound = 'menuClick'})
