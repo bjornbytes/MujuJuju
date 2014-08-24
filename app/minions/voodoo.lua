@@ -83,10 +83,21 @@ function Voodoo:attack()
 		if self.target ~= nil then
 			local dif = math.abs(self.target.x - self.x)
 			if dif <= self.attackRange + self.target.width / 2 then
-				ctx.particles:add(Lightning, {x = self.target.x})
-				if self.target:hurt(self.damage) then
-					self.target = nil
+				local ct = 1
+				if ctx.upgrades.vuju.chain > 0 then
+					if love.math.random() < ctx.upgrades.vuju.chain * .2 then
+						ct = 2
+					end
 				end
+				
+				for i = 1, ct do
+					ctx.particles:add(Lightning, {x = self.target.x})
+					if self.target:hurt(self.damage) then
+						self.target = nil
+						break
+					end
+				end
+
 				self.fireTimer = self.fireRate
 			end
 		end

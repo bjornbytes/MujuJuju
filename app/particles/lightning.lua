@@ -31,7 +31,7 @@ end
 function Lightning:randomLine(start, range)
 	local ending = {}
 	ending.x = start.x + love.math.random(-range, range)
-	ending.y = start.y + love.math.random(0, range * 2)
+	ending.y = start.y + love.math.random(0, range * 1.5)
 
 	return ending.x, ending.y
 end
