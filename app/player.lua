@@ -19,10 +19,10 @@ function Player:init()
 	self.juju = 70
 	self.dead = false
 	self.minions = {Imp}
+	self.minioncds = {0}
 	self.selectedMinion = 1
 	self.summoned = false
 	self.direction = 1
-	self.warningTimer = 0
 	ctx.view:register(self)
 end
 
@@ -68,11 +68,13 @@ function Player:update()
 		self.ghost = nil
 	end)
 
+	table.each(self.minioncds, function(cooldown, index)
+		self.minioncds[index] = timer.rot(cooldown)
+	end)
+
 	if self.ghost then
 		self.ghost:update()
 	end
-
-	self.warningTimer = timer.rot(self.warningTimer)
 end
 
 function Player:spend(amount)
@@ -96,23 +98,18 @@ function Player:draw()
 
 	g.setColor(128, 0, 255)
 	g.rectangle('line', x - self.width / 2, y, self.width, self.height)
+end
 
-	if self.warningTimer > 0 then
-		g.setColor(255, 0, 0)
-		g.print('Can\'t summon Vuju. He must be unlocked first.', love.graphics.getWidth() / 2 - 115, 25)
-	end
+function Player:cooldown()
+	
 end
 
 function Player:summon()
 	local minion = self.minions[self.selectedMinion]
-
-	if minion.code == 'vuju' and ctx.upgrades.vuju.unlock == 0 then
-		self.warningTimer = 3
-		return
-	end
-
-	if self:spend(minion.cost) then
+	local cooldown = self.minioncds[self.selectedMinion]
+	if self:spend(minion.cost) and cooldown == 0 then
 		ctx.minions:add(minion, {x = self.x + love.math.random(-10, 20), direction = self.direction})
+		self.minioncds[self.selectedMinion] = minion.cooldown
 	end
 end
 

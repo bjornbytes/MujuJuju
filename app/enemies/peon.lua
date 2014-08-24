@@ -16,7 +16,7 @@ function Peon:update()
 end
 
 function Peon:chooseTarget()
-	local minion
+	--[[local minion
 	local playerDistance = math.abs(self.x - ctx.player.x)
 	local shrineDistance = math.abs(self.x - ctx.shrine.x)
 
@@ -37,6 +37,12 @@ function Peon:chooseTarget()
 		self.target = ctx.player
 	else
 		self.target = ctx.shrine
+	end
+	]]
+	if not ctx.player.dead then
+		self.target = ctx.target:getClosestTarget(self)
+	else
+		self.target = ctx.target:getClosestNPC(self)
 	end
 
 	local dif = self.target.x - self.x
