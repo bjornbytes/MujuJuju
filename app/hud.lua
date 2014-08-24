@@ -32,17 +32,40 @@ function Hud:gui()
 
 	g.print(math.floor(ctx.player.juju) .. ' juju', 2, 0)
 	
+	-- Health Bars
+
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
 
 	self:health(px - 30, py - 20, ctx.player.health, ctx.player.maxHealth)
 	self:health(ctx.shrine.x - 30, ctx.shrine.y - 65, ctx.shrine.health, ctx.shrine.maxHealth)
 
 	table.each(ctx.enemies.enemies, function(enemy)
-		self:health(enemy.x - 25, enemy.y - 25, enemy.health, enemy.maxHealth)
+		if enemy.code == 'puju' then
+			self:health(enemy.x - 25, enemy.y - 25, enemy.health, enemy.maxHealth)
+		elseif enemy.code == 'spirit-bomb' then
+			self:health(enemy.x - 25, enemy.y - 45, enemy.health, enemy.maxHealth)
+		end
 	end)
 
+	local separationTable = {}
 	table.each(ctx.minions.minions, function(minion)
-		self:health(minion.x - 25, minion.y - 45, minion.health, minion.maxHealth)
+		local range = minion.width * 2
+		local location = math.floor(minion.x)
+		local i = location - range
+		local limit = location + range
+		for i = location - range, limit, 1 do
+			if not separationTable[i] then
+				separationTable[i] = 1 
+			else 
+				separationTable[i] = separationTable[i] + .5 
+			end
+		end
+
+		if minion.code == 'zuju' then
+			self:health(minion.x - 25, minion.y - 45 * separationTable[location], minion.health, minion.maxHealth)
+		elseif minion.code == 'vuju' then
+			self:health(minion.x - 25, minion.y - 45 * separationTable[location], minion.health, minion.maxHealth)
+		end
 	end)
 
 	if self.upgradeAlpha > .001 then

@@ -2,6 +2,7 @@ require 'app/enemies/enemy'
 
 Puju = extend(Enemy)
 
+Puju.code = 'puju'
 Puju.width = 24
 Puju.height = 24
 Puju.speed = 40
