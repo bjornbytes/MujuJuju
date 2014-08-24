@@ -13,6 +13,7 @@ function Shrine:init()
 	self.x = w / 2
 	self.y = h - ctx.environment.groundHeight - self.height - 7 
 	self.health = self.maxHealth
+	self.healthDisplay = self.health
 	self.image = love.graphics.newImage('media/graphics/shrine-v3.png')
 	self.color = {255, 255, 255}
 
@@ -26,6 +27,7 @@ function Shrine:update()
 	end
 
 	self.color = table.interpolate(self.color, ctx.player.dead and {160, 100, 225} or {255, 255, 255}, .6 * tickRate)
+	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 end
 
 function Shrine:draw()

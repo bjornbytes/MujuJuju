@@ -8,12 +8,13 @@ function Hud:init()
 	self.upgradeAlpha = 0
 	self.tooltip = ''
 	self.tooltipAlpha = 0
+	self.tooltipHover = false
 	ctx.view:register(self, 'gui')
 end
 
 function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
-	self.tooltipAlpha = math.lerp(self.tooltipAlpha, self.tooltip == '' and 0 or 1, 12 * tickRate)
+	self.tooltipAlpha = math.lerp(self.tooltipAlpha, self.tooltipHover and 1 or 0, 12 * tickRate)
 end
 
 function Hud:health(x, y, health, max)
@@ -24,7 +25,6 @@ function Hud:health(x, y, health, max)
 	g.rectangle('fill', x, y, 100 * .6, 3)
 	g.setColor(255, 0, 0)
 	g.rectangle('fill', x, y, health * .6, 3)
-
 end
 
 function Hud:stackingTable(stackingTable, x, range, delta)
@@ -50,8 +50,8 @@ function Hud:gui()
 
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
 
-	self:health(px - 30, py - 20, ctx.player.health, ctx.player.maxHealth)
-	self:health(ctx.shrine.x - 30, ctx.shrine.y - 65, ctx.shrine.health, ctx.shrine.maxHealth)
+	self:health(px - 30, py - 20, ctx.player.healthDisplay, ctx.player.maxHealth)
+	self:health(ctx.shrine.x - 30, ctx.shrine.y - 65, ctx.shrine.healthDisplay, ctx.shrine.maxHealth)
 
 	local stackingTable = {}
 	table.each(ctx.enemies.enemies, function(enemy)
@@ -59,9 +59,9 @@ function Hud:gui()
 		self:stackingTable(stackingTable, location, enemy.width * 2, .5)
 
 		if enemy.code == 'puju' then
-			self:health(enemy.x - 25, enemy.y - 25 * stackingTable[location], enemy.health, enemy.maxHealth)
+			self:health(enemy.x - 25, enemy.y - 25 * stackingTable[location], enemy.healthDisplay, enemy.maxHealth)
 		elseif enemy.code == 'spirit-bomb' then
-			self:health(enemy.x - 25, enemy.y - 45 * stackingTable[location], enemy.health, enemy.maxHealth)
+			self:health(enemy.x - 25, enemy.y - 45 * stackingTable[location], enemy.healthDisplay, enemy.maxHealth)
 		end
 	end)
 
@@ -71,9 +71,9 @@ function Hud:gui()
 		self:stackingTable(stackingTable, location, minion.width * 2, .5)
 
 		if minion.code == 'zuju' then
-			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.health, minion.maxHealth)
+			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.healthDisplay, minion.maxHealth)
 		elseif minion.code == 'vuju' then
-			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.health, minion.maxHealth)
+			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.healthDisplay, minion.maxHealth)
 		end
 	end)
 
@@ -90,7 +90,7 @@ function Hud:gui()
 
 		local xx
 		local idx
-		self.tooltip = self.tooltipAlpha > .1 and self.tooltip or ''
+		self.tooltipHover = false
 
 		-- Juju box
 		g.rectangle('line', w2 - 32, h2 - 184, 64, 64)
@@ -99,6 +99,7 @@ function Hud:gui()
 			self.tooltip = [[
 				Juju!
 			]]
+			self.tooltipHover = true
 		end
 
 		-- Zuju
@@ -107,6 +108,7 @@ function Hud:gui()
 			self.tooltip = [[
 				Zuju
 			]]
+			self.tooltipHover = true
 		end
 		xx = x1 + (w * .25)
 		idx = 1
@@ -118,6 +120,7 @@ function Hud:gui()
 			g.print(name .. '\n' .. cost, i - 24 + 3, h2 - 144 + 80)
 			if math.inside(mx, my, i - 24, h2 - 144 + 80, 48, 48) then
 				self.tooltip = ctx.upgrades.tooltips.zuju[key][ctx.upgrades.zuju[key] + 1]
+				self.tooltipHover = true
 			end
 			idx = idx + 1
 		end
@@ -156,7 +159,7 @@ function Hud:gui()
 			local textWidth, lines = g.getFont():getWrap(self.tooltip, 250)
 			g.rectangle('fill', mx + 8, my + 8, textWidth + 16, lines * g.getFont():getHeight() + 16)
 			g.setColor(255, 255, 255, self.tooltipAlpha * 255)
-			g.print(self.tooltip, mx + 16, my + 16)
+			g.printf(self.tooltip, mx + 16, my + 16, 250)
 		end
 	end
 end

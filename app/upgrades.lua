@@ -62,7 +62,53 @@ Upgrades.clear = function()
 				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 1: 30 damage, 100 radius\nNext Level: 60 damage, 200 radius\nCost: 125',
 				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 2: 60 damage, 200 radius\nNext Level: 90 damage, 300 radius\nCost: 150',
 				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 3: 90 damage, 300 radius\nMax Level'
+			},
+			fortify = {
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 0\nNext Level: +50 health\nCost: 50',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 1: +50 health\nNext Level: +100 health\nCost: 100',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 2: +100 health\nNext Level: +150 health\nCost: 150',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 3: +150 health\nMax Level',
 			}
-		}
+		},
+		vuju = {
+			chain = {
+				'???',
+				'???',
+				'???',
+				'???'
+			},
+			curse = {
+				'???',
+				'???',
+				'???',
+				'???'
+			},
+			fortify = {
+				'Fortify\nImbue the Vuju with spiritual energy, increasing their maximum health.\nLevel 0\nNext Level: +50 health\nCost: 50',
+				'Fortify\nImbue the Vuju with spiritual energy, increasing their maximum health.\nLevel 1: +50 health\nNext Level: +100 health\nCost: 100',
+				'Fortify\nImbue the Vuju with spiritual energy, increasing their maximum health.\nLevel 2: +100 health\nNext Level: +150 health\nCost: 150',
+				'Fortify\nImbue the Vuju with spiritual energy, increasing their maximum health.\nLevel 3: +150 health\nMax Level',
+			}
+		},
+		muju = {
+			warp = {
+				'Warp\nMuju distorts time around him while in the Juju realm, slowing time in the material realm.\nLevel 0\nNext Level: 50% slow\nCost: 200',
+				'Warp\nMuju distorts time around him while in the Juju realm, slowing time in the material realm.\nLevel 1: 50% slow\nNext Level: 67% slow\nCost: 400',
+				'Warp\nMuju distorts time around him while in the Juju realm, slowing time in the material realm.\nLevel 2: 67% slow\nNext Level: 75% slow\nCost: 600',
+				'Warp\nMuju distorts time around him while in the Juju realm, slowing time in the material realm.\nLevel 3: 75% slow\nMax Level',
+			},
+			harvest = {
+				'Harvest\nMuju taps into his Juju powers, allowing him to harvest Juju from Zuju and Vuju.\nLevel 0\nNext Level: Very Muju\nCost: 500',
+				'Harvest\nMuju taps into his Juju powers, allowing him to harvest Juju from Zuju and Vuju.\nLevel 1: Very Juju\nNext Level: Many Juju\nCost: 500',
+				'Harvest\nMuju taps into his Juju powers, allowing him to harvest Juju from Zuju and Vuju.\nLevel 2: Many Juju\nNext Level: Wow\nCost: 500',
+				'Harvest\nMuju taps into his Juju powers, allowing him to harvest Juju from Zuju and Vuju.\nLevel 3: Wow\nMax Level',
+			},
+			magnet = {
+				'Juju Magnet\nMuju uses his Juju powers to attract Juju to himself while in the Juju realm.  Juju magnets, how do they work?\nLevel 0\nNext Level: Weak Magnet\nCost: 200',
+				'Juju Magnet\nMuju uses his Juju powers to attract Juju to himself while in the Juju realm.  Juju magnets, how do they work?\nLevel 1: Weak Magnet\nNext Level: Strong Magnet\nCost: 300',
+				'Juju Magnet\nMuju uses his Juju powers to attract Juju to himself while in the Juju realm.  Juju magnets, how do they work?\nLevel 2: Strong Magnet\nNext Level: Superconductor Plasma Space-time Continuum Magnet\nCost: 400',
+				'Juju Magnet\nMuju uses his Juju powers to attract Juju to himself while in the Juju realm.  Juju magnets, how do they work?\nLevel 3: Superconductor Plasma Space-time Continuum Magnet\nMax Level',
+			}
+		},
 	}
 end
