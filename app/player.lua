@@ -4,7 +4,7 @@ Player.width = 45
 Player.height = 90
 
 Player.walkSpeed = 65
-Player.maxHealth = 10000
+Player.maxHealth = 100
 
 Player.depth = 0
 
@@ -179,7 +179,8 @@ function Player:summon()
 		self.animationLock = true
 		self.animationState = 'summon'
 		self.animator:set('summon', false)
-		ctx.sound:play({sound = ctx.sounds.summon})
+		local summonSound = love.math.random(1, 3)
+		ctx.sound:play({sound = ctx.sounds['summon' .. summonSound]})
 	end
 end
 
