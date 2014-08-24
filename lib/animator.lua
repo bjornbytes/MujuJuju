@@ -8,7 +8,6 @@ function Skeleton:init(data)
 	self.skeleton = spine.Skeleton.new(self.data)
 
 	function self.skeleton:createImage(attachment)
-		print('media/skeletons/' .. data.name .. '/' .. attachment.name .. '.png')
 		return love.graphics.newImage('media/skeletons/' .. data.name .. '/' .. attachment.name .. '.png')
 	end
 
