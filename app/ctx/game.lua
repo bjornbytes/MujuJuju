@@ -18,6 +18,7 @@ function Game:load()
 	self.upgrades = Upgrades
 	self.upgrades:clear()
 	self.target = Target()
+	self.sound = Sound()
 end
 
 function Game:update()
