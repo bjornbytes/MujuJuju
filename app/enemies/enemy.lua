@@ -11,6 +11,7 @@ function Enemy:init(data)
 	table.merge(data, self)	
 
 	self.health = self.maxHealth
+	self.healthDisplay = self.health
 
 	ctx.view:register(self)
 end
@@ -23,6 +24,7 @@ function Enemy:update()
 	end
 
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
+	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 end
 
 function Enemy:hurt(amount)

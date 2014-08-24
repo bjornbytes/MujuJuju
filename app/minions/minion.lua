@@ -13,6 +13,7 @@ function Minion:init(data)
 	table.merge(data, self)
 
 	self.health = self.maxHealth + ctx.upgrades[self.code].fortify * 50
+	self.healthDisplay = self.health
 
 	ctx.view:register(self)
 end
@@ -27,6 +28,7 @@ function Minion:update()
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 	self:hurt(2 * tickRate)
 	self.speed = math.max(self.speed - 1 * tickRate, 25)
+	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 end
 
 function Minion:attack()

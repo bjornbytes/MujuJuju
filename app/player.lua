@@ -10,6 +10,7 @@ Player.depth = 0
 
 function Player:init()
 	self.health = 100
+	self.healthDisplay = self.health
 	self.x = love.graphics.getWidth() / 2
 	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
 	self.prevx = self.x
@@ -116,6 +117,8 @@ function Player:update()
 	if self.ghost then
 		self.ghost:update()
 	end
+
+	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 	
 	self:animate()
 end
