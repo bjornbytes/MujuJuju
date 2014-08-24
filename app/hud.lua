@@ -219,9 +219,11 @@ function Hud:mousereleased(x, y, b)
 		local w, h = 600, 400
 		local xx
 
-		xx = x1 + (w * .25)
-		local idx = 1
-		for i = xx - 64, xx + 64, 64 do
+		xx = x1 + (w * .235)
+		idx = 1
+		for i = xx - 80, xx + 80, 78 do
+			local yy = h2 - 144 + 80
+			if idx == 1 or idx == 3 then yy = yy - 12 end
 			if math.inside(x, y, i - 24, h2 - 144 + 80, 48, 48) then
 				local key = ctx.upgrades.keys.zuju[idx]
 				local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1]
@@ -233,10 +235,12 @@ function Hud:mousereleased(x, y, b)
 			idx = idx + 1
 		end
 
-		xx = x1 + (w * .75)
-		local idx = 1
-		for i = xx - 64, xx + 64, 64 do
-			if math.inside(x, y, i - 24, h2 - 144 + 80, 48, 48) then
+		xx = x1 + (w * .78)
+		idx = 1
+		for i = xx - 78, xx + 78, 78 do
+			local yy = h2 - 144 + 80
+			if idx == 1 or idx == 3 then yy = yy - 12 end
+			if math.inside(x, y, i - 24, yy, 48, 48) then
 				local key = ctx.upgrades.keys.vuju[idx]
 				local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1]
 				if cost and ctx.player:spend(cost) then
@@ -248,8 +252,10 @@ function Hud:mousereleased(x, y, b)
 		end
 
 		xx = x1 + (w * .5)
-		local idx = 1
-		for i = xx - 64, xx + 64, 64 do
+		idx = 1
+		for i = xx - 156, xx + 140, 138 do
+			local yy = h2 + 16 + 70
+			if idx == 1 or idx == 3 then yy = yy - 12 end
 			if math.inside(x, y, i - 24, h2 + 16 + 80, 48, 48) then
 				local key = ctx.upgrades.keys.muju[idx]
 				local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1]
@@ -261,8 +267,7 @@ function Hud:mousereleased(x, y, b)
 			idx = idx + 1
 		end
 
-		g.rectangle('line', x1 + (w * .75) - 32, h2 - 144, 64, 64)
-		if #ctx.player.minions < 2 and math.inside(x, y, x1 + (w * .75) - 32, h2 - 144, 64, 64) then
+		if #ctx.player.minions < 2 and math.inside(x, y, x1 + (w * .775) - 32, h2 - 144, 64, 64) then
 			if ctx.player:spend(350) then
 				table.insert(ctx.player.minions, Voodoo)
 				table.insert(ctx.player.minioncds, 0)

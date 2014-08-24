@@ -73,7 +73,8 @@ function Game:keypressed(key)
 	self.player:keypressed(key)
 
 	if key == 'escape' then
-		love.event.quit()
+		Context:remove(ctx)
+		Context:add(Menu)
 	end
 end
 
