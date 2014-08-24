@@ -27,6 +27,17 @@ function Hud:health(x, y, health, max)
 
 end
 
+function Hud:stackingTable(stackingTable, x, range, delta)
+		local limit = x + range
+		for i = x - range, limit, 1 do
+			if not stackingTable[i] then
+				stackingTable[i] = 1 
+			else 
+				stackingTable[i] = stackingTable[i] + delta 
+			end
+		end
+end
+
 function Hud:gui()
 	local w, h = love.graphics.getDimensions()
 
@@ -42,32 +53,27 @@ function Hud:gui()
 	self:health(px - 30, py - 20, ctx.player.health, ctx.player.maxHealth)
 	self:health(ctx.shrine.x - 30, ctx.shrine.y - 65, ctx.shrine.health, ctx.shrine.maxHealth)
 
+	local stackingTable = {}
 	table.each(ctx.enemies.enemies, function(enemy)
+		local location = math.floor(enemy.x)
+		self:stackingTable(stackingTable, location, enemy.width * 2, .5)
+
 		if enemy.code == 'puju' then
-			self:health(enemy.x - 25, enemy.y - 25, enemy.health, enemy.maxHealth)
+			self:health(enemy.x - 25, enemy.y - 25 * stackingTable[location], enemy.health, enemy.maxHealth)
 		elseif enemy.code == 'spirit-bomb' then
-			self:health(enemy.x - 25, enemy.y - 45, enemy.health, enemy.maxHealth)
+			self:health(enemy.x - 25, enemy.y - 45 * stackingTable[location], enemy.health, enemy.maxHealth)
 		end
 	end)
 
-	local separationTable = {}
+	stackingTable = {}
 	table.each(ctx.minions.minions, function(minion)
-		local range = minion.width * 2
 		local location = math.floor(minion.x)
-		local i = location - range
-		local limit = location + range
-		for i = location - range, limit, 1 do
-			if not separationTable[i] then
-				separationTable[i] = 1 
-			else 
-				separationTable[i] = separationTable[i] + .5 
-			end
-		end
+		self:stackingTable(stackingTable, location, minion.width * 2, .5)
 
 		if minion.code == 'zuju' then
-			self:health(minion.x - 25, minion.y - 45 * separationTable[location], minion.health, minion.maxHealth)
+			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.health, minion.maxHealth)
 		elseif minion.code == 'vuju' then
-			self:health(minion.x - 25, minion.y - 45 * separationTable[location], minion.health, minion.maxHealth)
+			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.health, minion.maxHealth)
 		end
 	end)
 
