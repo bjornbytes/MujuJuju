@@ -17,7 +17,7 @@ function Player:init()
 	self.prevy = self.y
 	self.speed = 0
 	self.jujuRealm = 0
-	self.juju = 5000
+	self.juju = 50
 	self.dead = false
 	self.minions = {Zuju}
 	self.minioncds = {0}
@@ -57,7 +57,7 @@ function Player:init()
 		walk = function() return tickRate * math.abs(self.speed / self.walkSpeed) end,
 		idle = tickRate * .4,
 		summon = tickRate * 1.85,
-		resurrect = tickRate,
+		resurrect = tickRate * 2,
 		death = tickRate
 	}, f.val)
 

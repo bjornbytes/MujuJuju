@@ -45,9 +45,12 @@ function Hud:gui()
 	local w, h = love.graphics.getDimensions()
 
 	g.setFont(self.font)
-
-
-	g.setColor(255, 255, 255)
+	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
+	g.print('Zuju', 16, 100)
+	if #ctx.player.minions == 2 then
+		g.setColor(ctx.player.selectedMinion == 2 and {255, 255, 255} or {150, 150, 150})
+		g.print('Vuju', 16, 100 + g.getFont():getHeight() + 2)
+	end
 	
 	-- Health Bars
 
