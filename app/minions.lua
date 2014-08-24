@@ -28,16 +28,14 @@ function Minions:remove(minion)
 			ctx.jujus:add({amount = randomNum*0.50, x = minion.x, y = minion.y, velocity = 0,speed = love.math.random(1, 25)})
 		end
 	end
-	self.minions[minion] = nil
-
 	if minion.code == 'zuju' and ctx.upgrades.zuju.burst > 0 then
 		local radius = 100 * ctx.upgrades.zuju.burst
 		local damage = 30 * ctx.upgrades.zuju.burst
 		ctx.particles:add(Burst, {x = minion.x, y = minion.y, radius = radius})
-		table.each(ctx.enemies.enemies, function(enemy)
-			if math.distance(self.x, self.y, enemy.x, enemy.y) < radius then
-				enemy:hurt(damage)
-			end
+		local enemiesInRadius = ctx.target:getEnemiesInRange(minion, radius)
+		table.each(enemiesInRadius, function(enemy)
+			enemy:hurt(damage)
 		end)
 	end
+	self.minions[minion] = nil
 end
