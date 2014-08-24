@@ -11,8 +11,8 @@ Peon.maxHealth = 100
 Peon.attackRange = Peon.width / 2
 
 function Peon:update()
-	self:chooseTarget()
 	Enemy.update(self)
+	self:chooseTarget()
 end
 
 function Peon:chooseTarget()
@@ -41,7 +41,7 @@ function Peon:chooseTarget()
 
 	local dif = self.target.x - self.x
 	if math.abs(dif) > self.attackRange + self.target.width / 2 then
-		self.x = self.x + self.speed * math.sign(dif) * tickRate
+		self.x = self.x + self.speed * math.sign(dif) * tickRate * self.timeScale
 	end
 end
 
