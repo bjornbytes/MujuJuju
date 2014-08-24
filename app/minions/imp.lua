@@ -4,7 +4,7 @@ Imp = extend(Minion)
 
 Imp.code = 'zuju'
 Imp.cost = 10
-Imp.cooldown = 2
+Imp.cooldown = 3
 
 Imp.speed = 45
 Imp.damage = 20
