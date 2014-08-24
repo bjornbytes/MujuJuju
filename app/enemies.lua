@@ -35,14 +35,13 @@ end
 
 function Enemies:remove(enemy)
 	ctx.view:unregister(enemy)
-	local randomNum = love.math.random(10, 40)
-	--if randomNum <= 20 then
-		ctx.jujus:add({amount = randomNum, x = enemy.x, y = enemy.y, velocity = math.floor(love.math.random(-0.9, 1.9)),speed = love.math.random(1, 15)})
-	--[[elseif randomNum > 30 and randomNum <= 40 then
-		ctx.jujus:add({amount = randomNum*0.25, x = enemy.x, y = enemy.y, velocity = -1,speed = love.math.random(1, 25)})
-		ctx.jujus:add({amount = randomNum*0.75, x = enemy.x, y = enemy.y, velocity = 1,speed = love.math.random(1, 25)})
-	end]]
-
+	local x = love.math.random(30, 45)
+	if love.math.random() > .5 then
+		ctx.jujus:add({amount = x, x = enemy.x, y = enemy.y, velocity = math.floor(love.math.random(-0.9, 1.9)), speed = love.math.random(1, 15)})
+	else
+		ctx.jujus:add({amount = x / 2, x = enemy.x, y = enemy.y, velocity = -1, speed = love.math.random(1, 25)})
+		ctx.jujus:add({amount = x / 2, x = enemy.x, y = enemy.y, velocity = 1, speed = love.math.random(1, 25)})
+	end
 
 	table.each(ctx.minions.minions, function(minion)
 		if minion.target == enemy then

@@ -64,7 +64,7 @@ function Juju:update()
 		end
 	end
 
-	if not math.inside(self.x, self.y, 0, 0, love.graphics.getDimensions()) then
+	if not math.inside(self.x, self.y, -self.amount, -self.amount, love.graphics.getWidth() + self.amount, love.graphics.getHeight() + self.amount) then
 		ctx.jujus:remove(self)
 	end
 end
