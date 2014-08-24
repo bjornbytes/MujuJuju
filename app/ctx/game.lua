@@ -13,6 +13,7 @@ function Game:load()
 	self.particles = Particles()
 	self.effects = Effects()
 	self.effects:add(Vignette)
+	self.effects:add(Bloom)
 	self.hud = Hud()
 	self.upgrades = Upgrades
 	self.upgrades:clear()
