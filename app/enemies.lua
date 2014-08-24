@@ -35,7 +35,7 @@ end
 
 function Enemies:remove(enemy)
 	ctx.view:unregister(enemy)
-	local x = love.math.random(30, 45)
+	local x = love.math.random(15, 25)
 	if love.math.random() > .5 then
 		ctx.jujus:add({amount = x, x = enemy.x, y = enemy.y, velocity = math.floor(love.math.random(-0.9, 1.9)), speed = love.math.random(1, 15)})
 	else
