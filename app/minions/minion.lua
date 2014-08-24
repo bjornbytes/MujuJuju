@@ -12,7 +12,7 @@ function Minion:init(data)
 
 	table.merge(data, self)
 
-	self.health = self.maxHealth
+	self.health = self.maxHealth + ctx.upgrades[self.code].fortify * 50
 
 	ctx.view:register(self)
 end

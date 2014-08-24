@@ -2,7 +2,6 @@ Minions = class()
 
 function Minions:init()
 	self.minions = {}
-	self.dropJuju = false
 end
 
 function Minions:update()
@@ -16,7 +15,7 @@ end
 
 function Minions:remove(minion)
 	ctx.view:unregister(minion)
-	if self.dropJuju then
+	if ctx.upgrades.muju.harvest then
 		local randomNum = love.math.random(10, 45)
 		if randomNum <= 20 then
 			ctx.jujus:add({amount = randomNum, x = minion.x, y = minion.y, velocity = math.floor(love.math.random(-0.9, 1.9)),speed = love.math.random(1, 15)})

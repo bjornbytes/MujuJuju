@@ -2,12 +2,13 @@ require 'app/minions/minion'
 
 Voodoo = extend(Minion)
 
-Voodoo.cost = 10
+Voodoo.code = 'vuju'
+Voodoo.cost = 30 
 Voodoo.cooldown = 5
 
 Voodoo.damage = 17
 Voodoo.fireRate = 1.7
-Voodoo.attackRange = Voodoo.width * 20
+Voodoo.attackRange = Voodoo.width * 8 
 Voodoo.maxHealth = 70
 
 function Voodoo:update()
@@ -36,7 +37,7 @@ function Voodoo:draw()
 	g.setColor(255, 255, 0)
 	g.rectangle('line', self.x - self.width / 2, self.y, self.width, self.height)
 
-	g.setColor(255, 255, 255)
+	g.setColor(255, 255, 255, 75)
 	g.circle('line', self.x, self.y, self.attackRange)
 end
 

@@ -2,6 +2,7 @@ require('app/minions/minion')
 
 Imp = extend(Minion)
 
+Imp.code = 'zuju'
 Imp.cost = 10
 Imp.cooldown = 5
 
