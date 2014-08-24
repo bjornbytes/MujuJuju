@@ -12,7 +12,7 @@ Voodoo.attackRange = Voodoo.width * 8
 Voodoo.maxHealth = 70
 
 function Voodoo:update()
-	local distance = math.huge
+	--[[local distance = math.huge
 	table.each(ctx.enemies.enemies, function(enemy)
 		local dif = math.abs(enemy.x - self.x)
 		if dif < distance then
@@ -20,7 +20,8 @@ function Voodoo:update()
 			self.target = enemy
 		end
 	end)
-	
+	]]
+	self.target = ctx.target:getClosestEnemy(self)
 	if self.target then
 		self:attack()
 	end
