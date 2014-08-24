@@ -8,7 +8,6 @@ Upgrades.clear = function()
 	}
 
 	Upgrades.vuju = {
-		unlock = 0,
 		chain = 0,
 		curse = 0,
 		fortify = 0
@@ -22,7 +21,7 @@ Upgrades.clear = function()
 
 	Upgrades.names = {
 		zuju = {cleave = 'Cleave', burst = 'Burst', fortify = 'Fortify'},
-		vuju = {unlock = 'Unlock', chain = 'Chain', curse = 'Curse', fortify = 'Fortify'},
+		vuju = {chain = 'Chain', curse = 'Curse', fortify = 'Fortify'},
 		muju = {warp = 'Warp', harvest = 'Harvest', magnet = 'Magnet'}
 	}
 
@@ -33,7 +32,6 @@ Upgrades.clear = function()
 			fortify = {50, 100, 150}
 		},
 		vuju = {
-			unlock = {200},
 			chain = {100, 150, 200},
 			curse = {60, 100, 140},
 			fortify = {50, 100, 150}
@@ -47,7 +45,7 @@ Upgrades.clear = function()
 
 	Upgrades.keys = {
 		zuju = {'cleave', 'burst', 'fortify'},
-		vuju = {'unlock', 'chain', 'curse', 'fortify'},
+		vuju = {'chain', 'curse', 'fortify'},
 		muju = {'warp', 'harvest', 'magnet'}
 	}
 end
