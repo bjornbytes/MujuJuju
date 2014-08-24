@@ -14,6 +14,7 @@ function Juju:init(data)
 	self.prevy = self.y
 	self.sinState = math.pi - 1
 	self.angle = love.math.random() * 2 * math.pi
+	self.depth = self.depth + love.math.random()
 	--self.velocity = 1
 	--self.speed = 20
 	table.merge(data, self)
