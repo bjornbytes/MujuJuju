@@ -19,6 +19,7 @@ function Enemies:update()
 			end
 		end
 
+		spawnType = SpiritBomb
 		self:add(spawnType, {x = x})
 		self.minEnemyRate = math.max(self.minEnemyRate - .05, 1.5)
 		self.maxEnemyRate = math.max(self.maxEnemyRate - .08, 2.5)
@@ -48,17 +49,6 @@ function Enemies:remove(enemy)
 			minion.target = nil
 		end
 	end)
-
-	if self.code == 'zuju' and ctx.upgrades.zuju.burst > 0 then
-		local radius = 100 * ctx.upgrades.zuju.burst
-		local damage = 30 * ctx.upgrades.zuju.burst
-		ctx.particles:add(Burst, {x = self.x, y = self.y, radius = radius})
-		table.each(ctx.enemies.enemies, function(enemy)
-			if math.distance(self.x, self.y, enemy.x, enemy.y) < radius then
-				enemy:hurt(damage)
-			end
-		end)
-	end
 
 	self.enemies[enemy] = nil
 end
