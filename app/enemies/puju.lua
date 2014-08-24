@@ -12,6 +12,7 @@ Puju.maxHealth = 100
 Puju.attackRange = Puju.width / 2
 
 function Puju:init(data)
+	self.depth = self.depth + love.math.random()
 	self.image = love.graphics.newImage('media/skeletons/puju/puju.png')
 	Enemy.init(self, data)
 end
