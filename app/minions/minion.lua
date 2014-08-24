@@ -40,12 +40,10 @@ function Minion:attack()
 				else
 					if self.target:hurt(self.damage) then
 						self.target = nil
-					end					
-					for i=1, ctx.upgrades.zuju.cleave+1,1 do
-						if targets[i] ~= nil and targets[i] ~= self.target then
-							if targets[i]:hurt(self.damage) then
-								targets[i] = nil
-							end
+					end
+					for i = 1, math.min(ctx.upgrades.zuju.cleave + 1, #targets) do
+						if targets[i] ~= self.target then
+							targets[i]:hurt(self.damage)
 						end
 					end
 				end
