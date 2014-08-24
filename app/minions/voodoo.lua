@@ -89,9 +89,14 @@ function Voodoo:attack()
 						ct = 2
 					end
 				end
-				
+
 				for i = 1, ct do
 					ctx.particles:add(Lightning, {x = self.target.x})
+					if ctx.upgrades.vuju.curse > 0 then
+						if love.math.random() < ctx.upgrades.vuju.curse * .2 then
+							self.target.slow = 1
+						end
+					end
 					if self.target:hurt(self.damage) then
 						self.target = nil
 						break
@@ -107,7 +112,7 @@ function Voodoo:attack()
 		ctx.particles:add(Curse, {x = self.target.x - Curse.width / 2, y = self.target.y - 16})
 		table.each(ctx.enemies.enemies, function(enemy)
 			if self.curseFireTimer > 0 then
-				-- curse you!
+				
 			end
 		end)
 		self.curseFireTimer = self.curseFireRate - (.5 * ctx.upgrades.vuju.curse)

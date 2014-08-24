@@ -6,6 +6,7 @@ function Enemy:init(data)
 	self.target = ctx.shrine
 	self.x = 0
 	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
+	self.slow = 0
 	self.fireTimer = 0
 
 	table.merge(data, self)	
@@ -25,6 +26,7 @@ function Enemy:update()
 
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+	self.slow = math.lerp(self.slow, 0, 5 * tickRate)
 end
 
 function Enemy:hurt(amount)
