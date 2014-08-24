@@ -7,26 +7,36 @@ Lightning.maxHealth = .2
 function Lightning:init(data)
 	self.range = 50
 	self.targetX = data.x
-	self.y = 0
 	self.health = self.maxHealth
+	self.path = self:lightning()
 	Particle.init(self, data)
 end
 
-function Lightning:randomLine(range)
+function Lightning:lightning()
+	local path = {}
+
+	local start = {x = self.targetX, y = 0}
+	table.insert(path, start)
+
+	for i = 1, 10 do
+		local x, y = self:randomLine(start, self.range)
+		table.insert(path, {x = x, y = y})
+		start = path[#path]
+	end
+	table.insert(path, {x = self.targetX, y = love.graphics.getHeight() - ctx.environment.groundHeight})
+
+	return path
+end
+
+function Lightning:randomLine(start, range)
 	local ending = {}
-	ending.x = self.x + love.math.random(-range, range)
-	ending.y = self.y + love.math.random(0, range)
+	ending.x = start.x + love.math.random(-range, range)
+	ending.y = start.y + love.math.random(0, range)
 
 	return ending.x, ending.y
 end
 
 function Lightning:update()
-	if self.health < .1 then
-		self.range = 0
-		self.y = ctx.environment.groundHeight
-		self.x = self.targetX
-	end
-
 	self.health = timer.rot(self.health, function()
 		ctx.particles:remove(self)
 	end)
@@ -35,12 +45,14 @@ end
 function Lightning:draw()
 	local g = love.graphics
 	g.setColor(255, 255, 220, 128 + (self.health / self.maxHealth) * 128)
-	local x, y = self:randomLine(self.range)
-	g.setLineWidth(love.math.random(4, 10))
-	g.line(self.x, self.y, x, y)
-	g.setLineWidth(1)
 
-	self.x = x
-	self.y = y
+	table.each(self.path, function(path, index)
+		g.setLineWidth(5)
+		if index < #self.path then
+			g.line(path.x, path.y, self.path[index + 1].x, self.path[index + 1].y)
+		end
+	end)
+
+	g.setLineWidth(1)
 end
 
