@@ -35,6 +35,7 @@ function Voodoo:update()
 	end
 
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
+	self.curseFireTimer = self.curseFireTimer - math.min(self.curseFireTimer, tickRate * self.timeScale)
 end
 
 function Voodoo:draw()
@@ -52,5 +53,15 @@ end
 
 function Voodoo:attack()
 	Minion.attack(self)
+
+	if self.curseFireTimer == 0 and ctx.upgrades.vuju.curse > 0 then
+		ctx.particles:add(Curse, {x = self.target.x - Curse.width / 2, y = self.target.y - 16})
+		table.each(ctx.enemies.enemies, function(enemy)
+			if self.curseFireTimer > 0 then
+				-- curse you!
+			end
+		end)
+		self.curseFireTimer = self.curseFireRate - (.5 * ctx.upgrades.vuju.curse)
+	end
 end
 
