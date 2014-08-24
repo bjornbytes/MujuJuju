@@ -50,5 +50,16 @@ function Enemies:remove(enemy)
 		end
 	end)
 
+	if enemy.code == 'zuju' and ctx.upgrades.zuju.burst > 0 then
+		local radius = 100 * ctx.upgrades.zuju.burst
+		local damage = 30 * ctx.upgrades.zuju.burst
+		ctx.particles:add(Burst, {x = self.x, y = self.y, radius = radius})
+		table.each(ctx.enemies.enemies, function(enemy)
+			if math.distance(self.x, self.y, enemy.x, enemy.y) < radius then
+				enemy:hurt(damage)
+			end
+		end)
+	end
+
 	self.enemies[enemy] = nil
 end

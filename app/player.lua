@@ -68,7 +68,7 @@ function Player:update()
 	self.prevx = self.x
 	self.prevy = self.y
 
-	if self.dead or self.animationState == 'summon' then
+	if self.dead or self.animationState == 'summon' or self.animationState == 'death' or self.animationState == 'resurrect' then
 		self.speed = 0
 	else
 		if love.mouse.isDown('l') then
@@ -185,7 +185,7 @@ function Player:hurt(amount)
 	-- Check whether or not to enter Juju Realm
 	if self.health <= 0 and self.jujuRealm == 0 then
   	-- We jujuin'
-		self.jujuRealm = 5 + math.min(tick * tickRate / 45, 5)
+		self.jujuRealm = 6 + math.min(tick * tickRate / 45, 4)
 		self.dead = true
 		self.ghost = GhostPlayer()
 

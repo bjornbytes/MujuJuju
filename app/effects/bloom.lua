@@ -38,6 +38,11 @@ function Bloom:applyEffect(source, target)
 		g.draw(self.canvas, 400, 300, 0, 4 + i, 4 + i, 400, 300)
 	end
   g.setBlendMode('alpha')
+
+	if ctx.player.dead then
+		ctx.player.ghost:draw()
+	end
+
   g.setCanvas()
 
   self.canvas:clear()
