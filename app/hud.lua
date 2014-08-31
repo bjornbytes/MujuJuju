@@ -20,13 +20,13 @@ function Hud:update()
 	self.tooltipAlpha = math.lerp(self.tooltipAlpha, self.tooltipHover and 1 or 0, 12 * tickRate)
 end
 
-function Hud:health(x, y, health, max)
+function Hud:health(x, y, health, max, color)
 	local g = love.graphics
 	health = (100 * health) / max
 
 	g.setColor(0, 0, 0, 160)
 	g.rectangle('fill', x, y, 100 * .6, 3)
-	g.setColor(255, 0, 0)
+	g.setColor(color)
 	g.rectangle('fill', x, y, health * .6, 3)
 end
 
@@ -55,9 +55,11 @@ function Hud:gui()
 	-- Health Bars
 
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
+	local green = {0, 255, 0}
+	local red = {255, 0, 0}
 
-	self:health(px - 30, py - 20, ctx.player.healthDisplay, ctx.player.maxHealth)
-	self:health(ctx.shrine.x - 30, ctx.shrine.y - 65, ctx.shrine.healthDisplay, ctx.shrine.maxHealth)
+	self:health(px - 30, py - 20, ctx.player.healthDisplay, ctx.player.maxHealth, green)
+	self:health(ctx.shrine.x - 30, ctx.shrine.y - 65, ctx.shrine.healthDisplay, ctx.shrine.maxHealth, green)
 
 	local stackingTable = {}
 	table.each(ctx.enemies.enemies, function(enemy)
@@ -65,9 +67,9 @@ function Hud:gui()
 		self:stackingTable(stackingTable, location, enemy.width * 2, .5)
 
 		if enemy.code == 'puju' then
-			self:health(enemy.x - 25, enemy.y - 25 * stackingTable[location], enemy.healthDisplay, enemy.maxHealth)
+			self:health(enemy.x - 25, enemy.y - 25 * stackingTable[location], enemy.healthDisplay, enemy.maxHealth, red)
 		elseif enemy.code == 'spirit-bomb' then
-			self:health(enemy.x - 25, enemy.y - 45 * stackingTable[location], enemy.healthDisplay, enemy.maxHealth)
+			self:health(enemy.x - 25, enemy.y - 45 * stackingTable[location], enemy.healthDisplay, enemy.maxHealth, red)
 		end
 	end)
 
@@ -77,9 +79,9 @@ function Hud:gui()
 		self:stackingTable(stackingTable, location, minion.width * 2, .5)
 
 		if minion.code == 'zuju' then
-			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.healthDisplay, minion.maxHealth)
+			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.healthDisplay, minion.maxHealth, green)
 		elseif minion.code == 'vuju' then
-			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.healthDisplay, minion.maxHealth)
+			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.healthDisplay, minion.maxHealth, green)
 		end
 	end)
 
