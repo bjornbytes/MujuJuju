@@ -10,7 +10,7 @@ Voodoo.speed = 0
 
 Voodoo.damage = 17
 Voodoo.fireRate = 1.7
-Voodoo.attackRange = Voodoo.width * 8 
+Voodoo.attackRange = Voodoo.width * 3
 
 function Voodoo:init(data)
 	Minion.init(self, data)
