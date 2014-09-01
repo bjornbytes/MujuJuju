@@ -90,5 +90,4 @@ end
 
 function Game:mousereleased(...)
 	if self.hud.upgrading or self.paused then return self.hud:mousereleased(...) end
-	self.player:mousereleased(...)
 end

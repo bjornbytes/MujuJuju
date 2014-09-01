@@ -17,7 +17,7 @@ function SpiritBomb:init(data)
 end
 
 function SpiritBomb:update()
-	self.timeScale = 1 / (1 + ctx.upgrades.muju.warp * (ctx.player.dead and 1 or 0))
+	self.timeScale = 1
 	local dif = self.target.x - self.x
 	self.target = ctx.target:getShrine(self)
 	if math.abs(dif) > 20 then

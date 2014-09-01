@@ -17,7 +17,8 @@ function Player:init()
 	self.prevy = self.y
 	self.speed = 0
 	self.jujuRealm = 0
-	self.juju = 50
+	self.juju = 30
+	self.jujuTimer = 1
 	self.dead = false
 	self.minions = {Zuju}
 	self.minioncds = {0}
@@ -123,6 +124,10 @@ function Player:update()
 	end
 
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+	self.jujuTimer = timer.rot(self.jujuTimer, function()
+		self.juju = self.juju + 1
+		return 1
+	end)
 	
 	self:animate()
 end
@@ -177,9 +182,20 @@ end
 function Player:summon()
 	local minion = self.minions[self.selectedMinion]
 	local cooldown = self.minioncds[self.selectedMinion]
-	if cooldown == 0 and self:spend(minion.cost) then
-		ctx.minions:add(minion, {x = self.x + love.math.random(-10, 20), direction = self.direction})
-		self.minioncds[self.selectedMinion] = minion.cooldown
+	local cost = minion.cost
+	if minion.code == 'zuju' then
+		local upgradeCount = ctx.upgrades.zuju.cleave + ctx.upgrades.zuju.fortify + ctx.upgrades.zuju.burst
+		cost = cost + 5 * upgradeCount
+	end
+	if cooldown == 0 and self:spend(cost) then
+		ctx.minions:add(minion, {x = self.x + love.math.random(-20, 20), direction = self.direction})
+		self.minioncds[self.selectedMinion] = minion.cooldown * (1 - (.1 * ctx.upgrades.muju.flow))
+		if ctx.upgrades.muju.flow >= 3 and love.math.random() < .1 then
+			self.minioncds[self.selectedMinion] = 0
+		end
+		if ctx.upgrades.muju.flow == 5 and love.math.random() < .1 then
+			ctx.minions:add(minion, {x = self.x + love.math.random(-40, 40), direction = self.direction})
+		end
 
 		self.animationLock = true
 		self.animationState = 'summon'
@@ -231,14 +247,7 @@ function Player:keyreleased(key)
 end
 
 function Player:mousepressed(x, y, button)
-	if button == 'r' and not summoned then
-		self:summon()
-		self.summoned = true
-	end
-end
-
-function Player:mousereleased(x, y, button)
 	if button == 'r' then
-		self.summoned = false
+		self:summon()
 	end
 end

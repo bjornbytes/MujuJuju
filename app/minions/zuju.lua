@@ -4,7 +4,7 @@ Zuju = extend(Minion)
 
 Zuju.code = 'zuju'
 Zuju.cost = 10
-Zuju.cooldown = 2.5
+Zuju.cooldown = 4
 
 Zuju.speed = 45
 Zuju.damage = 20
@@ -16,6 +16,9 @@ function Zuju:init(data)
 	Minion.init(self, data)
 	self.depth = self.depth + love.math.random()
 	self.skeleton = Skeleton({name = 'zuju', x = self.x, y = self.y + self.height + 8, scale = .5})
+	local healths = {[0] = 80, 100, 130, 175, 230, 300}
+	self.maxHealth = healths[ctx.upgrades.zuju.fortify]
+	self.health = self.maxHealth
 
 	self.animator = Animator({
 		skeleton = self.skeleton,
@@ -104,4 +107,14 @@ function Zuju:hurt(amount)
 		end
 		return true
 	end
+end
+
+function Zuju:damage()
+	local damage = 20 + (5 + ctx.upgrades.zuju.cleave) * ctx.upgrades.zuju.cleave
+	damage = damage + love.math.random(-3, 3)
+	local chance = .05 + (ctx.upgrades.zuju.cleave == 5 and .05 or 0)
+	if ctx.upgrades.zuju.cleave >= 3 and love.math.random() < chance then
+		damage = damage * 2
+	end
+	return damage
 end

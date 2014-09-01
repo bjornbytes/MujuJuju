@@ -3,8 +3,8 @@ Upgrades = {}
 Upgrades.clear = function()
 	Upgrades.zuju = {
 		cleave = 0,
-		burst = 0,
-		fortify = 0
+		fortify = 0,
+		burst = 0
 	}
 
 	Upgrades.vuju = {
@@ -14,22 +14,22 @@ Upgrades.clear = function()
 	}
 
 	Upgrades.muju = {
-		warp = 0,
-		harvest = 0,
-		magnet = 0
+		flow = 0,
+		zeal = 0,
+		imbue = 0
 	}
 
 	Upgrades.names = {
-		zuju = {cleave = 'Cleave', burst = 'Burst', fortify = 'Fortify'},
+		zuju = {cleave = 'Cleave', fortify = 'Fortify', burst = 'Burst'},
 		vuju = {chain = 'Chain', curse = 'Curse', fortify = 'Fortify'},
-		muju = {warp = 'Warp', harvest = 'Harvest', magnet = 'Magnet'}
+		muju = {flow = 'Flow', zeal = 'Zeal', imbue = 'Imbue'}
 	}
 
 	Upgrades.costs = {
 		zuju = {
-			cleave = {80, 100, 120},
-			burst = {100, 125, 150},
-			fortify = {50, 100, 150}
+			cleave = {45, 65, 95, 135, 185},
+			fortify = {35, 60, 100, 150, 250},
+			burst = {100, 125, 150}
 		},
 		vuju = {
 			chain = {100, 150, 200},
@@ -37,37 +37,41 @@ Upgrades.clear = function()
 			fortify = {50, 100, 150}
 		},
 		muju = {
-			warp = {200, 400, 600},
-			harvest = {500, 500, 500},
-			magnet = {200, 300, 400}
+			flow = {50, 70, 90, 110, 130},
+			zeal = {30, 65, 100, 135, 170},
+			imbue = {40, 70, 100, 130, 150}
 		}
 	}
 
 	Upgrades.keys = {
-		zuju = {'cleave', 'burst', 'fortify'},
+		zuju = {'cleave', 'fortify', 'burst'},
 		vuju = {'chain', 'curse', 'fortify'},
-		muju = {'warp', 'harvest', 'magnet'}
+		muju = {'flow', 'zeal', 'imbue'}
 	}
 
 	Upgrades.tooltips = {
 		zuju = {
 			cleave = {
-				'Cleave\nZuju cleave enemies around their original target.\nLevel 0\nNext Level: 1 extra target\nCost: 80',
-				'Cleave\nZuju damage enemies around their original target.\nLevel 1: 1 extra target\nNext Level: 2 extra targets\nCost: 100',
-				'Cleave\nZuju damage enemies around their original target.\nLevel 2: 2 extra target\nNext Level: 3 extra targets\nCost: 120',
-				'Cleave\nZuju damage enemies around their original target.\nLevel 3: 3 extra target\nMax Level'
+				'Cleave\nZuju strike with increased strength.\nLevel 0: 17 - 23 damage\nNext Level: 23 - 29 damage\nCost: 45',
+				'Cleave\nZuju strike with increased strength.\nLevel 1: 23 - 29 damage\nNext Level: 31 - 37 damage\nCost: 65',
+				'Cleave\nZuju strike with increased strength.\nLevel 2: 31 - 37 damage\nNext Level: 41 - 47 damage, 5% chance to critically strike\nCost: 95',
+				'Cleave\nZuju strike with increased strength.\nLevel 3: 41 - 47 damage, 5% chance to critically strike\nNext Level: 53 - 59 damage, 5% chance to critically strike\nCost: 135',
+				'Cleave\nZuju strike with increased strength.\nLevel 4: 53 - 59 damage, 5% chance to critically strike\nNext Level: 67 - 73 damage, 10% chance to critically strike\nCost: 185',
+				'Cleave\nZuju strike with increased strength.\nLevel 5: 67 - 73 damage, 10% chance to critically strike\nMax Level'
+			},
+			fortify = {
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 0: 80 health\nNext Level: 100 health\nCost: 35',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 1: 100 health\nNext Level: 130 health\nCost: 60',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 2: 130 health\nNext Level: 175 health\nCost: 100',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 3: 175 health\nNext Level: 230 health\nCost: 150',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 4: 230 health\nNext Level: 300 health\nCost: 250',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 5: 300 health\nMax Level'
 			},
 			burst = {
 				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 0\nNext Level: 20 damage, 75 radius\nCost: 100',
 				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 1: 20 damage, 75 radius\nNext Level: 40 damage, 125 radius\nCost: 125',
 				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 2: 40 damage, 125 radius\nNext Level: 60 damage, 175 radius\nCost: 150',
 				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 3: 60 damage, 175 radius\nMax Level'
-			},
-			fortify = {
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 0\nNext Level: +50 health\nCost: 50',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 1: +50 health\nNext Level: +100 health\nCost: 100',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 2: +100 health\nNext Level: +150 health\nCost: 150',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 3: +150 health\nMax Level'
 			}
 		},
 		vuju = {
@@ -91,23 +95,29 @@ Upgrades.clear = function()
 			}
 		},
 		muju = {
-			warp = {
-				'Warp\nMuju distorts time around him while in the Juju realm, slowing time in the material realm.\nLevel 0\nNext Level: 50% slow\nCost: 200',
-				'Warp\nMuju distorts time around him while in the Juju realm, slowing time in the material realm.\nLevel 1: 50% slow\nNext Level: 67% slow\nCost: 400',
-				'Warp\nMuju distorts time around him while in the Juju realm, slowing time in the material realm.\nLevel 2: 67% slow\nNext Level: 75% slow\nCost: 600',
-				'Warp\nMuju distorts time around him while in the Juju realm, slowing time in the material realm.\nLevel 3: 75% slow\nMax Level',
+			flow = {
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 0\nNext Level: 10% cooldown reduction\nCost: 50',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 1: 10% cooldown reduction\nNext Level: 20% cooldown reduction\nCost: 70',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 2: 20% cooldown reduction\nNext Level: 30% cooldown reduction, 10% chance to instantly refresh cooldown\nCost: 90',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 3: 30% cooldown reduction, 10% chance to instantly refresh cooldown\nNext Level: 40% cooldown reduction, 10% chance to instantly refresh cooldown\nCost: 110',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 4: 40% cooldown reduction, 10% chance to instantly refresh cooldown\nNext Level: 50% cooldown reduction, 10% chance to instantly refresh cooldown, 10% chance to summon an extra minion\nCost: 130',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 5: 50% cooldown reduction, 10% chance to instantly refresh cooldown, 10% chance to summon an extra minion\nMax Level'
 			},
-			harvest = {
-				'Harvest\nMuju taps into his Juju powers, allowing him to harvest Juju from Zuju and Vuju.\nLevel 0\nNext Level: Very Muju\nCost: 500',
-				'Harvest\nMuju taps into his Juju powers, allowing him to harvest Juju from Zuju and Vuju.\nLevel 1: Very Juju\nNext Level: Many Juju\nCost: 500',
-				'Harvest\nMuju taps into his Juju powers, allowing him to harvest Juju from Zuju and Vuju.\nLevel 2: Many Juju\nNext Level: Wow\nCost: 500',
-				'Harvest\nMuju taps into his Juju powers, allowing him to harvest Juju from Zuju and Vuju.\nLevel 3: Wow\nMax Level',
+			zeal = {
+				'Zeal\nMuju moves more freely in the juju realm.\nLevel 0\nNext Level: 20% faster\nCost: 30',
+				'Zeal\nMuju moves more freely in the juju realm.\nLevel 1: 20% faster\nNext Level: 40% faster\nCost: 65',
+				'Zeal\nMuju moves more freely in the juju realm.\nLevel 2: 40% faster\nNext Level: 60% faster, juju magnet\nCost: 100',
+				'Zeal\nMuju moves more freely in the juju realm.\nLevel 3: 60% faster, juju magnet\nNext Level: 80% faster, juju magnet\nCost: 135',
+				'Zeal\nMuju moves more freely in the juju realm.\nLevel 4: 80% faster, juju magnet\nNext Level: 100% faster, juju magnet, ability to return to your body\nCost: 170',
+				'Zeal\nMuju moves more freely in the juju realm.\nLevel 5: 100% faster, juju magnet, ability to return to your body\nMax Level',
 			},
-			magnet = {
-				'Juju Magnet\nMuju uses his Juju powers to attract Juju to himself while in the Juju realm.  Juju magnets, how do they work?\nLevel 0\nNext Level: Weak Magnet\nCost: 200',
-				'Juju Magnet\nMuju uses his Juju powers to attract Juju to himself while in the Juju realm.  Juju magnets, how do they work?\nLevel 1: Weak Magnet\nNext Level: Strong Magnet\nCost: 300',
-				'Juju Magnet\nMuju uses his Juju powers to attract Juju to himself while in the Juju realm.  Juju magnets, how do they work?\nLevel 2: Strong Magnet\nNext Level: Superconductor Plasma Space-time Continuum Magnet\nCost: 400',
-				'Juju Magnet\nMuju uses his Juju powers to attract Juju to himself while in the Juju realm.  Juju magnets, how do they work?\nLevel 3: Superconductor Plasma Space-time Continuum Magnet\nMax Level',
+			imbue = {
+				'Imbue\nThe shrine becomes imbued with magical juju powers, allowing it to recover health over time.\nLevel 0\nNext Level: .5% max health per second\nCost: 40',
+				'Imbue\nThe shrine becomes imbued with magical juju powers, allowing it to recover health over time.\nLevel 1: .5% max health per second\nNext Level: 1.0% max health per second\nCost: 70',
+				'Imbue\nThe shrine becomes imbued with magical juju powers, allowing it to recover health over time.\nLevel 2: 1.0% max health per second\nNext Level: 1.5% max health per second, reflects 50% damage\nCost: 100',
+				'Imbue\nThe shrine becomes imbued with magical juju powers, allowing it to recover health over time.\nLevel 3: 1.5% max health per second, reflects 50% damage\nNext Level: 2.0% max health per second, reflects 50% damage\nCost: 130',
+				'Imbue\nThe shrine becomes imbued with magical juju powers, allowing it to recover health over time.\nLevel 4: 2.0% max health per second, reflects 50% damage\nNext Level: 2.5% max health per second, reflects 50% damage, slows enemies approaching the shrine.\nCost: 170',
+				'Imbue\nThe shrine becomes imbued with magical juju powers, allowing it to recover health over time.\nLevel 5: 2.5% max health per second, reflects 50% damage, slows enemies approaching the shrine\nMax Level',
 			}
 		},
 	}
