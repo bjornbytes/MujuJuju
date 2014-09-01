@@ -3,8 +3,8 @@ require('app/minions/minion')
 Zuju = extend(Minion)
 
 Zuju.code = 'zuju'
-Zuju.cost = 10
-Zuju.cooldown = 4
+Zuju.cost = 12
+Zuju.cooldown = 3
 
 Zuju.speed = 45
 Zuju.damage = 20
@@ -14,8 +14,11 @@ Zuju.maxHealth = 80
 
 function Zuju:init(data)
 	Minion.init(self, data)
-	self.depth = self.depth + love.math.random()
-	self.skeleton = Skeleton({name = 'zuju', x = self.x, y = self.y + self.height + 8, scale = .5})
+	local r = love.math.random(-20, 20)
+	self.y = self.y + r
+	local scale = .5 + (r / 210)
+	self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
+	self.skeleton = Skeleton({name = 'zuju', x = self.x, y = self.y + self.height + 8, scale = scale})
 	local healths = {[0] = 80, 100, 130, 175, 230, 300}
 	self.maxHealth = healths[ctx.upgrades.zuju.fortify]
 	self.health = self.maxHealth

@@ -8,7 +8,7 @@ Puju.height = 24
 Puju.speed = 40
 Puju.damage = 18
 Puju.fireRate = 1.1
-Puju.maxHealth = 100
+Puju.maxHealth = 50
 Puju.attackRange = Puju.width / 2
 
 Puju.buttRate = 4
@@ -20,8 +20,8 @@ function Puju:init(data)
 	self.depth = self.depth + love.math.random()
 	self.image = love.graphics.newImage('media/skeletons/puju/puju.png')
 	self.depth = self.depth + love.math.random()
-	self.maxHealth = self.maxHealth + 4 * ctx.enemies.level
-	self.damage = self.damage + 2 * ctx.enemies.level
+	self.maxHealth = self.maxHealth + 6 * ctx.enemies.level
+	self.damage = self.damage + 1 * ctx.enemies.level
 	Enemy.init(self, data)
 end
 

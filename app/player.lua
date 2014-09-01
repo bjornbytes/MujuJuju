@@ -6,7 +6,7 @@ Player.height = 90
 Player.walkSpeed = 65
 Player.maxHealth = 100
 
-Player.depth = 0
+Player.depth = -10
 
 function Player:init()
 	self.health = 100
@@ -185,7 +185,7 @@ function Player:summon()
 	local cost = minion.cost
 	if minion.code == 'zuju' then
 		local upgradeCount = ctx.upgrades.zuju.cleave + ctx.upgrades.zuju.fortify + ctx.upgrades.zuju.burst
-		cost = cost + 5 * upgradeCount
+		cost = cost + 3 * upgradeCount
 	end
 	if cooldown == 0 and self:spend(cost) then
 		ctx.minions:add(minion, {x = self.x + love.math.random(-20, 20), direction = self.direction})

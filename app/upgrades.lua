@@ -37,7 +37,7 @@ Upgrades.clear = function()
 			fortify = {50, 100, 150}
 		},
 		muju = {
-			flow = {50, 70, 90, 110, 130},
+			flow = {30, 50, 70, 90, 110},
 			zeal = {30, 65, 100, 135, 170},
 			imbue = {40, 70, 100, 130, 150}
 		}
@@ -96,11 +96,11 @@ Upgrades.clear = function()
 		},
 		muju = {
 			flow = {
-				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 0\nNext Level: 10% cooldown reduction\nCost: 50',
-				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 1: 10% cooldown reduction\nNext Level: 20% cooldown reduction\nCost: 70',
-				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 2: 20% cooldown reduction\nNext Level: 30% cooldown reduction, 10% chance to instantly refresh cooldown\nCost: 90',
-				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 3: 30% cooldown reduction, 10% chance to instantly refresh cooldown\nNext Level: 40% cooldown reduction, 10% chance to instantly refresh cooldown\nCost: 110',
-				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 4: 40% cooldown reduction, 10% chance to instantly refresh cooldown\nNext Level: 50% cooldown reduction, 10% chance to instantly refresh cooldown, 10% chance to summon an extra minion\nCost: 130',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 0\nNext Level: 10% cooldown reduction\nCost: 30',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 1: 10% cooldown reduction\nNext Level: 20% cooldown reduction\nCost: 50',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 2: 20% cooldown reduction\nNext Level: 30% cooldown reduction, 10% chance to instantly refresh cooldown\nCost: 70',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 3: 30% cooldown reduction, 10% chance to instantly refresh cooldown\nNext Level: 40% cooldown reduction, 10% chance to instantly refresh cooldown\nCost: 70',
+				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 4: 40% cooldown reduction, 10% chance to instantly refresh cooldown\nNext Level: 50% cooldown reduction, 10% chance to instantly refresh cooldown, 10% chance to summon an extra minion\nCost: 110',
 				'Flow\nMuju channels juju more effectively, increasing the rate at which he can summon minions.\nLevel 5: 50% cooldown reduction, 10% chance to instantly refresh cooldown, 10% chance to summon an extra minion\nMax Level'
 			},
 			zeal = {

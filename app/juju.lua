@@ -30,13 +30,13 @@ function Juju:update()
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 	if self.vy > -.1 then
-		self.y = self.y - 12 * tickRate
+		self.y = self.y - 10 * tickRate
 	end
 
 	if ctx.player.jujuRealm > 0 then
 		local ghost = ctx.player.ghost
-		if ctx.upgrades.muju.zeal >= 3 and math.distance(self.x, self.y, ghost.x, ghost.y) < self.amount + 100 then
-			local magnetStrength = 4 * tickRate
+		if ctx.upgrades.muju.zeal >= 3 and math.distance(self.x, self.y, ghost.x, ghost.y) < self.amount + 120 then
+			local magnetStrength = 2 * tickRate
 			self.x, self.y = math.lerp(self.x, ghost.x, magnetStrength), math.lerp(self.y, ghost.y, magnetStrength)
 		end
 
@@ -54,7 +54,7 @@ function Juju:update()
 
 	self.angle = self.angle + (math.sin(tick * tickRate) * math.cos(tick * tickRate)) / love.math.random(9, 11)
 	self.scale = math.lerp(self.scale, math.clamp(self.amount / 50, .3, 1), 2 * tickRate)
-	self.alpha = math.lerp(self.alpha, ctx.player.jujuRealm > 0 and 1 or .8, 2 * tickRate)
+	self.alpha = math.lerp(self.alpha, 1, 2 * tickRate)
 
 	self.x = math.clamp(self.x, self.amount, love.graphics.getWidth() - self.amount)
 end
@@ -65,7 +65,7 @@ function Juju:draw()
 	local wave = math.sin(tick * tickRate * 4)
 
 	g.setBlendMode('additive')
-	g.setColor(255, 255, 255, 70 * self.alpha)
+	g.setColor(255, 255, 255, 30 * self.alpha)
 	g.draw(self.image, self.x, self.y + 5 * wave, self.angle, self.scale * (1.6 + wave / 12), self.scale * (1.6 + wave / 12), self.image:getWidth() / 2, self.image:getHeight() / 2)
 	g.setBlendMode('alpha')
 

@@ -11,7 +11,7 @@ function Shrine:init()
 	local w, h = love.graphics.getDimensions()
 
 	self.x = w / 2
-	self.y = h - ctx.environment.groundHeight - self.height - 7 
+	self.y = h - ctx.environment.groundHeight - self.height - 7
 	self.health = self.maxHealth
 	self.healthDisplay = self.health
 	self.image = love.graphics.newImage('media/graphics/shrine-v3.png')

@@ -28,7 +28,7 @@ function Enemies:update()
 
 	table.with(self.enemies, 'update')
 
-	self.level = self.level + tickRate / 15
+	self.level = self.level + tickRate / (16 + self.level)
 end
 
 function Enemies:add(kind, data)
