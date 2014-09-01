@@ -2,7 +2,7 @@ Menu = class()
 
 function Menu:init()
 	self.sound = Sound()
-	self.menuSounds = self.sound:play({sound = 'menu'})
+	self.menuSounds = self.sound:loop({sound = 'menu'})
 	self.bg = love.graphics.newImage('media/graphics/main-menu.png')
 	self.font = love.graphics.newFont('media/fonts/pixel.ttf', 8)
 	self.creditsAlpha = 0
