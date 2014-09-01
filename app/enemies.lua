@@ -2,9 +2,10 @@ Enemies = class()
 
 function Enemies:init()
 	self.enemies = {}
+	self.level = 0
 	self.nextEnemy = 5
 	self.minEnemyRate = 7
-	self.maxEnemyRate = 10
+	self.maxEnemyRate = 9
 end
 
 function Enemies:update()
@@ -13,19 +14,21 @@ function Enemies:update()
 		local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
 
 		spawnType = Puju
-		if self.maxEnemyRate < 5 then
-			if love.math.random() < .3 then
+		if self.maxEnemyRate < 7 then
+			if love.math.random() < .1 then
 				spawnType = SpiritBomb
 			end
 		end
 
 		self:add(spawnType, {x = x})
-		self.minEnemyRate = math.max(self.minEnemyRate - .05, 1.5)
-		self.maxEnemyRate = math.max(self.maxEnemyRate - .08, 2.5)
+		self.minEnemyRate = math.max(self.minEnemyRate - .03, 1.5)
+		self.maxEnemyRate = math.max(self.maxEnemyRate - .05, 2.5)
 		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
 	end)
 
 	table.with(self.enemies, 'update')
+
+	self.level = self.level + tickRate / 15
 end
 
 function Enemies:add(kind, data)
@@ -35,12 +38,12 @@ end
 
 function Enemies:remove(enemy)
 	ctx.view:unregister(enemy)
-	local x = love.math.random(15, 25)
+	local x = love.math.random(6 + self.level, 6 + math.round(self.level * 1.5))
 	if love.math.random() > .5 then
-		ctx.jujus:add({amount = x, x = enemy.x, y = enemy.y, velocity = math.floor(love.math.random(-0.9, 1.9)), speed = love.math.random(1, 15)})
+		ctx.jujus:add({amount = x, x = enemy.x, y = enemy.y, vx = love.math.random(-35, 35)})
 	else
-		ctx.jujus:add({amount = x / 2, x = enemy.x, y = enemy.y, velocity = -1, speed = love.math.random(1, 25)})
-		ctx.jujus:add({amount = x / 2, x = enemy.x, y = enemy.y, velocity = 1, speed = love.math.random(1, 25)})
+		ctx.jujus:add({amount = x / 2, x = enemy.x, y = enemy.y, vx = love.math.random(0, 45)})
+		ctx.jujus:add({amount = x / 2, x = enemy.x, y = enemy.y, vx = love.math.random(-45, 0)})
 	end
 
 	table.each(ctx.minions.minions, function(minion)

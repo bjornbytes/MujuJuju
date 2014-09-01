@@ -12,11 +12,11 @@ function Juju:init(data)
 	self.y = 100
 	self.prevx = self.x
 	self.prevy = self.y
-	self.sinState = math.pi - 1
 	self.angle = love.math.random() * 2 * math.pi
 	self.depth = self.depth + love.math.random()
-	--self.velocity = 1
-	--self.speed = 20
+	self.vy = love.math.random(-300, -100)
+	self.scale = 0
+	self.alpha = 0
 	table.merge(data, self)
 	ctx.view:register(self)
 end
@@ -24,34 +24,16 @@ end
 function Juju:update()
 	self.prevx = self.x
 	self.prevy = self.y
-	if self.sinState < math.pi then
-		self.sinState = self.sinState + 0.1
-	else
-		self.sinState = 0
+
+	self.vx = math.lerp(self.vx, 0, tickRate)
+	self.vy = math.lerp(self.vy, 0, 2 * tickRate)
+	self.x = self.x + self.vx * tickRate
+	self.y = self.y + self.vy * tickRate
+	if self.vy > -.1 then
+		self.y = self.y - 12 * tickRate
 	end
 
-	if self.velocity < 0 then
-		self.speed = math.lerp(self.speed, -self.moveSpeed, math.min(10 * tickRate, 1))
-	elseif self.velocity > 0 then
-		self.speed = math.lerp(self.speed, self.moveSpeed, math.min(10 * tickRate, 1))
-	else
-		self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
-	end
-	self.x = self.x + self.speed * tickRate
-	self.y = self.y - (self.y/6) * tickRate
-	self.y = self.y + math.sin(self.sinState)
 	if ctx.player.jujuRealm > 0 then
-		--If Muju dead
-		--[[if (ctx.player.ghost.x >= self.x-self.amount-ctx.player.ghost.magnetRange) and (ctx.player.ghost.x <= self.x+self.amount+ctx.player.ghost.magnetRange) and (ctx.player.ghost.y >= self.y-self.amount-ctx.player.ghost.magnetRange) and (ctx.player.ghost.y<= self.y+self.amount+ctx.player.ghost.magnetRange) then
-			--If mouse close to Juju
-			local angle = math.atan2((ctx.player.ghost.y - self.y), (ctx.player.ghost.x - self.x))
-			local dx = 50 * math.cos(angle)
-			local dy = 50 * math.sin(angle)
-			self.x = self.x + (dx * tickRate)
-			self.y = self.y + (dy * tickRate)
-			--Move Juju towards mouse
-		end]]
-
 		local ghost = ctx.player.ghost
 		if ctx.upgrades.muju.zeal >= 3 and math.distance(self.x, self.y, ghost.x, ghost.y) < self.amount + 100 then
 			local magnetStrength = 4 * tickRate
@@ -59,25 +41,34 @@ function Juju:update()
 		end
 
 		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
-			--If mouse is over Juju
 			ctx.player.juju = ctx.player.juju + self.amount
 			ctx.jujus:remove(self)
-			--Remove da Juju mon!
 			ctx.sound:play({sound = ctx.sounds.juju})
 		end
 	end
 
-	if not math.inside(self.x, self.y, -self.amount, -self.amount, love.graphics.getWidth() + self.amount, love.graphics.getHeight() + self.amount) then
+	if self.y < -50 then
 		ctx.jujus:remove(self)
 		ctx.sound:play({sound = ctx.sounds.juju})
 	end
-	self.angle = self.angle + (math.sin(tick * tickRate) * math.cos(tick * tickRate)) / 10
+
+	self.angle = self.angle + (math.sin(tick * tickRate) * math.cos(tick * tickRate)) / love.math.random(9, 11)
+	self.scale = math.lerp(self.scale, math.clamp(self.amount / 50, .3, 1), 2 * tickRate)
+	self.alpha = math.lerp(self.alpha, ctx.player.jujuRealm > 0 and 1 or .8, 2 * tickRate)
+
+	self.x = math.clamp(self.x, self.amount, love.graphics.getWidth() - self.amount)
 end
 
 function Juju:draw()
 	local g = love.graphics
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+	local wave = math.sin(tick * tickRate * 4)
 
-	g.setColor(255, 255, 255, 180)
-	g.draw(self.image, self.x, self.y, self.angle, (self.amount / 50), (self.amount / 50), self.image:getWidth() / 2, self.image:getHeight() / 2)
+	g.setBlendMode('additive')
+	g.setColor(255, 255, 255, 70 * self.alpha)
+	g.draw(self.image, self.x, self.y + 5 * wave, self.angle, self.scale * (1.6 + wave / 12), self.scale * (1.6 + wave / 12), self.image:getWidth() / 2, self.image:getHeight() / 2)
+	g.setBlendMode('alpha')
+
+	g.setColor(255, 255, 255, 255 * self.alpha)
+	g.draw(self.image, self.x, self.y + 5 * wave, self.angle, self.scale, self.scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
 end

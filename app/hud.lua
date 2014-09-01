@@ -46,10 +46,14 @@ function Hud:gui()
 
 	g.setFont(self.font)
 	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
-	g.print('Zuju', 16, 100)
+	local cost = Zuju.cost
+	local upgradeCount = ctx.upgrades.zuju.cleave + ctx.upgrades.zuju.fortify + ctx.upgrades.zuju.burst
+	g.print('Zuju [' .. cost + (5 * upgradeCount) .. '] ' .. (ctx.player.minioncds[1] > 0 and math.ceil(ctx.player.minioncds[1]) or ''), 16, 100)
 	if #ctx.player.minions == 2 then
 		g.setColor(ctx.player.selectedMinion == 2 and {255, 255, 255} or {150, 150, 150})
-		g.print('Vuju', 16, 100 + g.getFont():getHeight() + 2)
+		local cost = Vuju.cost
+		local upgradeCount = 0
+		g.print('Vuju [' .. cost + (5 * upgradeCount) .. '] ' .. (ctx.player.minioncds[2] > 0 and math.ceil(ctx.player.minioncds[2]) or ''), 16, 100 + g.getFont():getHeight() + 2)
 	end
 	
 	-- Health Bars

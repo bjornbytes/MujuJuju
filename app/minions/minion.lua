@@ -37,10 +37,8 @@ function Minion:attack()
 		if self.target ~= nil then
 			local dif = math.abs(self.target.x - self.x)
 			if dif <= self.attackRange + self.target.width / 2 then
-				local damage = self.damage
-				if self.code == 'zuju' and ctx.upgrades.zuju.cleave >= 3 and love.math.random() < .1 + (ctx.upgrades.zuju.cleave == 5 and .1 or 0) then
-					damage = damage * 2
-				end
+				local damage = type(self.damage) == 'function' and self:damage() or self.damage
+
 				self.target:hurt(damage)
 				self.fireTimer = self.fireRate
 				ctx.sound:play({sound = ctx.sounds.combat})
