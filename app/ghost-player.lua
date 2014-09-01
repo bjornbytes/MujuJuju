@@ -22,7 +22,7 @@ function GhostPlayer:update()
 	self.prevx = self.x
 	self.prevy = self.y
 
-	local speed = 120
+	local speed = 100 + (20 * ctx.upgrades.muju.zeal)
 	if love.keyboard.isDown('left', 'a') then
 		self.vx = math.lerp(self.vx, -speed, 8 * tickRate)
 		self.angle = math.anglerp(self.angle, -math.pi / 2 - (math.pi / 7 * (self.vx / -speed)), 12 * tickRate)
@@ -62,6 +62,10 @@ function GhostPlayer:update()
 	end
 	scale = .4 + scale * .4
 	self.radius = 40 * scale
+	
+	if ctx.upgrades.muju.zeal == 5 and ctx.player.jujuRealm < 5 and math.distance(self.x, self.y, ctx.player.x, ctx.player.y) < self.radius * 2 then
+		ctx.player.jujuRealm = .1
+	end
 end
 
 function GhostPlayer:despawn()

@@ -178,8 +178,14 @@ function Player:summon()
 	local minion = self.minions[self.selectedMinion]
 	local cooldown = self.minioncds[self.selectedMinion]
 	if cooldown == 0 and self:spend(minion.cost) then
-		ctx.minions:add(minion, {x = self.x + love.math.random(-10, 20), direction = self.direction})
-		self.minioncds[self.selectedMinion] = minion.cooldown
+		ctx.minions:add(minion, {x = self.x + love.math.random(-20, 20), direction = self.direction})
+		self.minioncds[self.selectedMinion] = minion.cooldown * (1 - (.1 * ctx.upgrades.muju.flow))
+		if ctx.upgrades.muju.flow >= 3 and love.math.random() < .1 then
+			self.minioncds[self.selectedMinion] = 0
+		end
+		if ctx.upgrades.muju.flow == 5 and love.math.random() < .1 then
+			ctx.minions:add(minion, {x = self.x + love.math.random(-40, 40), direction = self.direction})
+		end
 
 		self.animationLock = true
 		self.animationState = 'summon'

@@ -53,8 +53,8 @@ function Juju:update()
 		end]]
 
 		local ghost = ctx.player.ghost
-		if math.distance(self.x, self.y, ghost.x, ghost.y) < self.amount + (65 * ctx.upgrades.muju.magnet) then
-			local magnetStrength = 2 * ctx.upgrades.muju.magnet * tickRate
+		if ctx.upgrades.muju.zeal >= 3 and math.distance(self.x, self.y, ghost.x, ghost.y) < self.amount + 100 then
+			local magnetStrength = 4 * tickRate
 			self.x, self.y = math.lerp(self.x, ghost.x, magnetStrength), math.lerp(self.y, ghost.y, magnetStrength)
 		end
 

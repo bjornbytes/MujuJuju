@@ -18,7 +18,7 @@ function Enemy:init(data)
 end
 
 function Enemy:update()
-	self.timeScale = 1 / (1 + ctx.upgrades.muju.warp * (ctx.player.dead and 1 or 0))
+	self.timeScale = 1
 
 	if self.target and self.fireTimer == 0 and math.abs(self.x - self.target.x) <= self.attackRange + self.target.width / 2 then
 		self:attack()
