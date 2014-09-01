@@ -6,6 +6,7 @@ Minion.height = 48
 Minion.depth = -10
 
 function Minion:init(data)
+	self.knockBack = 0
 	self.target = nil
 	self.fireTimer = 0
 	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
@@ -30,6 +31,9 @@ function Minion:update()
 	self:hurt(2 * tickRate)
 	self.speed = math.max(self.speed - 1 * tickRate, 25)
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+
+	self.x = self.x + self.knockBack * tickRate * 5000
+	self.knockBack = math.max(0, math.abs(self.knockBack) - tickRate) * math.sign(self.knockBack)
 end
 
 function Minion:attack()

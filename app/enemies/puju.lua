@@ -11,7 +11,12 @@ Puju.fireRate = 1.1
 Puju.maxHealth = 100
 Puju.attackRange = Puju.width / 2
 
+Puju.buttRate = 4
+Puju.buttDamage = 25
+Puju.buttRange = Puju.attackRange * 1.5
+
 function Puju:init(data)
+	self.buttTimer = 1
 	self.depth = self.depth + love.math.random()
 	self.image = love.graphics.newImage('media/skeletons/puju/puju.png')
 	self.depth = self.depth + love.math.random()
@@ -19,6 +24,7 @@ function Puju:init(data)
 end
 
 function Puju:update()
+	self.buttTimer = timer.rot(self.buttTimer)
 	Enemy.update(self)
 	self:chooseTarget()
 end
@@ -37,9 +43,26 @@ function Puju:chooseTarget()
 end
 
 function Puju:attack()
-	if self.target:hurt(self.damage) then self.target = false end
 	self.fireTimer = self.fireRate
+
+	if self.buttTimer == 0 then
+		return self:butt()
+	end
+
+	if self.target:hurt(self.damage) then self.target = false end
 	ctx.sound:play({sound = ctx.sounds.combat})
+end
+
+function Puju:butt()
+	local targets = ctx.target:getMinionsInRange(self, self.buttRange)
+	table.each(targets, function(target)
+		if math.sign(self.target.x - self.x) == math.sign(target.x - self.x) then
+			target:hurt(self.buttDamage)	
+			local sign = math.sign(target.x - self.x)
+			target.knockBack = sign * (.1 + love.math.random() / 20)
+		end
+	end)
+	self.buttTimer = self.buttRate
 end
 
 function Puju:draw()
@@ -51,5 +74,5 @@ function Puju:draw()
 		xscale = -xscale
 	end
 
-	g.draw(self.image, self.x, self.y + 5 * math.sin(tick * tickRate * 4), 0, xscale, 1, self.image:getWidth() / 2, self.image:getHeight() / 2)
+	g.draw(self.image, self.x, self.y + 5 * math.sin(ctx.hud.timer.total * tickRate * 4), 0, xscale, 1, self.image:getWidth() / 2, self.image:getHeight() / 2)
 end

@@ -12,12 +12,15 @@ function Hud:init()
 	self.tooltipAlpha = 0
 	self.tooltipHover = false
 	self.jujuIcon = g.newImage('media/graphics/juju-icon.png')
+	self.timer = {total = 0, minutes = 0, seconds = 0}
 	ctx.view:register(self, 'gui')
 end
 
 function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
 	self.tooltipAlpha = math.lerp(self.tooltipAlpha, self.tooltipHover and 1 or 0, 12 * tickRate)
+	-- Update Timer
+	self:score()
 end
 
 function Hud:health(x, y, health, max, color)
@@ -41,8 +44,31 @@ function Hud:stackingTable(stackingTable, x, range, delta)
 		end
 end
 
+function Hud:score()
+	if not self.upgrading then
+		self.timer.total = self.timer.total + 1
+	end
+end
+
+
 function Hud:gui()
 	local w, h = love.graphics.getDimensions()
+
+	-- Timer
+	local total = self.timer.total * tickRate
+	self.timer.seconds = math.floor(total % 60)
+	self.timer.minutes = math.floor(total / 60)
+
+	if self.timer.minutes < 10 then
+		self.timer.minutes = '0' .. self.timer.minutes
+	end
+
+	if self.timer.seconds < 10 then
+		self.timer.seconds = '0' .. self.timer.seconds
+	end
+
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.print(self.timer.minutes .. ':' .. self.timer.seconds, w - 50, 25)
 
 	g.setFont(self.font)
 	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
@@ -96,7 +122,7 @@ function Hud:gui()
 		local xx
 		local idx
 		self.tooltipHover = false
-
+		
 		-- Juju box
 		if math.inside(mx, my, w2 - 22, h2 - 250, 48, 48) then
 			self.tooltip = math.floor(ctx.player.juju) .. ' Juju!'
