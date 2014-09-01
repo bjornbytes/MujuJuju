@@ -16,6 +16,7 @@ function Zuju:init(data)
 	Minion.init(self, data)
 	self.depth = self.depth + love.math.random()
 	self.skeleton = Skeleton({name = 'zuju', x = self.x, y = self.y + self.height + 8, scale = .5})
+	self.damage = self.damage + (5 + ctx.upgrades.zuju.cleave) * ctx.upgrades.zuju.cleave
 
 	self.animator = Animator({
 		skeleton = self.skeleton,
