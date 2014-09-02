@@ -21,7 +21,7 @@ function Puju:init(data)
 	self.image = love.graphics.newImage('media/skeletons/puju/puju.png')
 	self.depth = self.depth + love.math.random()
 	self.maxHealth = self.maxHealth + 6 * ctx.enemies.level
-	self.damage = self.damage + 1 * ctx.enemies.level
+	self.damage = self.damage + .5 * ctx.enemies.level
 	Enemy.init(self, data)
 end
 

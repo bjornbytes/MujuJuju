@@ -19,7 +19,7 @@ function Zuju:init(data)
 	local scale = .5 + (r / 210)
 	self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
 	self.skeleton = Skeleton({name = 'zuju', x = self.x, y = self.y + self.height + 8, scale = scale})
-	local healths = {[0] = 80, 100, 130, 175, 230, 300}
+	local healths = {[0] = 80, 125, 175, 235, 300, 400}
 	self.maxHealth = healths[ctx.upgrades.zuju.fortify]
 	self.health = self.maxHealth
 

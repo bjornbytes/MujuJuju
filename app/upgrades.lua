@@ -60,12 +60,12 @@ Upgrades.clear = function()
 				'Cleave\nZuju strike with increased strength.\nLevel 5: 67 - 73 damage, 10% chance to critically strike\nMax Level'
 			},
 			fortify = {
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 0: 80 health\nNext Level: 100 health\nCost: 35',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 1: 100 health\nNext Level: 130 health\nCost: 60',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 2: 130 health\nNext Level: 175 health\nCost: 100',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 3: 175 health\nNext Level: 230 health\nCost: 150',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 4: 230 health\nNext Level: 300 health\nCost: 250',
-				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 5: 300 health\nMax Level'
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 0: 80 health\nNext Level: 125 health\nCost: 35',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 1: 125 health\nNext Level: 175 health\nCost: 60',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 2: 175 health\nNext Level: 235 health\nCost: 100',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 3: 235 health\nNext Level: 300 health\nCost: 150',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 4: 300 health\nNext Level: 400 health\nCost: 250',
+				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 5: 400 health\nMax Level'
 			},
 			burst = {
 				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 0\nNext Level: 20 damage, 75 radius\nCost: 100',
