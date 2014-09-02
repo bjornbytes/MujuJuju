@@ -8,21 +8,25 @@ Puju.height = 24
 Puju.speed = 40
 Puju.damage = 18
 Puju.fireRate = 1.1
-Puju.maxHealth = 50
+Puju.maxHealth = 40
 Puju.attackRange = Puju.width / 2
 
 Puju.buttRate = 4
 Puju.buttDamage = 25
-Puju.buttRange = Puju.attackRange * 1.5
+Puju.buttRange = Puju.attackRange * 2
+
+Puju.image = love.graphics.newImage('media/skeletons/puju/puju.png')
 
 function Puju:init(data)
 	self.buttTimer = 1
-	self.depth = self.depth + love.math.random()
-	self.image = love.graphics.newImage('media/skeletons/puju/puju.png')
-	self.depth = self.depth + love.math.random()
-	self.maxHealth = self.maxHealth + 6 * ctx.enemies.level
-	self.damage = self.damage + .5 * ctx.enemies.level
 	Enemy.init(self, data)
+	local r = love.math.random(-20, 20)
+	self.y = self.y + r
+	local scale = .5 + (r / 210)
+	self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
+	self.maxHealth = self.maxHealth + 4 * ctx.enemies.level ^ 1.4
+	self.health = self.maxHealth
+	self.damage = self.damage + .3 * ctx.enemies.level ^ 1.3
 end
 
 function Puju:update()
@@ -52,6 +56,9 @@ function Puju:attack()
 	end
 
 	if self.target:hurt(self.damage) then self.target = false end
+	if self.target == ctx.shrine and ctx.upgrades.muju.imbue >= 3 then
+		self:hurt(self.damage / 2)
+	end
 	ctx.sound:play({sound = ctx.sounds.combat})
 end
 

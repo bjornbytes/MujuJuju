@@ -29,7 +29,7 @@ Upgrades.clear = function()
 		zuju = {
 			cleave = {45, 65, 95, 135, 185},
 			fortify = {35, 60, 100, 150, 250},
-			burst = {100, 125, 150}
+			burst = {50, 75, 100, 125, 150}
 		},
 		vuju = {
 			chain = {100, 150, 200},
@@ -68,10 +68,12 @@ Upgrades.clear = function()
 				'Fortify\nImbue the Zuju with spiritual energy, increasing their maximum health.\nLevel 5: 400 health\nMax Level'
 			},
 			burst = {
-				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 0\nNext Level: 20 damage, 75 radius\nCost: 100',
-				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 1: 20 damage, 75 radius\nNext Level: 40 damage, 125 radius\nCost: 125',
-				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 2: 40 damage, 125 radius\nNext Level: 60 damage, 175 radius\nCost: 150',
-				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 3: 60 damage, 175 radius\nMax Level'
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 0\nNext Level: 20 damage, 25 radius\nCost: 50',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 1: 20 damage, 25 radius\nNext Level: 40 damage, 50 radius\nCost: 75',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 2: 40 damage, 50 radius\nNext Level: 60 damage, 75 radius, affected area slows enemies by 30% for 3s\nCost: 100',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 3: 60 damage, 50 radius, affected area slows enemies by 30% for 3s\nNext Level: 80 damage, 100 radius, affected area slows enemies by 30% for 3s\nCost: 125',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 4: 80 damage, 50 radius, affected area slows enemies by 30% for 3s\nNext Level: 100 damage, 125 radius, affected area slows enemies by 60% for 3s\nCost: 150',
+				'Burst\nZuju burst into a spirit flame on death, damaging nearby enemies.\nLevel 5: 80 damage, 50 radius, affected area slows enemies by 60% for 3s\nMax Level',
 			}
 		},
 		vuju = {

@@ -1,6 +1,6 @@
 Enemy = class()
 
-Enemy.depth = -5
+Enemy.depth = -10
 
 function Enemy:init(data)
 	self.target = ctx.shrine
