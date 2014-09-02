@@ -53,7 +53,7 @@ function Juju:update()
 	end
 
 	self.angle = self.angle + (math.sin(tick * tickRate) * math.cos(tick * tickRate)) / love.math.random(9, 11)
-	self.scale = math.lerp(self.scale, math.clamp(self.amount / 50, .3, 1), 2 * tickRate)
+	self.scale = math.lerp(self.scale, math.clamp(self.amount / 50, .3, .75), 2 * tickRate)
 	self.alpha = math.lerp(self.alpha, 1, 2 * tickRate)
 
 	self.x = math.clamp(self.x, self.amount, love.graphics.getWidth() - self.amount)

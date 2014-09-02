@@ -26,6 +26,8 @@ function Shrine:update()
 		Context:add(Game)
 	end
 
+	self.health = math.min(self.maxHealth, self.health + (self.maxHealth * ctx.upgrades.muju.imbue * .005 * tickRate))
+
 	self.color = table.interpolate(self.color, ctx.player.dead and {160, 100, 225} or {255, 255, 255}, .6 * tickRate)
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 end

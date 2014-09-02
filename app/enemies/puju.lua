@@ -47,7 +47,7 @@ end
 function Puju:attack()
 	self.fireTimer = self.fireRate
 
-	if self.buttTimer == 0 then
+	if self.buttTimer == 0 and self.target ~= ctx.player then
 		return self:butt()
 	end
 
