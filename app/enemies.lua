@@ -21,8 +21,8 @@ function Enemies:update()
 		end
 
 		self:add(spawnType, {x = x})
-		self.minEnemyRate = math.max(self.minEnemyRate - .05, 1.4)
-		self.maxEnemyRate = math.max(self.maxEnemyRate - .065, 2.5)
+		self.minEnemyRate = math.max(self.minEnemyRate - .055, 1.4)
+		self.maxEnemyRate = math.max(self.maxEnemyRate - .0675, 2.5)
 		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
 	end)
 
@@ -38,7 +38,7 @@ end
 
 function Enemies:remove(enemy)
 	ctx.view:unregister(enemy)
-	local x = love.math.random(8 + self.level, 8 + math.round(self.level * 1.8))
+	local x = love.math.random(7 + self.level * .25, 7 + math.round(self.level * 1.5))
 	if love.math.random() > .5 then
 		ctx.jujus:add({amount = x, x = enemy.x, y = enemy.y, vx = love.math.random(-35, 35)})
 	else
