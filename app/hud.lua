@@ -23,14 +23,14 @@ function Hud:update()
 	self:score()
 end
 
-function Hud:health(x, y, health, max, color)
+function Hud:health(x, y, percent, color, width, thickness)
 	local g = love.graphics
-	health = (100 * health) / max
+	thickness = thickness or 2
 
 	g.setColor(0, 0, 0, 160)
-	g.rectangle('fill', x, y, 100 * .6, 3)
+	g.rectangle('fill', x, y, width + 1, thickness + 1)
 	g.setColor(color)
-	g.rectangle('fill', x, y, health * .6, 3)
+	g.rectangle('fill', x, y, percent * width, thickness)
 end
 
 function Hud:stackingTable(stackingTable, x, range, delta)
@@ -39,7 +39,7 @@ function Hud:stackingTable(stackingTable, x, range, delta)
 			if not stackingTable[i] then
 				stackingTable[i] = 1 
 			else 
-				stackingTable[i] = stackingTable[i] + delta 
+				stackingTable[i] = stackingTable[i] + delta
 			end
 		end
 end
@@ -85,34 +85,25 @@ function Hud:gui()
 	-- Health Bars
 
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
-	local green = {0, 255, 0}
+	local green = {50, 230, 50}
 	local red = {255, 0, 0}
+	local purple = {200, 80, 255}
 
-	self:health(px - 30, py - 20, ctx.player.healthDisplay, ctx.player.maxHealth, green)
-	self:health(ctx.shrine.x - 30, ctx.shrine.y - 65, ctx.shrine.healthDisplay, ctx.shrine.maxHealth, green)
+	self:health(px - 40, py - 15, ctx.player.healthDisplay / ctx.player.maxHealth, purple, 80, 3)
+	self:health(ctx.shrine.x - 60, ctx.shrine.y - 65, ctx.shrine.healthDisplay / ctx.shrine.maxHealth, green, 120, 4)
 
 	local stackingTable = {}
 	table.each(ctx.enemies.enemies, function(enemy)
 		local location = math.floor(enemy.x)
 		self:stackingTable(stackingTable, location, enemy.width * 2, .5)
-
-		if enemy.code == 'puju' then
-			self:health(enemy.x - 25, enemy.y - 25 * stackingTable[location], enemy.healthDisplay, enemy.maxHealth, red)
-		elseif enemy.code == 'spirit-bomb' then
-			self:health(enemy.x - 25, enemy.y - 45 * stackingTable[location], enemy.healthDisplay, enemy.maxHealth, red)
-		end
+		self:health(enemy.x - 25, h - ctx.environment.groundHeight - enemy.height - 15 - 15 * stackingTable[location], enemy.healthDisplay / enemy.maxHealth, red, 50, 2)
 	end)
 
 	stackingTable = {}
 	table.each(ctx.minions.minions, function(minion)
 		local location = math.floor(minion.x)
 		self:stackingTable(stackingTable, location, minion.width * 2, .5)
-
-		if minion.code == 'zuju' then
-			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.healthDisplay, minion.maxHealth, green)
-		elseif minion.code == 'vuju' then
-			self:health(minion.x - 25, minion.y - 45 * stackingTable[location], minion.healthDisplay, minion.maxHealth, green)
-		end
+		self:health(minion.x - 25, h - ctx.environment.groundHeight - minion.height - 15 * stackingTable[location], minion.healthDisplay / minion.maxHealth, green, 50, 2)
 	end)
 
 	if self.upgradeAlpha > .001 then
