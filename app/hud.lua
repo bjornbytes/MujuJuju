@@ -151,7 +151,7 @@ function Hud:gui()
 			idx = idx + 1
 		end
 
-		-- Voodoo
+		-- Vuju
 		if #ctx.player.minions < 2 then
 			g.draw(self.lock, x1 + (w * .775) - 20, h2 - 144, 0, .6, .6)
 		end
@@ -298,7 +298,7 @@ function Hud:mousereleased(x, y, b)
 
 		if #ctx.player.minions < 2 and math.inside(x, y, x1 + (w * .775) - 32, h2 - 144, 64, 64) then
 			if ctx.player:spend(250) then
-				table.insert(ctx.player.minions, Voodoo)
+				table.insert(ctx.player.minions, Vuju)
 				table.insert(ctx.player.minioncds, 0)
 					ctx.sound:play({sound = 'menuClick'})
 			end

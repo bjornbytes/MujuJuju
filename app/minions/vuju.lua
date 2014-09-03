@@ -1,18 +1,18 @@
 require 'app/minions/minion'
 
-Voodoo = extend(Minion)
+Vuju = extend(Minion)
 
-Voodoo.code = 'vuju'
-Voodoo.cost = 30 
-Voodoo.cooldown = 5
-Voodoo.maxHealth = 70
-Voodoo.speed = 0
+Vuju.code = 'vuju'
+Vuju.cost = 30 
+Vuju.cooldown = 5
+Vuju.maxHealth = 70
+Vuju.speed = 0
 
-Voodoo.damage = 17
-Voodoo.fireRate = 1.7
-Voodoo.attackRange = Voodoo.width * 3
+Vuju.damage = 17
+Vuju.fireRate = 1.7
+Vuju.attackRange = Vuju.width * 3.5
 
-function Voodoo:init(data)
+function Vuju:init(data)
 	Minion.init(self, data)
 
 	self.depth = self.depth + love.math.random()
@@ -49,7 +49,7 @@ function Voodoo:init(data)
 	}, f.val)
 end
 
-function Voodoo:update()
+function Vuju:update()
 	if self.animationState == 'death' then
 		self.animator:update(self.animationSpeeds[self.animationState]())
 		self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
@@ -71,11 +71,11 @@ function Voodoo:update()
 	self.animator:update(self.animationSpeeds[self.animationState]())
 end
 
-function Voodoo:draw()
+function Vuju:draw()
 	self.animator:draw()
 end
 
-function Voodoo:attack()
+function Vuju:attack()
 	if self.fireTimer == 0 then
 		if self.target ~= nil then
 			local dif = math.abs(self.target.x - self.x)
@@ -106,7 +106,7 @@ function Voodoo:attack()
 	end
 end
 
-function Voodoo:hurt(amount)
+function Vuju:hurt(amount)
 	self.health = math.max(self.health - amount, 0)
 	if self.health <= 0 then
 		if self.animationState ~= 'death' then
