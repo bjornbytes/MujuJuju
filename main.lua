@@ -1,6 +1,7 @@
 require 'require'
 
 function love.load()
+	print(math.sin(math.pi / 2))
 	Context:add(Menu)
 end
 

@@ -14,17 +14,21 @@ function Enemies:update()
 		local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
 
 		spawnType = Puju
-		if self.maxEnemyRate < 7 then
-			if love.math.random() < .1 then
-				spawnType = SpiritBomb
+		if self.maxEnemyRate < 8 then
+			if love.math.random() < math.min(8 - self.maxEnemyRate, 2) * .075 then
+				spawnType = Spuju
 			end
 		end
 
 		self:add(spawnType, {x = x})
-		self.minEnemyRate = math.max(self.minEnemyRate - .055, 1.4)
-		self.maxEnemyRate = math.max(self.maxEnemyRate - .065, 2.5)
+		self.minEnemyRate = math.max(self.minEnemyRate - .055, .95)
+		self.maxEnemyRate = math.max(self.maxEnemyRate - .065, 2)
 		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
 	end)
+
+	if not next(self.enemies) then
+		self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, .75 * tickRate))
+	end
 
 	table.with(self.enemies, 'update')
 
@@ -38,7 +42,7 @@ end
 
 function Enemies:remove(enemy)
 	ctx.view:unregister(enemy)
-	local x = love.math.random(10 + self.level * .75, 19 + math.round(self.level * 1.15))
+	local x = love.math.random(12 + (self.level ^ .85) * .75, 18 + (self.level ^ .85))
 	if love.math.random() > .5 then
 		ctx.jujus:add({amount = x, x = enemy.x, y = enemy.y, vx = love.math.random(-35, 35)})
 	else

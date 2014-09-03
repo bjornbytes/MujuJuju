@@ -22,6 +22,7 @@ function Zuju:init(data)
 	local healths = {[0] = 80, 125, 175, 235, 300, 400}
 	self.maxHealth = healths[ctx.upgrades.zuju.fortify]
 	self.health = self.maxHealth
+	self.speed = self.speed + love.math.random(-10, 10)
 
 	self.animator = Animator({
 		skeleton = self.skeleton,

@@ -29,6 +29,13 @@ function Enemy:update()
 	self.slow = math.lerp(self.slow, 0, 1 * tickRate)
 end
 
+function Enemy:move()
+	local dif = self.target.x - self.x
+	if math.abs(dif) > self.attackRange + self.target.width / 2 then
+		self.x = self.x + self.speed * math.sign(dif) * tickRate * self.timeScale * (1 - self.slow)
+	end
+end
+
 function Enemy:hurt(amount)
 	self.health = self.health - amount
 	if self.health <= 0 then

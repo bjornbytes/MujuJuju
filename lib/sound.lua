@@ -1,12 +1,12 @@
 Sound = class()
 
 function Sound:init()
-  self.mute = false
+  self.muted = false
 	self.sounds = {}
 end
 
 function Sound:play(data)
-  if self.mute then return end
+  if self.muted then return end
 
   local name = data.sound
 
@@ -28,6 +28,6 @@ function Sound:loop(data)
 end
 
 function Sound:mute()
-  self.mute = not self.mute
+  self.muted = not self.muted
   love.audio.tag.all.stop()
 end

@@ -67,14 +67,20 @@ function Hud:gui()
 		self.timer.seconds = '0' .. self.timer.seconds
 	end
 
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.print(self.timer.minutes .. ':' .. self.timer.seconds, w - 50, 25)
+	g.setColor(255, 255, 255)
+	g.print(self.timer.minutes .. ':' .. self.timer.seconds, w - 50, 25)
+	if true then
+		g.print('level ' .. math.floor(ctx.enemies.level), w - 150, 25 + g.getFont():getHeight())
+		g.print('puju ' .. math.floor(Puju.maxHealth + 4 * ctx.enemies.level ^ 1.185) .. ' / ' .. math.floor(Puju.damage + .3 * ctx.enemies.level ^ 1.2), w - 150, 25 + 2 * g.getFont():getHeight())
+		g.print('spuju ' .. math.floor(Spuju.maxHealth + 4 * ctx.enemies.level ^ 1) .. ' / ' .. math.floor(Spuju.damage + .45 * ctx.enemies.level ^ 1.4), w - 150, 25 + 3 * g.getFont():getHeight())
+	end
 
 	g.setFont(self.font)
 	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
-	local cost = Zuju.cost
 	local upgradeCount = ctx.upgrades.zuju.cleave + ctx.upgrades.zuju.fortify + ctx.upgrades.zuju.burst
-	g.print('Zuju [' .. cost + (3 * upgradeCount) .. '] ' .. (ctx.player.minioncds[1] > 0 and math.ceil(ctx.player.minioncds[1]) or ''), 16, 100)
+	local mujuUpgradeCount = ctx.upgrades.muju.flow + ctx.upgrades.muju.zeal + ctx.upgrades.muju.imbue
+	local cost = Zuju.cost + (3 * upgradeCount) - (1 * mujuUpgradeCount)
+	g.print('Zuju [' .. math.round(cost) .. '] ' .. (ctx.player.minioncds[1] > 0 and math.ceil(ctx.player.minioncds[1]) or ''), 16, 100)
 	if #ctx.player.minions == 2 then
 		g.setColor(ctx.player.selectedMinion == 2 and {255, 255, 255} or {150, 150, 150})
 		local cost = Vuju.cost

@@ -23,6 +23,9 @@ function Minions:remove(minion)
 		table.each(enemiesInRadius, function(enemy)
 			enemy:hurt(damage)
 		end)
+		if math.abs(ctx.player.x - minion.x) < radius + ctx.player.width / 2 then
+			ctx.player:hurt(damage / 2)
+		end
 		if ctx.upgrades.zuju.burst >= 3 then
 			ctx.particles:add(BurstSlow, {x = minion.x, y = minion.y, radius = radius})
 		end

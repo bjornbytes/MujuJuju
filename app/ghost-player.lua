@@ -15,6 +15,9 @@ function GhostPlayer:init()
 	self.angle = -math.pi / 2
 	self.maxRange = 500
 
+	local maxJuju = 7
+	self.maxDis = math.lerp(self.maxRange, 0, (1 - (ctx.player.jujuRealm / maxJuju)) ^ 3)
+
 	ctx.view:register(self)
 end
 
@@ -30,7 +33,7 @@ function GhostPlayer:update()
 		self.vx = math.lerp(self.vx, speed, 8 * tickRate)
 		self.angle = math.anglerp(self.angle, -math.pi / 2 + (math.pi / 7 * (self.vx / speed)), 12 * tickRate)
 	else
-		self.vx = math.lerp(self.vx, 0, 3 * tickRate)
+		self.vx = math.lerp(self.vx, 0, 2 * tickRate)
 	end
 
 	if love.keyboard.isDown('up', 'w') then
@@ -38,7 +41,7 @@ function GhostPlayer:update()
 	elseif love.keyboard.isDown('down', 's') then
 		self.vy = math.lerp(self.vy, speed, 8 * tickRate)
 	else
-		self.vy = math.lerp(self.vy, 0, 3 * tickRate)
+		self.vy = math.lerp(self.vy, 0, 2 * tickRate)
 	end
 
 	self.x = self.x + self.vx * tickRate

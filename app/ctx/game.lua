@@ -67,7 +67,8 @@ function Game:resize()
 end
 
 function Game:keypressed(key)
-	if key == 'p' then self.paused = not self.paused end
+	if key == 'p' then self.paused = not self.paused
+	elseif key == 'm' then self.sound:mute() end
 	if self.hud.upgrading or self.paused then return self.hud:keypressed(key) end
 	self.hud:keypressed(key)
 	self.player:keypressed(key)
