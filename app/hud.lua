@@ -117,8 +117,11 @@ function Hud:gui()
 		local w2, h2 = w / 2, h / 2
 		local x1, y1 = w2 - 300, h2 - 200
 		local w, h = 600, 400
+		g.setColor(50, 50, 50, self.upgradeAlpha * 240)
+		g.rectangle('fill', 20, 20, love.graphics.getWidth() - 40, love.graphics.getHeight() - 40)
+		--g.draw(self.upgradeBg, 400, 300, 0, .85, .85, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
+		
 		g.setColor(255, 255, 255, self.upgradeAlpha * 240)
-		g.draw(self.upgradeBg, 400, 300, 0, .85, .85, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
 
 		local xx
 		local idx
@@ -144,6 +147,7 @@ function Hud:gui()
 			local key = ctx.upgrades.keys.zuju[idx]
 			local name = ctx.upgrades.names.zuju[key]
 			local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1] or ''
+			g.rectangle('line', i - 24, yy, 50, 50)
 			if math.inside(mx, my, i - 24, yy, 50, 50) then
 				self.tooltip = ctx.upgrades.tooltips.zuju[key][ctx.upgrades.zuju[key] + 1]
 				self.tooltipHover = true
@@ -174,6 +178,7 @@ function Hud:gui()
 			local key = ctx.upgrades.keys.vuju[idx]
 			local name = ctx.upgrades.names.vuju[key]
 			local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1] or ''
+			g.rectangle('line', i - 24, yy, 48, 48)
 			if math.inside(mx, my, i - 24, yy, 48, 48) then
 				self.tooltip = ctx.upgrades.tooltips.vuju[key][ctx.upgrades.vuju[key] + 1]
 				self.tooltipHover = true
@@ -190,6 +195,7 @@ function Hud:gui()
 			local key = ctx.upgrades.keys.muju[idx]
 			local name = ctx.upgrades.names.muju[key]
 			local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1] or ''
+			g.rectangle('line', i - 24, yy, 80, 80)
 			if math.inside(mx, my, i - 24, yy, 80, 80) then
 				self.tooltip = ctx.upgrades.tooltips.muju[key][ctx.upgrades.muju[key] + 1]
 				self.tooltipHover = true
@@ -198,7 +204,7 @@ function Hud:gui()
 		end
 
 		if self.tooltip ~= '' then
-			g.setColor(0, 0, 0, self.tooltipAlpha * 255)
+			g.setColor(15, 15, 15, self.tooltipAlpha * 255)
 			local textWidth, lines = g.getFont():getWrap(self.tooltip, 250)
 			local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
 			g.rectangle('fill', xx, my + 8, textWidth + 14, lines * g.getFont():getHeight() + 16)
@@ -253,7 +259,7 @@ function Hud:mousereleased(x, y, b)
 		for i = xx - 80, xx + 80, 78 do
 			local yy = h2 - 144 + 80
 			if idx == 1 or idx == 3 then yy = yy - 12 end
-			if math.inside(x, y, i - 24, h2 - 144 + 80, 48, 48) then
+			if math.inside(x, y, i - 24, yy, 50, 50) then
 				local key = ctx.upgrades.keys.zuju[idx]
 				local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1]
 				if cost and ctx.player:spend(cost) then
@@ -269,7 +275,7 @@ function Hud:mousereleased(x, y, b)
 		for i = xx - 78, xx + 78, 78 do
 			local yy = h2 - 144 + 80
 			if idx == 1 or idx == 3 then yy = yy - 12 end
-			if math.inside(x, y, i - 24, yy, 48, 48) then
+			if math.inside(x, y, i - 24, yy, 50, 50) then
 				local key = ctx.upgrades.keys.vuju[idx]
 				local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1]
 				if cost and ctx.player:spend(cost) then
@@ -285,7 +291,7 @@ function Hud:mousereleased(x, y, b)
 		for i = xx - 156, xx + 140, 138 do
 			local yy = h2 + 16 + 70
 			if idx == 1 or idx == 3 then yy = yy - 12 end
-			if math.inside(x, y, i - 24, h2 + 16 + 80, 48, 48) then
+			if math.inside(x, y, i - 24, yy, 48, 48) then
 				local key = ctx.upgrades.keys.muju[idx]
 				local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1]
 				if cost and ctx.player:spend(cost) then
