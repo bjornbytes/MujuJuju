@@ -226,12 +226,12 @@ Upgrades.clear = function()
 		}
 	}
 
-	Upgrade.makeTooltip = function(who, what)
+	Upgrades.makeTooltip = function(who, what)
 		local pieces = {}
 		local upgrade = Upgrades[who][what]
-		table.insert(pieces, '{title}' .. string.capitalize(what))
-		table.insert(pieces, '{whoCares}' .. upgrade.description)
-		table.insert(pieces, '{normal}Level ' .. upgrade.level .. (upgrade.values[upgrade.level] or ''))
+		table.insert(pieces, '{white}{title}' .. what:capitalize() .. '{pixel}')
+		table.insert(pieces, '{whoCares}' .. upgrade.description .. '\n')
+		table.insert(pieces, '{white}Level ' .. upgrade.level .. ': ' .. (upgrade.values[upgrade.level] or ''))
 		if not upgrade.values[upgrade.level + 1] then
 			table.insert(pieces, '{whoCares}Max Level')
 		else

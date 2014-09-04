@@ -7,3 +7,6 @@
 [submodule "lib/deps/slam"]
 	path = lib/deps/slam
 	url = https://github.com/vrld/slam
+[submodule "lib/deps/richtext"]
+	path = lib/deps/richtext
+	url = https://github.com/bjornswenson/richtext
