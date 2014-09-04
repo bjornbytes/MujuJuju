@@ -184,18 +184,14 @@ function Player:summon()
 	local cooldown = self.minioncds[self.selectedMinion]
 	local cost = minion.cost
 	if minion.code == 'zuju' then
-		local upgradeCount = ctx.upgrades.zuju.cleave + ctx.upgrades.zuju.fortify + ctx.upgrades.zuju.burst
-		local mujuUpgradeCount = ctx.upgrades.muju.flow + ctx.upgrades.muju.zeal + ctx.upgrades.muju.imbue
-		cost = cost + 3 * upgradeCount - mujuUpgradeCount * 1
+		local upgradeCount = ctx.upgrades.zuju.empower.level + ctx.upgrades.zuju.fortify.level + ctx.upgrades.zuju.burst.level + ctx.upgrades.zuju.siphon.level + ctx.upgrades.zuju.sanctuary.level
+		cost = cost + 3 * upgradeCount
 	end
 	if cooldown == 0 and self:spend(cost) then
 		ctx.minions:add(minion, {x = self.x + love.math.random(-20, 20), direction = self.direction})
-		self.minioncds[self.selectedMinion] = minion.cooldown * (1 - (.1 * ctx.upgrades.muju.flow))
-		if ctx.upgrades.muju.flow >= 3 and love.math.random() < .1 then
+		self.minioncds[self.selectedMinion] = minion.cooldown * (1 - (.1 * ctx.upgrades.muju.flow.level))
+		if ctx.upgrades.muju.refresh.level == 1 and love.math.random() < .15 then
 			self.minioncds[self.selectedMinion] = 0
-		end
-		if ctx.upgrades.muju.flow == 5 and love.math.random() < .1 then
-			ctx.minions:add(minion, {x = self.x + love.math.random(-40, 40), direction = self.direction})
 		end
 
 		self.animationLock = true

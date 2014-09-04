@@ -35,9 +35,13 @@ function Juju:update()
 
 	if ctx.player.jujuRealm > 0 then
 		local ghost = ctx.player.ghost
-		if ctx.upgrades.muju.zeal >= 3 and math.distance(self.x, self.y, ghost.x, ghost.y) < self.amount + 120 then
-			local magnetStrength = 2 * tickRate
-			self.x, self.y = math.lerp(self.x, ghost.x, magnetStrength), math.lerp(self.y, ghost.y, magnetStrength)
+		if ctx.upgrades.muju.absorb.level > 0 then
+			local distance, direction = math.vector(self.x, self.y, ghost.x, ghost.y)
+			local threshold = self.amount + 70 + 30 * ctx.upgrades.muju.absorb.level
+			local factor = math.clamp((threshold - distance) / threshold, 0, 1)
+			local speed = threshold * factor * tickRate
+			self.x = self.x + math.dx(speed, direction)
+			self.y = self.y + math.dy(speed, direction)
 		end
 
 		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
@@ -49,7 +53,6 @@ function Juju:update()
 
 	if self.y < -50 then
 		ctx.jujus:remove(self)
-		ctx.sound:play({sound = ctx.sounds.juju})
 	end
 
 	self.angle = self.angle + (math.sin(tick * tickRate) * math.cos(tick * tickRate)) / love.math.random(9, 11)

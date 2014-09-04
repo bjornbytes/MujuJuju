@@ -13,7 +13,6 @@ function Minion:init(data)
 
 	table.merge(data, self)
 
-	self.maxHealth = self.maxHealth + ctx.upgrades[self.code].fortify * 50 
 	self.health = self.maxHealth
 	self.healthDisplay = self.health
 
@@ -42,6 +41,9 @@ function Minion:attack()
 			local dif = math.abs(self.target.x - self.x)
 			if dif <= self.attackRange + self.target.width / 2 then
 				local damage = type(self.damage) == 'function' and self:damage() or self.damage
+				if self.code == 'zuju' then
+					self.health = math.min(self.health + (.1 * damage * ctx.upgrades.zuju.siphon.level), self.maxHealth)
+				end
 
 				self.target:hurt(damage)
 				self.fireTimer = self.fireRate

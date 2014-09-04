@@ -20,8 +20,9 @@ function Zuju:init(data)
 	self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
 	self.skeleton = Skeleton({name = 'zuju', x = self.x, y = self.y + self.height + 8, scale = scale})
 	local healths = {[0] = 80, 125, 175, 235, 300, 400}
-	self.maxHealth = healths[ctx.upgrades.zuju.fortify]
+	self.maxHealth = healths[ctx.upgrades.zuju.fortify.level]
 	self.health = self.maxHealth
+	self.healthDisplay = self.health
 	self.speed = self.speed + love.math.random(-10, 10)
 
 	self.animator = Animator({
@@ -114,11 +115,7 @@ function Zuju:hurt(amount)
 end
 
 function Zuju:damage()
-	local damage = 20 + (5 + ctx.upgrades.zuju.cleave) * ctx.upgrades.zuju.cleave
+	local damage = 20 + (5 + ctx.upgrades.zuju.empower.level) * ctx.upgrades.zuju.empower.level
 	damage = damage + love.math.random(-3, 3)
-	local chance = .05 + (ctx.upgrades.zuju.cleave == 5 and .05 or 0)
-	if ctx.upgrades.zuju.cleave >= 3 and love.math.random() < chance then
-		damage = damage * 2
-	end
 	return damage
 end
