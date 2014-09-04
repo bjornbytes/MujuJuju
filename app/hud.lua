@@ -166,7 +166,6 @@ function Hud:gui()
 		local w, h = 600, 400
 		g.setColor(50, 50, 50, self.upgradeAlpha * 240)
 		g.rectangle('fill', 20, 20, love.graphics.getWidth() - 40, love.graphics.getHeight() - 40)
-		--g.draw(self.upgradeBg, 400, 300, 0, .85, .85, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
 		
 		g.setColor(255, 255, 255, self.upgradeAlpha * 240)
 
@@ -175,86 +174,6 @@ function Hud:gui()
 				g.circle('line', unpack(geometry))
 			end
 		end
-
-		--[=[local xx
-		local idx
-		self.tooltipHover = false
-		
-		-- Juju box
-		if math.inside(mx, my, w2 - 22, h2 - 250, 48, 48) then
-			self.tooltip = math.floor(ctx.player.juju) .. ' Juju!'
-			self.tooltipHover = true
-		end
-
-		-- Zuju
-		if math.inside(mx, my, x1 + (w * .235) - 32, h2 - 144, 64, 64) then
-			self.tooltip = [[Zuju
-				Unlocked!]]
-			self.tooltipHover = true
-		end
-		xx = x1 + (w * .235)
-		idx = 1
-		for i = xx - 80, xx + 80, 78 do
-			local yy = h2 - 144 + 80
-			if idx == 1 or idx == 3 then yy = yy - 12 end
-			local key = ctx.upgrades.keys.zuju[idx]
-			local name = ctx.upgrades.names.zuju[key]
-			local cost = ctx.upgrades.costs.zuju[key][ctx.upgrades.zuju[key] + 1] or ''
-			g.rectangle('line', i - 24, yy, 50, 50)
-			if math.inside(mx, my, i - 24, yy, 50, 50) then
-				self.tooltip = ctx.upgrades.tooltips.zuju[key][ctx.upgrades.zuju[key] + 1]
-				self.tooltipHover = true
-			end
-			idx = idx + 1
-		end
-
-		-- Vuju
-		if #ctx.player.minions < 2 then
-			g.draw(self.lock, x1 + (w * .775) - 20, h2 - 144, 0, .6, .6)
-		end
-
-		if math.inside(mx, my, x1 + (w * .775) - 32, h2 - 144, 64, 64) then
-			if #ctx.player.minions < 2 then
-				self.tooltip = [[Vuju
-					Cost: 250]]
-			else
-				self.tooltip = [[Vuju
-					Unlocked!]]
-			end
-			self.tooltipHover = true
-		end
-		xx = x1 + (w * .78)
-		idx = 1
-		for i = xx - 78, xx + 78, 78 do
-			local yy = h2 - 144 + 80
-			if idx == 1 or idx == 3 then yy = yy - 12 end
-			local key = ctx.upgrades.keys.vuju[idx]
-			local name = ctx.upgrades.names.vuju[key]
-			local cost = ctx.upgrades.costs.vuju[key][ctx.upgrades.vuju[key] + 1] or ''
-			g.rectangle('line', i - 24, yy, 48, 48)
-			if math.inside(mx, my, i - 24, yy, 48, 48) then
-				self.tooltip = ctx.upgrades.tooltips.vuju[key][ctx.upgrades.vuju[key] + 1]
-				self.tooltipHover = true
-			end
-			idx = idx + 1
-		end
-
-		-- MUUUUUUUUUUUUJU
-		xx = x1 + (w * .5)
-		idx = 1
-		for i = xx - 156, xx + 140, 138 do
-			local yy = h2 + 16 + 70
-			if idx == 1 or idx == 3 then yy = yy - 12 end
-			local key = ctx.upgrades.keys.muju[idx]
-			local name = ctx.upgrades.names.muju[key]
-			local cost = ctx.upgrades.costs.muju[key][ctx.upgrades.muju[key] + 1] or ''
-			g.rectangle('line', i - 24, yy, 80, 80)
-			if math.inside(mx, my, i - 24, yy, 80, 80) then
-				self.tooltip = ctx.upgrades.tooltips.muju[key][ctx.upgrades.muju[key] + 1]
-				self.tooltipHover = true
-			end
-			idx = idx + 1
-		end]=]
 
 		if self.tooltip then
 			local mx, my = love.mouse.getPosition()
