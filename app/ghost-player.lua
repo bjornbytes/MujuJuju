@@ -18,6 +18,8 @@ function GhostPlayer:init()
 	local maxJuju = 7
 	self.maxDis = math.lerp(self.maxRange, 0, (1 - (ctx.player.jujuRealm / maxJuju)) ^ 3)
 
+	ctx.sound:play({sound = 'spirit'})
+
 	ctx.view:register(self)
 end
 
