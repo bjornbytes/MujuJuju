@@ -20,7 +20,7 @@ function Minion:init(data)
 end
 
 function Minion:update()
-	self.timeScale = 1
+	self.timeScale = 1 / (1 + ctx.upgrades.muju.distort.level * (ctx.player.dead and 1 or 0))
 	self.target = ctx.target:getClosestEnemy(self)
 	if self.target ~= ctx.shrine then
 		self:attack()
