@@ -7,6 +7,10 @@ function Enemy:init(data)
 	self.x = 0
 	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
 	self.slow = 0
+	self.damageReduction = 0
+	self.damageReudctionDuration = 0
+	self.damageAmplification = 0
+	self.damageAmplificationDuration = 0
 	self.fireTimer = 0
 
 	table.merge(data, self)	
@@ -27,6 +31,12 @@ function Enemy:update()
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 	self.slow = math.lerp(self.slow, 0, 1 * tickRate)
+	self.damageReductionDuration = timer.rot(self.damageReductionDuration, function()
+		self.damageReduction = 0
+	end)
+	self.damageAmplificationDuration = timer.rot(self.damageAmplificationDuration, function()
+		self.damageAmplification = 0
+	end)
 end
 
 function Enemy:move()
@@ -37,7 +47,7 @@ function Enemy:move()
 end
 
 function Enemy:hurt(amount)
-	self.health = self.health - amount
+	self.health = self.health - (amount + (amount * self.damageAmplification))
 	if self.health <= 0 then
 		ctx.enemies:remove(self)
 		return true

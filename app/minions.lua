@@ -30,5 +30,14 @@ function Minions:remove(minion)
 			ctx.particles:add(BurstHeal, {x = minion.x, y = minion.y, radius = radius})
 		end
 	end
+	if ctx.upgrades.muju.harvest.level > 0 then
+		local x = love.math.random(1 + ctx.upgrades.muju.harvest.level, 3 + ctx.upgrades.muju.harvest.level * 2)
+		if love.math.random() > .5 then
+			ctx.jujus:add({amount = x, x = enemy.x, y = enemy.y, vx = love.math.random(-35, 35)})
+		else
+			ctx.jujus:add({amount = x / 2, x = enemy.x, y = enemy.y, vx = love.math.random(0, 45)})
+			ctx.jujus:add({amount = x / 2, x = enemy.x, y = enemy.y, vx = love.math.random(-45, 0)})
+		end
+	end
 	self.minions[minion] = nil
 end

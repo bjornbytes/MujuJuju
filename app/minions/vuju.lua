@@ -10,10 +10,21 @@ Vuju.speed = 0
 
 Vuju.damage = 17
 Vuju.fireRate = 1.7
-Vuju.attackRange = Vuju.width * 3.5
+Vuju.attackRange = 125
 
 function Vuju:init(data)
 	Minion.init(self, data)
+
+	self.attackRange = 125 + ctx.upgrades.vuju.surge.level * 25
+	self.damage = 30
+	local inc = 7
+	for i = 1, #ctx.upgrades.vuju.charge.level do
+		self.damage = self.damage + inc
+		inc = inc + 3
+	end
+
+	self.curseRate = 8 - ctx.upgrades.vuju.condemn.level
+	self.curseTimer = 0
 
 	self.depth = self.depth + love.math.random()
 	self.skeleton = Skeleton({name = 'vuju', x = self.x, y = self.y + self.height, scale = .5})
@@ -76,33 +87,32 @@ function Vuju:draw()
 end
 
 function Vuju:attack()
-	if self.fireTimer == 0 then
-		if self.target ~= nil then
-			local dif = math.abs(self.target.x - self.x)
-			if dif <= self.attackRange + self.target.width / 2 then
-				local ct = 1
-				if ctx.upgrades.vuju.chain > 0 then
-					if love.math.random() < ctx.upgrades.vuju.chain * .2 then
-						ct = 2
-					end
+	if self.target == nil then return end
+	if math.abs(self.target.x - self.x) > self.attackRange + self.target.width / 2 then return end
+	if ctx.upgrades.vuju.condemn.level > 0 and self.curseTimer == 0 then
+		self.target.damageReduction = .4 + (ctx.upgrades.vuju.condemn.level * .1)
+		self.target.damageReductionDuration = 5
+		self.target.damageAmplification = .33 * ctx.upgrades.vuju.soak.level
+		self.target.damageAmplificationDuration = 5
+		self.curseTimer = self.curseRate
+	elseif self.fireTimer == 0 then
+		local targets = {self.target}
+		local damage = self.damage
+		for i = 1, 2 * ctx.upgrades.vuju.arc.level do
+			targets[1]:hurt(damage)
+			ctx.particles:add(Lightning, {x = targets[1].x})
+			damage = math.max(damage / 2, self.damage / 4)
+			local newTargets = ctx.target:getEnemiesInRange(targets[1], 25 + (25 * ctx.upgrades.vuju.arc.level))
+			if not newTargets then break end
+			for j = 1, #newTargets do
+				if not table.has(targets, newTargets[j]) then
+					table.insert(targets, 1, newTargets[j])
+					break
 				end
-
-				for i = 1, ct do
-					ctx.particles:add(Lightning, {x = self.target.x})
-					if ctx.upgrades.vuju.curse > 0 then
-						if love.math.random() < ctx.upgrades.vuju.curse * .2 then
-							self.target.slow = 1
-						end
-					end
-					if self.target:hurt(self.damage) then
-						self.target = nil
-						break
-					end
-				end
-
-				self.fireTimer = self.fireRate
 			end
 		end
+
+		self.fireTimer = self.fireRate
 	end
 end
 

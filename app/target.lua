@@ -46,10 +46,12 @@ function Target:getClosestEnemy(source)
 	local closestEnemy
 	local enemyDistance = math.huge
 	table.each(ctx.enemies.enemies, function(e)
-		local distance = math.abs(source.x - e.x)
-		if distance < enemyDistance then
-			enemyDistance = distance
-			closestEnemy = e
+		if e ~= source then
+			local distance = math.abs(source.x - e.x)
+			if distance < enemyDistance then
+				enemyDistance = distance
+				closestEnemy = e
+			end
 		end
 	end)
 	return closestEnemy, enemyDistance
@@ -62,10 +64,12 @@ function Target:getClosestMinion(source)
 	local closestMinion
 	local minionDistance = math.huge
 	table.each(ctx.minions.minions, function(m)
-		local distance = math.abs(source.x - m.x)
-		if distance < minionDistance then
-			minionDistance = distance
-			closestMinion = m
+		if source ~= m then
+			local distance = math.abs(source.x - m.x)
+			if distance < minionDistance then
+				minionDistance = distance
+				closestMinion = m
+			end
 		end
 	end)
 	return closestMinion, minionDistance

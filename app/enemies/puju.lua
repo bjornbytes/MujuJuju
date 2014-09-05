@@ -45,8 +45,9 @@ function Puju:attack()
 		return self:butt()
 	end
 
-	if self.target:hurt(self.damage) then self.target = false end
-	self:hurt(self.damage * .25 * ctx.upgrades.muju.mirror.level)
+	local damage = self.damage * (1 - self.damageReduction)
+	if self.target:hurt(damage) then self.target = false end
+	self:hurt(damage * .25 * ctx.upgrades.muju.mirror.level)
 	ctx.sound:play({sound = ctx.sounds.combat})
 end
 
@@ -54,7 +55,8 @@ function Puju:butt()
 	local targets = ctx.target:getMinionsInRange(self, self.buttRange * 2)
 	table.each(targets, function(target)
 		if math.sign(self.target.x - self.x) == math.sign(target.x - self.x) then
-			target:hurt(self.buttDamage)
+			local damage = self.buttDamage * (1 - self.damageReduction)
+			target:hurt(damage)
 			local sign = math.sign(target.x - self.x)
 			target.knockBack = sign * (.1 + love.math.random() / 15)
 		end
@@ -67,4 +69,8 @@ function Puju:draw()
 	local sign = -math.sign(self.target.x - self.x)
 	g.setColor(255, 255, 255)
 	g.draw(self.image, self.x, self.y + 5 * math.sin(ctx.hud.timer.total * tickRate * 4), 0, self.scale * sign, self.scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
+	if self.damageReduction > 0 then
+		g.setColor(255, 200, 200, 200 * math.min(self.damageReductionDuration, 1))
+		g.circle('fill', self.x, self.y - 80, 5)
+	end
 end

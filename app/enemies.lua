@@ -56,4 +56,5 @@ function Enemies:remove(enemy)
 		end
 	end)
 	self.enemies[enemy] = nil
+	enemy = nil
 end

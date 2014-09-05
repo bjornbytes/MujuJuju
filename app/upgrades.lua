@@ -96,11 +96,11 @@ Upgrades.clear = function()
 			costs = {100, 50, 50, 50, 50},
 			description = 'Vuju gain the ability to hex enemies, reducing the damage they deal for 5 seconds.',
 			values = {
-				[1] = '25% damage reduction, 14 second cooldown',
-				[2] = '35% damage reduction, 12 second cooldown',
-				[3] = '45% damage reduction, 10 second cooldown',
-				[4] = '55% damage reduction, 8 second cooldown',
-				[5] = '65% damage reduction, 6 second cooldown'
+				[1] = '40% damage reduction, 8 second cooldown',
+				[2] = '50% damage reduction, 7 second cooldown',
+				[3] = '60% damage reduction, 6 second cooldown',
+				[4] = '70% damage reduction, 5 second cooldown',
+				[5] = '80% damage reduction, 4 second cooldown'
 			}
 		},
 		arc = {
