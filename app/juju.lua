@@ -17,6 +17,7 @@ function Juju:init(data)
 	self.vy = love.math.random(-300, -100)
 	self.scale = 0
 	self.alpha = 0
+	self.dead = false
 	table.merge(data, self)
 	ctx.view:register(self)
 end
@@ -24,6 +25,16 @@ end
 function Juju:update()
 	self.prevx = self.x
 	self.prevy = self.y
+	
+	if self.dead then
+		local tx, ty = 64, 64
+		self.x, self.y = math.lerp(self.x, tx, 10 * tickRate), math.lerp(self.y, ty, 10 * tickRate)
+		self.scale = math.lerp(self.scale, .1, 5 * tickRate)
+		if math.distance(self.x, self.y, tx, ty) < 1 then
+			ctx.jujus:remove(self)
+		end
+		return
+	end
 
 	self.vx = math.lerp(self.vx, 0, tickRate)
 	self.vy = math.lerp(self.vy, 0, 2 * tickRate)
@@ -46,8 +57,8 @@ function Juju:update()
 
 		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
 			ctx.player.juju = ctx.player.juju + self.amount
-			ctx.jujus:remove(self)
 			ctx.sound:play({sound = ctx.sounds.juju})
+			self.dead = true
 		end
 	end
 
