@@ -22,6 +22,8 @@ function GhostPlayer:init()
 end
 
 function GhostPlayer:update()
+	local maxJuju = 7
+
 	self.prevx = self.x
 	self.prevy = self.y
 
@@ -44,10 +46,16 @@ function GhostPlayer:update()
 		self.vy = math.lerp(self.vy, 0, 2 * tickRate)
 	end
 
+	local len = (self.vx ^ 2 + self.vy ^ 2) ^ .5
+	if len > 0 and ctx.player.jujuRealm < maxJuju - 1 then
+		self.vx = (self.vx / len) * math.min(len, speed)
+		self.vy = (self.vy / len) * math.min(len, speed)
+	end
+
+
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 
-	local maxJuju = 7
 	self.maxDis = math.lerp(self.maxRange, 0, (1 - (ctx.player.jujuRealm / maxJuju)) ^ 3)
 	if math.distance(self.x, self.y, ctx.player.x, ctx.player.y) > self.maxDis then
 		local angle = math.direction(ctx.player.x, ctx.player.y, self.x, self.y)

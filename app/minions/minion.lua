@@ -27,7 +27,7 @@ function Minion:update()
 	end
 	
 	self.fireTimer = self.fireTimer - math.min(self.fireTimer, tickRate * self.timeScale)
-	self:hurt(2 * tickRate)
+	self:hurt(self.maxHealth * .033 * tickRate)
 	self.speed = math.max(self.speed - .5 * tickRate, 20)
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 

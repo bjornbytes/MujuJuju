@@ -8,7 +8,7 @@ Puju.height = 24
 Puju.speed = 40
 Puju.damage = 18
 Puju.fireRate = 1.1
-Puju.maxHealth = 80
+Puju.maxHealth = 40
 Puju.attackRange = Puju.width / 2
 
 Puju.buttRate = 4
@@ -24,7 +24,7 @@ function Puju:init(data)
 	self.scale = 1 + (r / 210)
 	self.y = self.y + r
 	self.depth = self.depth - r / 20 + love.math.random() * (1 / 20)
-	self.maxHealth = self.maxHealth + 3 * ctx.enemies.level ^ 1.185
+	self.maxHealth = self.maxHealth + 4 * ctx.enemies.level ^ 1.185
 	self.health = self.maxHealth
 	self.damage = self.damage + .3 * ctx.enemies.level ^ 1.2
 end
@@ -32,7 +32,7 @@ end
 function Puju:update()
 	Enemy.update(self)
 
-	self.target = ctx.player.dead and ctx.target:getClosestNPC(self) or ctx.target:getClosestTarget(self)
+	self.target = (ctx.player.dead or ctx.player.invincible > 0) and ctx.target:getClosestNPC(self) or ctx.target:getClosestTarget(self)
 	self:move()
 
 	self.buttTimer = timer.rot(self.buttTimer)

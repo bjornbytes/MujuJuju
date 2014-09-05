@@ -123,6 +123,8 @@ function Player:update()
 		self.ghost:update()
 	end
 
+	self:hurt(self.maxHealth * .033 * tickRate)
+
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 	self.jujuTimer = timer.rot(self.jujuTimer, function()
 		self.juju = self.juju + 1

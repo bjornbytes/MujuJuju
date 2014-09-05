@@ -8,7 +8,7 @@ function Enemy:init(data)
 	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
 	self.slow = 0
 	self.damageReduction = 0
-	self.damageReudctionDuration = 0
+	self.damageReductionDuration = 0
 	self.damageAmplification = 0
 	self.damageAmplificationDuration = 0
 	self.fireTimer = 0
