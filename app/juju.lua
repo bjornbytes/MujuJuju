@@ -19,6 +19,10 @@ function Juju:init(data)
 	self.alpha = 0
 	self.dead = false
 	table.merge(data, self)
+
+	for i = 1, 15 do
+		ctx.particles:add(JujuJuice, {x = self.x, y = self.y})
+	end
 	ctx.view:register(self)
 end
 
@@ -34,6 +38,12 @@ function Juju:update()
 			ctx.jujus:remove(self)
 			ctx.player.juju = ctx.player.juju + self.amount
 			ctx.hud.jujuIconScale = 1
+			for i = 1, 20 do
+				ctx.particles:add(JujuJuice, {x = tx, y = ty})
+			end
+		end
+		for i = 1, 2 do
+			ctx.particles:add(JujuJuice, {x = self.x, y = self.y})
 		end
 		return
 	end

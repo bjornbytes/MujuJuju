@@ -54,7 +54,6 @@ function GhostPlayer:update()
 		self.vy = (self.vy / len) * math.min(len, speed)
 	end
 
-
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 
