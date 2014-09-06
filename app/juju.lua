@@ -27,11 +27,13 @@ function Juju:update()
 	self.prevy = self.y
 	
 	if self.dead then
-		local tx, ty = 64, 64
+		local tx, ty = 52, 52
 		self.x, self.y = math.lerp(self.x, tx, 10 * tickRate), math.lerp(self.y, ty, 10 * tickRate)
 		self.scale = math.lerp(self.scale, .1, 5 * tickRate)
-		if math.distance(self.x, self.y, tx, ty) < 1 then
+		if math.distance(self.x, self.y, tx, ty) < 16 then
 			ctx.jujus:remove(self)
+			ctx.player.juju = ctx.player.juju + self.amount
+			ctx.hud.jujuIconScale = 1
 		end
 		return
 	end
@@ -56,7 +58,6 @@ function Juju:update()
 		end
 
 		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
-			ctx.player.juju = ctx.player.juju + self.amount
 			ctx.sound:play({sound = ctx.sounds['juju' .. love.math.random(1, 8)]})
 			self.dead = true
 		end

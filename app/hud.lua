@@ -42,12 +42,14 @@ function Hud:init()
 	self.tooltip = nil
 	self.tooltipRaw = ''
 	self.jujuIcon = g.newImage('media/graphics/juju-icon.png')
+	self.jujuIconScale = .75
 	self.timer = {total = 0, minutes = 0, seconds = 0}
 	ctx.view:register(self, 'gui')
 end
 
 function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
+	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
 
 	-- Update Timer
 	self:score()
@@ -186,9 +188,9 @@ function Hud:gui()
 	end
 
 	g.setColor(255, 255, 255)
-	g.draw(self.jujuIcon, 16, 16, 0, .75, .75)
+	g.draw(self.jujuIcon, 52, 55, 0, self.jujuIconScale, self.jujuIconScale, self.jujuIcon:getWidth() / 2, self.jujuIcon:getHeight() / 2)
 	g.setColor(0, 0, 0)
-	g.printf(math.floor(ctx.player.juju), 16, 16 + self.jujuIcon:getHeight() * .375 - (g.getFont():getHeight() / 2), self.jujuIcon:getWidth() * .75, 'center')
+	g.printf(math.floor(ctx.player.juju), 16, 18 + self.jujuIcon:getHeight() * .375 - (g.getFont():getHeight() / 2), self.jujuIcon:getWidth() * .75, 'center')
 	g.setColor(255, 255, 255)
 end
 

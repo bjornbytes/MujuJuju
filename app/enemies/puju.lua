@@ -27,6 +27,32 @@ function Puju:init(data)
 	self.maxHealth = self.maxHealth + 4 * ctx.enemies.level ^ 1.185
 	self.health = self.maxHealth
 	self.damage = self.damage + .3 * ctx.enemies.level ^ 1.2
+
+	self.skeleton = Skeleton({name = 'puju', x = self.x, y = self.y + self.height + 8, scale = self.scale})
+	self.animator = Animator({
+		skeleton = self.skeleton,
+		mixes = {
+			{from = 'attack', to = 'headbutt', time = .2},
+			{from = 'headbutt', to = 'attack', time = .2},
+		}
+	})
+
+	self.animationState = 'attack'
+	self.animator:set(self.animationState, true)
+	self.animator.state.onComplete = function(trackIndex)
+		local name = self.animator.state:getCurrent(trackIndex).animation.name
+		if name == 'headbutt' then
+			self.animationState = 'attack'
+			self.animator:set(self.animationState, true)
+		end
+	end
+
+	self.animationSpeeds = table.map({
+		headbutt = .69 * tickRate,
+		attack = .8 * tickRate
+	}, f.val)
+
+	self.attackAnimation = 0
 end
 
 function Puju:update()
@@ -36,12 +62,18 @@ function Puju:update()
 	self:move()
 
 	self.buttTimer = timer.rot(self.buttTimer)
+
+	self.skeleton.skeleton.x = self.x
+	self.skeleton.skeleton.y = self.y + self.height / 2 + 5 * math.sin(ctx.hud.timer.total * tickRate * 4)
+	self.skeleton.skeleton.flipX = (self.target.x - self.x) > 0
+	self.animator:update(self.animationSpeeds[self.animationState]() * ((self.animationState ~= 'attack' or self.attackAnimation > 0) and 1 or 0))
+	self.attackAnimation = timer.rot(self.attackAnimation)
 end
 
 function Puju:attack()
 	self.fireTimer = self.fireRate
 
-	if self.buttTimer == 0 and self.target ~= ctx.player and love.math.random() < .6 then
+	if self.buttTimer == 0 and self.target ~= ctx.player and self.target ~= ctx.shrine and love.math.random() < .6 then
 		return self:butt()
 	end
 
@@ -49,6 +81,7 @@ function Puju:attack()
 	if self.target:hurt(damage) then self.target = false end
 	self:hurt(damage * .25 * ctx.upgrades.muju.mirror.level)
 	ctx.sound:play({sound = ctx.sounds.combat})
+	self.attackAnimation = 1
 end
 
 function Puju:butt()
@@ -62,13 +95,16 @@ function Puju:butt()
 		end
 	end)
 	self.buttTimer = self.buttRate
+	self.animationState = 'headbutt'
+	self.animator:set(self.animationState, false)
 end
 
 function Puju:draw()
 	local g = love.graphics
 	local sign = -math.sign(self.target.x - self.x)
 	g.setColor(255, 255, 255)
-	g.draw(self.image, self.x, self.y + 5 * math.sin(ctx.hud.timer.total * tickRate * 4), 0, self.scale * sign, self.scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
+	self.animator:draw()
+	--g.draw(self.image, self.x, self.y + , 0, self.scale * sign, self.scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
 	if self.damageReduction > 0 then
 		g.setColor(255, 200, 200, 200 * math.min(self.damageReductionDuration, 1))
 		g.circle('fill', self.x, self.y - 80, 5)
