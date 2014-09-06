@@ -25,6 +25,10 @@ function Zuju:init(data)
 	self.healthDisplay = self.health
 	self.speed = self.speed + love.math.random(-10, 10)
 
+	for i = 1, 15 do
+		ctx.particles:add(Dirt, {x = self.x, y = self.y + self.height})
+	end
+
 	self.animator = Animator({
 		skeleton = self.skeleton,
 		mixes = {

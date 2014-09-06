@@ -2,12 +2,13 @@ Vignette = {}
 
 function Vignette:init()
   self:resize()
-	self.radius = 1
-  self.shader:send('blur', .45)
+	self.radius = .85
+	self.blur = .45
 end
 
 function Vignette:update()
-	self.radius = math.lerp(self.radius, ctx.player.dead and .85 or 1, 3 * tickRate)
+	self.blur = math.lerp(self.blur, ctx.player.dead and 1.15 or .45, 2 * tickRate)
+	self.shader:send('blur', self.blur)
 	self.shader:send('radius', self.radius)
 end
 

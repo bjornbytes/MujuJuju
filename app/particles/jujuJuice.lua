@@ -16,7 +16,7 @@ function JujuJuice:update()
 	self.vy = math.lerp(self.vy, 0, 2 * tickRate)
 	self.gravity = math.lerp(self.gravity, 0, 2 * tickRate)
 	self.alpha = math.lerp(self.alpha, 0, 2 * tickRate)
-	if self.alpha < .01 then ctx.particles:remove(self) end
+	if self.alpha < .04 then ctx.particles:remove(self) end
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 end
@@ -31,4 +31,5 @@ function JujuJuice:draw()
 	g.circle('fill', self.x, self.y, self.size * 1.5)
 	g.setColor(240, 255, 200, self.alpha * 20)
 	g.circle('fill', self.x, self.y, self.size * 2)
+	g.setBlendMode('alpha')
 end

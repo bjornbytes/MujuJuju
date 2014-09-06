@@ -55,6 +55,10 @@ function Juju:update()
 	if self.vy > -.1 then
 		self.y = self.y - 10 * tickRate
 	end
+	
+	if love.math.random() < 2 * tickRate then
+		ctx.particles:add(JujuJuice, {x = self.x, y = self.y, vy = love.math.random(-150, -75), vx = love.math.random(-100, 100), alpha = .35})
+	end
 
 	if ctx.player.jujuRealm > 0 then
 		local ghost = ctx.player.ghost
