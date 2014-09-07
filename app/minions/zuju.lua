@@ -67,6 +67,11 @@ end
 
 function Zuju:update()
 	if self.animationState == 'death' or self.animationState == 'spawn' then
+		self.x = self.x + self.knockBack * tickRate * 3000
+		self.knockBack = math.max(0, math.abs(self.knockBack) - tickRate) * math.sign(self.knockBack)
+		self.knockBackDisplay = math.lerp(self.knockBackDisplay, math.abs(self.knockBack), 20 * tickRate)
+		self.skeleton.skeleton.x = self.x
+		self.skeleton.skeleton.y = self.y + self.height + 8 - math.abs(self.knockBackDisplay * 200)
 		self.animator:update(self.animationSpeeds[self.animationState]())
 		self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
 		return
@@ -98,7 +103,7 @@ function Zuju:update()
 	end
 
 	self.skeleton.skeleton.x = self.x
-	self.skeleton.skeleton.y = self.y + self.height + 8
+	self.skeleton.skeleton.y = self.y + self.height + 8 - math.abs(self.knockBackDisplay * 200)
 	self.animator:update(self.animationSpeeds[self.animationState]())
 end
 

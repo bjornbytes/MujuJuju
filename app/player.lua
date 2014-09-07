@@ -23,7 +23,7 @@ function Player:init()
 	self.minions = {Zuju}
 	self.minioncds = {0}
 	self.selectedMinion = 1
-	self.summoned = false
+	self.recentSelect = 0
 	self.direction = 1
 	self.invincible = 0
 
@@ -102,7 +102,7 @@ function Player:update()
 	end
 
 	self.jujuRealm = timer.rot(self.jujuRealm, function()
-		self.invincible = 3
+		self.invincible = 2
 		self.health = self.maxHealth
 		self.dead = false
 		self.ghost:despawn()
@@ -129,6 +129,7 @@ function Player:update()
 		self.juju = self.juju + 1
 		return 1
 	end)
+	self.recentSelect = timer.rot(self.recentSelect)
 	
 	self:animate()
 end
@@ -230,6 +231,7 @@ function Player:keypressed(key)
 	for i = 1, #self.minions do
 		if tonumber(key) == i then
 			self.selectedMinion = i
+			self.recentSelect = 1
 			return
 		end
 	end

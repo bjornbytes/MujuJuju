@@ -18,7 +18,7 @@ function Vuju:init(data)
 	self.attackRange = 125 + ctx.upgrades.vuju.surge.level * 25
 	self.damage = 30
 	local inc = 7
-	for i = 1, #ctx.upgrades.vuju.charge.level do
+	for i = 1, ctx.upgrades.vuju.charge.level do
 		self.damage = self.damage + inc
 		inc = inc + 3
 	end
@@ -89,7 +89,7 @@ end
 function Vuju:attack()
 	if self.target == nil then return end
 	if math.abs(self.target.x - self.x) > self.attackRange + self.target.width / 2 then return end
-	if ctx.upgrades.vuju.condemn.level > 0 and self.curseTimer == 0 then
+	if ctx.upgrades.vuju.condemn.level > 0 and self.fireTimer == 0 and self.curseTimer == 0 then
 		self.target.damageReduction = .4 + (ctx.upgrades.vuju.condemn.level * .1)
 		self.target.damageReductionDuration = 5
 		self.target.damageAmplification = .33 * ctx.upgrades.vuju.soak.level
@@ -98,7 +98,7 @@ function Vuju:attack()
 	elseif self.fireTimer == 0 then
 		local targets = {self.target}
 		local damage = self.damage
-		for i = 1, 2 * ctx.upgrades.vuju.arc.level do
+		for i = 1, math.max(1, 2 * ctx.upgrades.vuju.arc.level) do
 			targets[1]:hurt(damage)
 			ctx.particles:add(Lightning, {x = targets[1].x})
 			damage = math.max(damage / 2, self.damage / 4)

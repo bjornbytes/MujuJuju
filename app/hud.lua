@@ -104,6 +104,13 @@ end
 function Hud:gui()
 	local w, h = love.graphics.getDimensions()
 
+	if ctx.player.recentSelect > 0 and ctx.player.selectedMinion == 2 then
+		local range = 125 + ctx.upgrades.vuju.surge.level * 25
+		g.setColor(255, 255, 255, 255 * math.min(ctx.player.recentSelect * 2, 1))
+		local x, y = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), h - ctx.environment.groundHeight
+		g.line(x - range, y, x + range, y)
+	end
+
 	-- Timer
 	local total = self.timer.total * tickRate
 	self.timer.seconds = math.floor(total % 60)
@@ -121,8 +128,8 @@ function Hud:gui()
 	g.print(self.timer.minutes .. ':' .. self.timer.seconds, w - 50, 25)
 	if true then
 		g.print('level ' .. math.floor(ctx.enemies.level), w - 150, 25 + g.getFont():getHeight())
-		g.print('puju ' .. math.floor(Puju.maxHealth + 4 * ctx.enemies.level ^ 1.185) .. ' / ' .. math.floor(Puju.damage + .3 * ctx.enemies.level ^ 1.2), w - 150, 25 + 2 * g.getFont():getHeight())
-		g.print('spuju ' .. math.floor(Spuju.maxHealth + 4 * ctx.enemies.level ^ 1) .. ' / ' .. math.floor(Spuju.damage + .45 * ctx.enemies.level ^ 1.4), w - 150, 25 + 3 * g.getFont():getHeight())
+		g.print('puju ' .. math.floor(Puju.maxHealth + 3 * ctx.enemies.level ^ 1.25) .. ' / ' .. math.floor(Puju.damage + .3 * ctx.enemies.level ^ 1.2), w - 150, 25 + 2 * g.getFont():getHeight())
+		g.print('spuju ' .. math.floor(Spuju.maxHealth + 4 * ctx.enemies.level ^ .9) .. ' / ' .. math.floor(Spuju.damage + .6 * ctx.enemies.level ^ 1.1), w - 150, 25 + 3 * g.getFont():getHeight())
 	end
 
 	g.setFont(pixelFont)
@@ -198,6 +205,11 @@ function Hud:keypressed(key)
 	if (key == 'tab' or key == 'e') and math.abs(ctx.player.x - ctx.shrine.x) < ctx.player.width then
 		self.upgrading = not self.upgrading
 		return true
+	end
+
+	if key == 'v' and #ctx.player.minions < 2 and ctx.player:spend(150) then
+		table.insert(ctx.player.minions, Vuju)
+		table.insert(ctx.player.minioncds, 0)
 	end
 
 	if key == 'escape' and self.upgrading then
