@@ -4,7 +4,7 @@ Vuju = extend(Minion)
 
 Vuju.code = 'vuju'
 Vuju.cost = 30 
-Vuju.cooldown = 5
+Vuju.cooldown = 6
 Vuju.maxHealth = 70
 Vuju.speed = 0
 
@@ -16,7 +16,7 @@ function Vuju:init(data)
 	Minion.init(self, data)
 
 	self.attackRange = 125 + ctx.upgrades.vuju.surge.level * 25
-	self.damage = 30
+	self.damage = 20
 	local inc = 7
 	for i = 1, ctx.upgrades.vuju.charge.level do
 		self.damage = self.damage + inc
@@ -99,6 +99,7 @@ function Vuju:attack()
 		local targets = {self.target}
 		local damage = self.damage
 		for i = 1, math.max(1, 2 * ctx.upgrades.vuju.arc.level) do
+			if i > #targets then break end
 			targets[1]:hurt(damage)
 			ctx.particles:add(Lightning, {x = targets[1].x})
 			damage = math.max(damage / 2, self.damage / 4)

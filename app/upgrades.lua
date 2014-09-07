@@ -83,12 +83,12 @@ Upgrades.clear = function()
 			costs = {60, 70, 80, 90, 100},
 			description = 'Vuju become more charged and deal increased damage with lightning.',
 			values = {
-				[0] = '30 damage',
-				[1] = '37 damage',
-				[2] = '47 damage',
-				[3] = '60 damage',
-				[4] = '76 damage',
-				[5] = '95 damage'
+				[0] = '20 damage',
+				[1] = '27 damage',
+				[2] = '37 damage',
+				[3] = '50 damage',
+				[4] = '66 damage',
+				[5] = '85 damage'
 			}
 		},
 		condemn = {

@@ -93,7 +93,7 @@ function Target:getEnemiesInRange(source, range)
 	local enemiesInRange = {}
 	table.each(ctx.enemies.enemies, function(e)
 		local distance = math.abs(source.x - e.x)
-		if distance <= range + e.width / 2 then
+		if e ~= source and distance <= range + e.width / 2 then
 			table.insert(enemiesInRange,e)
 		end
 	end)

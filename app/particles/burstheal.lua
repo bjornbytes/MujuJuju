@@ -1,9 +1,11 @@
 BurstHeal = extend(Particle)
 
+
 function BurstHeal:init(data)
 	self.health = 3 + ctx.upgrades.zuju.sanctuary.level
+	self.maxHealth = self.health
 	self.amount = (30 + (ctx.upgrades.zuju.sanctuary.level * 10)) * tickRate
-	self.dept = self.depth + love.math.random()
+	self.depth = 0 + love.math.random()
 	Particle.init(self, data)
 end
 
@@ -19,6 +21,6 @@ end
 
 function BurstHeal:draw()
 	local g = love.graphics
-	g.setColor(20, 180, 20, 80 * math.min(self.health / BurstHeal.health, 1))
+	g.setColor(20, 180, 20, 80 * math.min(self.health / self.maxHealth, 1))
 	g.circle('fill', self.x, self.y, self.radius)
 end

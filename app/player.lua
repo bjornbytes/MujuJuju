@@ -188,6 +188,9 @@ function Player:summon()
 	if minion.code == 'zuju' then
 		local upgradeCount = ctx.upgrades.zuju.empower.level + ctx.upgrades.zuju.fortify.level + ctx.upgrades.zuju.burst.level + ctx.upgrades.zuju.siphon.level + ctx.upgrades.zuju.sanctuary.level
 		cost = cost + 3 * upgradeCount
+	elseif minion.code == 'vuju' then
+		local upgradeCount = ctx.upgrades.vuju.surge.level + ctx.upgrades.vuju.charge.level + ctx.upgrades.vuju.condemn.level + ctx.upgrades.vuju.arc.level + ctx.upgrades.vuju.soak.level
+		cost = cost + 4 * upgradeCount
 	end
 	if cooldown == 0 and self:spend(cost) then
 		ctx.minions:add(minion, {x = self.x + love.math.random(-20, 20), direction = self.direction})
