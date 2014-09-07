@@ -44,7 +44,7 @@ function Bloom:applyEffect(source, target)
   g.setBlendMode('additive')
 	g.draw(self.canvas, 0, 0, 0, 4, 4)
 	for i = 6, 1, -1 do
-		g.draw(self.canvas, 400, 300, 0, 4 + i * 2 * factor, 4 + i * 2 * factor, self.canvas:getWidth() / 2, self.canvas:getHeight() / 2)
+		g.draw(self.canvas, 400, 300, 0, 4 + i * 1.25 * factor, 4 + i * 1.25 * factor, self.canvas:getWidth() / 2, self.canvas:getHeight() / 2)
 	end
   g.setBlendMode('alpha')
 
