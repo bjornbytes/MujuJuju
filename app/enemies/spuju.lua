@@ -22,7 +22,7 @@ function Spuju:init(data)
 	self.depth = self.depth - r / 25 + love.math.random() * (1 / 25)
 	self.maxHealth = self.maxHealth + 4 * ctx.enemies.level ^ .9
 	self.health = self.maxHealth
-	self.damage = self.damage + .6 * ctx.enemies.level ^ 1.1
+	self.damage = self.damage + 1.1 * ctx.enemies.level ^ .9
 	self.clip = 3
 end
 

@@ -4,7 +4,7 @@ Upgrades.clear = function()
 	Upgrades.zuju = {
 		empower = {
 			level = 0,
-			costs = {45, 64, 95, 135, 185},
+			costs = {45, 65, 95, 135, 185},
 			description = 'Zuju strike with increased force.',
 			values = {
 				[0] = '17 - 23 damage',
@@ -83,12 +83,12 @@ Upgrades.clear = function()
 			costs = {60, 70, 80, 90, 100},
 			description = 'Vuju become more charged and deal increased damage with lightning.',
 			values = {
-				[0] = '25 damage',
-				[1] = '32 damage',
-				[2] = '42 damage',
-				[3] = '55 damage',
-				[4] = '71 damage',
-				[5] = '90 damage'
+				[0] = '30 damage',
+				[1] = '37 damage',
+				[2] = '47 damage',
+				[3] = '60 damage',
+				[4] = '76 damage',
+				[5] = '95 damage'
 			}
 		},
 		condemn = {

@@ -16,7 +16,7 @@ function Vuju:init(data)
 	Minion.init(self, data)
 
 	self.attackRange = 125 + ctx.upgrades.vuju.surge.level * 25
-	self.damage = 25
+	self.damage = 30
 	local inc = 7
 	for i = 1, ctx.upgrades.vuju.charge.level do
 		self.damage = self.damage + inc

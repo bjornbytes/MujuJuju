@@ -126,11 +126,6 @@ function Hud:gui()
 
 	g.setColor(255, 255, 255)
 	g.print(self.timer.minutes .. ':' .. self.timer.seconds, w - 50, 25)
-	if true then
-		g.print('level ' .. math.floor(ctx.enemies.level), w - 150, 25 + g.getFont():getHeight())
-		g.print('puju ' .. math.floor(Puju.maxHealth + 3 * ctx.enemies.level ^ 1.25) .. ' / ' .. math.floor(Puju.damage + .3 * ctx.enemies.level ^ 1.2), w - 150, 25 + 2 * g.getFont():getHeight())
-		g.print('spuju ' .. math.floor(Spuju.maxHealth + 4 * ctx.enemies.level ^ .9) .. ' / ' .. math.floor(Spuju.damage + .6 * ctx.enemies.level ^ 1.1), w - 150, 25 + 3 * g.getFont():getHeight())
-	end
 
 	g.setFont(pixelFont)
 	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})

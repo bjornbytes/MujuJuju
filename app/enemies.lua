@@ -10,7 +10,7 @@ end
 
 function Enemies:update()
 	self.nextEnemy = timer.rot(self.nextEnemy, function()
-		if table.count(self.enemies) < 1 + self.level / 3 then
+		if table.count(self.enemies) < 1 + self.level / 2 then
 			local spawnType
 			local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
 
@@ -22,8 +22,8 @@ function Enemies:update()
 			end
 
 			self:add(spawnType, {x = x})
-			self.minEnemyRate = math.max(self.minEnemyRate - .045, 2)
-			self.maxEnemyRate = math.max(self.maxEnemyRate - .055, 2.75)
+			self.minEnemyRate = math.max(self.minEnemyRate - .045 * (self.minEnemyRate / 10), 2)
+			self.maxEnemyRate = math.max(self.maxEnemyRate - .055 * (self.maxEnemyRate / 10), 2.75)
 		end
 		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
 	end)
