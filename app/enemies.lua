@@ -4,7 +4,7 @@ function Enemies:init()
 	self.enemies = {}
 	self.level = 0
 	self.nextEnemy = 5
-	self.minEnemyRate = 7
+	self.minEnemyRate = 6
 	self.maxEnemyRate = 9
 end
 
@@ -22,8 +22,8 @@ function Enemies:update()
 			end
 
 			self:add(spawnType, {x = x})
-			self.minEnemyRate = math.max(self.minEnemyRate - .045 * (self.minEnemyRate / 10), 2)
-			self.maxEnemyRate = math.max(self.maxEnemyRate - .055 * (self.maxEnemyRate / 10), 2.75)
+			self.minEnemyRate = math.max(self.minEnemyRate - .06 * math.clamp(self.minEnemyRate / 5, .5, 1), 2)
+			self.maxEnemyRate = math.max(self.maxEnemyRate - .03 * math.clamp(self.maxEnemyRate / 4, .5, 1), 2.75)
 		end
 		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
 	end)

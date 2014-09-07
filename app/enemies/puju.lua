@@ -24,7 +24,7 @@ function Puju:init(data)
 	self.scale = 1 + (r / 210)
 	self.y = self.y + r
 	self.depth = self.depth - r / 20 + love.math.random() * (1 / 20)
-	self.maxHealth = self.maxHealth + 3 * ctx.enemies.level ^ 1.1
+	self.maxHealth = self.maxHealth + 4 * ctx.enemies.level ^ 1.1
 	self.health = self.maxHealth
 	self.damage = self.damage + .5 * ctx.enemies.level
 	self.buttDamage = self.damage * 1.5
