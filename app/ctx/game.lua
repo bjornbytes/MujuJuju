@@ -12,7 +12,7 @@ function Game:load()
 	self.jujus = Jujus()
 	self.particles = Particles()
 	self.effects = Effects()
-	--self.effects:add(Vignette)
+	self.effects:add(Vignette)
 	self.effects:add(Bloom)
 	self.hud = Hud()
 	self.upgrades = Upgrades

@@ -21,7 +21,7 @@ function Juju:init(data)
 	table.merge(data, self)
 
 	for i = 1, 15 do
-		ctx.particles:add(JujuJuice, {x = self.x, y = self.y})
+		ctx.particles:add(JujuSex, {x = self.x, y = self.y})
 	end
 	ctx.view:register(self)
 end
@@ -39,11 +39,11 @@ function Juju:update()
 			ctx.player.juju = ctx.player.juju + self.amount
 			ctx.hud.jujuIconScale = 1
 			for i = 1, 20 do
-				ctx.particles:add(JujuJuice, {x = tx, y = ty})
+				ctx.particles:add(JujuSex, {x = tx, y = ty})
 			end
 		end
 		for i = 1, 2 do
-			ctx.particles:add(JujuJuice, {x = self.x, y = self.y})
+			ctx.particles:add(JujuSex, {x = self.x, y = self.y})
 		end
 		return
 	end
@@ -57,7 +57,7 @@ function Juju:update()
 	end
 	
 	if love.math.random() < 2 * tickRate then
-		ctx.particles:add(JujuJuice, {x = self.x, y = self.y, vy = love.math.random(-150, -75), vx = love.math.random(-100, 100), alpha = .35})
+		ctx.particles:add(JujuSex, {x = self.x, y = self.y, vy = love.math.random(-150, -75), vx = love.math.random(-100, 100), alpha = .35})
 	end
 
 	if ctx.player.jujuRealm > 0 then

@@ -1,16 +1,15 @@
-JujuJuice = extend(Particle)
+JujuSex = extend(Particle)
 
-function JujuJuice:init(data)
+function JujuSex:init(data)
 	self.vx = love.math.random(-200, 200)
 	self.vy = -100 + love.math.random() * -350
 	self.gravity = 1000
 	self.size = love.math.random(2, 6)
 	self.alpha = .7
-	ctx.view:register(self)
 	Particle.init(self, data)
 end
 
-function JujuJuice:update()
+function JujuSex:update()
 	self.vx = math.lerp(self.vx, 0, 2 * tickRate)
 	self.vy = self.vy + self.gravity * tickRate
 	self.vy = math.lerp(self.vy, 0, 2 * tickRate)
@@ -21,7 +20,7 @@ function JujuJuice:update()
 	self.y = self.y + self.vy * tickRate
 end
 
-function JujuJuice:draw()
+function JujuSex:draw()
 	local g = love.graphics
 	g.setColor(50, 255, 50, self.alpha * 255)
 	g.circle('fill', self.x, self.y, self.size)
