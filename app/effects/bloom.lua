@@ -34,6 +34,11 @@ function Bloom:applyEffect(source, target)
   g.setShader()
   g.setCanvas(target)
   g.draw(source)
+		table.each(ctx.particles.particles, function(particle)
+			if getmetatable(particle).__index == JujuSex then
+				particle:draw()
+			end
+		end)
 	local factor = ctx.player.dead and 1 or 1
   love.graphics.setColor(255, 255, 255, self.alpha * 100 * factor)
   g.setBlendMode('additive')
@@ -46,11 +51,6 @@ function Bloom:applyEffect(source, target)
 	if ctx.player.dead then
 		ctx.player.ghost:draw()
 		table.each(ctx.jujus.jujus, function(juju) juju:draw() end)
-		--[[table.each(ctx.particles.particles, function(particle)
-			if getmetatable(particle).__index == JujuSex then
-				particle:draw()
-			end
-		end)]]
 	end
 
   g.setCanvas()
