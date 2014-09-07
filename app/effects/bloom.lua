@@ -35,7 +35,7 @@ function Bloom:applyEffect(source, target)
   g.setCanvas(target)
   g.draw(source)
 	local factor = ctx.player.dead and 1 or 1
-  love.graphics.setColor(255, 255, 255, self.alpha * 150 * factor)
+  love.graphics.setColor(255, 255, 255, self.alpha * 100 * factor)
   g.setBlendMode('additive')
 	g.draw(self.canvas, 0, 0, 0, 4, 4)
 	for i = 6, 1, -1 do
