@@ -14,6 +14,7 @@ function Game:load()
 	self.effects = Effects()
 	self.effects:add(Vignette)
 	self.effects:add(Bloom)
+	self.effects:add(Wave)
 	self.hud = Hud()
 	self.upgrades = Upgrades
 	self.upgrades:clear()

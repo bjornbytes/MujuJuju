@@ -16,6 +16,7 @@ function Shrine:init()
 	self.healthDisplay = self.health
 	self.image = love.graphics.newImage('media/graphics/shrine-v3.png')
 	self.color = {255, 255, 255}
+	self.highlight = 0
 
 	ctx.view:register(self)
 end
@@ -30,6 +31,7 @@ function Shrine:update()
 
 	self.color = table.interpolate(self.color, ctx.player.dead and {160, 100, 225} or {255, 255, 255}, .6 * tickRate)
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+	self.highlight = math.lerp(self.highlight, math.abs(ctx.player.x - self.x) < ctx.player.width and 128 or 0, 5 * tickRate)
 end
 
 function Shrine:draw()
@@ -39,13 +41,11 @@ function Shrine:draw()
 	g.setColor(self.color)
 	g.draw(self.image, self.x, self.y + self.height + 12, 0, scale, scale, self.image:getWidth() / 2, self.image:getHeight())
 
-	if math.abs(ctx.player.x - ctx.shrine.x) < ctx.player.width then
-		g.setBlendMode('additive')
-		g.setColor(255, 255, 255, 128)
-		g.draw(self.image, self.x, self.y + self.height + 12, 0, scale, scale, self.image:getWidth() / 2, self.image:getHeight())
-		g.setColor(255, 255, 255, 255)
-		g.setBlendMode('alpha')
-	end
+	g.setBlendMode('additive')
+	g.setColor(255, 255, 255, self.highlight)
+	g.draw(self.image, self.x, self.y + self.height + 12, 0, scale, scale, self.image:getWidth() / 2, self.image:getHeight())
+	g.setColor(255, 255, 255, 255)
+	g.setBlendMode('alpha')
 end
 
 function Shrine:hurt(value)

@@ -111,7 +111,6 @@ function Player:update()
 		self.animationState = 'resurrect'
 		self.animationLock = true
 		self.animator:set('resurrect', false)
-		if self.spiritSounds then self.spiritSounds:stop() end
 	end)
 	self.invincible = timer.rot(self.invincible)
 
@@ -219,7 +218,6 @@ function Player:hurt(amount)
 		self.animationLock = true
 		self.animator:set('death', false)
 		ctx.sound:play({sound = ctx.sounds.death})
-		self.spiritSounds = ctx.sound:loop({sound = ctx.sounds.spirit})
 		return true
 	end
 
