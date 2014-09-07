@@ -209,7 +209,7 @@ function Hud:keypressed(key)
 		return true
 	end
 
-	if key == 'v' and #ctx.player.minions < 2 and ctx.player:spend(150) then
+	if key == 'v' and #ctx.player.minions < 2 and ctx.player:spend(80) then
 		table.insert(ctx.player.minions, Vuju)
 		table.insert(ctx.player.minioncds, 0)
 	end

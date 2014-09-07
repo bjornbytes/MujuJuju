@@ -2,9 +2,9 @@ BurstHeal = extend(Particle)
 
 
 function BurstHeal:init(data)
-	self.health = 3 + ctx.upgrades.zuju.sanctuary.level
+	self.health = 2 + ctx.upgrades.zuju.sanctuary.level
 	self.maxHealth = self.health
-	self.amount = (30 + (ctx.upgrades.zuju.sanctuary.level * 10)) * tickRate
+	self.amount = (ctx.upgrades.zuju.sanctuary.level * 10) * tickRate
 	self.depth = 0 + love.math.random()
 	Particle.init(self, data)
 end

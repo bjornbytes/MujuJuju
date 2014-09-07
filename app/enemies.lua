@@ -10,19 +10,21 @@ end
 
 function Enemies:update()
 	self.nextEnemy = timer.rot(self.nextEnemy, function()
-		local spawnType
-		local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
+		if table.count(self.enemies) < 1 + self.level / 3 then
+			local spawnType
+			local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
 
-		spawnType = Puju
-		if self.maxEnemyRate < 8 then
-			if love.math.random() < math.min(8 - self.maxEnemyRate, 2) * .06 then
-				spawnType = Spuju
+			spawnType = Puju
+			if self.maxEnemyRate < 8 then
+				if love.math.random() < math.min(8 - self.maxEnemyRate, 2) * .06 then
+					spawnType = Spuju
+				end
 			end
-		end
 
-		self:add(spawnType, {x = x})
-		self.minEnemyRate = math.max(self.minEnemyRate - .055, 1.25)
-		self.maxEnemyRate = math.max(self.maxEnemyRate - .065, 2.2)
+			self:add(spawnType, {x = x})
+			self.minEnemyRate = math.max(self.minEnemyRate - .045, 2)
+			self.maxEnemyRate = math.max(self.maxEnemyRate - .055, 2.75)
+		end
 		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
 	end)
 
