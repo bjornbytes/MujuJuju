@@ -34,12 +34,12 @@ function Bloom:applyEffect(source, target)
   g.setShader()
   g.setCanvas(target)
   g.draw(source)
-	local factor = ctx.player.dead and (ctx.player.jujuRealm / 7) or 1
-  love.graphics.setColor(255, 255, 255, self.alpha * 100 * factor)
+	local factor = ctx.player.dead and 1 or 1
+  love.graphics.setColor(255, 255, 255, self.alpha * 150 * factor)
   g.setBlendMode('additive')
 	g.draw(self.canvas, 0, 0, 0, 4, 4)
 	for i = 6, 1, -1 do
-		g.draw(self.canvas, 400, 300, 0, 4 + 2 * i * math.min(factor + .5, 1), 4 + 2 * i * math.min(.5 + factor, 1), self.canvas:getWidth() / 2, self.canvas:getHeight() / 2)
+		g.draw(self.canvas, 400, 300, 0, 4 + i * 2 * factor, 4 + i * 2 * factor, self.canvas:getWidth() / 2, self.canvas:getHeight() / 2)
 	end
   g.setBlendMode('alpha')
 
