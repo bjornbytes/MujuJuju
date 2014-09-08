@@ -64,7 +64,7 @@ function Juju:update()
 		local ghost = ctx.player.ghost
 		if ctx.upgrades.muju.absorb.level > 0 then
 			local distance, direction = math.vector(self.x, self.y, ghost.x, ghost.y)
-			local threshold = self.amount + 70 + 30 * ctx.upgrades.muju.absorb.level
+			local threshold = self.amount + 100 + 50 * ctx.upgrades.muju.absorb.level
 			local factor = math.clamp((threshold - distance) / threshold, 0, 1)
 			local speed = threshold * factor * tickRate
 			self.x = self.x + math.dx(speed, direction)

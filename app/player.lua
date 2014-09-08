@@ -79,9 +79,9 @@ function Player:update()
 	if self.dead or self.animationState == 'summon' or self.animationState == 'death' or self.animationState == 'resurrect' then
 		self.speed = 0
 	else
-		if love.keyboard.isDown('left', 'a') or self.gamepad:getGamepadAxis('leftx') < -.5 then
+		if love.keyboard.isDown('left', 'a') or (self.gamepad and self.gamepad:getGamepadAxis('leftx') < -.5) then
 			self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
-		elseif love.keyboard.isDown('right', 'd') or self.gamepad:getGamepadAxis('leftx') > .5 then
+		elseif love.keyboard.isDown('right', 'd') or (self.gamepad and self.gamepad:getGamepadAxis('leftx') > .5) then
 			self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
 		else
 			self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
@@ -92,16 +92,18 @@ function Player:update()
 		self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
 
 		-- Controller
-		local ltrigger = self.gamepad:getGamepadAxis('triggerleft') > .5
-		local rtrigger = self.gamepad:getGamepadAxis('triggerright') > .5
-		if not self.gamepadSelectDirty then
-			if rtrigger then self.selectedMinion = self.selectedMinion + 1 end
-			if ltrigger then self.selectedMinion = self.selectedMinion - 1 end
-			if ltrigger or rtrigger then self.recentSelect = 1 end
-			if self.selectedMinion <= 0 then self.selectedMinion = #self.minions
-			elseif self.selectedMinion > #self.minions then self.selectedMinion = 1 end
+		if self.gamepad then
+			local ltrigger = self.gamepad:getGamepadAxis('triggerleft') > .5
+			local rtrigger = self.gamepad:getGamepadAxis('triggerright') > .5
+			if not self.gamepadSelectDirty then
+				if rtrigger then self.selectedMinion = self.selectedMinion + 1 end
+				if ltrigger then self.selectedMinion = self.selectedMinion - 1 end
+				if ltrigger or rtrigger then self.recentSelect = 1 end
+				if self.selectedMinion <= 0 then self.selectedMinion = #self.minions
+				elseif self.selectedMinion > #self.minions then self.selectedMinion = 1 end
+			end
+			self.gamepadSelectDirty = rtrigger or ltrigger
 		end
-		self.gamepadSelectDirty = rtrigger or ltrigger
 	end
 
 	self.jujuRealm = timer.rot(self.jujuRealm, function()

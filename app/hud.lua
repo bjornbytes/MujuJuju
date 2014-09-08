@@ -3,34 +3,35 @@ Hud = class()
 local g = love.graphics
 local rich = require 'lib/deps/richtext/richtext'
 
-local pixelFont = love.graphics.newFont('media/fonts/pixel.ttf', 8)
-local fancyFont = love.graphics.newFont('media/fonts/letterSseungi.ttf', 24)
-Hud.richOptions = {title = fancyFont, pixel = pixelFont, white = {255, 255, 255}, whoCares = {220, 220, 220}, red = {255, 0, 0}, green = {0, 255, 0}}
+local pixelFont = love.graphics.newFont('media/fonts/inglobal.ttf', 14)
+local fancyFont = love.graphics.newFont('media/fonts/inglobal.ttf', 24)
+local boldFont = love.graphics.newFont('media/fonts/inglobalb.ttf', 14)
+Hud.richOptions = {title = fancyFont, bold = boldFont, normal = pixelFont, white = {255, 255, 255}, whoCares = {230, 230, 230}, red = {255, 100, 100}, green = {100, 255, 100}}
 Hud.upgradePositions = {
 	zuju = {
-		empower = {200 + 50, 50 * 1, 24},
-		fortify = {200 + 50, 50 * 2, 24},
-		burst = {200 + 50, 50 * 3, 24},
-		siphon = {200 + 50, 50 * 4, 24},
-		sanctuary = {200 + 50, 50 * 5, 24}
+		empower = {161, 207, 28},
+		fortify = {244, 212, 28},
+		burst = {326, 208, 28},
+		siphon = {193.5, 281, 32},
+		sanctuary = {296, 281, 32}
 	},
 	vuju = {
-		surge = {200 + 50 * 2, 50 * 1, 24},
-		charge = {200 + 50 * 2, 50 * 2, 24},
-		condemn = {200 + 50 * 2, 50 * 3, 24},
-		arc = {200 + 50 * 2, 50 * 4, 24},
-		soak = {200 + 50 * 2, 50 * 5, 24}
+		surge = {476, 208, 28},
+		charge = {559, 212, 28},
+		condemn = {641, 208, 28},
+		arc = {508.5, 281, 32},
+		soak = {611, 281, 32}
 	},
 	muju = {
-		flow = {200 + 50 * 3, 50 * 1, 24},
-		harvest = {200 + 50 * 3, 50 * 2, 24},
-		refresh = {200 + 50 * 3, 50 * 3, 24},
-		zeal = {200 + 50 * 3, 50 * 4, 24},
-		absorb = {200 + 50 * 3, 50 * 5, 24},
-		diffuse = {200 + 50 * 3, 50 * 6, 24},
-		imbue = {200 + 50 * 3, 50 * 7, 24},
-		mirror = {200 + 50 * 3, 50 * 8, 24},
-		distort = {200 + 50 * 3, 50 * 9, 24}
+		flow = {260, 406, 24},
+		harvest = {218.5, 459.5, 26},
+		refresh = {290, 478, 40},
+		zeal = {400, 391, 20},
+		absorb = {400, 442, 25},
+		diffuse = {400, 507.5, 31},
+		imbue = {537, 407, 24},
+		mirror = {579, 461, 26},
+		distort = {508, 478, 40}
 	}
 }
 
@@ -62,7 +63,7 @@ function Hud:update()
 			for what, geometry in pairs(self.upgradePositions[who]) do
 				if math.distance(mx, my, geometry[1], geometry[2]) < geometry[3] then
 					local str = ctx.upgrades.makeTooltip(who, what)
-					self.tooltip = rich.new(table.merge({str, 250}, self.richOptions))
+					self.tooltip = rich.new(table.merge({str, 300}, self.richOptions))
 					self.tooltipRaw = str:gsub('{%a+}', '')
 					hover = true
 					break
@@ -104,6 +105,7 @@ end
 function Hud:gui()
 	local w, h = love.graphics.getDimensions()
 
+	-- Vuju range indicator
 	if ctx.player.recentSelect > 0 and ctx.player.selectedMinion == 2 then
 		local range = 125 + ctx.upgrades.vuju.surge.level * 25
 		g.setColor(255, 255, 255, 255 * math.min(ctx.player.recentSelect * 2, 1))
@@ -111,15 +113,22 @@ function Hud:gui()
 		g.line(x - range, y, x + range, y)
 	end
 
+	-- Juju icon
+	if not self.upgrading then
+		g.setColor(255, 255, 255, 255 * (1 - self.upgradeAlpha))
+		g.draw(self.jujuIcon, 52, 55, 0, self.jujuIconScale, self.jujuIconScale, self.jujuIcon:getWidth() / 2, self.jujuIcon:getHeight() / 2)
+		g.setColor(0, 0, 0)
+		g.printf(math.floor(ctx.player.juju), 16, 18 + self.jujuIcon:getHeight() * .375 - (g.getFont():getHeight() / 2), self.jujuIcon:getWidth() * .75, 'center')
+		g.setColor(255, 255, 255)
+	end
+
 	-- Timer
 	local total = self.timer.total * tickRate
 	self.timer.seconds = math.floor(total % 60)
 	self.timer.minutes = math.floor(total / 60)
-
 	if self.timer.minutes < 10 then
 		self.timer.minutes = '0' .. self.timer.minutes
 	end
-
 	if self.timer.seconds < 10 then
 		self.timer.seconds = '0' .. self.timer.seconds
 	end
@@ -127,6 +136,7 @@ function Hud:gui()
 	g.setColor(255, 255, 255)
 	g.print(self.timer.minutes .. ':' .. self.timer.seconds, w - 50, 25)
 
+	-- Minion indicator
 	g.setFont(pixelFont)
 	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
 	local upgradeCount = ctx.upgrades.zuju.empower.level + ctx.upgrades.zuju.fortify.level + ctx.upgrades.zuju.burst.level + ctx.upgrades.zuju.siphon.level + ctx.upgrades.zuju.sanctuary.level
@@ -142,7 +152,6 @@ function Hud:gui()
 	end
 	
 	-- Health Bars
-
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
 	local green = {50, 230, 50}
 	local red = {255, 0, 0}
@@ -165,37 +174,30 @@ function Hud:gui()
 		self:health(minion.x - 25, h - ctx.environment.groundHeight - minion.height - 15 * stackingTable[location], minion.healthDisplay / minion.maxHealth, green, 50, 2)
 	end)
 
+	-- Upgrade screen
 	if self.upgradeAlpha > .001 then
 		local mx, my = love.mouse.getPosition()
 		local w2, h2 = w / 2, h / 2
-		local x1, y1 = w2 - 300, h2 - 200
-		local w, h = 600, 400
-		g.setColor(50, 50, 50, self.upgradeAlpha * 240)
-		g.rectangle('fill', 20, 20, love.graphics.getWidth() - 40, love.graphics.getHeight() - 40)
 		
-		g.setColor(255, 255, 255, self.upgradeAlpha * 240)
+		g.setColor(255, 255, 255, self.upgradeAlpha * 250)
+		g.draw(self.upgradeBg, 400, 300, 0, .875, .875, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
 
-		for who in pairs(self.upgradePositions) do
-			for what, geometry in pairs(self.upgradePositions[who]) do
-				g.circle('line', unpack(geometry))
-			end
-		end
+		g.setColor(0, 0, 0, self.upgradeAlpha * 250)
+		local str = tostring(ctx.player.juju)
+		g.print(str, w2 - g.getFont():getWidth(str) / 2, 65)
 
 		if self.tooltip then
 			local mx, my = love.mouse.getPosition()
-			g.setColor(15, 15, 15, 230)
-			local textWidth, lines = g.getFont():getWrap(self.tooltipRaw, 250)
+			local textWidth, lines = g.getFont():getWrap(self.tooltipRaw, 300)
 			local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
-			g.rectangle('fill', xx, my + 8, textWidth + 14, lines * g.getFont():getHeight() + 16 + 8)
-			self.tooltip:draw(xx + 8, my + 16)
+			local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))
+			g.setColor(30, 50, 70, 240)
+			g.rectangle('fill', xx, yy, textWidth + 14, lines * g.getFont():getHeight() + 16 + 5)
+			g.setColor(10, 30, 50, 255)
+			g.rectangle('line', xx + .5, yy + .5, textWidth + 14, lines * g.getFont():getHeight() + 16 + 5)
+			self.tooltip:draw(xx + 8, yy + 4)
 		end
 	end
-
-	g.setColor(255, 255, 255)
-	g.draw(self.jujuIcon, 52, 55, 0, self.jujuIconScale, self.jujuIconScale, self.jujuIcon:getWidth() / 2, self.jujuIcon:getHeight() / 2)
-	g.setColor(0, 0, 0)
-	g.printf(math.floor(ctx.player.juju), 16, 18 + self.jujuIcon:getHeight() * .375 - (g.getFont():getHeight() / 2), self.jujuIcon:getWidth() * .75, 'center')
-	g.setColor(255, 255, 255)
 end
 
 function Hud:keypressed(key)
@@ -229,11 +231,7 @@ end
 
 function Hud:mousepressed(x, y, b)
 	if not self.upgrading then return end
-	local w, h = love.graphics.getDimensions()
-	local w2, h2 = w / 2, h / 2
-	local x1, y1 = w2 - 300, h2 - 200
-	local w, h = 600, 400
-	if math.inside(x, y, w2 - 50, h2 + 216, 100, 40) then
+	if math.inside(x, y, 69, 94, 50, 50) then
 		self.upgrading = false
 	end
 end
@@ -243,24 +241,26 @@ function Hud:mousereleased(x, y, b)
 		for who in pairs(self.upgradePositions) do
 			for what, geometry in pairs(self.upgradePositions[who]) do
 				if math.distance(x, y, geometry[1], geometry[2]) < geometry[3] then
-					local nextLevel = ctx.upgrades[who][what].level + 1
-					local cost = ctx.upgrades[who][what].costs[nextLevel]
-					if cost and ctx.player:spend(cost) then
+					local upgrade = ctx.upgrades[who][what]
+					local nextLevel = upgrade.level + 1
+					local cost = upgrade.costs[nextLevel]
+					local canBuy = true
+					if upgrade.prerequisites then
+						table.each(upgrade.prerequisites, function(level, req)
+							if ctx.upgrades[who][req].level < level then
+								canBuy = false
+								return false
+							end
+						end)
+					end
+
+					if canBuy and cost and ctx.player:spend(cost) then
 						ctx.upgrades[who][what].level = nextLevel
 						ctx.sound:play({sound = 'menuClick'})
 					end
 				end
 			end
 		end
-
-		-- Vuju unlock
-		--[[if #ctx.player.minions < 2 and math.inside(x, y, x1 + (w * .775) - 32, h2 - 144, 64, 64) then
-			if ctx.player:spend(250) then
-				table.insert(ctx.player.minions, Vuju)
-				table.insert(ctx.player.minioncds, 0)
-				ctx.sound:play({sound = 'menuClick'})
-			end
-		end]]
 	end
 end
 
