@@ -120,7 +120,9 @@ function Player:update()
 	self.invincible = timer.rot(self.invincible)
 
 	table.each(self.minioncds, function(cooldown, index)
-		self.minioncds[index] = timer.rot(cooldown)
+		self.minioncds[index] = timer.rot(cooldown, function()
+			ctx.hud.cooldownAlpha[index] = 1
+		end)
 	end)
 
 	if self.ghost then

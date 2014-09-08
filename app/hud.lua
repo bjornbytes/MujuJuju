@@ -46,12 +46,19 @@ function Hud:init()
 	self.jujuIconScale = .75
 	self.timer = {total = 0, minutes = 0, seconds = 0}
 	self.particles = Particles()
+	self.selectAlpha = {0, 0}
+	self.cooldownAlpha = {.5, .5}
+	self.selectBg = {g.newImage('media/graphics/select-zuju.png'), g.newImage('media/graphics/select-vuju.png')}
 	ctx.view:register(self, 'gui')
 end
 
 function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
 	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
+	for i = 1, #self.selectAlpha do
+		self.selectAlpha[i] = math.lerp(self.selectAlpha[i], ctx.player.selectedMinion == i and 1 or .5, 5 * tickRate)
+		self.cooldownAlpha[i] = math.lerp(self.cooldownAlpha[i], .5, 2 * tickRate)
+	end
 
 	-- Update Timer
 	self:score()
@@ -80,7 +87,7 @@ function Hud:update()
 				self.tooltipRaw = str:gsub('{%a+}', '')
 				hover = true
 			else
-				local str = '{white}{title}Vuju\nUnlocked!'
+				local str = '{white}{title}Vuju{normal}\nUnlocked!'
 				self.tooltip = rich.new(table.merge({str, 300}, self.richOptions))
 				self.tooltipRaw = str:gsub('{%a+}', '')
 				hover = true
@@ -164,7 +171,19 @@ function Hud:gui()
 	g.print(str, w - 25 - g.getFont():getWidth(str), 25)
 
 	-- Minion indicator
-	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
+	for i = 1, #ctx.player.minions do
+		g.setColor(255, 210, 73, 255 * self.selectAlpha[i])
+		local w = 123 + (180 * .05 * (self.cooldownAlpha[i] - .5))
+		g.rectangle('fill', 64, 100 + 50 * (i - 1) + 10, w, 23)
+		g.setColor(255, 255, 255, 255 * self.cooldownAlpha[i] * (self.selectAlpha[i]))
+		local cd = ctx.player.minions[i].cooldown * (1 - (.1 * ctx.upgrades.muju.flow.level))
+		g.rectangle('fill', 64, 100 + 50 * (i - 1) + 10, w * (1 - (ctx.player.minioncds[i] / cd)), 23)
+		g.setColor(255, 255, 255, self.selectAlpha[i] * 255)
+		g.draw(self.selectBg[i], 16, 100 + 50 * (i - 1), 0, .6 + (.05 * (self.cooldownAlpha[i] - .5)), .6)
+		g.setColor(0, 0, 0, self.selectAlpha[i] * 255)
+		g.print(ctx.player.minions[i].code:capitalize(), 80, 100 + 50 * (i - 1) + 14)
+	end
+	--[[g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
 	local upgradeCount = ctx.upgrades.zuju.empower.level + ctx.upgrades.zuju.fortify.level + ctx.upgrades.zuju.burst.level + ctx.upgrades.zuju.siphon.level + ctx.upgrades.zuju.sanctuary.level
 	local zujucost = Zuju.cost + (3 * upgradeCount)
 	upgradeCount = ctx.upgrades.vuju.surge.level + ctx.upgrades.vuju.charge.level + ctx.upgrades.vuju.condemn.level + ctx.upgrades.vuju.arc.level + ctx.upgrades.vuju.soak.level
@@ -175,7 +194,7 @@ function Hud:gui()
 		local cost = Vuju.cost
 		local upgradeCount = 0
 		g.print('Vuju [' .. math.round(vujucost) .. '] ' .. (ctx.player.minioncds[2] > 0 and math.ceil(ctx.player.minioncds[2]) or ''), 16, 100 + g.getFont():getHeight() + 2)
-	end
+	end]]
 	
 	-- Health Bars
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
@@ -209,7 +228,7 @@ function Hud:gui()
 		g.draw(self.upgradeBg, 400, 300, 0, .875, .875, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
 
 		g.setColor(0, 0, 0, self.upgradeAlpha * 250)
-		local str = tostring(ctx.player.juju)
+		local str = tostring(math.floor(ctx.player.juju))
 		g.print(str, w2 - g.getFont():getWidth(str) / 2, 65)
 
 		if self.tooltip then
