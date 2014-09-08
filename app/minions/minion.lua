@@ -49,7 +49,11 @@ function Minion:attack()
 
 				self.target:hurt(damage)
 				self.fireTimer = self.fireRate
-				ctx.sound:play({sound = ctx.sounds.combat})
+				local pitch = 1 + love.math.random() * .2
+				if love.math.random() > .5 then
+					pitch = 1 / pitch
+				end
+				ctx.sound:play({sound = ctx.sounds.combat}):setPitch(pitch)
 			end
 		end
 	end

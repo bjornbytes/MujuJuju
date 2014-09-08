@@ -20,16 +20,19 @@ function Spuju:init(data)
 	self.y = self.y + r
 	self.scale = .8 + (r / 210)
 	self.depth = self.depth - r / 25 + love.math.random() * (1 / 25)
-	self.maxHealth = self.maxHealth + 4 * ctx.enemies.level ^ .9
+	self.maxHealth = self.maxHealth + 5 * ctx.enemies.level ^ .9
 	self.health = self.maxHealth
 	self.damage = self.damage + 1.1 * ctx.enemies.level ^ .9
+	self.attackRange = self.attackRange + math.min(math.max(ctx.enemies.level - 20, 0) * 2, 100)
 	self.clip = 3
+	if ctx.enemies.level > 50 then self.clip = self.clip + 1 end
+	if ctx.enemies.level > 80 then self.clip = self.clip + 1 end
+	self.maxClip = self.clip
 end
 
 function Spuju:update()
 	Enemy.update(self)
 
-	self.target = ctx.target:getClosestNPC(self)
 	self:move()
 end
 
@@ -45,12 +48,11 @@ function Spuju:draw()
 end
 
 function Spuju:attack()
-	if self.clip == 0 then self.clip = 3 end
+	if self.clip == 0 then self.clip = self.maxClip end
 	self.clip = self.clip - 1
 	self.fireTimer = self.clip == 0 and self.reloadRate or self.fireRate
 	local targetx = self.target == ctx.shrine and self.target.x or self.target.x + love.math.randomNormal(65)
 	local velocity = 150 + 250 * (math.abs(self.target.x - self.x) / self.attackRange)
 	local damage = self.damage * (1 - self.damageReduction)
 	ctx.particles:add(SpiritBomb, {x = self.x, y = self.y - self.height / 2, targetx = targetx, velocity = velocity, damage = damage})
-	ctx.sound:play({sound = ctx.sounds.combat})
 end

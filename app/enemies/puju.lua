@@ -99,6 +99,7 @@ function Puju:butt()
 	self.buttTimer = self.buttRate
 	self.animationState = 'headbutt'
 	self.animator:set(self.animationState, false)
+	ctx.sound:play({sound = ctx.sounds.combat})
 end
 
 function Puju:draw()

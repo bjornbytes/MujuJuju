@@ -162,7 +162,7 @@ Upgrades.clear = function()
 		},
 		zeal = {
 			level = 0,
-			costs = {30, 65, 100, 135, 170},
+			costs = {20, 30, 40, 50, 60},
 			description = 'Muju moves more freely in the juju realm.',
 			values = {
 				[1] = '20% faster',

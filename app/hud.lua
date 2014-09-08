@@ -218,6 +218,15 @@ function Hud:keyreleased(key)
 	--
 end
 
+function Hud:gamepadpressed(gamepad, button)
+	if gamepad == ctx.player.gamepad then
+		if (button == 'x' or button == 'y') and math.abs(ctx.player.x - ctx.shrine.x) < ctx.player.width then
+			self.upgrading = not self.upgrading
+			return true
+		end
+	end
+end
+
 function Hud:mousepressed(x, y, b)
 	if not self.upgrading then return end
 	local w, h = love.graphics.getDimensions()

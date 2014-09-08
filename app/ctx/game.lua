@@ -72,11 +72,13 @@ end
 
 function Game:resize()
 	self.view:resize()
+	self.effects:resize()
 end
 
 function Game:keypressed(key)
 	if key == 'p' then self.paused = not self.paused
-	elseif key == 'm' then self.sound:mute() end
+	elseif key == 'm' then self.sound:mute()
+	elseif key == 'f' then love.window.setFullscreen(not love.window.getFullscreen()) end
 	if self.hud.upgrading or self.paused then return self.hud:keypressed(key) end
 	self.hud:keypressed(key)
 	self.player:keypressed(key)
@@ -89,14 +91,18 @@ end
 
 function Game:keyreleased(...)
 	if self.hud.upgrading or self.paused then return self.hud:keyreleased(...) end
-	self.player:keyreleased(...)
 end
 
 function Game:mousepressed(...)
 	if self.hud.upgrading or self.paused then return self.hud:mousepressed(...) end
-	self.player:mousepressed(...)
 end
 
 function Game:mousereleased(...)
 	if self.hud.upgrading or self.paused then return self.hud:mousereleased(...) end
+end
+
+function Game:gamepadpressed(...)
+	if self.hud.upgrading or self.paused then return self.hud:gamepadpressed(...) end
+	self.hud:gamepadpressed(...)
+	self.player:gamepadpressed(...)
 end

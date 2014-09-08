@@ -27,6 +27,12 @@ function Player:init()
 	self.direction = 1
 	self.invincible = 0
 
+	local joysticks = love.joystick.getJoysticks()
+	for _, joystick in ipairs(joysticks) do
+		if joystick:isGamepad() then self.gamepad = joystick break end
+	end
+	self.gamepadSelectDirty = false
+
 	self.skeleton = Skeleton({name = 'muju', x = self.x, y = self.y, scale = .6})
 
 	self.animator = Animator({
@@ -73,32 +79,29 @@ function Player:update()
 	if self.dead or self.animationState == 'summon' or self.animationState == 'death' or self.animationState == 'resurrect' then
 		self.speed = 0
 	else
-		if love.mouse.isDown('l') then
-			local sign = math.sign(love.mouse.getX() - self.x)
-			if sign < 0 then
-				self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
-			elseif sign > 0 then
-				self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
-			else
-				self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
-			end
+		if love.keyboard.isDown('left', 'a') or self.gamepad:getGamepadAxis('leftx') < -.5 then
+			self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
+		elseif love.keyboard.isDown('right', 'd') or self.gamepad:getGamepadAxis('leftx') > .5 then
+			self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
 		else
-			if love.keyboard.isDown('left', 'a') then
-				self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
-			elseif love.keyboard.isDown('right', 'd') then
-				self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
-			else
-				self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
-			end
+			self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
 		end
 
 		local delta = self.x + self.speed * tickRate
-		if love.mouse.isDown('l') and self.speed * tickRate > math.abs(self.x - love.mouse.getX()) then
-			self.x = love.mouse.getX()
-		else
-			self.x = self.x + self.speed * tickRate
-		end
+		self.x = self.x + self.speed * tickRate
 		self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
+
+		-- Controller
+		local ltrigger = self.gamepad:getGamepadAxis('triggerleft') > .5
+		local rtrigger = self.gamepad:getGamepadAxis('triggerright') > .5
+		if not self.gamepadSelectDirty then
+			if rtrigger then self.selectedMinion = self.selectedMinion + 1 end
+			if ltrigger then self.selectedMinion = self.selectedMinion - 1 end
+			if ltrigger or rtrigger then self.recentSelect = 1 end
+			if self.selectedMinion <= 0 then self.selectedMinion = #self.minions
+			elseif self.selectedMinion > #self.minions then self.selectedMinion = 1 end
+		end
+		self.gamepadSelectDirty = rtrigger or ltrigger
 	end
 
 	self.jujuRealm = timer.rot(self.jujuRealm, function()
@@ -244,12 +247,10 @@ function Player:keypressed(key)
 	end
 end
 
-function Player:keyreleased(key)
-	--
-end
-
-function Player:mousepressed(x, y, button)
-	if button == 'r' then
-		self:summon()
+function Player:gamepadpressed(gamepad, button)
+	if gamepad == self.gamepad then
+		if (button == 'a' or button == 'rightstick' or button == 'rightshoulder') and not self.dead then
+				self:summon()
+		end
 	end
 end
