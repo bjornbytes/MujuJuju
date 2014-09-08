@@ -189,7 +189,7 @@ Upgrades.clear = function()
 			prerequisites = {absorb = 1},
 			description = 'Spiritual mastery of juju is attained, allowing Muju to return to his body at any point while in the juju realm.',
 			values = {
-				[1] = '+100% extra body returning-ness'
+				[1] = '+100% body returning-ness'
 			}
 		},
 		imbue = {
@@ -231,11 +231,11 @@ Upgrades.clear = function()
 		local upgrade = Upgrades[who][what]
 		table.insert(pieces, '{white}{title}' .. what:capitalize() .. '{normal}')
 		table.insert(pieces, '{whoCares}' .. upgrade.description .. '\n')
-		table.insert(pieces, '{white}{bold}Level ' .. upgrade.level .. ': ' .. (upgrade.values[upgrade.level] or ''))
+		table.insert(pieces, '{white}{bold}Level ' .. upgrade.level .. (upgrade.values[upgrade.level] and ': ' .. upgrade.values[upgrade.level] or ''))
 		if not upgrade.values[upgrade.level + 1] then
 			table.insert(pieces, '{whoCares}{normal}Max Level')
 		else
-			table.insert(pieces, '{bold}Next Level: ' .. upgrade.values[upgrade.level + 1])
+			table.insert(pieces, '{white}{bold}Next Level: ' .. upgrade.values[upgrade.level + 1])
 			local color = ctx.player.juju >= upgrade.costs[upgrade.level + 1] and '{green}' or '{red}'
 			table.insert(pieces, color .. upgrade.costs[upgrade.level + 1] .. ' juju')
 			if upgrade.prerequisites then
@@ -248,5 +248,15 @@ Upgrades.clear = function()
 		end
 
 		return table.concat(pieces, '\n')
+	end
+
+	Upgrades.canBuy = function(who, what)
+		local upgrade = ctx.upgrades[who][what]
+		if ctx.player.juju < upgrade.costs[upgrade.level + 1] then return false end
+		if not upgrade.prerequisites then return true end
+		for key, level in pairs(upgrade.prerequisites) do
+			if ctx.upgrades[who][key].level < level then return false end
+		end
+		return true
 	end
 end

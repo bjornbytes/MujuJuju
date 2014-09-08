@@ -48,6 +48,10 @@ function Puju:init(data)
 		end
 	end
 
+	self.animator.state.onEvent = function(trackIndex, event)
+		print(event.data.name)
+	end
+
 	self.animationSpeeds = table.map({
 		headbutt = .69 * tickRate,
 		attack = .8 * tickRate

@@ -3,10 +3,10 @@ Hud = class()
 local g = love.graphics
 local rich = require 'lib/deps/richtext/richtext'
 
-local pixelFont = love.graphics.newFont('media/fonts/inglobal.ttf', 14)
+local normalFont = love.graphics.newFont('media/fonts/inglobal.ttf', 14)
 local fancyFont = love.graphics.newFont('media/fonts/inglobal.ttf', 24)
 local boldFont = love.graphics.newFont('media/fonts/inglobalb.ttf', 14)
-Hud.richOptions = {title = fancyFont, bold = boldFont, normal = pixelFont, white = {255, 255, 255}, whoCares = {230, 230, 230}, red = {255, 100, 100}, green = {100, 255, 100}}
+Hud.richOptions = {title = fancyFont, bold = boldFont, normal = normalFont, white = {255, 255, 255}, whoCares = {230, 230, 230}, red = {255, 100, 100}, green = {100, 255, 100}}
 Hud.upgradePositions = {
 	zuju = {
 		empower = {161, 207, 28},
@@ -45,6 +45,7 @@ function Hud:init()
 	self.jujuIcon = g.newImage('media/graphics/juju-icon.png')
 	self.jujuIconScale = .75
 	self.timer = {total = 0, minutes = 0, seconds = 0}
+	self.particles = Particles()
 	ctx.view:register(self, 'gui')
 end
 
@@ -71,8 +72,32 @@ function Hud:update()
 			end
 		end
 
+		if math.distance(mx, my, 560, 140) < 38 then
+			if #ctx.player.minions < 2 then
+				local color = ctx.player.juju >= 80 and '{green}' or '{red}'
+				local str = '{white}{title}Vuju{normal}\n{whoCares}Casts chain lightning and hexes enemies.\n\n' .. color .. '{bold}80 juju'
+				self.tooltip = rich.new(table.merge({str, 300}, self.richOptions))
+				self.tooltipRaw = str:gsub('{%a+}', '')
+				hover = true
+			else
+				local str = '{white}{title}Vuju\nUnlocked!'
+				self.tooltip = rich.new(table.merge({str, 300}, self.richOptions))
+				self.tooltipRaw = str:gsub('{%a+}', '')
+				hover = true
+			end
+		end
+
+		if math.distance(mx, my, 245, 140) < 38 then
+			local str = '{white}{title}Zuju{normal}\nUnlocked!'
+			self.tooltip = rich.new(table.merge({str, 300}, self.richOptions))
+			self.tooltipRaw = str:gsub('{%a+}', '')
+			hover = true
+		end
+
 		if not hover then self.tooltip = nil end
 	end
+
+	self.particles:update()
 end
 
 function Hud:health(x, y, percent, color, width, thickness)
@@ -114,6 +139,7 @@ function Hud:gui()
 	end
 
 	-- Juju icon
+	g.setFont(boldFont)
 	if not self.upgrading then
 		g.setColor(255, 255, 255, 255 * (1 - self.upgradeAlpha))
 		g.draw(self.jujuIcon, 52, 55, 0, self.jujuIconScale, self.jujuIconScale, self.jujuIcon:getWidth() / 2, self.jujuIcon:getHeight() / 2)
@@ -132,12 +158,12 @@ function Hud:gui()
 	if self.timer.seconds < 10 then
 		self.timer.seconds = '0' .. self.timer.seconds
 	end
+	local str = self.timer.minutes .. ':' .. self.timer.seconds
 
 	g.setColor(255, 255, 255)
-	g.print(self.timer.minutes .. ':' .. self.timer.seconds, w - 50, 25)
+	g.print(str, w - 25 - g.getFont():getWidth(str), 25)
 
 	-- Minion indicator
-	g.setFont(pixelFont)
 	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
 	local upgradeCount = ctx.upgrades.zuju.empower.level + ctx.upgrades.zuju.fortify.level + ctx.upgrades.zuju.burst.level + ctx.upgrades.zuju.siphon.level + ctx.upgrades.zuju.sanctuary.level
 	local zujucost = Zuju.cost + (3 * upgradeCount)
@@ -188,7 +214,7 @@ function Hud:gui()
 
 		if self.tooltip then
 			local mx, my = love.mouse.getPosition()
-			local textWidth, lines = g.getFont():getWrap(self.tooltipRaw, 300)
+			local textWidth, lines = normalFont:getWrap(self.tooltipRaw, 300)
 			local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
 			local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))
 			g.setColor(30, 50, 70, 240)
@@ -207,8 +233,6 @@ function Hud:keypressed(key)
 	end
 
 	if key == 'v' and #ctx.player.minions < 2 and ctx.player:spend(80) then
-		table.insert(ctx.player.minions, Vuju)
-		table.insert(ctx.player.minioncds, 0)
 	end
 
 	if key == 'escape' and self.upgrading then
@@ -244,22 +268,21 @@ function Hud:mousereleased(x, y, b)
 					local upgrade = ctx.upgrades[who][what]
 					local nextLevel = upgrade.level + 1
 					local cost = upgrade.costs[nextLevel]
-					local canBuy = true
-					if upgrade.prerequisites then
-						table.each(upgrade.prerequisites, function(level, req)
-							if ctx.upgrades[who][req].level < level then
-								canBuy = false
-								return false
-							end
-						end)
-					end
 
-					if canBuy and cost and ctx.player:spend(cost) then
+					if ctx.upgrades.canBuy(who, what) and ctx.player:spend(cost) then
 						ctx.upgrades[who][what].level = nextLevel
 						ctx.sound:play({sound = 'menuClick'})
+						for i = 1, 80 do
+							self.particles:add(UpgradeParticle, {x = x, y = y})
+						end
 					end
 				end
 			end
+		end
+
+		if #ctx.player.minions < 2 and math.distance(x, y, 560, 140) < 38 and ctx.player:spend(80) then
+			table.insert(ctx.player.minions, Vuju)
+			table.insert(ctx.player.minioncds, 0)
 		end
 	end
 end
