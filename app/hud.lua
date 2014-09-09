@@ -183,18 +183,18 @@ function Hud:gui()
 		g.setColor(0, 0, 0, self.selectAlpha[i] * 255)
 		g.print(ctx.player.minions[i].code:capitalize(), 80, 100 + 50 * (i - 1) + 14)
 	end
-	--[[g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
+	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
 	local upgradeCount = ctx.upgrades.zuju.empower.level + ctx.upgrades.zuju.fortify.level + ctx.upgrades.zuju.burst.level + ctx.upgrades.zuju.siphon.level + ctx.upgrades.zuju.sanctuary.level
 	local zujucost = Zuju.cost + (3 * upgradeCount)
 	upgradeCount = ctx.upgrades.vuju.surge.level + ctx.upgrades.vuju.charge.level + ctx.upgrades.vuju.condemn.level + ctx.upgrades.vuju.arc.level + ctx.upgrades.vuju.soak.level
 	local vujucost = Vuju.cost + (4 * upgradeCount)
-	g.print('Zuju [' .. math.round(zujucost) .. '] ' .. (ctx.player.minioncds[1] > 0 and math.ceil(ctx.player.minioncds[1]) or ''), 16, 100)
+	g.print('Zuju [' .. math.round(zujucost) .. '] ' .. (ctx.player.minioncds[1] > 0 and math.ceil(ctx.player.minioncds[1]) or ''), 200, 115)
 	if #ctx.player.minions == 2 then
 		g.setColor(ctx.player.selectedMinion == 2 and {255, 255, 255} or {150, 150, 150})
 		local cost = Vuju.cost
 		local upgradeCount = 0
-		g.print('Vuju [' .. math.round(vujucost) .. '] ' .. (ctx.player.minioncds[2] > 0 and math.ceil(ctx.player.minioncds[2]) or ''), 16, 100 + g.getFont():getHeight() + 2)
-	end]]
+		g.print('Vuju [' .. math.round(vujucost) .. '] ' .. (ctx.player.minioncds[2] > 0 and math.ceil(ctx.player.minioncds[2]) or ''), 200, 115 + g.getFont():getHeight() + 2)
+	end
 	
 	-- Health Bars
 	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
