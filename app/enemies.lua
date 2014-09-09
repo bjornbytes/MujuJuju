@@ -22,7 +22,7 @@ function Enemies:update()
 			end
 
 			self:add(spawnType, {x = x})
-			self.minEnemyRate = math.max(self.minEnemyRate - .06 * math.clamp(self.minEnemyRate / 5, .5, 1), 2)
+			self.minEnemyRate = math.max(self.minEnemyRate - .055 * math.clamp(self.minEnemyRate / 5, .5, 1), 2)
 			self.maxEnemyRate = math.max(self.maxEnemyRate - .03 * math.clamp(self.maxEnemyRate / 4, .5, 1), 2.75)
 		end
 		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
