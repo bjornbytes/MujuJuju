@@ -29,5 +29,5 @@ end
 
 function Sound:mute()
   self.muted = not self.muted
-  love.audio.tags.all.stop()
+  love.audio.tags.all.setVolume(self.muted and 0 or 1)
 end
