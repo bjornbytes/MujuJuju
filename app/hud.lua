@@ -302,7 +302,9 @@ function Hud:mousereleased(x, y, b)
 		if #ctx.player.minions < 2 and math.distance(x, y, 560, 140) < 38 and ctx.player:spend(80) then
 			table.insert(ctx.player.minions, Vuju)
 			table.insert(ctx.player.minioncds, 0)
+			for i = 1, 100 do
+				self.particles:add(UpgradeParticle, {x = x, y = y})
+			end
 		end
 	end
 end
-
