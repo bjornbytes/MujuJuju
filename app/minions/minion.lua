@@ -53,7 +53,9 @@ function Minion:attack()
 				if love.math.random() > .5 then
 					pitch = 1 / pitch
 				end
-				ctx.sound:play({sound = ctx.sounds.combat}):setPitch(pitch)
+				if not ctx.sound.muted then
+					ctx.sound:play({sound = ctx.sounds.combat}):setPitch(pitch)
+				end
 			end
 		end
 	end
