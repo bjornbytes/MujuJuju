@@ -2,6 +2,7 @@ Game = class()
 
 function Game:load()
 	self.paused = false
+	self.ded = false
 	self.view = View()
 	self.environment = Environment()
 	self.foreground = Foreground()
@@ -43,9 +44,13 @@ function Game:load()
 end
 
 function Game:update()
-	if self.hud.upgrading or self.paused then
+	if self.hud.upgrading or self.paused or self.ded then
 		self.player.prevx = self.player.x
 		self.player.prevy = self.player.y
+		if self.player.ghost then
+			self.player.ghost.prevx = self.player.ghost.x
+			self.player.ghost.prevy = self.player.ghost.y
+		end
 		self.hud:update()
 		return
 	end
@@ -79,7 +84,7 @@ function Game:keypressed(key)
 	if key == 'p' then self.paused = not self.paused
 	elseif key == 'm' then self.sound:mute()
 	elseif key == 'f' then love.window.setFullscreen(not love.window.getFullscreen()) end
-	if self.hud.upgrading or self.paused then return self.hud:keypressed(key) end
+	if self.hud.upgrading or self.paused or self.ded then return self.hud:keypressed(key) end
 	self.hud:keypressed(key)
 	self.player:keypressed(key)
 
@@ -90,19 +95,19 @@ function Game:keypressed(key)
 end
 
 function Game:keyreleased(...)
-	if self.hud.upgrading or self.paused then return self.hud:keyreleased(...) end
+	if self.hud.upgrading or self.paused or self.ded then return self.hud:keyreleased(...) end
 end
 
 function Game:mousepressed(...)
-	if self.hud.upgrading or self.paused then return self.hud:mousepressed(...) end
+	if self.hud.upgrading or self.paused or self.ded then return self.hud:mousepressed(...) end
 end
 
 function Game:mousereleased(...)
-	if self.hud.upgrading or self.paused then return self.hud:mousereleased(...) end
+	if self.hud.upgrading or self.paused or self.ded then return self.hud:mousereleased(...) end
 end
 
 function Game:gamepadpressed(...)
-	if self.hud.upgrading or self.paused then return self.hud:gamepadpressed(...) end
+	if self.hud.upgrading or self.paused or self.ded then return self.hud:gamepadpressed(...) end
 	self.hud:gamepadpressed(...)
 	self.player:gamepadpressed(...)
 end

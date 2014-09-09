@@ -49,11 +49,13 @@ function Hud:init()
 	self.selectAlpha = {0, 0}
 	self.cooldownAlpha = {.5, .5}
 	self.selectBg = {g.newImage('media/graphics/select-zuju.png'), g.newImage('media/graphics/select-vuju.png')}
+	self.deadAlpha = 0
 	ctx.view:register(self, 'gui')
 end
 
 function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
+	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
 	for i = 1, #self.selectAlpha do
 		self.selectAlpha[i] = math.lerp(self.selectAlpha[i], ctx.player.selectedMinion == i and 1 or .5, 5 * tickRate)
@@ -220,7 +222,7 @@ function Hud:gui()
 	end)
 
 	-- Upgrade screen
-	if self.upgradeAlpha > .001 then
+	if self.upgradeAlpha > .001 and not ctx.ded then
 		local mx, my = love.mouse.getPosition()
 		local w2, h2 = w / 2, h / 2
 		
@@ -243,19 +245,28 @@ function Hud:gui()
 			self.tooltip:draw(xx + 8, yy + 4)
 		end
 	end
+
+	-- Death Screen
+	if ctx.ded then
+		g.setColor(255, 255, 255, 255 * self.deadAlpha)
+		local str = 'u ded'
+		g.print(str, g.getWidth() / 2 - g.getFont():getWidth(str) / 2, g.getHeight() / 2)
+	end
 end
 
 function Hud:keypressed(key)
-	if (key == 'tab' or key == 'e') and math.abs(ctx.player.x - ctx.shrine.x) < ctx.player.width then
+	if (key == 'tab' or key == 'e') and math.abs(ctx.player.x - ctx.shrine.x) < ctx.player.width and not ctx.ded then
 		self.upgrading = not self.upgrading
 		return true
 	end
 
-	if key == 'v' and #ctx.player.minions < 2 and ctx.player:spend(80) then
+	if key == 'escape' and self.upgrading and not ctx.ded then
+		self.upgrading = false
 	end
 
-	if key == 'escape' and self.upgrading then
-		self.upgrading = false
+	if ctx.ded and self.deadAlpha > .9 then
+		Context:remove(ctx)
+		Context:add(Game)
 	end
 end
 
@@ -264,23 +275,28 @@ function Hud:keyreleased(key)
 end
 
 function Hud:gamepadpressed(gamepad, button)
-	if gamepad == ctx.player.gamepad then
+	if gamepad == ctx.player.gamepad and not ctx.ded then
 		if (button == 'x' or button == 'y') and math.abs(ctx.player.x - ctx.shrine.x) < ctx.player.width then
 			self.upgrading = not self.upgrading
 			return true
 		end
 	end
+
+	if ctx.ded and self.deadAlpha > .9 then
+		Context:remove(ctx)
+		Context:add(Game)
+	end
 end
 
 function Hud:mousepressed(x, y, b)
-	if not self.upgrading then return end
+	if not self.upgrading or ctx.ded then return end
 	if math.inside(x, y, 69, 94, 50, 50) then
 		self.upgrading = false
 	end
 end
 
 function Hud:mousereleased(x, y, b)
-	if self.upgrading and b == 'l' then
+	if self.upgrading and b == 'l' and not ctx.ded then
 		for who in pairs(self.upgradePositions) do
 			for what, geometry in pairs(self.upgradePositions[who]) do
 				if math.distance(x, y, geometry[1], geometry[2]) < geometry[3] then
@@ -306,5 +322,10 @@ function Hud:mousereleased(x, y, b)
 				self.particles:add(UpgradeParticle, {x = x, y = y})
 			end
 		end
+	end
+
+	if ctx.ded and self.deadAlpha > .9 then
+		Context:remove(ctx)
+		Context:add(Game)
 	end
 end

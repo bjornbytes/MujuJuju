@@ -23,8 +23,7 @@ end
 
 function Shrine:update()
 	if self.health <= 0 then
-		Context:remove(ctx)
-		Context:add(Game)
+		ctx.ded = true
 	end
 
 	self.health = math.min(self.maxHealth, self.health + (self.maxHealth * ctx.upgrades.muju.imbue.level * .005 * tickRate))
