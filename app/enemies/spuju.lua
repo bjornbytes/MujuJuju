@@ -33,6 +33,7 @@ end
 function Spuju:update()
 	Enemy.update(self)
 
+	self.target = ctx.target:getClosestNPC(self)
 	self:move()
 end
 

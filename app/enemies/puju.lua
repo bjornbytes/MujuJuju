@@ -85,7 +85,8 @@ function Puju:attack()
 	local damage = self.damage * (1 - self.damageReduction)
 	if self.target:hurt(damage) then self.target = false end
 	self:hurt(damage * .25 * ctx.upgrades.muju.mirror.level)
-	ctx.sound:play({sound = ctx.sounds.combat})
+	local sound = ctx.sound:play({sound = ctx.sounds.combat})
+	if sound then sound:setVolume(.5) end
 	self.attackAnimation = 1
 end
 
@@ -103,7 +104,8 @@ function Puju:butt()
 	self.buttTimer = self.buttRate
 	self.animationState = 'headbutt'
 	self.animator:set(self.animationState, false)
-	ctx.sound:play({sound = ctx.sounds.combat})
+	local sound = ctx.sound:play({sound = ctx.sounds.combat})
+	if sound then sound:setVolume(.5) end
 end
 
 function Puju:draw()

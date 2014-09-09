@@ -54,7 +54,10 @@ function Minion:attack()
 					pitch = 1 / pitch
 				end
 				local sound = ctx.sound:play({sound = ctx.sounds.combat})
-				if sound then sound:setPitch(pitch) end
+				if sound then
+					sound:setPitch(pitch)
+					sound:setVolume(.5)
+				end
 			end
 		end
 	end
