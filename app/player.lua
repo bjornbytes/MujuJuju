@@ -106,6 +106,8 @@ function Player:update()
 		end
 	end
 
+	self.x = math.clamp(self.x, 0, love.graphics.getWidth())
+
 	self.jujuRealm = timer.rot(self.jujuRealm, function()
 		self.invincible = 2
 		self.health = self.maxHealth
