@@ -258,7 +258,7 @@ function Hud:gui()
 		g.draw(self.upgradeBg, 400, 300, 0, .875, .875, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
 
 		g.setColor(0, 0, 0, self.upgradeAlpha * 250)
-		local str = tostring(math.floor(ctx.player.juju)) .. '\n' .. love.mouse.getX() .. ', ' .. love.mouse.getY()
+		local str = tostring(math.floor(ctx.player.juju))
 		g.print(str, w2 - g.getFont():getWidth(str) / 2, 65)
 
 		for who in pairs(self.upgradeDotGeometry) do
