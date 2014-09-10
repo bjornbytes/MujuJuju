@@ -10,7 +10,6 @@ function Dirt:init(data)
 	self.r = 100 + love.math.random(-20, 20)
 	self.g = 50 + love.math.random(-10, 10)
 	self.b = love.math.random(10)
-	ctx.view:register(self)
 	Particle.init(self, data)
 end
 

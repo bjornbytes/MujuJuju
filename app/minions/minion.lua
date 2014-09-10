@@ -45,6 +45,9 @@ function Minion:attack()
 				local damage = type(self.damage) == 'function' and self:damage() or self.damage
 				if self.code == 'zuju' then
 					self.health = math.min(self.health + (.1 * damage * ctx.upgrades.zuju.siphon.level), self.maxHealth)
+					for i = 1, ctx.upgrades.zuju.siphon.level do
+						ctx.particles:add(Lifesteal, {x = self.x, y = self.y})
+					end
 				end
 
 				self.target:hurt(damage)
