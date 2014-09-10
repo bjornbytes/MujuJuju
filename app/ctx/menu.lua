@@ -6,6 +6,7 @@ function Menu:init()
 	self.bg = love.graphics.newImage('media/graphics/main-menu.png')
 	self.font = love.graphics.newFont('media/fonts/pixel.ttf', 8)
 	self.creditsAlpha = 0
+	love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor.png'))
 end
 
 function Menu:update()
