@@ -1,6 +1,7 @@
 Enemy = class()
 
 Enemy.depth = -10
+Enemy.curseIcon = love.graphics.newImage('media/graphics/curse-icon.png')
 
 function Enemy:init(data)
 	self.target = ctx.shrine
