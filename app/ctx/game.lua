@@ -106,8 +106,9 @@ function Game:mousereleased(...)
 	if self.hud.upgrading or self.paused or self.ded then return self.hud:mousereleased(...) end
 end
 
-function Game:gamepadpressed(...)
-	if self.hud.upgrading or self.paused or self.ded then return self.hud:gamepadpressed(...) end
-	self.hud:gamepadpressed(...)
-	self.player:gamepadpressed(...)
+function Game:gamepadpressed(gamepad, button)
+	if self.hud.upgrading or self.paused or self.ded then return self.hud:gamepadpressed(gamepad, button) end
+	if button == 'start' or button == 'guide' then self.paused = not self.paused end
+	self.hud:gamepadpressed(gamepad, button)
+	self.player:gamepadpressed(gamepad, button)
 end

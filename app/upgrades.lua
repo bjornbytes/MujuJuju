@@ -252,6 +252,7 @@ Upgrades.clear = function()
 
 	Upgrades.canBuy = function(who, what)
 		local upgrade = ctx.upgrades[who][what]
+		if not upgrade.costs[upgrade.level + 1] then return false end
 		if ctx.player.juju < upgrade.costs[upgrade.level + 1] then return false end
 		if not upgrade.prerequisites then return true end
 		for key, level in pairs(upgrade.prerequisites) do

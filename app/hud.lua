@@ -34,10 +34,19 @@ Hud.upgradePositions = {
 		distort = {508, 478, 40}
 	}
 }
+Hud.upgradeDotGeometry = {
+	zuju = {
+		empower = {{139, 230, 8.5}, {149, 236, 8.5}, {160.5, 239, 8.5}, {172, 235, 8.5}, {182, 230, 8.5}},
+		fortify = {{224, 233, 8.5}, {234, 240, 8.5}, {245, 242, 8.5}, {256, 239, 8.5}, {266, 233, 8.5}},
+		burst = {{304, 230, 8.5}, {314, 236, 8.5}, {325.5, 239, 8.5}, {337, 236, 8.5}, {346, 229, 8.5}}
+	}
+}
 
 function Hud:init()
 	self.upgrading = false
 	self.upgradeBg = g.newImage('media/graphics/upgrade-menu.png')
+	self.upgradeDot = g.newImage('media/graphics/level-icon.png')
+	self.upgradeDotAlpha = {}
 	self.lock = g.newImage('media/graphics/lock.png')
 	self.upgradeAlpha = 0
 	self.tooltip = nil
@@ -64,6 +73,13 @@ function Hud:update()
 
 	-- Update Timer
 	self:score()
+
+	for key in pairs(self.upgradeDotAlpha) do
+		self.upgradeDotAlpha[key] = math.lerp(self.upgradeDotAlpha[key], 1, 5 * tickRate)
+		if self.upgradeDotAlpha[key] > .999 then
+			self.upgradeDotAlpha[key] = nil
+		end
+	end
 
 	if self.upgradeAlpha > .001 then
 		local mx, my = love.mouse.getPosition()
@@ -230,8 +246,23 @@ function Hud:gui()
 		g.draw(self.upgradeBg, 400, 300, 0, .875, .875, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
 
 		g.setColor(0, 0, 0, self.upgradeAlpha * 250)
-		local str = tostring(math.floor(ctx.player.juju))
+		local str = tostring(math.floor(ctx.player.juju)) .. '\n' .. love.mouse.getX() .. ', ' .. love.mouse.getY()
 		g.print(str, w2 - g.getFont():getWidth(str) / 2, 65)
+
+		for who in pairs(self.upgradeDotGeometry) do
+			for what in pairs(self.upgradeDotGeometry[who]) do
+				for i = 1, ctx.upgrades[who][what].level do
+					local info = self.upgradeDotGeometry[who][what][i]
+					if info then
+						local x, y, scale = unpack(info)
+						local dot = self.upgradeDot
+						local w, h = dot:getDimensions()
+						g.setColor(255, 255, 255, (self.upgradeDotAlpha[who .. what .. i] or 1) * 255 * self.upgradeAlpha)
+						g.draw(dot, x, y, 0, scale / w, scale / h, w / 2, h / 2)
+					end
+				end
+			end
+		end
 
 		if self.tooltip then
 			local mx, my = love.mouse.getPosition()
@@ -310,6 +341,7 @@ function Hud:mousereleased(x, y, b)
 						for i = 1, 80 do
 							self.particles:add(UpgradeParticle, {x = x, y = y})
 						end
+						self.upgradeDotAlpha[who .. what .. nextLevel] = 0
 					end
 				end
 			end
