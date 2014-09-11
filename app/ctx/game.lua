@@ -41,6 +41,7 @@ function Game:load()
 	}
 
 	backgroundSound = self.sound:loop({sound = self.sounds.background})
+	love.audio.setPosition(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, love.graphics.getHeight() / 2)
 end
 
 function Game:update()

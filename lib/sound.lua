@@ -15,7 +15,9 @@ function Sound:play(data)
 	end
 
 	if self.sounds[name] then
-		return self.sounds[name]:play()
+		local sound = self.sounds[name]:play()
+		if data.x and data.y then sound:setPosition(data.x, data.y, 0) end
+		return sound
 	end
 
 	return nil

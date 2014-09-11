@@ -7,7 +7,7 @@ local normalFont = love.graphics.newFont('media/fonts/inglobal.ttf', 14)
 local fancyFont = love.graphics.newFont('media/fonts/inglobal.ttf', 24)
 local boldFont = love.graphics.newFont('media/fonts/inglobalb.ttf', 14)
 Hud.richOptions = {title = fancyFont, bold = boldFont, normal = normalFont, white = {255, 255, 255}, whoCares = {230, 230, 230}, red = {255, 100, 100}, green = {100, 255, 100}}
-Hud.upgradePositions = {
+Hud.upgradeGeometry = {
 	zuju = {
 		empower = {161, 207, 28},
 		fortify = {244, 212, 28},
@@ -67,9 +67,8 @@ function Hud:init()
 	self.jujuIconScale = .75
 	self.timer = {total = 0, minutes = 0, seconds = 0}
 	self.particles = Particles()
-	self.selectAlpha = {0, 0}
-	self.cooldownAlpha = {.5, .5}
 	self.selectBg = {g.newImage('media/graphics/select-zuju.png'), g.newImage('media/graphics/select-vuju.png')}
+	self.selectFactor = {0, 0}
 	self.deadAlpha = 0
 	ctx.view:register(self, 'gui')
 end
@@ -78,9 +77,8 @@ function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
-	for i = 1, #self.selectAlpha do
-		self.selectAlpha[i] = math.lerp(self.selectAlpha[i], ctx.player.selectedMinion == i and 1 or .5, 5 * tickRate)
-		self.cooldownAlpha[i] = math.lerp(self.cooldownAlpha[i], .5, 2 * tickRate)
+	for i = 1, #self.selectFactor do
+		self.selectFactor[i] = math.lerp(self.selectFactor[i], ctx.player.selectedMinion == i and 1 or 0, 12 * tickRate)
 	end
 
 	-- Update Timer
@@ -97,8 +95,8 @@ function Hud:update()
 		local mx, my = love.mouse.getPosition()
 		local hover = false
 
-		for who in pairs(self.upgradePositions) do
-			for what, geometry in pairs(self.upgradePositions[who]) do
+		for who in pairs(self.upgradeGeometry) do
+			for what, geometry in pairs(self.upgradeGeometry[who]) do
 				if math.distance(mx, my, geometry[1], geometry[2]) < geometry[3] then
 					local str = ctx.upgrades.makeTooltip(who, what)
 					self.tooltip = rich.new(table.merge({str, 300}, self.richOptions))
@@ -201,29 +199,17 @@ function Hud:gui()
 	g.print(str, w - 25 - g.getFont():getWidth(str), 25)
 
 	-- Minion indicator
-	for i = 1, #ctx.player.minions do
-		g.setColor(255, 210, 73, 255 * self.selectAlpha[i])
-		local w = 123 + (180 * .05 * (self.cooldownAlpha[i] - .5))
-		g.rectangle('fill', 64, 100 + 50 * (i - 1) + 10, w, 23)
-		g.setColor(255, 255, 255, 255 * self.cooldownAlpha[i] * (self.selectAlpha[i]))
-		local cd = ctx.player.minions[i].cooldown * (1 - (.1 * ctx.upgrades.muju.flow.level))
-		g.rectangle('fill', 64, 100 + 50 * (i - 1) + 10, w * (1 - (ctx.player.minioncds[i] / cd)), 23)
-		g.setColor(255, 255, 255, self.selectAlpha[i] * 255)
-		g.draw(self.selectBg[i], 16, 100 + 50 * (i - 1), 0, .6 + (.05 * (self.cooldownAlpha[i] - .5)), .6)
-		g.setColor(0, 0, 0, self.selectAlpha[i] * 255)
-		g.print(ctx.player.minions[i].code:capitalize(), 80, 100 + 50 * (i - 1) + 14)
-	end
-	g.setColor(ctx.player.selectedMinion == 1 and {255, 255, 255} or {150, 150, 150})
-	local upgradeCount = ctx.upgrades.zuju.empower.level + ctx.upgrades.zuju.fortify.level + ctx.upgrades.zuju.burst.level + ctx.upgrades.zuju.siphon.level + ctx.upgrades.zuju.sanctuary.level
-	local zujucost = Zuju.cost + (3 * upgradeCount)
-	upgradeCount = ctx.upgrades.vuju.surge.level + ctx.upgrades.vuju.charge.level + ctx.upgrades.vuju.condemn.level + ctx.upgrades.vuju.arc.level + ctx.upgrades.vuju.soak.level
-	local vujucost = Vuju.cost + (4 * upgradeCount)
-	g.print('Zuju [' .. math.round(zujucost) .. '] ' .. (ctx.player.minioncds[1] > 0 and math.ceil(ctx.player.minioncds[1]) or ''), 200, 115)
-	if #ctx.player.minions == 2 then
-		g.setColor(ctx.player.selectedMinion == 2 and {255, 255, 255} or {150, 150, 150})
-		local cost = Vuju.cost
-		local upgradeCount = 0
-		g.print('Vuju [' .. math.round(vujucost) .. '] ' .. (ctx.player.minioncds[2] > 0 and math.ceil(ctx.player.minioncds[2]) or ''), 200, 115 + g.getFont():getHeight() + 2)
+	local yy = 120
+	for i = 1, #self.selectFactor do
+		local scale = .5 + (.15 * self.selectFactor[i])
+		local xx = 16 - 28 * (1 - self.selectFactor[i])
+		g.setColor(255, 210, 73)
+		g.rectangle('fill', xx + 79 * scale, yy - 17.5 * scale, 204 * scale, 39.5 * scale)
+		g.setColor(255, 255, 255, 100)
+		g.rectangle('fill', xx + 79 * scale, yy - 17.5 * scale, 204 * scale, 39.5 * scale)
+		g.setColor(255, 255, 255)
+		g.draw(self.selectBg[i], xx, yy, 0, scale, scale, 0, self.selectBg[i]:getHeight() / 2)
+		yy = yy + self.selectBg[i]:getHeight() * .5
 	end
 	
 	-- Health Bars
@@ -272,6 +258,17 @@ function Hud:gui()
 						g.setColor(255, 255, 255, (self.upgradeDotAlpha[who .. what .. i] or 1) * 255 * self.upgradeAlpha)
 						g.draw(dot, x + .5, y + .5, 0, scale / w, scale / h, w / 2, h / 2)
 					end
+				end
+			end
+		end
+
+		g.setColor(255, 255, 255, 220 * self.upgradeAlpha)
+		local lw, lh = self.lock:getDimensions()
+		for who in pairs(self.upgradeGeometry) do
+			for what, geometry in pairs(self.upgradeGeometry[who]) do
+				if not ctx.upgrades.checkPrerequisites(who, what) then
+					local scale = math.min(geometry[3] / lw, geometry[3] / lh) + .1
+					g.draw(self.lock, geometry[1], geometry[2], 0, scale, scale, lw / 2, lh / 2)
 				end
 			end
 		end
@@ -340,8 +337,8 @@ end
 
 function Hud:mousereleased(x, y, b)
 	if self.upgrading and b == 'l' and not ctx.ded then
-		for who in pairs(self.upgradePositions) do
-			for what, geometry in pairs(self.upgradePositions[who]) do
+		for who in pairs(self.upgradeGeometry) do
+			for what, geometry in pairs(self.upgradeGeometry[who]) do
 				if math.distance(x, y, geometry[1], geometry[2]) < geometry[3] then
 					local upgrade = ctx.upgrades[who][what]
 					local nextLevel = upgrade.level + 1

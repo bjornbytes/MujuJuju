@@ -17,11 +17,11 @@ function Player:init()
 	self.prevy = self.y
 	self.speed = 0
 	self.jujuRealm = 0
-	self.juju = 30
+	self.juju = 300
 	self.jujuTimer = 1
 	self.dead = false
-	self.minions = {Zuju}
-	self.minioncds = {0}
+	self.minions = {Zuju, Zuju}
+	self.minioncds = {0, 0}
 	self.selectedMinion = 1
 	self.recentSelect = 0
 	self.direction = 1
@@ -122,9 +122,7 @@ function Player:update()
 	self.invincible = timer.rot(self.invincible)
 
 	table.each(self.minioncds, function(cooldown, index)
-		self.minioncds[index] = timer.rot(cooldown, function()
-			ctx.hud.cooldownAlpha[index] = 1
-		end)
+		self.minioncds[index] = timer.rot(cooldown)
 	end)
 
 	if self.ghost then

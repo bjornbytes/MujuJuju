@@ -1,5 +1,8 @@
 Upgrades = {}
 
+-- TODO Player:has(Minion) etc.
+local function hasVuju() return ctx.player.minions[2] == Vuju end
+
 Upgrades.clear = function()
 	Upgrades.zuju = {
 		empower = {
@@ -68,6 +71,7 @@ Upgrades.clear = function()
 		surge = {
 			level = 0,
 			costs = {25, 40, 55, 70, 85},
+			prerequisites = {hasVuju},
 			description = 'Vuju surge with increased energy, increasing their cast range.',
 			values = {
 				[0] = '125 range',
@@ -81,6 +85,7 @@ Upgrades.clear = function()
 		charge = {
 			level = 0,
 			costs = {60, 70, 80, 90, 100},
+			prerequisites = {hasVuju},
 			description = 'Vuju become more charged and deal increased damage with lightning.',
 			values = {
 				[0] = '30 damage',
@@ -94,6 +99,7 @@ Upgrades.clear = function()
 		condemn = {
 			level = 0,
 			costs = {100, 50, 50, 50, 50},
+			prerequisites = {hasVuju},
 			description = 'Vuju gain the ability to hex enemies, reducing the damage they deal for 5 seconds.',
 			values = {
 				[1] = '40% damage reduction, 8 second cooldown',
@@ -106,7 +112,7 @@ Upgrades.clear = function()
 		arc = {
 			level = 0,
 			costs = {100, 100, 100},
-			prerequisites = {surge = 3, charge = 3},
+			prerequisites = {surge = 3, charge = 3, hasVuju},
 			description = 'Lightning jumps to additional nearby enemies.  Each arc deals 50% reduced damage, down to a minimum of 25% damage.',
 			values = {
 				[1] = '2 jumps at 50 range',
@@ -117,7 +123,7 @@ Upgrades.clear = function()
 		soak = {
 			level = 0,
 			costs = {100, 100, 100},
-			prerequisites = {charge = 3, condemn = 3},
+			prerequisites = {charge = 3, condemn = 3, hasVuju},
 			description = 'The curse also soaks enemies, increasing the damage they take from lightning.',
 			values = {
 				[1] = '33% increase',
@@ -240,9 +246,16 @@ Upgrades.clear = function()
 			table.insert(pieces, color .. upgrade.costs[upgrade.level + 1] .. ' juju')
 			if upgrade.prerequisites then
 				for name, min in pairs(upgrade.prerequisites) do
-					local color = Upgrades[who][name].level >= min and '{green}' or '{red}'
-					local points = (min == 1) and 'point' or 'points'
-					table.insert(pieces, color .. min .. ' ' .. points .. ' in ' .. name:capitalize())
+					if type(min) == 'function' then
+						if min == hasVuju then
+							local color = hasVuju() and '{green}' or '{red}'
+							table.insert(pieces, color .. 'Requires Vuju')
+						end
+					else
+						local color = Upgrades[who][name].level >= min and '{green}' or '{red}'
+						local points = (min == 1) and 'point' or 'points'
+						table.insert(pieces, color .. min .. ' ' .. points .. ' in ' .. name:capitalize())
+					end
 				end
 			end
 		end
@@ -251,12 +264,18 @@ Upgrades.clear = function()
 	end
 
 	Upgrades.canBuy = function(who, what)
-		local upgrade = ctx.upgrades[who][what]
+		local upgrade = Upgrades[who][what]
 		if not upgrade.costs[upgrade.level + 1] then return false end
 		if ctx.player.juju < upgrade.costs[upgrade.level + 1] then return false end
+		return Upgrades.checkPrerequisites(who, what)
+	end
+
+	Upgrades.checkPrerequisites = function(who, what)
+		local upgrade = Upgrades[who][what]
 		if not upgrade.prerequisites then return true end
 		for key, level in pairs(upgrade.prerequisites) do
-			if ctx.upgrades[who][key].level < level then return false end
+			if type(level) == 'function' and not level() then return false
+			elseif ctx.upgrades[who][key].level < level then return false end
 		end
 		return true
 	end
