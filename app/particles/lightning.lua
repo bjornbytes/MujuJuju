@@ -11,6 +11,7 @@ function Lightning:init(data)
 	self.range = 50
 	self.health = self.maxHealth
 	self.prevHealth = self.health
+	self.sparked = false
 	self:lightning()
 	ctx.view:register(self)
 end
@@ -47,6 +48,12 @@ function Lightning:update()
 	self.health = timer.rot(self.health, function()
 		ctx.particles:remove(self)
 	end)
+	if not self.sparked and self.health < self.maxHealth / 2 then
+		for i = 1, 12 do
+			ctx.particles:add(Spark, {x = self.path[#self.path - 1], y = self.path[#self.path]})
+		end
+		self.sparked = true
+	end
 end
 
 function Lightning:draw()
