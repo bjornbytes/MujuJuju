@@ -98,10 +98,12 @@ function Vuju:attack()
 	elseif self.fireTimer == 0 then
 		local targets = {self.target}
 		local damage = self.damage
+		local ox, oy = self.target.x, 0
 		for i = 1, math.max(1, 2 * ctx.upgrades.vuju.arc.level) do
 			if i > #targets then break end
 			targets[1]:hurt(damage)
-			ctx.particles:add(Lightning, {x = targets[1].x})
+			ctx.particles:add(Lightning, {x = ox, y = oy, target = targets[1]})
+			ox, oy = targets[1].x, targets[1].y
 			damage = math.max(damage / 2, self.damage / 4)
 			local newTargets = ctx.target:getEnemiesInRange(targets[1], 25 + (25 * ctx.upgrades.vuju.arc.level))
 			if not newTargets then break end

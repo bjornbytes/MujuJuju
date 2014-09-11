@@ -2,42 +2,44 @@ require 'app/particles/particle'
 
 Lightning = extend(Particle)
 
-Lightning.maxHealth = .225
+Lightning.maxHealth = .2
 
 function Lightning:init(data)
+	self.x = data.x
+	self.y = data.y
+	self.target = data.target
 	self.range = 50
-	self.targetX = data.x
 	self.health = self.maxHealth
 	self.prevHealth = self.health
-	self.path = self:lightning()
-	Particle.init(self, data)
+	self:lightning()
+	ctx.view:register(self)
 end
 
 function Lightning:lightning()
-	local path = {}
-	self.maxDistance = 0
-
-	local start = {x = self.targetX, y = 0}
-	table.insert(path, start)
-
-	for i = 1, 10 do
-		local x, y = self:randomLine(start, self.range)
-		table.insert(path, {x = x, y = y})
-		self.maxDistance = self.maxDistance + math.distance(path[#path].x, path[#path].y, path[#path - 1].x, path[#path - 1].y)
-		start = path[#path]
+	local function t(x, y)
+		table.insert(self.path, x)
+		table.insert(self.path, y)
 	end
-	table.insert(path, {x = self.targetX, y = love.graphics.getHeight() - ctx.environment.groundHeight})
-	self.maxDistance = self.maxDistance + math.distance(path[#path].x, path[#path].y, path[#path - 1].x, path[#path - 1].y)
 
-	return path
-end
+	self.path = {}
+	self.distance = 0
+	if not self.target then return end
 
-function Lightning:randomLine(start, range)
-	local ending = {}
-	ending.x = start.x + love.math.random(-range, range)
-	ending.y = start.y + love.math.random(0, range * 1.5)
+	local x, y = self.x, self.y
+	t(x, y)
 
-	return ending.x, ending.y
+	for i = 0, 1, .1 do
+		if i == 1 then t(self.target.x, self.target.y) break end
+		x, y = math.lerp(self.x, self.target.x, i), math.lerp(self.y, self.target.y, i)
+		local n1, n2 = love.math.noise(x * y * i), love.math.noise(x / (1 + y) / (1 + i))
+		n1, n2 = 2 * n1 - 1, 2 * n2 - 1
+		x = x + 50 * n1
+		y = y + 50 * n2
+		if #self.path > 0 then
+			self.distance = self.distance + math.distance(self.path[#self.path - 1], self.path[#self.path], x, y)
+		end
+		t(x, y)
+	end
 end
 
 function Lightning:update()
@@ -50,13 +52,13 @@ end
 function Lightning:draw()
 	local g = love.graphics
 	local hp = math.lerp(self.prevHealth, self.health, tickDelta / tickRate)
-	local dis = (1 - (hp / self.maxHealth)) * self.maxDistance
+	local dis = self.distance * (1 - math.max((hp / self.maxHealth) - .5, 0) * 2)
 	
-	for i = 1, #self.path - 1 do
-		g.setLineWidth(3 * (1 - (dis / self.maxDistance)))
-		g.setColor(255, 255, 220, 128 + (hp / self.maxHealth * 127))
-		local x1, y1 = self.path[i].x, self.path[i].y
-		local x2, y2 = self.path[i + 1].x, self.path[i + 1].y
+	for i = 1, #self.path - 2, 2 do
+		g.setLineWidth(3 * (1 - (dis / self.distance)))
+		g.setColor(255, 255, 220, math.min(2 * hp / self.maxHealth, 1) * 255)
+		local x1, y1 = self.path[i], self.path[i + 1]
+		local x2, y2 = self.path[i + 2], self.path[i + 3]
 		local d = math.distance(x1, y1, x2, y2)
 		if d < dis then
 			g.line(x1, y1, x2, y2)

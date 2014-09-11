@@ -17,11 +17,11 @@ function Player:init()
 	self.prevy = self.y
 	self.speed = 0
 	self.jujuRealm = 0
-	self.juju = 300
+	self.juju = 30
 	self.jujuTimer = 1
 	self.dead = false
-	self.minions = {Zuju, Zuju}
-	self.minioncds = {0, 0}
+	self.minions = {Zuju}
+	self.minioncds = {0}
 	self.selectedMinion = 1
 	self.recentSelect = 0
 	self.direction = 1

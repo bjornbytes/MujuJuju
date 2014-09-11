@@ -274,7 +274,7 @@ Upgrades.clear = function()
 		local upgrade = Upgrades[who][what]
 		if not upgrade.prerequisites then return true end
 		for key, level in pairs(upgrade.prerequisites) do
-			if type(level) == 'function' and not level() then return false
+			if type(level) == 'function' then if  not level() then return false end
 			elseif ctx.upgrades[who][key].level < level then return false end
 		end
 		return true
