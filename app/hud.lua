@@ -214,7 +214,7 @@ function Hud:gui()
 		local scale = .75 + (.15 * self.selectFactor[i]) + (.1 * self.selectExtra[i])
 		local xx = 48 - 10 * (1 - self.selectFactor[i])
 		local f, cost = g.getFont(), tostring(ctx.player.minions[i]:getCost())
-		local tx, ty = xx - f:getWidth(cost) / 2, yy - f:getHeight() / 2
+		local tx, ty = xx - f:getWidth(cost) / 2 - (bg:getWidth() * .75 / 2) + 4, yy - f:getHeight() / 2 - (bg:getHeight() * .75 / 2) + 4
 		local alpha = .65 + self.selectFactor[i] * .35
 
 		-- Backdrop
