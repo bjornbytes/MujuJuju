@@ -129,3 +129,8 @@ function Vuju:hurt(amount)
 		return true
 	end
 end
+
+function Vuju:getCost()
+	local upgradeCount = ctx.upgrades.vuju.surge.level + ctx.upgrades.vuju.charge.level + ctx.upgrades.vuju.condemn.level + ctx.upgrades.vuju.arc.level + ctx.upgrades.vuju.soak.level
+	return self.cost + upgradeCount * 4
+end

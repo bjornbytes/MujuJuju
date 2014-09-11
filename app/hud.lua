@@ -69,6 +69,10 @@ function Hud:init()
 	self.particles = Particles()
 	self.selectBg = {g.newImage('media/graphics/select-zuju.png'), g.newImage('media/graphics/select-vuju.png')}
 	self.selectFactor = {0, 0}
+	self.selectExtra = {0, 0}
+	self.selectQuad = {}
+	self.selectQuad[1] = g.newQuad(0, 0, self.selectBg[1]:getWidth(), self.selectBg[1]:getHeight(), self.selectBg[1]:getWidth(), self.selectBg[1]:getHeight())
+	self.selectQuad[2] = g.newQuad(0, 0, self.selectBg[2]:getWidth(), self.selectBg[2]:getHeight(), self.selectBg[2]:getWidth(), self.selectBg[2]:getHeight())
 	self.deadAlpha = 0
 	ctx.view:register(self, 'gui')
 end
@@ -78,7 +82,12 @@ function Hud:update()
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
 	for i = 1, #self.selectFactor do
-		self.selectFactor[i] = math.lerp(self.selectFactor[i], ctx.player.selectedMinion == i and 1 or 0, 12 * tickRate)
+		self.selectFactor[i] = math.lerp(self.selectFactor[i], ctx.player.selectedMinion == i and 1 or 0, 18 * tickRate)
+		self.selectExtra[i] = math.lerp(self.selectExtra[i], 0, 5 * tickRate)
+		if ctx.player.minions[i] then
+			local y = self.selectBg[i]:getHeight() * (ctx.player.minioncds[i] / ctx.player.minions[i].cooldown)
+			self.selectQuad[i]:setViewport(0, y, self.selectBg[i]:getWidth(), self.selectBg[i]:getHeight() - y)
+		end
 	end
 
 	-- Update Timer
@@ -199,17 +208,36 @@ function Hud:gui()
 	g.print(str, w - 25 - g.getFont():getWidth(str), 25)
 
 	-- Minion indicator
-	local yy = 120
-	for i = 1, #self.selectFactor do
-		local scale = .5 + (.15 * self.selectFactor[i])
-		local xx = 16 - 28 * (1 - self.selectFactor[i])
-		g.setColor(255, 210, 73)
-		g.rectangle('fill', xx + 79 * scale, yy - 17.5 * scale, 204 * scale, 39.5 * scale)
-		g.setColor(255, 255, 255, 100)
-		g.rectangle('fill', xx + 79 * scale, yy - 17.5 * scale, 204 * scale, 39.5 * scale)
-		g.setColor(255, 255, 255)
-		g.draw(self.selectBg[i], xx, yy, 0, scale, scale, 0, self.selectBg[i]:getHeight() / 2)
-		yy = yy + self.selectBg[i]:getHeight() * .5
+	local yy = 135
+	for i = 1, #ctx.player.minions do
+		local bg = self.selectBg[i]
+		local scale = .75 + (.15 * self.selectFactor[i]) + (.1 * self.selectExtra[i])
+		local xx = 48 - 10 * (1 - self.selectFactor[i])
+		local f, cost = g.getFont(), tostring(ctx.player.minions[i]:getCost())
+		local tx, ty = xx - f:getWidth(cost) / 2, yy - f:getHeight() / 2
+		local alpha = .65 + self.selectFactor[i] * .35
+
+		-- Backdrop
+		g.setColor(255, 255, 255, 80 * alpha)
+		g.draw(bg, xx, yy, 0, scale, scale, bg:getWidth() / 2, bg:getHeight() / 2)
+
+		-- Cooldown
+		local _, qy = self.selectQuad[i]:getViewport()
+		g.setColor(255, 255, 255, (150 + (100 * (ctx.player.minioncds[i] == 0 and 1 or 0))) * alpha)
+		g.draw(bg, self.selectQuad[i], xx, yy + qy * scale, 0, scale, scale, bg:getWidth() / 2, bg:getHeight() / 2)
+
+		-- Juice
+		g.setBlendMode('additive')
+		g.setColor(255, 255, 255, 60 * self.selectExtra[i])
+		g.draw(bg, xx, yy, 0, scale + .2 * self.selectExtra[i], scale + .2 * self.selectExtra[i], bg:getWidth() / 2, bg:getHeight() / 2)
+		g.setBlendMode('alpha')
+
+		-- Cost
+		g.setColor(0, 0, 0, 200 + 55 * self.selectFactor[i])
+		g.print(cost, tx + 1, ty + 1)
+		g.setColor(255, 255, 255, 200 + 55 * self.selectFactor[i])
+		g.print(cost, tx, ty)
+		yy = yy + self.selectBg[i]:getHeight() * 1
 	end
 	
 	-- Health Bars

@@ -122,7 +122,9 @@ function Player:update()
 	self.invincible = timer.rot(self.invincible)
 
 	table.each(self.minioncds, function(cooldown, index)
-		self.minioncds[index] = timer.rot(cooldown)
+		self.minioncds[index] = timer.rot(cooldown, function()
+			ctx.hud.selectExtra[index] = 1
+		end)
 	end)
 
 	if self.ghost then
@@ -191,14 +193,7 @@ end
 function Player:summon()
 	local minion = self.minions[self.selectedMinion]
 	local cooldown = self.minioncds[self.selectedMinion]
-	local cost = minion.cost
-	if minion.code == 'zuju' then
-		local upgradeCount = ctx.upgrades.zuju.empower.level + ctx.upgrades.zuju.fortify.level + ctx.upgrades.zuju.burst.level + ctx.upgrades.zuju.siphon.level + ctx.upgrades.zuju.sanctuary.level
-		cost = cost + 3 * upgradeCount
-	elseif minion.code == 'vuju' then
-		local upgradeCount = ctx.upgrades.vuju.surge.level + ctx.upgrades.vuju.charge.level + ctx.upgrades.vuju.condemn.level + ctx.upgrades.vuju.arc.level + ctx.upgrades.vuju.soak.level
-		cost = cost + 4 * upgradeCount
-	end
+	local cost = minion:getCost()
 	if cooldown == 0 and self:spend(cost) then
 		ctx.minions:add(minion, {x = self.x + love.math.random(-20, 20), direction = self.direction})
 		self.minioncds[self.selectedMinion] = minion.cooldown * (1 - (.1 * ctx.upgrades.muju.flow.level))

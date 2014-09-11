@@ -128,3 +128,8 @@ function Zuju:damage()
 	damage = damage + love.math.random(-3, 3)
 	return damage
 end
+
+function Zuju:getCost()
+	local upgradeCount = ctx.upgrades.zuju.empower.level + ctx.upgrades.zuju.fortify.level + ctx.upgrades.zuju.burst.level + ctx.upgrades.zuju.siphon.level + ctx.upgrades.zuju.sanctuary.level
+	return self.cost + upgradeCount * 3
+end
