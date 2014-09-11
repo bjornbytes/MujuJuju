@@ -226,10 +226,6 @@ function Player:hurt(amount)
 		ctx.sound:play({sound = ctx.sounds.death})
 		return true
 	end
-
-	if self.jujuRealm > 0 then
-		-- What's going on in the Juju Realm
-	end
 end
 
 function Player:keypressed(key)
