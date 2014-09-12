@@ -57,6 +57,7 @@ Hud.upgradeDotGeometry = {
 function Hud:init()
 	self.upgrading = false
 	self.upgradeBg = g.newImage('media/graphics/upgrade-menu.png')
+	self.upgradeCircles = g.newImage('media/graphics/upgrade-menu-circles.png')
 	self.upgradeDot = g.newImage('media/graphics/level-icon.png')
 	self.upgradeDotAlpha = {}
 	self.lock = g.newImage('media/graphics/lock.png')
@@ -167,7 +168,7 @@ function Hud:stackingTable(stackingTable, x, range, delta)
 end
 
 function Hud:score()
-	if not self.upgrading and not ctx.paused then
+	if not self.upgrading and not ctx.paused and not ctx.ded then
 		self.timer.total = self.timer.total + 1
 	end
 end
@@ -271,6 +272,7 @@ function Hud:gui()
 		
 		g.setColor(255, 255, 255, self.upgradeAlpha * 250)
 		g.draw(self.upgradeBg, 400, 300, 0, .875, .875, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
+		g.draw(self.upgradeCircles, 400, 300, 0, 1, 1, self.upgradeCircles:getWidth() / 2, self.upgradeCircles:getHeight() / 2)
 
 		g.setColor(0, 0, 0, self.upgradeAlpha * 250)
 		local str = tostring(math.floor(ctx.player.juju))
