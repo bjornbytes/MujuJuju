@@ -17,7 +17,7 @@ function UpgradeParticle:update()
 	self.vy = math.lerp(self.vy, 0, 2 * tickRate)
 	self.gravity = math.lerp(self.gravity, 0, self.gravityDecay * tickRate)
 	self.alpha = math.lerp(self.alpha, 0, 2 * tickRate)
-	if self.alpha < .01 then ctx.particles:remove(self) end
+	if self.alpha < .01 then ctx.hud.particles:remove(self) end
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 end

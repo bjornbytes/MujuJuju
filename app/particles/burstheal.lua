@@ -12,7 +12,9 @@ end
 function BurstHeal:update()
 	local minions = ctx.target:getMinionsInRange(self, self.radius)
 	table.each(minions, function(minion)
-		minion.health = math.min(minion.health + self.amount, minion.maxHealth)
+		local heal = (not minion.lastSanctuary or minion.lastSanctuary ~= tick) and self.amount or self.amount / 2
+		minion.health = math.min(minion.health + heal, minion.maxHealth)
+		minion.lastSanctuary = tick
 	end)
 	self.health = timer.rot(self.health, function()
 		ctx.particles:remove(self)

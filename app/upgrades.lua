@@ -45,7 +45,7 @@ Upgrades.clear = function()
 		},
 		siphon = {
 			level = 0,
-			costs = {100, 110, 120},
+			costs = {80, 160, 240},
 			prerequisites = {empower = 3, fortify = 3},
 			description = 'Zuju siphon life from their enemies with every strike, granting them lifesteal.',
 			values = {
@@ -56,7 +56,7 @@ Upgrades.clear = function()
 		},
 		sanctuary = {
 			level = 0,
-			costs = {80, 120, 160},
+			costs = {80, 160, 240},
 			prerequisites = {fortify = 3, burst = 3},
 			description = 'The spirit flame leaves behind an aura that slowly heals allies.',
 			values = {
@@ -84,7 +84,7 @@ Upgrades.clear = function()
 		},
 		charge = {
 			level = 0,
-			costs = {60, 70, 80, 90, 100},
+			costs = {60, 80, 100, 120, 140},
 			prerequisites = {hasVuju},
 			description = 'Vuju become more charged and deal increased damage with lightning.',
 			values = {
@@ -111,7 +111,7 @@ Upgrades.clear = function()
 		},
 		arc = {
 			level = 0,
-			costs = {100, 100, 100},
+			costs = {100, 200, 300},
 			prerequisites = {surge = 3, charge = 3, hasVuju},
 			description = 'Lightning jumps to additional nearby enemies.  Each arc deals 50% reduced damage, down to a minimum of 25% damage.',
 			values = {
@@ -122,7 +122,7 @@ Upgrades.clear = function()
 		},
 		soak = {
 			level = 0,
-			costs = {100, 100, 100},
+			costs = {30, 60, 90},
 			prerequisites = {charge = 3, condemn = 3, hasVuju},
 			description = 'The curse also soaks enemies, increasing the damage they take from lightning.',
 			values = {
@@ -148,7 +148,7 @@ Upgrades.clear = function()
 		},
 		harvest = {
 			level = 0,
-			costs = {120, 130, 140},
+			costs = {75, 150, 200},
 			prerequisites = {flow = 3},
 			description = 'The souls of minions are harvested after death, producing a small amount of juju.',
 			values = {
@@ -180,7 +180,7 @@ Upgrades.clear = function()
 		},
 		absorb = {
 			level = 0,
-			costs = {150, 150, 150},
+			costs = {50, 75, 100},
 			prerequisites = {zeal = 3},
 			description = 'Muju attracts juju towards himself while in the juju realm.  Juju magnets, how do they work?',
 			values = {
@@ -191,7 +191,7 @@ Upgrades.clear = function()
 		},
 		diffuse = {
 			level = 0,
-			costs = {250},
+			costs = {200},
 			prerequisites = {absorb = 1},
 			description = 'Spiritual mastery of juju is attained, allowing Muju to return to his body at any point while in the juju realm.',
 			values = {
@@ -212,7 +212,7 @@ Upgrades.clear = function()
 		},
 		mirror = {
 			level = 0,
-			costs = {100, 100, 100},
+			costs = {30, 60, 120},
 			prerequisites = {imbue = 3},
 			description = 'Gives the shrine a protective magic coating, reflecting a portion of damage dealt to it.',
 			values = {

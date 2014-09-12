@@ -8,7 +8,7 @@ Puju.height = 24
 Puju.speed = 40
 Puju.damage = 18
 Puju.fireRate = 1.1
-Puju.maxHealth = 60
+Puju.maxHealth = 65
 Puju.attackRange = Puju.width / 2
 
 Puju.buttRate = 4

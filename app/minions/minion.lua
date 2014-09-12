@@ -10,6 +10,7 @@ function Minion:init(data)
 	self.knockBackDisplay = 0
 	self.target = nil
 	self.fireTimer = 0
+	self.dead = false
 	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
 
 	table.merge(data, self)
@@ -44,7 +45,8 @@ function Minion:attack()
 			if dif <= self.attackRange + self.target.width / 2 then
 				local damage = type(self.damage) == 'function' and self:damage() or self.damage
 				if self.code == 'zuju' then
-					self.health = math.min(self.health + (.1 * damage * ctx.upgrades.zuju.siphon.level), self.maxHealth)
+					local heal = math.min(damage, target.health) * .1 * ctx.upgrades.zuju.siphon.level
+					self.health = math.min(self.health + heal, self.maxHealth)
 					for i = 1, ctx.upgrades.zuju.siphon.level do
 						ctx.particles:add(Lifesteal, {x = self.x, y = self.y})
 					end
