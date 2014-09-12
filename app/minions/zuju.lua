@@ -67,7 +67,7 @@ end
 
 function Zuju:update()
 	if self.animationState == 'death' or self.animationState == 'spawn' then
-		self.dead = true
+		self.dead = self.animationState == 'death'
 		self.x = self.x + self.knockBack * tickRate * 3000
 		self.knockBack = math.max(0, math.abs(self.knockBack) - tickRate) * math.sign(self.knockBack)
 		self.knockBackDisplay = math.lerp(self.knockBackDisplay, math.abs(self.knockBack), 20 * tickRate)
