@@ -99,6 +99,10 @@ function Game:keyreleased(...)
 	if self.hud.upgrading or self.paused or self.ded then return self.hud:keyreleased(...) end
 end
 
+function Game:textinput(char)
+	self.hud:textinput(char)
+end
+
 function Game:mousepressed(...)
 	if self.hud.upgrading or self.paused or self.ded then return self.hud:mousepressed(...) end
 end

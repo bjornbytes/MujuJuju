@@ -74,6 +74,7 @@ function Hud:init()
 	self.selectQuad[1] = g.newQuad(0, 0, self.selectBg[1]:getWidth(), self.selectBg[1]:getHeight(), self.selectBg[1]:getWidth(), self.selectBg[1]:getHeight())
 	self.selectQuad[2] = g.newQuad(0, 0, self.selectBg[2]:getWidth(), self.selectBg[2]:getHeight(), self.selectBg[2]:getWidth(), self.selectBg[2]:getHeight())
 	self.deadAlpha = 0
+	self.deadName = ''
 	ctx.view:register(self, 'gui')
 end
 
@@ -317,7 +318,7 @@ function Hud:gui()
 	-- Death Screen
 	if ctx.ded then
 		g.setColor(255, 255, 255, 255 * self.deadAlpha)
-		local str = 'u ded'
+		local str = 'u ded\nenter your name\n' .. self.deadName
 		g.print(str, g.getWidth() / 2 - g.getFont():getWidth(str) / 2, g.getHeight() / 2)
 	end
 end
@@ -333,13 +334,30 @@ function Hud:keypressed(key)
 	end
 
 	if ctx.ded and self.deadAlpha > .9 then
-		Context:remove(ctx)
-		Context:add(Game)
+		if key == 'backspace' then
+			self.deadName = self.deadName:sub(1, -2)
+		elseif key == 'return' then
+			local seconds = math.floor(self.timer.total * tickRate)
+			require('socket.http').request({
+				method = 'GET',
+				url = 'http://plasticsarcastic.com/mujuJuju/score.php?name=' .. self.deadName .. '&score=' .. seconds
+			})
+			Context:remove(ctx)
+			Context:add(Game)
+		end
 	end
 end
 
 function Hud:keyreleased(key)
 	--
+end
+
+function Hud:textinput(char)
+	if ctx.ded then
+		if char:match('%w') then
+			self.deadName = self.deadName .. char
+		end
+	end
 end
 
 function Hud:gamepadpressed(gamepad, button)
@@ -348,11 +366,6 @@ function Hud:gamepadpressed(gamepad, button)
 			self.upgrading = not self.upgrading
 			return true
 		end
-	end
-
-	if ctx.ded and self.deadAlpha > .9 then
-		Context:remove(ctx)
-		Context:add(Game)
 	end
 end
 
@@ -391,10 +404,5 @@ function Hud:mousereleased(x, y, b)
 				self.particles:add(UpgradeParticle, {x = x, y = y})
 			end
 		end
-	end
-
-	if ctx.ded and self.deadAlpha > .9 then
-		Context:remove(ctx)
-		Context:add(Game)
 	end
 end
