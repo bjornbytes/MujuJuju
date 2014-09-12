@@ -61,6 +61,22 @@ Hud.upgradeDotGeometry = {
 		distort = {{508, 514, 13}}
 	}
 }
+Hud.upgradePillows = {
+	{g.newImage('media/graphics/pipe1.png'), 131, 238, check = function() return ctx.upgrades.zuju.empower.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe2.png'), 177, 234, check = function() return ctx.upgrades.zuju.fortify.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe3.png'), 230, 234, check = function() return ctx.upgrades.zuju.fortify.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe4.png'), 284, 237, check = function() return ctx.upgrades.zuju.burst.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe5.png'), 491, 238, check = function() return ctx.upgrades.vuju.surge.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe6.png'), 537, 234, check = function() return ctx.upgrades.vuju.charge.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe7.png'), 590, 234, check = function() return ctx.upgrades.vuju.charge.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe8.png'), 644, 237, check = function() return ctx.upgrades.vuju.condemn.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe9.png'), 205, 452, check = function() return ctx.upgrades.muju.flow.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe10.png'), 216, 492, check = function() return ctx.upgrades.muju.harvest.level >= 1 end, alpha = 0},
+	{g.newImage('media/graphics/pipe11.png'), 394, 437, check = function() return ctx.upgrades.muju.zeal.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe12.png'), 390, 499, check = function() return ctx.upgrades.muju.absorb.level >= 1 end, alpha = 0},
+	{g.newImage('media/graphics/pipe13.png'), 567, 452, check = function() return ctx.upgrades.muju.imbue.level >= 3 end, alpha = 0},
+	{g.newImage('media/graphics/pipe14.png'), 559, 493, check = function() return ctx.upgrades.muju.mirror.level >= 1 end, alpha = 0},
+}
 
 function Hud:init()
 	self.upgrading = false
@@ -97,6 +113,13 @@ function Hud:update()
 		if ctx.player.minions[i] then
 			local y = self.selectBg[i]:getHeight() * (ctx.player.minioncds[i] / ctx.player.minions[i].cooldown)
 			self.selectQuad[i]:setViewport(0, y, self.selectBg[i]:getWidth(), self.selectBg[i]:getHeight() - y)
+		end
+	end
+
+	for i = 1, #self.upgradePillows do
+		local pillow = self.upgradePillows[i]
+		if pillow.check() then
+			pillow.alpha = math.min(pillow.alpha + 2 * tickRate, 1)
 		end
 	end
 
@@ -280,6 +303,19 @@ function Hud:gui()
 		
 		g.setColor(255, 255, 255, self.upgradeAlpha * 250)
 		g.draw(self.upgradeBg, 400, 300, 0, .875, .875, self.upgradeBg:getWidth() / 2, self.upgradeBg:getHeight() / 2)
+
+		for i = 1, #self.upgradePillows do
+			local pillow = self.upgradePillows[i]
+			if pillow.check() then
+				g.setColor(255, 255, 255, 255 * pillow.alpha)
+				local img, x, y = unpack(pillow)
+				x = ((x - 400) * .875) + 400
+				y = ((y - 313) * .875) + 300
+				g.draw(img, x, y, 0, .875, .875)
+			end
+		end
+
+		g.setColor(255, 255, 255, self.upgradeAlpha * 250)
 		g.draw(self.upgradeCircles, 400, 300, 0, 1, 1, self.upgradeCircles:getWidth() / 2, self.upgradeCircles:getHeight() / 2)
 
 		g.setColor(0, 0, 0, self.upgradeAlpha * 250)
