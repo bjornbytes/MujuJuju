@@ -82,10 +82,14 @@ function Player:update()
 	if self.dead or self.animationState == 'summon' or self.animationState == 'death' or self.animationState == 'resurrect' then
 		self.speed = 0
 	else
+		local maxSpeed = self.walkSpeed
+		if self.gamepad and math.abs(self.gamepad:getGamepadAxis('leftx')) > .5 then
+			maxSpeed = self.walkSpeed * math.abs(self.gamepad:getGamepadAxis('leftx'))
+		end
 		if love.keyboard.isDown('left', 'a') or (self.gamepad and self.gamepad:getGamepadAxis('leftx') < -.5) then
-			self.speed = math.lerp(self.speed, -self.walkSpeed, math.min(10 * tickRate, 1))
+			self.speed = math.lerp(self.speed, -maxSpeed, math.min(10 * tickRate, 1))
 		elseif love.keyboard.isDown('right', 'd') or (self.gamepad and self.gamepad:getGamepadAxis('leftx') > .5) then
-			self.speed = math.lerp(self.speed, self.walkSpeed, math.min(10 * tickRate, 1))
+			self.speed = math.lerp(self.speed, maxSpeed, math.min(10 * tickRate, 1))
 		else
 			self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
 		end

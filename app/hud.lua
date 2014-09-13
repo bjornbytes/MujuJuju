@@ -81,6 +81,12 @@ Hud.upgradePillows = {
 }
 
 function Hud:init()
+	self.cursorImage = g.newImage('media/graphics/cursor.png')
+	self.cursorX = g.getWidth() / 2
+	self.cursorY = g.getHeight() / 2
+	self.prevCursorX = self.cursorX
+	self.prevCursorY = self.cursorY
+	self.cursorSpeed = 0
 	self.upgrading = false
 	self.upgradeBg = g.newImage('media/graphics/upgrade-menu.png')
 	self.upgradeCircles = g.newImage('media/graphics/upgrade-menu-circles.png')
@@ -121,6 +127,7 @@ function Hud:init()
 		[4] = g.newImage('media/graphics/tutorial-shrine.png'),
 		[5] = g.newImage('media/graphics/tutorial-minions.png')
 	}
+	self.tutorialDirty = {}
 	self.protectAlpha = 3
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
@@ -151,25 +158,30 @@ function Hud:update()
 	-- Tutorial hooks
 	if self.tutorialEnabled and (not self.upgrading) and (not ctx.paused) then
 		self.tutorialTimer = timer.rot(self.tutorialTimer)
-		if self.tutorialTimer == 0 and tick > 2 / tickRate and not ctx.player.hasMoved then
+		if self.tutorialTimer == 0 and tick > 2 / tickRate and not ctx.player.hasMoved and not self.tutorialDirty[1] then
 			self.tutorialIndex = 1
 			self.tutorialTimer = 2 * math.pi
+			self.tutorialDirty[1] = true
 		end
-		if self.tutorialTimer == 0 and ctx.player.dead and ctx.player.ghost.first then
+		if self.tutorialTimer == 0 and ctx.player.dead and ctx.player.ghost.first and not self.tutorialDirty[2] then
 			self.tutorialIndex = 3
 			self.tutorialTimer = 2 * math.pi
+			self.tutorialDirty[2] = true
 		end
-		if self.tutorialTimer == 0 and tick > 8 / tickRate and ctx.player.summonedMinions == 0 and not ctx.player.dead then
+		if self.tutorialTimer == 0 and tick > 8 / tickRate and ctx.player.summonedMinions == 0 and not ctx.player.dead and not self.tutorialDirty[3] then
 			self.tutorialIndex = 2
 			self.tutorialTimer = 2 * math.pi
+			self.tutorialDirty[3] = true
 		end
-		if self.tutorialTimer == 0 and self.upgradesBought == 0 and tick > 35 / tickRate and ctx.player.juju >= 45 and not ctx.player.dead then
+		if self.tutorialTimer == 0 and self.upgradesBought == 0 and tick > 35 / tickRate and ctx.player.juju >= 45 and not ctx.player.dead and not self.tutorialDirty[4] then
 			self.tutorialIndex = 4
 			self.tutorialTimer = 2 * math.pi
+			self.tutorialDirty[4] = true
 		end
-		if self.tutorialTimer == 0 and #ctx.player.minions > 1 and not ctx.player.dead then
+		if self.tutorialTimer == 0 and #ctx.player.minions > 1 and not ctx.player.dead and not self.tutorialDirty[5] then
 			self.tutorialIndex = 5
 			self.tutorialTimer = 2 * math.pi
+			self.tutorialDirty[5] = true
 		end
 
 		-- Tutorial unhooks
@@ -183,6 +195,26 @@ function Hud:update()
 
 	-- Update Timer
 	self:score()
+	
+	-- Virtual cursor for upgrades
+	if ctx.player.gamepad then
+		local vx, vy = 0, 0
+		local xx, yy = ctx.player.gamepad:getGamepadAxis('leftx'), ctx.player.gamepad:getGamepadAxis('lefty')
+		local cursorSpeed = 500
+		local len = (xx * xx + yy * yy) ^ .5
+		self.prevCursorX = self.cursorX
+		self.prevCursorY = self.cursorY
+		self.cursorSpeed = math.lerp(self.cursorSpeed, len > .2 and cursorSpeed or 0, 18 * tickRate)
+		len = len ^ 4
+		vx = xx / len
+		vy = yy / len
+		vx = math.clamp(vx, -1, 1)
+		vy = math.clamp(vy, -1, 1)
+		vx = vx * self.cursorSpeed * len
+		vy = vy * self.cursorSpeed * len
+		self.cursorX = self.cursorX + vx * tickRate
+		self.cursorY = self.cursorY + vy * tickRate
+	end
 
 	for key in pairs(self.upgradeDotAlpha) do
 		self.upgradeDotAlpha[key] = math.lerp(self.upgradeDotAlpha[key], 1, 5 * tickRate)
@@ -194,6 +226,10 @@ function Hud:update()
 	if self.upgradeAlpha > .001 then
 		local mx, my = love.mouse.getPosition()
 		local hover = false
+
+		if ctx.player.gamepad then
+			mx, my = self.cursorX, self.cursorY
+		end
 
 		for who in pairs(self.upgradeGeometry) do
 			for what, geometry in pairs(self.upgradeGeometry[who]) do
@@ -458,6 +494,10 @@ function Hud:gui()
 
 		if self.tooltip then
 			local mx, my = love.mouse.getPosition()
+			if ctx.player.gamepad then
+				mx, my = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
+				mx, my = math.round(mx), math.round(my)
+			end
 			local textWidth, lines = normalFont:getWrap(self.tooltipRaw, 300)
 			local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
 			local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))
@@ -535,6 +575,14 @@ function Hud:gui()
 			end
 		end
 	end
+
+	if self.upgrading or ctx.paused or ctx.ded then
+		if ctx.player.gamepad then
+			local xx, yy = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
+			g.setColor(255, 255, 255)
+			g.draw(self.cursorImage, xx, yy)
+		end
+	end
 end
 
 function Hud:keypressed(key)
@@ -577,7 +625,15 @@ function Hud:gamepadpressed(gamepad, button)
 	if gamepad == ctx.player.gamepad and not ctx.ded then
 		if (button == 'x' or button == 'y') and math.abs(ctx.player.x - ctx.shrine.x) < ctx.player.width then
 			self.upgrading = not self.upgrading
+			self.cursorX = g.getWidth() / 2
+			self.cursorY = g.getHeight() / 2
+			self.prevCursorX = self.cursorX
+			self.prevCursorY = self.cursorY
 			return true
+		end
+		if button == 'a' and (self.upgrading or ctx.paused or ctx.ded) then
+			self:mousepressed(self.cursorX, self.cursorY, 'l')
+			self:mousereleased(self.cursorX, self.cursorY, 'l')
 		end
 	end
 end
