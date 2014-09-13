@@ -72,7 +72,7 @@ function Juju:update()
 		end
 
 		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
-			ctx.sound:play({sound = ctx.sounds['juju' .. love.math.random(1, 8)]})
+			ctx.sound:play({sound = ctx.sounds['juju1']})
 			self.dead = true
 		end
 	end

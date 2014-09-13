@@ -33,7 +33,7 @@ function Menu:mousepressed(x, y, b)
 	if math.inside(x, y, 435, 220, 190, 90) then
 		self.menuSounds:stop()
 		Context:remove(ctx)
-		Context:add(Tutorial)
+		Context:add(Game)
 	elseif math.inside(x, y, 425, 335, 210, 90) then
 		print('Harry Truman bitch!')
 		self.creditsAlpha = 2
