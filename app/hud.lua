@@ -107,12 +107,20 @@ function Hud:init()
 	self.deadReplay = g.newImage('media/graphics/death-replay.png')
 	self.deadQuit = g.newImage('media/graphics/death-quit.png')
 	self.deadScreen = 1
+	self.pauseAlpha = 0
+	self.pauseScreen = g.newImage('media/graphics/pause-menu.png')
+	self.tutorialType = 'protect'
+	self.tutorialTimer = 5
+	self.tutorialEnabled = not love.filesystem.exists('playedBefore')
+	self.tutorialImages = {
+	}
 	ctx.view:register(self, 'gui')
 end
 
 function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
+	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
 	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
 	for i = 1, #self.selectFactor do
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], ctx.player.selectedMinion == i and 1 or 0, 18 * tickRate)
@@ -298,6 +306,15 @@ function Hud:gui()
 			self:stackingTable(stackingTable, location, minion.width * 2, .5)
 			self:health(minion.x - 25, h - ctx.environment.groundHeight - minion.height - 15 * stackingTable[location], minion.healthDisplay / minion.maxHealth, green, 50, 2)
 		end)
+
+		-- Pause Menu
+		if self.pauseAlpha > .01 then
+			g.setColor(0, 0, 0, 128 * self.pauseAlpha)
+			g.rectangle('fill', 0, 0, g.getDimensions())
+
+			g.setColor(255, 255, 255, 255 * self.pauseAlpha)
+			g.draw(self.pauseScreen, w * .5, h * .5, 0, 1, 1, self.pauseScreen:getWidth() / 2, self.pauseScreen:getHeight() / 2)
+		end
 	end
 
 	-- Upgrade screen
@@ -376,28 +393,59 @@ function Hud:gui()
 			g.setColor(253, 238, 65, 255 * self.deadAlpha)
 			g.setFont(deadFontSmall)
 			str = 'Your Score:'
-			g.printf(str, 0, g.getHeight() * .325, g.getWidth(), 'center')
+			g.printf(str, 0, h * .325, w, 'center')
 
 			g.setColor(240, 240, 240, 255 * self.deadAlpha)
 			str = tostring(math.floor(self.timer.total * tickRate))
-			g.printf(str, 0, g.getHeight() * .41, g.getWidth(), 'center')
+			g.printf(str, 0, h * .41, w, 'center')
 			
 			g.setColor(253, 238, 65, 255 * self.deadAlpha)
 			str = 'Your Name:'
-			g.printf(str, 0, g.getHeight() * .51, g.getWidth(), 'center')
+			g.printf(str, 0, h * .51, w, 'center')
 
 			g.setColor(255, 255, 255, 255 * self.deadAlpha)
-			g.draw(self.deadNameFrame, g.getWidth() / 2 - self.deadNameFrame:getWidth() / 2, g.getHeight() * .584)
+			g.draw(self.deadNameFrame, w / 2 - self.deadNameFrame:getWidth() / 2, h * .584)
 			
 			g.setColor(240, 240, 240, 255 * self.deadAlpha)
+			local font = g.getFont()
 			local scale = 1
-			while g.getFont():getWidth(self.deadName) * scale > self.deadNameFrame:getWidth() - 24 do scale = scale - .05 end
-			g.print(self.deadName, g.getWidth() / 2 - g.getFont():getWidth(self.deadName) * scale / 2, g.getHeight() * .584 + (self.deadNameFrame:getHeight() / 2) - g.getFont():getHeight() * scale / 2, 0, scale, scale)
+			while font:getWidth(self.deadName) * scale > self.deadNameFrame:getWidth() - 24 do scale = scale - .05 end
+			
+			local xx = w / 2 - font:getWidth(self.deadName) * scale / 2
+			local yy = h * .584 + (self.deadNameFrame:getHeight() / 2) - font:getHeight() * scale / 2
+			g.print(self.deadName, xx, yy, 0, scale, scale)
+
+			local cursorx = xx + font:getWidth(self.deadName) * scale + 1
+			g.line(cursorx, yy, cursorx, yy + font:getHeight() * scale)
 
 			g.setColor(255, 255, 255, 255 * self.deadAlpha)
-			g.draw(self.deadOk, g.getWidth() / 2 - self.deadOk:getWidth() / 2, g.getHeight() * .825)
+			g.draw(self.deadOk, w / 2 - self.deadOk:getWidth() / 2, h * .825)
 		else
-			-- Display highscores and 2 buttons
+			if self.highscores then
+				g.setColor(253, 238, 65, 255 * self.deadAlpha)
+				g.setFont(deadFontSmall)
+				g.printf('Highscores', 0, h * .05, w, 'center')
+
+				g.setFont(fancyFont)
+				g.setColor(255, 255, 255, 255 * self.deadAlpha)
+				local yy = h * .2
+
+				for _, entry in ipairs(self.highscores) do
+					g.print(entry.who, w * .3, yy)
+					g.printf(entry.what, 0, yy, w * .7, 'right')
+					yy = yy + g.getFont():getHeight() + 4
+				end
+				
+				g.draw(self.deadReplay, w * .4, h * .825, 0, 1, 1, self.deadReplay:getWidth() / 2)
+				g.draw(self.deadQuit, w * .6, h * .825, 0, 1, 1, self.deadQuit:getWidth() / 2)
+			else
+				g.setColor(253, 238, 65, 255 * self.deadAlpha)
+				g.setFont(deadFontSmall)
+				g.printf('Unable to load highscores :[', 0, h * .4, w, 'center')
+
+				g.draw(self.deadReplay, w * .4, h * .825, 0, 1, 1, self.deadReplay:getWidth() / 2)
+				g.draw(self.deadQuit, w * .6, h * .825, 0, 1, 1, self.deadQuit:getWidth() / 2)
+			end
 		end
 	end
 end
@@ -416,13 +464,12 @@ function Hud:keypressed(key)
 		if key == 'backspace' then
 			self.deadName = self.deadName:sub(1, -2)
 		elseif key == 'return' then
-			local seconds = math.floor(self.timer.total * tickRate)
-			require('socket.http').request({
-				method = 'GET',
-				url = 'http://plasticsarcastic.com/mujuJuju/score.php?name=' .. self.deadName .. '&score=' .. seconds
-			})
+			if self.deadScreen == 1 then self:sendScore() end
+		end
+		
+		if key == 'escape' then
 			Context:remove(ctx)
-			Context:add(Game)
+			Context:add(Menu)
 		end
 	end
 end
@@ -433,7 +480,7 @@ end
 
 function Hud:textinput(char)
 	if ctx.ded then
-		if char:match('%w') then
+		if #self.deadName < 16 and char:match('%w') then
 			self.deadName = self.deadName .. char
 		end
 	end
@@ -490,9 +537,53 @@ function Hud:mousereleased(x, y, b)
 			local img = self.deadOk
 			local w2 = g.getWidth() / 2
 			if math.inside(x, y, w2 - img:getWidth() / 2, g.getHeight() * .825, img:getDimensions()) then
+				self:sendScore()
+			end
+		elseif self.deadScreen == 2 then
+			local img1 = self.deadReplay
+			local img2 = self.deadQuit
+			local w = g.getWidth()
+			local h = g.getHeight()
+			if math.inside(x, y, w * .4 - img1:getWidth() / 2, h * .825, img1:getDimensions()) then
 				Context:remove(ctx)
 				Context:add(Game)
+			elseif math.inside(x, y, w * .6 - img2:getWidth() / 2, h * .825, img2:getDimensions()) then
+				Context:remove(ctx)
+				Context:add(Menu)
 			end
 		end
 	end
+
+	if b == 'l' and ctx.paused then
+		local w, h = g.getDimensions()
+		if math.inside(x, y, w * .4, h * .4, 155, 60) then
+			ctx.paused = not ctx.paused
+		elseif math.inside(x, y, w * .4, h * .51, 155, 60) then
+			Context:remove(ctx)
+			Context:add(Menu)
+		end
+	end
+end
+
+function Hud:sendScore()
+	self.highscores = nil
+
+	if #self.deadName > 0 then
+		local seconds = math.floor(self.timer.total * tickRate)
+		local http = require('socket.http')
+		http.TIMEOUT = 5
+		local response = http.request({
+			method = 'GET',
+			url = 'http://plasticsarcastic.com/mujuJuju/score.php?name=' .. self.deadName .. '&score=' .. seconds
+		})
+		response = 'bjorn,1000,123,bjorn,999,123,bjorn,998,123,trey,980,123,trey,970,123,viciousbr,666,123,viciousbr,656,123,viciousbr,123,123,trey,23,123,sophia,1,9'
+		if response then
+			self.highscores = {}
+			for who, what, when in response:gmatch('(%w+)%,(%w+)%,(%w+)') do
+				table.insert(self.highscores, {who = who, what = what, when = when})
+			end
+		end
+	end
+
+	self.deadScreen = 2
 end
