@@ -38,7 +38,8 @@ function Game:load()
 		juju8 = 'juju8',
 		combat = 'combat',
 		death = 'death',
-		menuClick = 'menuClick'
+		menuClick = 'menuClick',
+		youlose = 'youlose'
 	}
 
 	backgroundSound = self.sound:loop({sound = self.sounds.background})
