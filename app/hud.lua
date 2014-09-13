@@ -584,7 +584,7 @@ end
 
 function Hud:mousepressed(x, y, b)
 	if not self.upgrading or ctx.ded then return end
-	if math.inside(x, y, 69, 94, 50, 50) then
+	if math.inside(x, y, 670, 502, 48, 48) then
 		self.upgrading = false
 	end
 end
