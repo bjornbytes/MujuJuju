@@ -209,9 +209,18 @@ function Player:summon()
 	end
 end
 
-function Player:hurt(amount)
+function Player:hurt(amount, source)
 	if self.invincible == 0 then
 		self.health = math.max(self.health - amount, 0)
+		if self.gamepad and self.gamepad:isVibrationSupported() then
+			local l, r = .25, .25
+			if source then
+				if source.x > self.x then r = .5
+				elseif source.x < self.x then l = .5 end
+			end
+
+			self.gamepad:setVibration(l, r, .25)
+		end
 	end
 	-- Check whether or not to enter Juju Realm
 	if self.health <= 0 and self.jujuRealm == 0 then
@@ -224,6 +233,11 @@ function Player:hurt(amount)
 		self.animationLock = true
 		self.animator:set('death', false)
 		ctx.sound:play({sound = ctx.sounds.death})
+
+		if self.gamepad and self.gamepad:isVibrationSupported() then
+			self.gamepad:setVibration(1, 1, .5)
+		end
+
 		return true
 	end
 end

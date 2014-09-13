@@ -83,7 +83,7 @@ function Puju:attack()
 	end
 
 	local damage = self.damage * (1 - self.damageReduction)
-	if self.target:hurt(damage) then self.target = false end
+	if self.target:hurt(damage, self) then self.target = false end
 	self:hurt(damage * .25 * ctx.upgrades.muju.mirror.level)
 	local sound = ctx.sound:play({sound = ctx.sounds.combat})
 	if sound then sound:setVolume(.5) end
@@ -96,7 +96,7 @@ function Puju:butt()
 	if #targets >= 2 then damage = damage / 2 end
 	table.each(targets, function(target)
 		if math.sign(self.target.x - self.x) == math.sign(target.x - self.x) then
-			target:hurt(damage)
+			target:hurt(damage, self)
 			local sign = math.sign(target.x - self.x)
 			target.knockBack = sign * (.2 + love.math.random() / 25)
 		end

@@ -7,6 +7,8 @@ SpiritBomb.maxHealth = .3
 SpiritBomb.radius = 40
 
 function SpiritBomb:init(data)
+	self.owner = data.owner
+	data.owner = nil
 	Particle.init(self, data)
 	local dx = math.abs(self.targetx - self.x)
 	local dy = -Spuju.height
@@ -41,7 +43,7 @@ function SpiritBomb:update()
 				m:hurt(self.damage)
 			end)
 			if math.abs(self.x - ctx.player.x) < self.radius + ctx.player.width / 2 then
-				ctx.player:hurt(self.damage / 2)
+				ctx.player:hurt(self.damage / 2, self.owner)
 			end
 			if math.abs(self.x - ctx.shrine.x) < self.radius + ctx.shrine.width / 2 then
 				ctx.shrine:hurt(self.damage)
