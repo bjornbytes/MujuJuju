@@ -428,6 +428,7 @@ function Hud:gui()
 			g.printf('Protect Your Shrine!', 2, h * .25 + 2, w, 'center')
 			g.setColor(253, 238, 65, 255 * math.min(self.protectAlpha, 1))
 			g.printf('Protect Your Shrine!', 0, h * .25, w, 'center')
+			g.setFont(boldFont)
 		end
 
 		-- Pause Menu
@@ -501,7 +502,6 @@ function Hud:gui()
 			local textWidth, lines = normalFont:getWrap(self.tooltipRaw, 300)
 			local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
 			local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))
-			g.setFont(normalFont)
 			g.setColor(30, 50, 70, 240)
 			g.rectangle('fill', xx, yy, textWidth + 14, lines * g.getFont():getHeight() + 16 + 5)
 			g.setColor(10, 30, 50, 255)
