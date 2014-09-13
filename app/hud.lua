@@ -6,6 +6,8 @@ local rich = require 'lib/deps/richtext/richtext'
 local normalFont = love.graphics.newFont('media/fonts/inglobal.ttf', 14)
 local fancyFont = love.graphics.newFont('media/fonts/inglobal.ttf', 24)
 local boldFont = love.graphics.newFont('media/fonts/inglobalb.ttf', 14)
+local deadFontBig = love.graphics.newFont('media/fonts/inglobal.ttf', 64)
+local deadFontSmall = love.graphics.newFont('media/fonts/inglobal.ttf', 44)
 Hud.richOptions = {title = fancyFont, bold = boldFont, normal = normalFont, white = {255, 255, 255}, whoCares = {230, 230, 230}, red = {255, 100, 100}, green = {100, 255, 100}}
 Hud.upgradeGeometry = {
 	zuju = {
@@ -100,6 +102,11 @@ function Hud:init()
 	self.selectQuad[2] = g.newQuad(0, 0, self.selectBg[2]:getWidth(), self.selectBg[2]:getHeight(), self.selectBg[2]:getWidth(), self.selectBg[2]:getHeight())
 	self.deadAlpha = 0
 	self.deadName = ''
+	self.deadNameFrame = g.newImage('media/graphics/death-box.png')
+	self.deadOk = g.newImage('media/graphics/death-ok.png')
+	self.deadReplay = g.newImage('media/graphics/death-replay.png')
+	self.deadQuit = g.newImage('media/graphics/death-quit.png')
+	self.deadScreen = 1
 	ctx.view:register(self, 'gui')
 end
 
@@ -175,6 +182,8 @@ function Hud:update()
 	end
 
 	self.particles:update()
+
+	if ctx.ded then love.keyboard.setKeyRepeat(true) end
 end
 
 function Hud:health(x, y, percent, color, width, thickness)
@@ -207,94 +216,89 @@ end
 function Hud:gui()
 	local w, h = love.graphics.getDimensions()
 
-	-- Vuju range indicator
-	if ctx.player.recentSelect > 0 and ctx.player.selectedMinion == 2 then
-		local range = 125 + ctx.upgrades.vuju.surge.level * 25
-		g.setColor(255, 255, 255, 255 * math.min(ctx.player.recentSelect * 2, 1))
-		local x, y = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), h - ctx.environment.groundHeight
-		g.line(x - range, y, x + range, y)
-	end
+	if not ctx.ded then
 
-	-- Juju icon
-	g.setFont(boldFont)
-	if not self.upgrading then
-		g.setColor(255, 255, 255, 255 * (1 - self.upgradeAlpha))
-		g.draw(self.jujuIcon, 52, 55, 0, self.jujuIconScale, self.jujuIconScale, self.jujuIcon:getWidth() / 2, self.jujuIcon:getHeight() / 2)
-		g.setColor(0, 0, 0)
-		g.printf(math.floor(ctx.player.juju), 16, 18 + self.jujuIcon:getHeight() * .375 - (g.getFont():getHeight() / 2), self.jujuIcon:getWidth() * .75, 'center')
+		-- Juju icon
+		g.setFont(boldFont)
+		if not self.upgrading then
+			g.setColor(255, 255, 255, 255 * (1 - self.upgradeAlpha))
+			g.draw(self.jujuIcon, 52, 55, 0, self.jujuIconScale, self.jujuIconScale, self.jujuIcon:getWidth() / 2, self.jujuIcon:getHeight() / 2)
+			g.setColor(0, 0, 0)
+			g.printf(math.floor(ctx.player.juju), 16, 18 + self.jujuIcon:getHeight() * .375 - (g.getFont():getHeight() / 2), self.jujuIcon:getWidth() * .75, 'center')
+			g.setColor(255, 255, 255)
+		end
+
+		-- Timer
+		local total = self.timer.total * tickRate
+		self.timer.seconds = math.floor(total % 60)
+		self.timer.minutes = math.floor(total / 60)
+		if self.timer.minutes < 10 then
+			self.timer.minutes = '0' .. self.timer.minutes
+		end
+		if self.timer.seconds < 10 then
+			self.timer.seconds = '0' .. self.timer.seconds
+		end
+		local str = self.timer.minutes .. ':' .. self.timer.seconds
+
 		g.setColor(255, 255, 255)
+		g.print(str, w - 25 - g.getFont():getWidth(str), 25)
+
+		-- Minion indicator
+		local yy = 135
+		for i = 1, #ctx.player.minions do
+			local bg = self.selectBg[i]
+			local scale = .75 + (.15 * self.selectFactor[i]) + (.1 * self.selectExtra[i])
+			local xx = 48 - 10 * (1 - self.selectFactor[i])
+			local f, cost = g.getFont(), tostring(ctx.player.minions[i]:getCost())
+			local tx, ty = xx - f:getWidth(cost) / 2 - (bg:getWidth() * .75 / 2) + 4, yy - f:getHeight() / 2 - (bg:getHeight() * .75 / 2) + 4
+			local alpha = .65 + self.selectFactor[i] * .35
+
+			-- Backdrop
+			g.setColor(255, 255, 255, 80 * alpha)
+			g.draw(bg, xx, yy, 0, scale, scale, bg:getWidth() / 2, bg:getHeight() / 2)
+
+			-- Cooldown
+			local _, qy = self.selectQuad[i]:getViewport()
+			g.setColor(255, 255, 255, (150 + (100 * (ctx.player.minioncds[i] == 0 and 1 or 0))) * alpha)
+			g.draw(bg, self.selectQuad[i], xx, yy + qy * scale, 0, scale, scale, bg:getWidth() / 2, bg:getHeight() / 2)
+
+			-- Juice
+			g.setBlendMode('additive')
+			g.setColor(255, 255, 255, 60 * self.selectExtra[i])
+			g.draw(bg, xx, yy, 0, scale + .2 * self.selectExtra[i], scale + .2 * self.selectExtra[i], bg:getWidth() / 2, bg:getHeight() / 2)
+			g.setBlendMode('alpha')
+
+			-- Cost
+			g.setColor(0, 0, 0, 200 + 55 * self.selectFactor[i])
+			g.print(cost, tx + 1, ty + 1)
+			g.setColor(255, 255, 255, 200 + 55 * self.selectFactor[i])
+			g.print(cost, tx, ty)
+			yy = yy + self.selectBg[i]:getHeight() * 1
+		end
+		
+		-- Health Bars
+		local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
+		local green = {50, 230, 50}
+		local red = {255, 0, 0}
+		local purple = {200, 80, 255}
+
+		self:health(px - 40, py - 15, ctx.player.healthDisplay / ctx.player.maxHealth, purple, 80, 3)
+		self:health(ctx.shrine.x - 60, ctx.shrine.y - 65, ctx.shrine.healthDisplay / ctx.shrine.maxHealth, green, 120, 4)
+
+		local stackingTable = {}
+		table.each(ctx.enemies.enemies, function(enemy)
+			local location = math.floor(enemy.x)
+			self:stackingTable(stackingTable, location, enemy.width * 2, .5)
+			self:health(enemy.x - 25, h - ctx.environment.groundHeight - enemy.height - 15 - 15 * stackingTable[location], enemy.healthDisplay / enemy.maxHealth, red, 50, 2)
+		end)
+
+		stackingTable = {}
+		table.each(ctx.minions.minions, function(minion)
+			local location = math.floor(minion.x)
+			self:stackingTable(stackingTable, location, minion.width * 2, .5)
+			self:health(minion.x - 25, h - ctx.environment.groundHeight - minion.height - 15 * stackingTable[location], minion.healthDisplay / minion.maxHealth, green, 50, 2)
+		end)
 	end
-
-	-- Timer
-	local total = self.timer.total * tickRate
-	self.timer.seconds = math.floor(total % 60)
-	self.timer.minutes = math.floor(total / 60)
-	if self.timer.minutes < 10 then
-		self.timer.minutes = '0' .. self.timer.minutes
-	end
-	if self.timer.seconds < 10 then
-		self.timer.seconds = '0' .. self.timer.seconds
-	end
-	local str = self.timer.minutes .. ':' .. self.timer.seconds
-
-	g.setColor(255, 255, 255)
-	g.print(str, w - 25 - g.getFont():getWidth(str), 25)
-
-	-- Minion indicator
-	local yy = 135
-	for i = 1, #ctx.player.minions do
-		local bg = self.selectBg[i]
-		local scale = .75 + (.15 * self.selectFactor[i]) + (.1 * self.selectExtra[i])
-		local xx = 48 - 10 * (1 - self.selectFactor[i])
-		local f, cost = g.getFont(), tostring(ctx.player.minions[i]:getCost())
-		local tx, ty = xx - f:getWidth(cost) / 2 - (bg:getWidth() * .75 / 2) + 4, yy - f:getHeight() / 2 - (bg:getHeight() * .75 / 2) + 4
-		local alpha = .65 + self.selectFactor[i] * .35
-
-		-- Backdrop
-		g.setColor(255, 255, 255, 80 * alpha)
-		g.draw(bg, xx, yy, 0, scale, scale, bg:getWidth() / 2, bg:getHeight() / 2)
-
-		-- Cooldown
-		local _, qy = self.selectQuad[i]:getViewport()
-		g.setColor(255, 255, 255, (150 + (100 * (ctx.player.minioncds[i] == 0 and 1 or 0))) * alpha)
-		g.draw(bg, self.selectQuad[i], xx, yy + qy * scale, 0, scale, scale, bg:getWidth() / 2, bg:getHeight() / 2)
-
-		-- Juice
-		g.setBlendMode('additive')
-		g.setColor(255, 255, 255, 60 * self.selectExtra[i])
-		g.draw(bg, xx, yy, 0, scale + .2 * self.selectExtra[i], scale + .2 * self.selectExtra[i], bg:getWidth() / 2, bg:getHeight() / 2)
-		g.setBlendMode('alpha')
-
-		-- Cost
-		g.setColor(0, 0, 0, 200 + 55 * self.selectFactor[i])
-		g.print(cost, tx + 1, ty + 1)
-		g.setColor(255, 255, 255, 200 + 55 * self.selectFactor[i])
-		g.print(cost, tx, ty)
-		yy = yy + self.selectBg[i]:getHeight() * 1
-	end
-	
-	-- Health Bars
-	local px, py = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate)
-	local green = {50, 230, 50}
-	local red = {255, 0, 0}
-	local purple = {200, 80, 255}
-
-	self:health(px - 40, py - 15, ctx.player.healthDisplay / ctx.player.maxHealth, purple, 80, 3)
-	self:health(ctx.shrine.x - 60, ctx.shrine.y - 65, ctx.shrine.healthDisplay / ctx.shrine.maxHealth, green, 120, 4)
-
-	local stackingTable = {}
-	table.each(ctx.enemies.enemies, function(enemy)
-		local location = math.floor(enemy.x)
-		self:stackingTable(stackingTable, location, enemy.width * 2, .5)
-		self:health(enemy.x - 25, h - ctx.environment.groundHeight - enemy.height - 15 - 15 * stackingTable[location], enemy.healthDisplay / enemy.maxHealth, red, 50, 2)
-	end)
-
-	stackingTable = {}
-	table.each(ctx.minions.minions, function(minion)
-		local location = math.floor(minion.x)
-		self:stackingTable(stackingTable, location, minion.width * 2, .5)
-		self:health(minion.x - 25, h - ctx.environment.groundHeight - minion.height - 15 * stackingTable[location], minion.healthDisplay / minion.maxHealth, green, 50, 2)
-	end)
 
 	-- Upgrade screen
 	if self.upgradeAlpha > .001 and not ctx.ded then
@@ -363,9 +367,38 @@ function Hud:gui()
 
 	-- Death Screen
 	if ctx.ded then
-		g.setColor(255, 255, 255, 255 * self.deadAlpha)
-		local str = 'u ded\nenter your name\n' .. self.deadName
-		g.print(str, g.getWidth() / 2 - g.getFont():getWidth(str) / 2, g.getHeight() / 2)
+		if self.deadScreen == 1 then
+			g.setColor(244, 188, 80, 255 * self.deadAlpha)
+			g.setFont(deadFontBig)
+			local str = 'YOUR SHRINE HAS BEEN DESTROYED!'
+			g.printf(str, 50, 30, 700, 'center')
+
+			g.setColor(253, 238, 65, 255 * self.deadAlpha)
+			g.setFont(deadFontSmall)
+			str = 'Your Score:'
+			g.printf(str, 0, g.getHeight() * .325, g.getWidth(), 'center')
+
+			g.setColor(240, 240, 240, 255 * self.deadAlpha)
+			str = tostring(math.floor(self.timer.total * tickRate))
+			g.printf(str, 0, g.getHeight() * .41, g.getWidth(), 'center')
+			
+			g.setColor(253, 238, 65, 255 * self.deadAlpha)
+			str = 'Your Name:'
+			g.printf(str, 0, g.getHeight() * .51, g.getWidth(), 'center')
+
+			g.setColor(255, 255, 255, 255 * self.deadAlpha)
+			g.draw(self.deadNameFrame, g.getWidth() / 2 - self.deadNameFrame:getWidth() / 2, g.getHeight() * .584)
+			
+			g.setColor(240, 240, 240, 255 * self.deadAlpha)
+			local scale = 1
+			while g.getFont():getWidth(self.deadName) * scale > self.deadNameFrame:getWidth() - 24 do scale = scale - .05 end
+			g.print(self.deadName, g.getWidth() / 2 - g.getFont():getWidth(self.deadName) * scale / 2, g.getHeight() * .584 + (self.deadNameFrame:getHeight() / 2) - g.getFont():getHeight() * scale / 2, 0, scale, scale)
+
+			g.setColor(255, 255, 255, 255 * self.deadAlpha)
+			g.draw(self.deadOk, g.getWidth() / 2 - self.deadOk:getWidth() / 2, g.getHeight() * .825)
+		else
+			-- Display highscores and 2 buttons
+		end
 	end
 end
 
@@ -448,6 +481,17 @@ function Hud:mousereleased(x, y, b)
 			table.insert(ctx.player.minioncds, 0)
 			for i = 1, 100 do
 				self.particles:add(UpgradeParticle, {x = x, y = y})
+			end
+		end
+	end
+
+	if b == 'l' and ctx.ded then
+		if self.deadScreen == 1 then
+			local img = self.deadOk
+			local w2 = g.getWidth() / 2
+			if math.inside(x, y, w2 - img:getWidth() / 2, g.getHeight() * .825, img:getDimensions()) then
+				Context:remove(ctx)
+				Context:add(Game)
 			end
 		end
 	end
