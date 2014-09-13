@@ -26,12 +26,14 @@ function SpiritBomb:init(data)
 	self.vy = math.sin(angle) * -v
 	self.angle = love.math.random() * 2 * math.pi
 	self.health = nil
+	self.burstScale = 0
 	ctx.view:register(self)
 end
 
 function SpiritBomb:update()
 	if self.health then
 		self.health = timer.rot(self.health, function() ctx.particles:remove(self) end)
+		self.burstScale = math.lerp(self.burstScale, self.radius / Burst.image:getWidth(), 20 * tickRate)
 	else
 		self.x = self.x + self.vx * tickRate
 		self.y = self.y + self.vy * tickRate
@@ -55,8 +57,8 @@ end
 function SpiritBomb:draw()
 	local g = love.graphics
 	if self.health then
-		g.setColor(0, 255, 0, 200 * self.health / self.maxHealth)
-		g.circle('fill', self.x, g.getHeight() - ctx.environment.groundHeight, self.radius)
+		g.setColor(80, 230, 80, 200 * self.health / self.maxHealth)
+		g.draw(Burst.image, self.x, g.getHeight() - ctx.environment.groundHeight, self.angle, self.burstScale + .25, self.burstScale + .25, Burst.image:getWidth() / 2, Burst.image:getHeight() / 2)
 	else
 		g.setColor(255, 255, 255)
 		g.draw(self.image, self.x, self.y, self.angle, self.scale, self.scale, self.image:getWidth() / 2, self.image:getHeight() / 2)

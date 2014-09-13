@@ -14,7 +14,7 @@ function Enemies:update()
 			local spawnType
 			local x = love.math.random() > .5 and 0 or love.graphics.getWidth()
 
-			spawnType = Puju
+			spawnType = Spuju
 			if self.maxEnemyRate < 8 then
 				if love.math.random() < math.min(8 - self.maxEnemyRate, 2) * .06 then
 					spawnType = Spuju
@@ -22,7 +22,7 @@ function Enemies:update()
 			end
 
 			self:add(spawnType, {x = x})
-			self.minEnemyRate = math.max(self.minEnemyRate - .055 * math.clamp(self.minEnemyRate / 5, .1, 1), 1.25)
+			self.minEnemyRate = math.max(self.minEnemyRate - .055 * math.clamp(self.minEnemyRate / 5, .1, 1), 1.4)
 			self.maxEnemyRate = math.max(self.maxEnemyRate - .03 * math.clamp(self.maxEnemyRate / 4, .5, 1), 2.75)
 		end
 		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
