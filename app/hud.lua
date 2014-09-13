@@ -121,6 +121,7 @@ function Hud:init()
 		[4] = g.newImage('media/graphics/tutorial-shrine.png'),
 		[5] = g.newImage('media/graphics/tutorial-minions.png')
 	}
+	self.protectAlpha = 3
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end
@@ -129,6 +130,7 @@ function Hud:update()
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
+	self.protectAlpha = math.max(self.protectAlpha - tickRate, 0)
 	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
 	for i = 1, #self.selectFactor do
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], ctx.player.selectedMinion == i and 1 or 0, 18 * tickRate)
@@ -149,7 +151,7 @@ function Hud:update()
 	-- Tutorial hooks
 	if self.tutorialEnabled and (not self.upgrading) and (not ctx.paused) then
 		self.tutorialTimer = timer.rot(self.tutorialTimer)
-		if self.tutorialTimer == 0 and tick > 1.5 / tickRate and not ctx.player.hasMoved then
+		if self.tutorialTimer == 0 and tick > 2 / tickRate and not ctx.player.hasMoved then
 			self.tutorialIndex = 1
 			self.tutorialTimer = 2 * math.pi
 		end
@@ -381,6 +383,15 @@ function Hud:gui()
 				scale = .4
 			end
 			g.draw(img, x, y, 0, scale, scale, ox, oy)
+		end
+
+		-- Protect message
+		if self.protectAlpha > .1 then
+			g.setFont(deadFontBig)
+			g.setColor(0, 0, 0, 150 * math.min(self.protectAlpha, 1))
+			g.printf('Protect Your Shrine!', 2, h * .25 + 2, w, 'center')
+			g.setColor(253, 238, 65, 255 * math.min(self.protectAlpha, 1))
+			g.printf('Protect Your Shrine!', 0, h * .25, w, 'center')
 		end
 
 		-- Pause Menu
