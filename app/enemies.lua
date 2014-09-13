@@ -28,7 +28,7 @@ function Enemies:update()
 		return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
 	end)
 
-	if not next(self.enemies) then
+	if not next(self.enemies) and self.level > 1 then
 		self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, .75 * tickRate))
 	end
 

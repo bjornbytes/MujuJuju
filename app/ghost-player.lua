@@ -1,6 +1,7 @@
 GhostPlayer = class()
 
 GhostPlayer.radius = 48
+GhostPlayer.first = true
 
 function GhostPlayer:init()
 	self.x = ctx.player.x
@@ -102,6 +103,7 @@ function GhostPlayer:update()
 end
 
 function GhostPlayer:despawn()
+	GhostPlayer.first = false
 	ctx.view:unregister(self)
 end
 

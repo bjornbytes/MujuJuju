@@ -27,6 +27,9 @@ function Player:init()
 	self.direction = 1
 	self.invincible = 0
 
+	self.summonedMinions = 0
+	self.hasMoved = false
+
 	local joysticks = love.joystick.getJoysticks()
 	for _, joystick in ipairs(joysticks) do
 		if joystick:isGamepad() then self.gamepad = joystick break end
@@ -86,6 +89,8 @@ function Player:update()
 		else
 			self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
 		end
+
+		if self.speed ~= 0 then self.hasMoved = true end
 
 		local delta = self.x + self.speed * tickRate
 		self.x = self.x + self.speed * tickRate
@@ -200,6 +205,8 @@ function Player:summon()
 		if ctx.upgrades.muju.refresh.level == 1 and love.math.random() < .15 then
 			self.minioncds[self.selectedMinion] = 0
 		end
+
+		self.summonedMinions = self.summonedMinions + 1
 
 		self.animationLock = true
 		self.animationState = 'summon'

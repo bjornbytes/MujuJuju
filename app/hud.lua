@@ -88,6 +88,7 @@ function Hud:init()
 	self.upgradeDotAlpha = {}
 	self.lock = g.newImage('media/graphics/lock.png')
 	self.upgradeAlpha = 0
+	self.upgradesBought = 0
 	self.tooltip = nil
 	self.tooltipRaw = ''
 	self.jujuIcon = g.newImage('media/graphics/juju-icon.png')
@@ -109,11 +110,18 @@ function Hud:init()
 	self.deadScreen = 1
 	self.pauseAlpha = 0
 	self.pauseScreen = g.newImage('media/graphics/pause-menu.png')
-	self.tutorialType = 'protect'
-	self.tutorialTimer = 5
-	self.tutorialEnabled = not love.filesystem.exists('playedBefore')
+	self.tutorialIndex = 1
+	self.tutorialTimer = 0
+	self.tutorialEnabled = true or not love.filesystem.exists('playedBefore')
 	self.tutorialImages = {
+		[1] = g.newImage('media/graphics/tutorial-move1.png'),
+		[2] = g.newImage('media/graphics/tutorial-summon.png'),
+		[3] = g.newImage('media/graphics/tutorial-move2.png'),
+		[3.5] = g.newImage('media/graphics/tutorial-juju.png'),
+		[4] = g.newImage('media/graphics/tutorial-shrine.png'),
+		[5] = g.newImage('media/graphics/tutorial-minions.png')
 	}
+	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end
 
@@ -136,6 +144,39 @@ function Hud:update()
 		if pillow.check() then
 			pillow.alpha = math.min(pillow.alpha + 2 * tickRate, 1)
 		end
+	end
+
+	-- Tutorial hooks
+	if self.tutorialEnabled and (not self.upgrading) and (not ctx.paused) then
+		self.tutorialTimer = timer.rot(self.tutorialTimer)
+		if self.tutorialTimer == 0 and tick > 1.5 / tickRate and not ctx.player.hasMoved then
+			self.tutorialIndex = 1
+			self.tutorialTimer = 2 * math.pi
+		end
+		if self.tutorialTimer == 0 and ctx.player.dead and ctx.player.ghost.first then
+			self.tutorialIndex = 3
+			self.tutorialTimer = 2 * math.pi
+		end
+		if self.tutorialTimer == 0 and tick > 8 / tickRate and ctx.player.summonedMinions == 0 and not ctx.player.dead then
+			self.tutorialIndex = 2
+			self.tutorialTimer = 2 * math.pi
+		end
+		if self.tutorialTimer == 0 and self.upgradesBought == 0 and tick > 35 / tickRate and ctx.player.juju >= 45 and not ctx.player.dead then
+			self.tutorialIndex = 4
+			self.tutorialTimer = 2 * math.pi
+		end
+		if self.tutorialTimer == 0 and #ctx.player.minions > 1 and not ctx.player.dead then
+			self.tutorialIndex = 5
+			self.tutorialTimer = 2 * math.pi
+		end
+
+		-- Tutorial unhooks
+		local decay = function() while self.tutorialTimer > math.pi / 2 do self.tutorialTimer = self.tutorialTimer - math.pi / 2 end end
+		if self.tutorialIndex == 1 and ctx.player.hasMoved then decay() end
+		if self.tutorialIndex == 2 and (ctx.player.summonedMinions > 0 or ctx.player.dead) then decay() end
+		if self.tutorialIndex == 3 and not ctx.player.dead then decay() end
+		if self.tutorialIndex == 4 and self.upgradesBought > 0 then decay() end
+		if self.tutorialIndex == 5 and ctx.player.selectedMinion == 2 then decay() end
 	end
 
 	-- Update Timer
@@ -306,6 +347,41 @@ function Hud:gui()
 			self:stackingTable(stackingTable, location, minion.width * 2, .5)
 			self:health(minion.x - 25, h - ctx.environment.groundHeight - minion.height - 15 * stackingTable[location], minion.healthDisplay / minion.maxHealth, green, 50, 2)
 		end)
+
+		-- Tutorial
+		if self.tutorialEnabled and self.tutorialTimer > 0 then
+			g.setColor(255, 255, 255, 255 * math.abs(math.sin(self.tutorialTimer)))
+			local x, y
+			local ox, oy = 0, 0
+			local scale
+			local img = self.tutorialImages[self.tutorialIndex]
+			if self.tutorialIndex == 1 then
+				x, y = math.lerp(ctx.player.prevx, ctx.player.x, tickDelta / tickRate), math.lerp(ctx.player.prevy, ctx.player.y, tickDelta / tickRate) - 50
+				ox, oy = img:getWidth() / 2, img:getHeight() / 2
+				scale = .4
+			elseif self.tutorialIndex == 2 then
+				x, y = 48 + self.selectBg[1]:getWidth() * .45 + 16, 135 + self.selectBg[1]:getHeight() * .45 / 2 - 8
+				ox, oy = 1, 56
+				scale = .4
+			elseif self.tutorialIndex == 3 then
+				if not ctx.player.ghost then x, y = -1000, -1000
+				else
+					x, y = math.lerp(ctx.player.ghost.prevx, ctx.player.ghost.x, tickDelta / tickRate), math.lerp(ctx.player.ghost.prevy, ctx.player.ghost.y, tickDelta / tickRate) - 80
+					ox, oy = img:getWidth() / 2, img:getHeight() / 2
+					scale = .3
+				end
+
+				g.draw(self.tutorialImages[3.5], 100, 90, 0, .45, .45)
+			elseif self.tutorialIndex == 4 then
+				ox, oy = 440, 400
+				x, y = ctx.shrine.x, ctx.shrine.y - 85
+				scale = .4
+			elseif self.tutorialIndex == 5 then
+				x, y = 48 + self.selectBg[1]:getWidth() * .4 + 16, 135
+				scale = .4
+			end
+			g.draw(img, x, y, 0, scale, scale, ox, oy)
+		end
 
 		-- Pause Menu
 		if self.pauseAlpha > .01 then
@@ -529,6 +605,7 @@ function Hud:mousereleased(x, y, b)
 			for i = 1, 100 do
 				self.particles:add(UpgradeParticle, {x = x, y = y})
 			end
+			self.upgradesBought = self.upgradesBought + 1
 		end
 	end
 
@@ -572,11 +649,7 @@ function Hud:sendScore()
 		local seconds = math.floor(self.timer.total * tickRate)
 		local http = require('socket.http')
 		http.TIMEOUT = 5
-		local response = http.request({
-			method = 'GET',
-			url = 'http://plasticsarcastic.com/mujuJuju/score.php?name=' .. self.deadName .. '&score=' .. seconds
-		})
-		response = 'bjorn,1000,123,bjorn,999,123,bjorn,998,123,trey,980,123,trey,970,123,viciousbr,666,123,viciousbr,656,123,viciousbr,123,123,trey,23,123,sophia,1,9'
+		local response = http.request('http://plasticsarcastic.com/mujuJuju/score.php?name=' .. self.deadName .. '&score=' .. seconds)
 		if response then
 			self.highscores = {}
 			for who, what, when in response:gmatch('(%w+)%,(%w+)%,(%w+)') do
