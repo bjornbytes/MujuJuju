@@ -9,12 +9,13 @@ local function load(dir)
 	if love.filesystem.exists(dir .. '.lua') then require(dir) end
 end
 
-require 'spine-love.spine'
-require 'socket'
-
-load 'lib/deps/lutil'
+require 'lib/deps/lutil/util'
+require 'lib/deps/spine/love/spine'
 load 'lib/deps/slam'
+
 load 'lib'
+
+load 'app/hud'
 
 load 'app/enemies'
 load 'app/minions'

@@ -5,7 +5,7 @@ local g = love.graphics
 function View:init()
   self.x = 0
   self.y = 0
-  self.width = 800
+  self.width = 960
   self.height = 600
   self.xmin = 0
   self.ymin = 0
@@ -18,9 +18,14 @@ function View:init()
   self.frame.width = love.window.getWidth()
   self.frame.height = love.window.getHeight()
 
+  self.vx = 0
+  self.vy = 0
+
+  self.viewId = 0
   self.draws = {}
   self.guis = {}
   self.effects = {}
+  self.toRemove = {}
   self.target = nil
 
   self:resize()
@@ -30,20 +35,59 @@ function View:init()
   self.prevscale = self.scale
 
   self.shake = 0
+
+  ctx.event:on('view.register', function(data)
+    self:register(data.object, data.mode)
+  end)
+
+  ctx.event:on('view.unregister', function(data)
+    self:unregister(data.object)
+  end)
 end
 
 function View:update()
   self.prevx = self.x
   self.prevy = self.y
   self.prevscale = self.scale
+
+  local mx = love.mouse.getX()
+  if mx < self.frame.x + (.02 * self.frame.width) then
+    self.vx = -1000
+  elseif mx > self.frame.x + (.98 * self.frame.width) then
+    self.vx = 1000
+  end
+
+  self.x = self.x + self.vx * tickRate
+  self.y = self.y + self.vy * tickRate
   
-  self:follow()
   self:contain()
 
   self.shake = math.lerp(self.shake, 0, 8 * tickRate)
 
+  while #self.toRemove > 0 do
+    local x = self.toRemove[1]
+
+    if x.draw then
+      for i = 1, #self.draws do
+        if self.draws[i] == x then table.remove(self.draws, i) return end
+      end
+    end
+
+    if x.gui then
+      for i = 1, #self.guis do
+        if self.guis[i] == x then table.remove(self.guis, i) return end
+      end
+    end
+
+    for i = 1, #self.effects do
+      if self.effects[i] == x then table.remove(self.effects, i) return end
+    end
+
+    table.remove(self.toRemove, 1)
+  end
+
   table.sort(self.draws, function(a, b)
-    return a.depth > b.depth
+    return a.depth == b.depth and a.viewId < b.viewId or a.depth > b.depth
   end)
 end
 
@@ -93,8 +137,18 @@ end
 
 function View:resize()
   local w, h = love.graphics.getDimensions()
-  self.frame.x, self.frame.y, self.frame.width, self.frame.height = 0, 0, self.width, self.height
-  if (self.width / self.height) > (w / h) then
+  local ratio = w / h
+  self.frame.x, self.frame.y = 0, 0
+  self.frame.height = h
+  self.scale = h / self.height
+  self.frame.width = math.min(w, (self.xmax - self.xmin) * self.scale)
+  self.width = math.min(self.frame.width / self.scale, self.xmax - self.xmin)
+
+  --self.frame.width, self.frame.height = math.min(w, self.width), h
+  if self.frame.width < w then self.frame.x = (w - self.frame.width) / 2 end
+  if self.frame.height < h then self.frame.y = (h - self.frame.height) / 2 end
+
+  --[[if (self.width / self.height) > (w / h) then
     self.scale = w / self.width
     local margin = math.max(math.round(((h - w * (self.height / self.width)) / 2)), 0)
     self.frame.y = margin
@@ -106,13 +160,14 @@ function View:resize()
     self.frame.x = margin
     self.frame.width = w - 2 * margin
     self.frame.height = h
-  end
+  end]]
 
-  self.sourceCanvas = love.graphics.newCanvas(w, h)
+   self.sourceCanvas = love.graphics.newCanvas(w, h)
   self.targetCanvas = love.graphics.newCanvas(w, h)
 end
 
 function View:register(x, action)
+  x.viewId = self.viewId
   action = action or 'draw'
   if action == 'draw' then
     table.insert(self.draws, x)
@@ -122,24 +177,12 @@ function View:register(x, action)
   elseif action == 'effect' then
     table.insert(self.effects, x)
   end
+
+  self.viewId = self.viewId + 1
 end
 
 function View:unregister(x)
-  if x.draw then
-    for i = 1, #self.draws do
-      if self.draws[i] == x then table.remove(self.draws, i) return end
-    end
-  end
-
-  if x.gui then
-    for i = 1, #self.guis do
-      if self.guis[i] == x then table.remove(self.guis, i) return end
-    end
-  end
-
-  for i = 1, #self.effects do
-    if self.effects[i] == x then table.remove(self.effects, i) return end
-  end
+  table.insert(self.toRemove, x)
 end
 
 function View:convertZ(z)
@@ -161,24 +204,16 @@ function View:contain()
   self.y = math.clamp(self.y, 0, self.ymax - self.height)
 end
 
-function View:follow()
-  if not self.target then return end
-
-  local dis, dir = math.vector(self.target.x, self.target.y, self:worldMouseX(), self:worldMouseY())
-  local margin = 0.8
-  
-  dis = dis / 2
- 
-  self.x = math.lerp(self.x, self.target.x + math.dx(dis, dir) - (self.width / 2), math.min(25 * tickRate, 1))
-  self.y = math.lerp(self.y, self.target.y + math.dy(dis, dir) - (self.height / 2), math.min(25 * tickRate, 1))
-  
-  self.x = math.clamp(self.x, self.target.x - (self.width * margin), self.target.x + (self.width * margin) - self.width)
-  self.y = math.clamp(self.y, self.target.y - (self.height * margin), self.target.y + (self.height * margin) - self.height)
-end
-
 function View:worldPoint(x, y)
   x = math.round(((x - self.frame.x) / self.scale) + self.x)
   if y then y = math.round(((y - self.frame.y) / self.scale) + self.y) end
+  return x, y
+end
+
+function View:screenPoint(x, y)
+  local vx, vy = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  x = (x - vx) * self.scale
+  if y then y = (y - vy) * self.scale end
   return x, y
 end
 

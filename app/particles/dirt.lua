@@ -5,7 +5,7 @@ function Dirt:init(data)
 	self.vy = love.math.random(-500, -250)
 	self.alpha = .9
 	self.size = 1.5 + love.math.random() * 1.5
-	self.targety = love.graphics.getHeight() - ctx.environment.groundHeight + love.math.random(-18, 18)
+	self.targety = love.graphics.getHeight() - ctx.map.groundHeight + love.math.random(-18, 18)
 	self.bounced = love.math.random() > .8
 	self.r = 100 + love.math.random(-20, 20)
 	self.g = 50 + love.math.random(-10, 10)

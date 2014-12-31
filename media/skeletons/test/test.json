@@ -1,0 +1,54 @@
+{
+"skeleton": { "hash": "6lHPMQJmM6UHfAJk6kEZQuKP2Jw", "spine": "2.1.04", "width": 314, "height": 343 },
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "Rectangle 1", "bone": "root", "attachment": "Rectangle 1" }
+],
+"skins": {
+	"default": {
+		"Rectangle 1": {
+			"Rectangle 1": { "x": 6.64, "y": 174.03, "width": 314, "height": 343 }
+		}
+	}
+},
+"animations": {
+	"attack": {},
+	"death": {},
+	"idle": {
+		"bones": {
+			"root": {
+				"rotate": [
+					{ "time": 0, "angle": 0, "curve": "stepped" },
+					{ "time": 0.3333, "angle": 0 }
+				],
+				"translate": [
+					{ "time": 0, "x": 0, "y": 0 },
+					{ "time": 0.1666, "x": 0, "y": 17.98 },
+					{ "time": 0.3333, "x": 0, "y": 0 }
+				],
+				"scale": [
+					{ "time": 0, "x": 1, "y": 1, "curve": "stepped" },
+					{ "time": 0.3333, "x": 1, "y": 1 }
+				]
+			}
+		}
+	},
+	"walk": {
+		"bones": {
+			"root": {
+				"rotate": [
+					{ "time": 0, "angle": 0 }
+				],
+				"translate": [
+					{ "time": 0, "x": 0, "y": 0 }
+				],
+				"scale": [
+					{ "time": 0, "x": 1, "y": 1 }
+				]
+			}
+		}
+	}
+}
+}

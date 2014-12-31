@@ -3,7 +3,6 @@ Juju = class()
 Juju.maxHealth = 100
 Juju.moveSpeed = 10
 Juju.depth = -6
-Juju.image = love.graphics.newImage('media/graphics/juju-icon.png')
 
 function Juju:init(data)
 	-- Data = ({amount, x, y, velocity,speed})
@@ -72,7 +71,7 @@ function Juju:update()
 		end
 
 		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
-			ctx.sound:play({sound = ctx.sounds['juju1']})
+			ctx.sound:play({sound = 'juju1'})
 			self.dead = true
 		end
 	end
@@ -90,14 +89,15 @@ end
 
 function Juju:draw()
 	local g = love.graphics
+  local image = data.media.graphics.jujuIcon
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 	local wave = math.sin(tick * tickRate * 4)
 
 	g.setBlendMode('additive')
 	g.setColor(255, 255, 255, 30 * self.alpha)
-	g.draw(self.image, self.x, self.y + 5 * wave, self.angle, self.scale * (1.6 + wave / 12), self.scale * (1.6 + wave / 12), self.image:getWidth() / 2, self.image:getHeight() / 2)
+	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale * (1.6 + wave / 12), self.scale * (1.6 + wave / 12), image:getWidth() / 2, image:getHeight() / 2)
 	g.setBlendMode('alpha')
 
 	g.setColor(255, 255, 255, 255 * self.alpha)
-	g.draw(self.image, self.x, self.y + 5 * wave, self.angle, self.scale, self.scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
+	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)
 end

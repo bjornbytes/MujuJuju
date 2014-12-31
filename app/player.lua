@@ -3,83 +3,67 @@ Player = class()
 Player.width = 45
 Player.height = 90
 
-Player.walkSpeed = 65
-Player.maxHealth = 100
-
 Player.depth = -10
 
+
+----------------
+-- Core
+----------------
 function Player:init()
-	self.health = 100
-	self.healthDisplay = self.health
-	self.x = love.graphics.getWidth() / 2
-	self.y = love.graphics.getHeight() - ctx.environment.groundHeight - self.height
+	self.x = ctx.map.width / 2
+	self.y = ctx.map.height - ctx.map.groundHeight - self.height
+  self.direction = 1
+  self.speed = 0
+  self.walkSpeed = 65
+
+  self.maxHealth = 100
+  self.health = self.maxHealth
+  self.healthDisplay = self.health
+
+  self.dead = false
+  self.deathTimer = 0
+
+  self.juju = 30
+  self.jujuTimer = 1
+  self.jujuRate = 1
+
 	self.prevx = self.x
 	self.prevy = self.y
-	self.speed = 0
-	self.jujuRealm = 0
-	self.juju = 30
-	self.jujuTimer = 1
-	self.dead = false
-	self.minions = {Zuju}
+
+	self.minions = {}
 	self.minioncds = {0}
+
 	self.selectedMinion = 1
 	self.recentSelect = 0
-	self.direction = 1
 	self.invincible = 0
-
-	self.summonedMinions = 0
-	self.hasMoved = false
 
 	local joysticks = love.joystick.getJoysticks()
 	for _, joystick in ipairs(joysticks) do
 		if joystick:isGamepad() then self.gamepad = joystick break end
 	end
 	self.gamepadSelectDirty = false
+end
 
-	self.skeleton = Skeleton({name = 'muju', x = self.x, y = self.y, scale = .6})
+function Player:activate()
+  self.animation = data.animation.muju()
+  self.animation:on('complete', function(data)
+    if data.state.name ~= 'death' and not data.state.loop then
+      self.animation:set('idle', {force = true})
+    end
+  end)
 
-	self.animator = Animator({
-		skeleton = self.skeleton,
-		mixes = {
-			{from = 'idle', to = 'idle', time = .1},
-			{from = 'walk', to = 'idle', time = .2},
-			{from = 'idle', to = 'walk', time = .2},
-			{from = 'walk', to = 'summon', time = .1},
-			{from = 'summon', to = 'walk', time = .2},
-			{from = 'idle', to = 'summon', time = .1},
-			{from = 'summon', to = 'idle', time = .2},
-			{from = 'death', to = 'resurrect', time = .2},
-			{from = 'idle', to = 'death', time = .2},
-			{from = 'walk', to = 'death', time = .2},
-			{from = 'death', to = 'idle', time = .2}
-		}
-	})
+  -- self:initDeck() -- TODO
 
-	self.animationState = 'idle'
-	self.animator:add(self.animationState, true)
-	self.animator.state.onComplete = function(trackIndex)
-		local name = self.animator.state:getCurrent(trackIndex).animation.name
-		if name == 'summon' or name == 'death' or name == 'resurrect' then
-			self.animationLock = nil
-		end
-	end
-
-	self.animationSpeeds = table.map({
-		walk = function() return tickRate * math.abs(self.speed / self.walkSpeed) end,
-		idle = tickRate * .4,
-		summon = tickRate * 1.85,
-		resurrect = tickRate * 2,
-		death = tickRate
-	}, f.val)
-
-	ctx.view:register(self)
+  ctx.event:emit('view.register', {object = self})
 end
 
 function Player:update()
 	self.prevx = self.x
 	self.prevy = self.y
 
-	if self.dead or self.animationState == 'summon' or self.animationState == 'death' or self.animationState == 'resurrect' then
+	self:animate()
+
+	if self.dead or self.animation.state.name == 'summon' or self.animation.state.name == 'death' or self.animation.state.name == 'resurrect' then
 		self.speed = 0
 	else
 		local maxSpeed = self.walkSpeed
@@ -93,8 +77,6 @@ function Player:update()
 		else
 			self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
 		end
-
-		if self.speed ~= 0 then self.hasMoved = true end
 
 		local delta = self.x + self.speed * tickRate
 		self.x = self.x + self.speed * tickRate
@@ -117,16 +99,14 @@ function Player:update()
 
 	self.x = math.clamp(self.x, 0, love.graphics.getWidth())
 
-	self.jujuRealm = timer.rot(self.jujuRealm, function()
+	self.deathTimer = timer.rot(self.deathTimer, function()
 		self.invincible = 2
 		self.health = self.maxHealth
 		self.dead = false
 		self.ghost:despawn()
 		self.ghost = nil
 
-		self.animationState = 'resurrect'
-		self.animationLock = true
-		self.animator:set('resurrect', false)
+    self.animation:set('resurrect')
 	end)
 	self.invincible = timer.rot(self.invincible)
 
@@ -143,37 +123,34 @@ function Player:update()
 	self:hurt(self.maxHealth * .033 * tickRate)
 
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+
 	self.jujuTimer = timer.rot(self.jujuTimer, function()
 		self.juju = self.juju + 1
-		return 1
+		return self.jujuRate
 	end)
+
 	self.recentSelect = timer.rot(self.recentSelect)
-	
-	self:animate()
 end
 
+function Player:draw()
+	if math.floor(self.invincible * 4) % 2 == 0 then
+    local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+		love.graphics.setColor(255, 255, 255)
+		self.animation:draw(x, y)
+	end
+end
+
+
+----------------
+-- Core
+----------------
 function Player:animate()
-	if not self.animationLock and not self.dead then
-		local old = self.animationState
-		if self.animationState ~= 'walk' and math.abs(self.speed) > self.walkSpeed / 2 then
-			self.animationState = 'walk'
-		elseif self.animationState ~= 'idle' and math.abs(self.speed) <= self.walkSpeed / 2 then
-			self.animationState = 'idle'
-		end
+  if self.dead then return end
 
-		if old ~= self.animationState then
-			self.animator:set(self.animationState, true)
-		end
-	end
+  self.animation:set(math.abs(self.speed) > self.walkSpeed / 2 and 'walk' or 'idle')
+  self.animation.speed = self.animation.state.name == 'walk' and math.max(math.abs(self.speed / self.walkSpeed), .4) or 1
 
-	self.skeleton.skeleton.x = self.x
-	self.skeleton.skeleton.y = self.y + self.height / 2
-	if self.animationState == 'resurrect' then self.skeleton.skeleton.y = self.skeleton.skeleton.y - 16 end
-	if self.speed ~= 0 then
-		self.skeleton.skeleton.flipX = self.speed > 0
-	end
-	
-	self.animator:update(self.animationSpeeds[self.animationState]())
+	if self.speed ~= 0 then self.animation.flipped = math.sign(self.speed) > 0 end
 end
 
 function Player:spend(amount)
@@ -185,13 +162,6 @@ function Player:spend(amount)
 	else 
 		-- He's broke!
 		return false
-	end
-end
-
-function Player:draw()
-	if math.floor(self.invincible * 4) % 2 == 0 then
-		love.graphics.setColor(255, 255, 255)
-		self.animator:draw()
 	end
 end
 
@@ -210,13 +180,9 @@ function Player:summon()
 			self.minioncds[self.selectedMinion] = 0
 		end
 
-		self.summonedMinions = self.summonedMinions + 1
-
-		self.animationLock = true
-		self.animationState = 'summon'
-		self.animator:set('summon', false)
+		self.animation:set('summon')
 		local summonSound = love.math.random(1, 3)
-		ctx.sound:play({sound = ctx.sounds['summon' .. summonSound]})
+		ctx.sound:play({sound = 'summon' .. summonSound})
 	end
 end
 
@@ -234,16 +200,14 @@ function Player:hurt(amount, source)
 		end
 	end
 	-- Check whether or not to enter Juju Realm
-	if self.health <= 0 and self.jujuRealm == 0 then
+	if self.health <= 0 and self.deathTimer == 0 then
   	-- We jujuin'
-		self.jujuRealm = 7
+		self.deathTimer = 7
 		self.dead = true
-		self.ghost = GhostPlayer()
+		self.ghost = GhostPlayer(self)
 
-		self.animationState = 'death'
-		self.animationLock = true
-		self.animator:set('death', false)
-		ctx.sound:play({sound = ctx.sounds.death})
+    self.animation:set('death')
+		ctx.sound:play({sound = 'death'})
 
 		if self.gamepad and self.gamepad:isVibrationSupported() then
 			self.gamepad:setVibration(1, 1, .5)
@@ -270,7 +234,17 @@ end
 function Player:gamepadpressed(gamepad, button)
 	if gamepad == self.gamepad then
 		if (button == 'a' or button == 'rightstick' or button == 'rightshoulder') and not self.dead then
-				self:summon()
+      self:summon()
 		end
 	end
+end
+
+function Player:getHealthbar()
+  return self.x, self.y, self.healthDisplay / self.maxHealth
+end
+
+function Player:atShrine()
+  local shrine = table.values(ctx.shrines:filter(function(shrine) return shrine.team == self.team end))[1]
+  if not shrine then return false end
+  return math.abs(self.x - shrine.x) < self.width
 end

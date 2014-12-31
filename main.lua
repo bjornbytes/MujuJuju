@@ -1,6 +1,7 @@
 require 'require'
 
 function love.load()
+  data.load()
 	Context:add(Menu)
 end
 

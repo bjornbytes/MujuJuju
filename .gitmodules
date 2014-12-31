@@ -10,3 +10,6 @@
 [submodule "lib/deps/richtext"]
 	path = lib/deps/richtext
 	url = https://github.com/gvx/richtext
+[submodule "lib/deps/lutil"]
+	path = lib/deps/lutil
+	url = https://github.com/bjornswenson/lutil

@@ -1,129 +1,73 @@
 Target = class()
 
-function Target:init()
+local teamFilters = {
+  all = function() return true end,
+  enemy = function(a, b) return a.team ~= b.team end,
+  ally = function(a, b) return a.team == b.team end
+}
+
+local getEntries = {
+  shrine = function(source, teamFilter, t)
+    ctx.shrines:each(function(shrine)
+      if source ~= shrine and teamFilter(source, shrine) then
+        table.insert(t, {shrine, math.abs(shrine.x - source.x)})
+      end
+    end)
+  end,
+  player = function(source, teamFilter, t)
+    ctx.players:each(function(player)
+      if source ~= player and not player.dead and teamFilter(source, player) then
+        table.insert(t, {player, math.abs(player.x - source.x)})
+      end
+    end)
+  end,
+  unit = function(source, teamFilter, t)
+    ctx.units:each(function(unit)
+      if source ~= unit and not unit.dying and teamFilter(source, unit) then
+        table.insert(t, {unit, math.abs(unit.x - source.x)})
+      end
+    end)
+  end
+}
+
+local function halp(source, teamFilter, arg)
+  local targets = {}
+  teamFilter = teamFilters[teamFilter]
+  table.each(arg, function(kind) getEntries[kind](source, teamFilter, targets) end)
+  return targets
 end
 
-function Target:getClosestTarget(source)
-	local closestTarget, distance
-	local kind = getmetatable(source).__index
-	local super = getmetatable(kind).__index
-	if super == Enemy or super == Minion then
-  		kind = super
-	end
-	if (kind == Enemy) then
-		closestTarget, distance = self:compareDistance(source,self:compareDistance(source,ctx.player,ctx.shrine),self:getClosestMinion(source))
-	elseif (kind == Minion) then
-		closestTarget, distance = self:compareDistance(source,self:compareDistance(source,ctx.player,ctx.shrine),self:getClosestEnemy(source))
-	elseif (kind == Player) then
-		closestTarget, distance = self:compareDistance(source,ctx.shrine,self:compareDistance(source,self:getClosestEnemy(source),self:getClosestMinion(source)))
-	else
-		closestTarget, distance = self:compareDistance(source,self:compareDistance(source,ctx.player,ctx.shrine),self:compareDistance(source,self:getClosestEnemy(source),self:getClosestMinion(source)))
-	end
-	return closestTarget, distance
+function Target:closest(source, teamFilter, ...)
+  local targets = halp(source, teamFilter, {...})
+  table.sort(targets, function(a, b) return a[2] < b[2] end)
+  return targets[1] and unpack(targets[1])
 end
 
-function Target:getClosestNPC(source)
-	local closestTarget, distance
-	local kind = getmetatable(source).__index
-	local super = getmetatable(kind).__index
-	if super == Enemy or super == Minion then
-  		kind = super
-	end
-	if (kind == Enemy) then
-		closestTarget, distance = self:compareDistance(source,ctx.shrine,self:getClosestMinion(source))
-	elseif (kind == Minion) then
-		closestTarget, distance = self:compareDistance(source,ctx.shrine,self:getClosestEnemy(source))
-	else
-		closestTarget, distance = self:compareDistance(source,ctx.shrine,self:compareDistance(source,self:getClosestEnemy(source),self:getClosestMinion(source)))
-	end
-	return closestTarget, distance
+function Target:inRange(source, range, teamFilter, ...)
+  local targets = halp(source, teamFilter, {...})
+
+  local i = 1
+  while i <= #targets do
+    if targets[i][2] > range + targets[i][1].width / 2 then table.remove(targets, i)
+    else i = i + 1 end
+  end
+
+  table.sort(targets, function(a, b) return a[2] < b[2] end)
+
+  return table.map(targets, function(t) return t[1] end)
 end
 
-function Target:getClosestEnemy(source)
-	if not next(ctx.enemies.enemies) then
-		return nil
-	end
-	local closestEnemy
-	local enemyDistance = math.huge
-	table.each(ctx.enemies.enemies, function(e)
-		if e ~= source and not e.dead then
-			local distance = math.abs(source.x - e.x)
-			if distance < enemyDistance then
-				enemyDistance = distance
-				closestEnemy = e
-			end
-		end
-	end)
-	return closestEnemy, enemyDistance
+function Target:location(source, range)
+  local ground = ctx.map.height - ctx.map.groundHeight
+  local mx = ctx.view:worldPoint(love.mouse.getX())
+  local x = math.clamp(mx, source.x - range, source.x + range)
+  return x, ground
 end
 
-function Target:getClosestMinion(source)
-	if not next(ctx.minions.minions) then
-		return nil
-	end
-	local closestMinion
-	local minionDistance = math.huge
-	table.each(ctx.minions.minions, function(m)
-		if source ~= m and not m.dead then
-			local distance = math.abs(source.x - m.x)
-			if distance < minionDistance then
-				minionDistance = distance
-				closestMinion = m
-			end
-		end
-	end)
-	return closestMinion, minionDistance
-end
-
-function Target:getMinionsInRange(source, range)
-	local minions = {}
-	table.each(ctx.minions.minions, function(m)
-		local dif = math.abs(source.x - m.x)
-		if dif <= range + m.width / 2 then
-			table.insert(minions, m)
-		end
-	end)
-	return minions
-end
-
-function Target:getEnemiesInRange(source, range)
-	if not next(ctx.enemies.enemies) then
-		return nil
-	end
-	local enemiesInRange = {}
-	table.each(ctx.enemies.enemies, function(e)
-		local distance = math.abs(source.x - e.x)
-		if e ~= source and distance <= range + e.width / 2 then
-			table.insert(enemiesInRange,e)
-		end
-	end)
-	return enemiesInRange
-end
-
-function Target:getPlayer(source)
-	local distance = math.abs(source.x - ctx.player.x)
-	return ctx.player, distance
-end
-
-function Target:getShrine(source)
-	local distance = math.abs(source.x - ctx.shrine.x)
-	return ctx.shrine, distance
-end
-
-function Target:compareDistance(source, unit1, unit2)
-	if unit1 == nil then
-		return unit2
-	end
-	if unit2 == nil then
-		return unit1
-	end
-	local unit1Distance = math.abs(source.x - unit1.x)
-	local unit2Distance = math.abs(source.x - unit2.x)
-	local closerUnit = unit1
-	local distance = unit1Distance
-	if unit1Distance > unit2Distance then
-		closerUnit = unit2
-		distance = unit2Distance
-	end
-	return closerUnit, distance
+function Target:atMouse(...)
+  local mx, my = ctx.view:worldPoint(love.mouse.getPosition())
+  for _, entry in ipairs(self:inRange(...)) do
+    if entry[1]:contains(mx, my) then return unpack(entry) end
+  end
+  return nil
 end

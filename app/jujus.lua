@@ -5,7 +5,7 @@ function Jujus:init()
 end
 
 function Jujus:update()
-	table.with(self.jujus, 'update')
+  table.with(self.jujus, 'update')
 end
 
 function Jujus:add(data)

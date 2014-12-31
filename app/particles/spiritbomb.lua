@@ -1,7 +1,6 @@
 SpiritBomb = extend(Particle)
 
 SpiritBomb.gravity = 700
-SpiritBomb.image = love.graphics.newImage('media/graphics/spuju-skull.png')
 SpiritBomb.scale = 1
 SpiritBomb.maxHealth = .3
 SpiritBomb.radius = 40
@@ -31,15 +30,16 @@ function SpiritBomb:init(data)
 end
 
 function SpiritBomb:update()
+  local image = data.media.graphics.spujuSkull
 	if self.health then
 		self.health = timer.rot(self.health, function() ctx.particles:remove(self) end)
-		self.burstScale = math.lerp(self.burstScale, self.radius / Burst.image:getWidth(), 20 * tickRate)
+		self.burstScale = math.lerp(self.burstScale, self.radius / data.media.graphics.explosion:getWidth(), 20 * tickRate)
 	else
 		self.x = self.x + self.vx * tickRate
 		self.y = self.y + self.vy * tickRate
 		self.vy = self.vy + self.gravity * tickRate
 		self.angle = self.angle + math.sign(self.vx) * tickRate
-		if self.y + self.image:getWidth() >= love.graphics.getHeight() - ctx.environment.groundHeight then
+		if self.y + image:getWidth() >= love.graphics.getHeight() - ctx.map.groundHeight then
 			self.health = self.maxHealth
 			table.each(ctx.target:getMinionsInRange(self, self.radius), function(m)
 				m:hurt(self.damage)
@@ -58,9 +58,11 @@ function SpiritBomb:draw()
 	local g = love.graphics
 	if self.health then
 		g.setColor(80, 230, 80, 200 * self.health / self.maxHealth)
-		g.draw(Burst.image, self.x, g.getHeight() - ctx.environment.groundHeight, self.angle, self.burstScale + .25, self.burstScale + .25, Burst.image:getWidth() / 2, Burst.image:getHeight() / 2)
+    local image = data.media.graphics.explosion
+		g.draw(image, self.x, g.getHeight() - ctx.map.groundHeight, self.angle, self.burstScale + .25, self.burstScale + .25, image:getWidth() / 2, image:getHeight() / 2)
 	else
 		g.setColor(255, 255, 255)
-		g.draw(self.image, self.x, self.y, self.angle, self.scale, self.scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
+    local image = data.media.graphics.spujuSkull
+		g.draw(image, self.x, self.y, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)
 	end
 end
