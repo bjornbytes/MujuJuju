@@ -10,3 +10,9 @@
 [submodule "lib/deps/richtext"]
 	path = lib/deps/richtext
 	url = https://github.com/bjornswenson/richtext
+[submodule "lib/deps/lume"]
+	path = lib/deps/lume
+	url = https://github.com/rxi/lume
+[submodule "lib/deps/spine"]
+	path = lib/deps/spine
+	url = https://github.com/bjornswenson/spine-runtimes
