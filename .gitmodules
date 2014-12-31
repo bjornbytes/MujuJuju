@@ -1,18 +1,12 @@
-[submodule "lib/deps/lutil"]
-	path = lib/deps/lutil
-	url = https://github.com/bjornswenson/lutil
-[submodule "lib/deps/hardon"]
-	path = lib/deps/hardon
-	url = https://github.com/vrld/HardonCollider
 [submodule "lib/deps/slam"]
 	path = lib/deps/slam
 	url = https://github.com/vrld/slam
-[submodule "lib/deps/richtext"]
-	path = lib/deps/richtext
-	url = https://github.com/bjornswenson/richtext
 [submodule "lib/deps/lume"]
 	path = lib/deps/lume
 	url = https://github.com/rxi/lume
 [submodule "lib/deps/spine"]
 	path = lib/deps/spine
 	url = https://github.com/bjornswenson/spine-runtimes
+[submodule "lib/deps/richtext"]
+	path = lib/deps/richtext
+	url = https://github.com/gvx/richtext
