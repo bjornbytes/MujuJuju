@@ -7,9 +7,9 @@ function Wave:init()
 end
 
 function Wave:update()
-  local p = ctx.player
-	self.strength[1] = math.lerp(self.strength[1], ctx.player.dead and .005 or 0, .5 * tickRate)
-	self.strength[2] = math.lerp(self.strength[2], ctx.player.dead and .005 * 4 / 3 or 0, .5 * tickRate)
+  local p = ctx.players:get(ctx.id)
+	self.strength[1] = math.lerp(self.strength[1], p.dead and .005 or 0, .5 * tickRate)
+	self.strength[2] = math.lerp(self.strength[2], p.dead and .005 * 4 / 3 or 0, .5 * tickRate)
 	self.shader:send('time', tick)
 	self.shader:send('strength', self.strength)
 end

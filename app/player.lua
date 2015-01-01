@@ -30,10 +30,7 @@ function Player:init()
 	self.prevx = self.x
 	self.prevy = self.y
 
-	self.minions = {}
-	self.minioncds = {0}
-
-	self.selectedMinion = 1
+	self.selected = 1
 	self.recentSelect = 0
 	self.invincible = 0
 
@@ -52,7 +49,7 @@ function Player:activate()
     end
   end)
 
-  -- self:initDeck() -- TODO
+  self:initDeck()
 
   ctx.event:emit('view.register', {object = self})
 end
@@ -61,8 +58,77 @@ function Player:update()
 	self.prevx = self.x
 	self.prevy = self.y
 
+  self:move()
 	self:animate()
 
+	self.deathTimer = timer.rot(self.deathTimer, function()
+		self.invincible = 2
+		self.health = self.maxHealth
+		self.dead = false
+		self.ghost:despawn()
+		self.ghost = nil
+
+    self.animation:set('resurrect')
+	end)
+	self.invincible = timer.rot(self.invincible)
+
+	if self.ghost then
+		self.ghost:update()
+	end
+
+	self:hurt(self.maxHealth * .033 * tickRate)
+
+	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+
+	self.jujuTimer = timer.rot(self.jujuTimer, function()
+		self.juju = self.juju + 1
+		return self.jujuRate
+	end)
+
+  for i = 1, #self.deck do
+    self.deck[i].cooldown = timer.rot(self.deck[i].cooldown, function()
+      ctx.hud.units.cooldownPop[i] = 1
+    end)
+  end
+
+	self.recentSelect = timer.rot(self.recentSelect)
+end
+
+function Player:draw()
+	if math.floor(self.invincible * 4) % 2 == 0 then
+    local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+		love.graphics.setColor(255, 255, 255)
+		self.animation:draw(x, y)
+	end
+end
+
+function Player:keypressed(key)
+	for i = 1, #self.deck do
+		if tonumber(key) == i then
+			self.selected = i
+			self.recentSelect = 1
+			return
+		end
+	end
+
+	if key == ' ' and not self.dead then
+		self:summon()
+	end
+end
+
+function Player:gamepadpressed(gamepad, button)
+	if gamepad == self.gamepad then
+		if (button == 'a' or button == 'rightstick' or button == 'rightshoulder') and not self.dead then
+      self:summon()
+		end
+	end
+end
+
+
+----------------
+-- Behavior
+----------------
+function Player:move()
 	if self.dead or self.animation.state.name == 'summon' or self.animation.state.name == 'death' or self.animation.state.name == 'resurrect' then
 		self.speed = 0
 	else
@@ -90,60 +156,33 @@ function Player:update()
 				if rtrigger then self.selectedMinion = self.selectedMinion + 1 end
 				if ltrigger then self.selectedMinion = self.selectedMinion - 1 end
 				if ltrigger or rtrigger then self.recentSelect = 1 end
-				if self.selectedMinion <= 0 then self.selectedMinion = #self.minions
-				elseif self.selectedMinion > #self.minions then self.selectedMinion = 1 end
+				if self.selectedMinion <= 0 then self.selectedMinion = #self.deck
+				elseif self.selectedMinion > #self.deck then self.selectedMinion = 1 end
 			end
 			self.gamepadSelectDirty = rtrigger or ltrigger
 		end
 	end
 
 	self.x = math.clamp(self.x, 0, love.graphics.getWidth())
-
-	self.deathTimer = timer.rot(self.deathTimer, function()
-		self.invincible = 2
-		self.health = self.maxHealth
-		self.dead = false
-		self.ghost:despawn()
-		self.ghost = nil
-
-    self.animation:set('resurrect')
-	end)
-	self.invincible = timer.rot(self.invincible)
-
-	table.each(self.minioncds, function(cooldown, index)
-		self.minioncds[index] = timer.rot(cooldown, function()
-			ctx.hud.selectExtra[index] = 1
-		end)
-	end)
-
-	if self.ghost then
-		self.ghost:update()
-	end
-
-	self:hurt(self.maxHealth * .033 * tickRate)
-
-	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
-
-	self.jujuTimer = timer.rot(self.jujuTimer, function()
-		self.juju = self.juju + 1
-		return self.jujuRate
-	end)
-
-	self.recentSelect = timer.rot(self.recentSelect)
 end
 
-function Player:draw()
-	if math.floor(self.invincible * 4) % 2 == 0 then
-    local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
-		love.graphics.setColor(255, 255, 255)
-		self.animation:draw(x, y)
+function Player:summon()
+	local minion = self.deck[self.selected].code
+	local cooldown = self.deck[self.selected].cooldown
+	local cost = 12
+	if cooldown == 0 and self:spend(cost) then
+		ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
+		self.deck[self.selected].cooldown = 3
+
+		self.animation:set('summon')
+		local summonSound = love.math.random(1, 3)
+		ctx.sound:play({sound = 'summon' .. summonSound})
+    for i = 1, 15 do
+      ctx.particles:add(Dirt, {x = self.x, y = self.y + self.height})
+    end
 	end
 end
 
-
-----------------
--- Core
-----------------
 function Player:animate()
   if self.dead then return end
 
@@ -154,36 +193,12 @@ function Player:animate()
 end
 
 function Player:spend(amount)
-	-- Check if Muju is broke
 	if self.juju >= amount then
-		-- He's not broke!
 		self.juju = self.juju - amount
 		return true
-	else 
-		-- He's broke!
-		return false
-	end
-end
+  end
 
-function Player:cooldown()
-	
-end
-
-function Player:summon()
-	local minion = self.minions[self.selectedMinion]
-	local cooldown = self.minioncds[self.selectedMinion]
-	local cost = minion:getCost()
-	if cooldown == 0 and self:spend(cost) then
-		ctx.minions:add(minion, {x = self.x + love.math.random(-20, 20), direction = self.direction})
-		self.minioncds[self.selectedMinion] = minion.cooldown * (1 - (.1 * ctx.upgrades.muju.flow.level))
-		if ctx.upgrades.muju.refresh.level == 1 and love.math.random() < .15 then
-			self.minioncds[self.selectedMinion] = 0
-		end
-
-		self.animation:set('summon')
-		local summonSound = love.math.random(1, 3)
-		ctx.sound:play({sound = 'summon' .. summonSound})
-	end
+  return false
 end
 
 function Player:hurt(amount, source)
@@ -217,28 +232,10 @@ function Player:hurt(amount, source)
 	end
 end
 
-function Player:keypressed(key)
-	for i = 1, #self.minions do
-		if tonumber(key) == i then
-			self.selectedMinion = i
-			self.recentSelect = 1
-			return
-		end
-	end
 
-	if key == ' ' and not self.dead then
-		self:summon()
-	end
-end
-
-function Player:gamepadpressed(gamepad, button)
-	if gamepad == self.gamepad then
-		if (button == 'a' or button == 'rightstick' or button == 'rightshoulder') and not self.dead then
-      self:summon()
-		end
-	end
-end
-
+----------------
+-- Helper
+----------------
 function Player:getHealthbar()
   return self.x, self.y, self.healthDisplay / self.maxHealth
 end
@@ -247,4 +244,63 @@ function Player:atShrine()
   local shrine = table.values(ctx.shrines:filter(function(shrine) return shrine.team == self.team end))[1]
   if not shrine then return false end
   return math.abs(self.x - shrine.x) < self.width
+end
+
+function Player:initDeck()
+  local deck = {
+    { code = 'bruju',
+      runes = {},
+      skin = {}
+    },
+    { code = 'thuju',
+      runes = {},
+      skin = {}
+    },
+    { code = 'kuju',
+      runes = {},
+      skin = {}
+    }
+  }
+
+  self.deck = {}
+
+  for i = 1, #deck do
+    local entry = deck[i]
+
+    self.deck[entry.code] = {
+      runes = table.map(entry.runes, function(rune) return setmetatable({level = 0}, runes[rune]) end),
+      abilities = {},
+      upgrades = {},
+      cooldown = 0,
+      instance = nil,
+      code = entry.code
+    }
+
+    table.each(data.unit[entry.code].abilities, function(code, i)
+      self.deck[entry.code].abilities[code] = false
+    end)
+
+    table.each(data.unit[entry.code].abilities, function(code)
+      self.deck[entry.code].upgrades[code] = {}
+    end)
+
+    self.deck[i] = self.deck[entry.code]
+  end
+end
+
+function Player:contains(x, y)
+  math.inside(x, y, self.x - self.width / 2, self.y, self.width, self.height)
+end
+
+function Player:hasUnitAbility(unit, ability)
+  if type(unit) == 'number' then unit = self.deck[unit].code end
+  if type(ability) == 'number' then ability = data.unit[unit].abilities[ability] end
+  return self.deck[unit].abilities[ability]
+end
+
+function Player:hasUnitAbilityUpgrade(unit, ability, upgrade)
+  if type(unit) == 'number' then unit = self.deck[unit].code end
+  if type(ability) == 'number' then ability = data.unit[unit].abilities[ability] end
+  if type(upgrade) == 'number' then upgrade = data.ability[unit][ability].upgrades[upgrade].code end
+  return self.deck[unit].upgrades[ability][upgrade]
 end

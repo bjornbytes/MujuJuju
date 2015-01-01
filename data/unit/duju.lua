@@ -8,8 +8,8 @@ Duju.code = 'duju'
 Duju.health = 65
 Duju.damage = 18
 Duju.range = 32
-Duju.attackSpeed = 1.667
-Duju.speed = 60
+Duju.attackSpeed = 1.1
+Duju.speed = 40
 
 
 ----------------

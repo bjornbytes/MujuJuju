@@ -26,6 +26,8 @@ function Juju:init(data)
 end
 
 function Juju:update()
+  local p = ctx.players:get(ctx.id)
+
 	self.prevx = self.x
 	self.prevy = self.y
 	
@@ -35,7 +37,7 @@ function Juju:update()
 		self.scale = math.lerp(self.scale, .1, 5 * tickRate)
 		if math.distance(self.x, self.y, tx, ty) < 16 then
 			ctx.jujus:remove(self)
-			ctx.player.juju = ctx.player.juju + self.amount
+			p.juju = p.juju + self.amount
 			ctx.hud.jujuIconScale = 1
 			for i = 1, 20 do
 				ctx.particles:add(JujuSex, {x = tx, y = ty})
@@ -59,16 +61,8 @@ function Juju:update()
 		ctx.particles:add(JujuSex, {x = self.x, y = self.y, vy = love.math.random(-150, -75), vx = love.math.random(-100, 100), alpha = .35})
 	end
 
-	if ctx.player.jujuRealm > 0 then
-		local ghost = ctx.player.ghost
-		if ctx.upgrades.muju.absorb.level > 0 then
-			local distance, direction = math.vector(self.x, self.y, ghost.x, ghost.y)
-			local threshold = self.amount + 75 + 50 * ctx.upgrades.muju.absorb.level
-			local factor = math.clamp((threshold - distance) / threshold, 0, 1)
-			local speed = threshold * factor * tickRate
-			self.x = self.x + math.dx(speed, direction)
-			self.y = self.y + math.dy(speed, direction)
-		end
+	if p.deathTimer > 0 then
+		local ghost = p.ghost
 
 		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
 			ctx.sound:play({sound = 'juju1'})
@@ -89,7 +83,7 @@ end
 
 function Juju:draw()
 	local g = love.graphics
-  local image = data.media.graphics.jujuIcon
+  local image = data.media.graphics.juju
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 	local wave = math.sin(tick * tickRate * 4)
 

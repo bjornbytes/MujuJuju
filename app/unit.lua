@@ -18,7 +18,7 @@ function Unit:activate()
 
   self.animation:on('event', function(data)
     if data.data.name == 'attack' then
-      if self.target then
+      if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .5 then
         self.buffs:preattack(self.target, self.damage)
         local amount = self.target:hurt(self.damage, self, 'attack')
         self.buffs:postattack(self.target, amount)
@@ -29,6 +29,9 @@ function Unit:activate()
   self.animation:on('complete', function(data)
     if data.state.name == 'death' then
       self:die()
+    elseif data.state.name == 'spawn' then
+      self.spawning = false
+      self.animation:set('idle', {force = true})
     end
 
     if not data.state.loop then self.animation:set('idle') end
@@ -49,14 +52,16 @@ function Unit:activate()
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
   self.maxHealth = self.health
+  self.healthDisplay = self.health
   self.stance = 'aggressive'
   self.dying = false
   self.casting = false
   self.channeling = false
+  self.spawning = false
 
   if self.player then self.player.deck[self.class.code].instance = self end
 
-  self.prev = {x = self.x, y = self.y, health = self.health}
+  self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
   self.backCanvas = g.newCanvas(200, 200)
   self.canvas = g.newCanvas(200, 200)
 
@@ -68,22 +73,30 @@ function Unit:deactivate()
 end
 
 function Unit:update()
-  if self.dying then return end
+  self.prev.healthDisplay = self.healthDisplay
+
+  if self.dying then
+    self.healthDisplay = math.lerp(self.healthDisplay, 0, 20 * tickRate)
+    return
+  end
 
   self.prev.x = self.x
   self.prev.y = self.y
-  self.prev.health = self.health
 
   self:abilityCall('update')
   self:abilityCall('rot')
 
   self.buffs:preupdate()
 
-  if not self.casting and not self.channeling then
+  if not self.spawning and not self.casting and not self.channeling then
     f.exe(self.stances[self.stance], self)
   end
 
   self.buffs:postupdate()
+
+  self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+
+  if self.player then self:hurt(self.maxHealth * .02 * tickRate) end
 end
 
 function Unit:draw()
@@ -131,7 +144,7 @@ end
 
 function Unit:getHealthbar()
   local lerpd = table.interpolate(self.prev, self, tickDelta / tickRate)
-  return lerpd.x, lerpd.y, lerpd.health / self.maxHealth
+  return lerpd.x, lerpd.y, lerpd.healthDisplay / self.maxHealth
 end
 
 
@@ -201,6 +214,7 @@ end
 function Unit:attack(target)
   if not self:inRange(target) or self.buffs:stunned() then return end
   self.target = target
+  if self.animation.state.name ~= 'attack' then self.attackStart = tick end
   self.animation.flipped = self.x > target.x
   self.animation:set('attack')
 end
@@ -230,7 +244,6 @@ function Unit:hurt(amount, source, kind)
   self.buffs:posthurt(amount, source, kind)
 
   if self.health <= 0 then
-    self.prev.health = self.health
     self.animation:set('death', {force = true})
     self.dying = true
   end
@@ -248,13 +261,15 @@ function Unit:die()
   self:abilityCall('die')
   self:abilityCall('deactivate')
 
-  ctx.jujus:add({
-    x = self.x,
-    y = self.y,
-    amount = 10 + love.math.random(0, 2),
-    vx = love.math.random(-35, 35),
-    vy = love.math.random(-300, -100)
-  })
+  if not self.player then
+    ctx.jujus:add({
+      x = self.x,
+      y = self.y,
+      amount = love.math.random(14 + (ctx.units.level ^ .85) * 75, 20 + (self.level ^ .85)),
+      vx = love.math.random(-35, 35),
+      vy = love.math.random(-300, -100)
+    })
+  end
 
   ctx.units:remove(self)
 end

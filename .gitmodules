@@ -13,3 +13,6 @@
 [submodule "lib/deps/lutil"]
 	path = lib/deps/lutil
 	url = https://github.com/bjornswenson/lutil
+[submodule "lib/deps/tween"]
+	path = lib/deps/tween
+	url = https://github.com/kikito/tween.lua

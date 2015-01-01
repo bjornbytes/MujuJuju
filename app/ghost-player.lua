@@ -18,7 +18,7 @@ function GhostPlayer:init(owner)
 	self.maxRange = 500
 
 	local maxJuju = 7
-	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.jujuRealm / maxJuju)) ^ 3)
+	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.deathTimer / maxJuju)) ^ 3)
 
 	local sound = ctx.sound:play({sound = 'spirit'})
 	if sound then sound:setVolume(.12) end
@@ -72,7 +72,7 @@ function GhostPlayer:update()
 	end
 
 	local len = (self.vx ^ 2 + self.vy ^ 2) ^ .5
-	if len > 0 and self.owner.jujuRealm < maxJuju - 1 then
+	if len > 0 and self.owner.deathTimer < maxJuju - 1 then
 		self.vx = (self.vx / len) * math.min(len, speed)
 		self.vy = (self.vy / len) * math.min(len, speed)
 	end
@@ -80,7 +80,7 @@ function GhostPlayer:update()
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 
-	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.jujuRealm / maxJuju)) ^ 3)
+	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.deathTimer / maxJuju)) ^ 3)
 	if math.distance(self.x, self.y, px, py) > self.maxDis then
 		local angle = math.direction(px, py, self.x, self.y)
 		self.x = math.lerp(self.x, px + math.dx(self.maxDis, angle), 8 * tickRate)
@@ -90,10 +90,10 @@ function GhostPlayer:update()
 	self.x = math.clamp(self.x, self.radius, love.graphics.getWidth() - self.radius)
 	self.y = math.clamp(self.y, self.radius, love.graphics.getHeight() - self.radius - ctx.map.groundHeight)
 
-	local scale = math.min(self.owner.jujuRealm, 2) / 2
+	local scale = math.min(self.owner.deathTimer, 2) / 2
 	local maxJuju = 7
-	if maxJuju - self.owner.jujuRealm < 1 then
-		scale = maxJuju - self.owner.jujuRealm
+	if maxJuju - self.owner.deathTimer < 1 then
+		scale = maxJuju - self.owner.deathTimer
 	end
 	scale = .4 + scale * .4
 	self.radius = 40 * scale
@@ -108,13 +108,13 @@ function GhostPlayer:draw()
 	local g = love.graphics
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 
-	local scale = math.min(self.owner.jujuRealm, 2) / 2
+	local scale = math.min(self.owner.deathTimer, 2) / 2
 	local maxJuju = 7
-	if maxJuju - self.owner.jujuRealm < 1 then
-		scale = maxJuju - self.owner.jujuRealm
+	if maxJuju - self.owner.deathTimer < 1 then
+		scale = maxJuju - self.owner.deathTimer
 	end
 	scale = .4 + scale * .4
-	local alphaScale = math.min(self.owner.jujuRealm * 6 / maxJuju, 1)
+	local alphaScale = math.min(self.owner.deathTimer * 6 / maxJuju, 1)
 	g.setColor(255, 255, 255, 30 * alphaScale)
 	g.draw(self.image, x, y, self.angle, 1 * scale, 1 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
 	g.setColor(255, 255, 255, 75 * alphaScale)

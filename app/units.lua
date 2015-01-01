@@ -10,8 +10,10 @@ function Units:init()
 end
 
 function Units:update()
+  local enemyCount = table.count(self:filter(function(u) return u.team == 0 end))
+
   self.nextEnemy = timer.rot(self.nextEnemy, function()
-    if self:count() < 1 + self.level / 2 then
+    if enemyCount < 1 + self.level / 2 then
       local enemyType = 'duju'
       local x = love.math.random() < .5 and 0 or ctx.map.width
 
@@ -22,7 +24,7 @@ function Units:update()
     return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
   end)
 
-  if not next(self.objects) and self.level > 1 then
+  if enemyCount == 0 and self.level > 1 then
     self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, .75 * tickRate))
   end
 

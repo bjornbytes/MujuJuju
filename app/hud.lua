@@ -31,12 +31,13 @@ function Hud:init()
 	self.jujuIconScale = .75
 	self.timer = {total = 0, minutes = 0, seconds = 0}
 	self.particles = Particles()
-	self.selectBg = {data.media.graphics.unit.portrait.bruju, data.media.graphics.unit.portrait.huju}
-	self.selectFactor = {0, 0}
-	self.selectExtra = {0, 0}
+	self.selectBg = {data.media.graphics.unit.portrait.bruju, data.media.graphics.unit.portrait.huju, data.media.graphics.unit.portrait.huju}
+	self.selectFactor = {0, 0, 0}
+	self.selectExtra = {0, 0, 0}
 	self.selectQuad = {}
 	self.selectQuad[1] = g.newQuad(0, 0, self.selectBg[1]:getWidth(), self.selectBg[1]:getHeight(), self.selectBg[1]:getWidth(), self.selectBg[1]:getHeight())
 	self.selectQuad[2] = g.newQuad(0, 0, self.selectBg[2]:getWidth(), self.selectBg[2]:getHeight(), self.selectBg[2]:getWidth(), self.selectBg[2]:getHeight())
+	self.selectQuad[3] = g.newQuad(0, 0, self.selectBg[3]:getWidth(), self.selectBg[3]:getHeight(), self.selectBg[3]:getWidth(), self.selectBg[3]:getHeight())
 	self.deadAlpha = 0
 	self.deadName = ''
 	self.deadNameFrame = data.media.graphics.deathBox
@@ -47,7 +48,10 @@ function Hud:init()
 	self.pauseAlpha = 0
 	self.pauseScreen = data.media.graphics.pauseMenu
 	self.protectAlpha = 3
+  self.u, self.v = love.graphics.getDimensions()
   self.health = HudHealth()
+  self.upgrades = HudUpgrades()
+  self.units = HudUnits()
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end
@@ -60,14 +64,9 @@ function Hud:update()
 	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
 	self.protectAlpha = math.max(self.protectAlpha - tickRate, 0)
 	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
-	for i = 1, #self.selectFactor do
-		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selectedMinion == i and 1 or 0, 18 * tickRate)
-		self.selectExtra[i] = math.lerp(self.selectExtra[i], 0, 5 * tickRate)
-		if p.minions[i] then
-			local y = self.selectBg[i]:getHeight() * (p.minioncds[i] / p.minions[i].cooldown)
-			self.selectQuad[i]:setViewport(0, y, self.selectBg[i]:getWidth(), self.selectBg[i]:getHeight() - y)
-		end
-	end
+
+  self.upgrades:update()
+  self.units:update()
 
 	-- Update Timer
 	self:score()
@@ -120,7 +119,7 @@ function Hud:update()
 		end
 
 		if math.distance(mx, my, 560, 140) < 38 then
-			if #p.minions < 2 then
+			if #p.deck < 2 then
 				local color = p.juju >= 80 and '{green}' or '{red}'
 				local str = '{white}{title}Vuju{normal}\n{whoCares}Casts chain lightning and hexes enemies.\n\n' .. color .. '{bold}80 juju'
 				self.tooltip = rich.new(table.merge({str, 300}, self.richOptions))
@@ -209,11 +208,11 @@ function Hud:gui()
 
 		-- Minion indicator
 		local yy = 135
-		for i = 1, #p.minions do
+		for i = 1, #p.deck do
 			local bg = self.selectBg[i]
 			local scale = .75 + (.15 * self.selectFactor[i]) + (.1 * self.selectExtra[i])
 			local xx = 48 - 10 * (1 - self.selectFactor[i])
-			local f, cost = g.getFont(), tostring(p.minions[i]:getCost())
+			local f, cost = g.getFont(), tostring(12)
 			local tx, ty = xx - f:getWidth(cost) / 2 - (bg:getWidth() * .75 / 2) + 4, yy - f:getHeight() / 2 - (bg:getHeight() * .75 / 2) + 4
 			local alpha = .65 + self.selectFactor[i] * .35
 
@@ -223,7 +222,7 @@ function Hud:gui()
 
 			-- Cooldown
 			local _, qy = self.selectQuad[i]:getViewport()
-			g.setColor(255, 255, 255, (150 + (100 * (p.minioncds[i] == 0 and 1 or 0))) * alpha)
+			g.setColor(255, 255, 255, (150 + (100 * (p.deck[i].cooldown == 0 and 1 or 0))) * alpha)
 			g.draw(bg, self.selectQuad[i], xx, yy + qy * scale, 0, scale, scale, bg:getWidth() / 2, bg:getHeight() / 2)
 
 			-- Juice
@@ -241,29 +240,6 @@ function Hud:gui()
 		end
 
     self.health:draw()
-		
-		-- Health Bars
-		--[=[local px, py = math.lerp(p.prevx, p.x, tickDelta / tickRate), math.lerp(p.prevy, p.y, tickDelta / tickRate)
-		local green = {50, 230, 50}
-		local red = {255, 0, 0}
-		local purple = {200, 80, 255}
-
-		self:health(px - 40, py - 15, p.healthDisplay / p.maxHealth, purple, 80, 3)
-		self:health(ctx.shrine.x - 60, ctx.shrine.y - 65, ctx.shrine.healthDisplay / ctx.shrine.maxHealth, green, 120, 4)]]
-
-		local stackingTable = {}
-		table.each(ctx.enemies.enemies, function(enemy)
-			local location = math.floor(enemy.x)
-			self:stackingTable(stackingTable, location, enemy.width * 2, .5)
-			self:health(enemy.x - 25, h - ctx.map.groundHeight - enemy.height - 15 - 15 * stackingTable[location], enemy.healthDisplay / enemy.maxHealth, red, 50, 2)
-		end)
-
-		stackingTable = {}
-		table.each(ctx.minions.minions, function(minion)
-			local location = math.floor(minion.x)
-			self:stackingTable(stackingTable, location, minion.width * 2, .5)
-			self:health(minion.x - 25, h - ctx.map.groundHeight - minion.height - 15 * stackingTable[location], minion.healthDisplay / minion.maxHealth, green, 50, 2)
-		end)]=]
 
 		-- Protect message
 		if self.protectAlpha > .1 then
@@ -284,6 +260,8 @@ function Hud:gui()
 			g.draw(self.pauseScreen, w * .5, h * .5, 0, 1, 1, self.pauseScreen:getWidth() / 2, self.pauseScreen:getHeight() / 2)
 		end
 	end
+
+  self.units:draw()
 
 	-- Upgrade screen
 	if self.upgradeAlpha > .001 and not ctx.ded then
@@ -420,6 +398,8 @@ function Hud:gui()
 end
 
 function Hud:keypressed(key)
+  do return self.upgrades:keypressed() end
+
 	if (key == 'tab' or key == 'e') and math.abs(p.x - ctx.shrine.x) < p.width and not ctx.ded then
 		self.upgrading = not self.upgrading
 		return true
@@ -502,9 +482,9 @@ function Hud:mousereleased(x, y, b)
 			end
 		end
 
-		if #p.minions < 2 and math.distance(x, y, 560, 140) < 38 and p:spend(80) then
-			table.insert(p.minions, Vuju)
-			table.insert(p.minioncds, 0)
+		if #p.deck < 2 and math.distance(x, y, 560, 140) < 38 and p:spend(80) then
+			--table.insert(p.deck, Vuju)
+			--table.insert(p.minioncds, 0)
 			for i = 1, 100 do
 				self.particles:add(UpgradeParticle, {x = x, y = y})
 			end

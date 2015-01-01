@@ -5,11 +5,11 @@ Bruju.code = 'bruju'
 ----------------
 -- Stats
 ----------------
-Bruju.health = 65
+Bruju.health = 80
 Bruju.damage = 20
 Bruju.range = 32
-Bruju.attackSpeed = 1.667
-Bruju.speed = 50
+Bruju.attackSpeed = 1
+Bruju.speed = 45
 
 
 ----------------

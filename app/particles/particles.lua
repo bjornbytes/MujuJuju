@@ -15,6 +15,6 @@ function Particles:add(kind, data)
 end
 
 function Particles:remove(particle)
-	ctx.view:unregister(particle)
+  ctx.event:emit('view.unregister', {object = particle})
 	self.particles[particle] = nil
 end

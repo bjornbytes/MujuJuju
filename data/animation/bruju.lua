@@ -3,7 +3,7 @@ Bruju.code = 'bruju'
 
 Bruju.scale = .5
 Bruju.offsety = 48
-Bruju.default = 'idle'
+Bruju.default = 'spawn'
 Bruju.states = {}
 
 Bruju.states.spawn = {
