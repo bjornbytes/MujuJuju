@@ -3,7 +3,7 @@ Player = class()
 Player.width = 45
 Player.height = 90
 
-Player.depth = -10
+Player.depth = 0
 
 
 ----------------

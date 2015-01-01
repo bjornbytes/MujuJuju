@@ -35,7 +35,7 @@ end
 function Game:update()
 	if self.hud.upgrading or self.paused or self.ded then
 		self.hud:update()
-		if self.ded then self.effects:get(DeathBlur):update() end
+		if self.ded then self.effects:get('deathBlur'):update() end
 		return
 	end
 	self.players:update()

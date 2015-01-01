@@ -8,7 +8,7 @@ table.each(Unit.stanceList, function(stance, i) Unit.stanceList[stance] = i end)
 
 Unit.width = 64
 Unit.height = 64
-Unit.depth = 3
+Unit.depth = -3
 
 ----------------
 -- Core
@@ -18,10 +18,14 @@ function Unit:activate()
 
   self.animation:on('event', function(data)
     if data.data.name == 'attack' then
-      if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .5 then
+      if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
         self.buffs:preattack(self.target, self.damage)
         local amount = self.target:hurt(self.damage, self, 'attack')
         self.buffs:postattack(self.target, amount)
+        if not self.target or self.target.dying then
+          self.target = nil
+          self.animation:set('idle')
+        end
       end
     end
   end)
@@ -49,6 +53,20 @@ function Unit:activate()
 
   self:abilityCall('activate')
 
+  if not self.player then
+    local function scale(stat)
+      if self.class[stat .. 'Scaling'] then
+        local coefficient, exponent = unpack(self.class[stat .. 'Scaling'])
+        self[stat] = self[stat] + coefficient * ctx.units.level ^ exponent
+      end
+    end
+
+    scale('health')
+    scale('damage')
+
+    print(self.health)
+  end
+
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
   self.maxHealth = self.health
@@ -64,6 +82,10 @@ function Unit:activate()
   self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
   self.backCanvas = g.newCanvas(200, 200)
   self.canvas = g.newCanvas(200, 200)
+
+  local r = love.math.random(0, 40)
+  self.y = self.y + r
+  self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
 
   ctx.event:emit('view.register', {object = self})
 end
@@ -212,7 +234,12 @@ function Unit:moveTowards(target)
 end
 
 function Unit:attack(target)
-  if not self:inRange(target) or self.buffs:stunned() then return end
+  if not self:inRange(target) or self.buffs:stunned() then
+    self.target = nil
+    self.animation:set('idle')
+    return
+  end
+
   self.target = target
   if self.animation.state.name ~= 'attack' then self.attackStart = tick end
   self.animation.flipped = self.x > target.x
@@ -265,7 +292,7 @@ function Unit:die()
     ctx.jujus:add({
       x = self.x,
       y = self.y,
-      amount = love.math.random(14 + (ctx.units.level ^ .85) * 75, 20 + (self.level ^ .85)),
+      amount = love.math.random(14 + (ctx.units.level ^ .85) * .75, 20 + (ctx.units.level ^ .85)),
       vx = love.math.random(-35, 35),
       vy = love.math.random(-300, -100)
     })

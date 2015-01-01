@@ -5,7 +5,7 @@ Thuju.code = 'thuju'
 ----------------
 -- Stats
 ----------------
-Thuju.health = 100
+Thuju.health = 160
 Thuju.damage = 18
 Thuju.range = 32
 Thuju.attackSpeed = 1.5

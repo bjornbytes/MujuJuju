@@ -126,14 +126,14 @@ function HudUnits:update()
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selected == i and 1 or 0, 18 * tickRate)
 		self.cooldownPop[i] = math.lerp(self.cooldownPop[i], 0, 5 * tickRate)
 		if p.deck[i] then
-			local y = self.bg[i]:getHeight() * (p.deck[i].cooldown / 5)
+			local y = self.bg[i]:getHeight() * (p.deck[i].cooldown / 3)
 			self.selectQuad[i]:setViewport(0, y, self.bg[i]:getWidth(), self.bg[i]:getHeight() - y)
 		end
 	end
 end
 
 function HudUnits:draw()
-  if ctx.ending then return end
+  if ctx.ded then return end
 
   local p = ctx.players:get(ctx.id)
   if not p then return end
@@ -215,7 +215,7 @@ function HudUnits:draw()
 end
 
 function HudUnits:mousepressed(mx, my, b)
-  if ctx.ending then return end
+  if ctx.ded then return end
   if b ~= 'l' then return end
 
   local p = ctx.players:get(ctx.id)

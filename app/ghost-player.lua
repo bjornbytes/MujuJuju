@@ -7,11 +7,13 @@ function GhostPlayer:init(owner)
   self.owner = owner
 	self.x = owner.x
 	self.y = owner.y + owner.height
+  self.alpha = 0
 	self.vx = 0
 	self.vy = -600
 	self.magnetRange = 15
 	self.prevx = self.x
 	self.prevy = self.y
+  self.prevalpha = self.alpha
 	self.image = data.media.graphics.spiritMuju
 
 	self.angle = -math.pi / 2
@@ -31,6 +33,7 @@ function GhostPlayer:update()
 
 	self.prevx = self.x
 	self.prevy = self.y
+  self.prevalpha = self.alpha
 
 	local px, py = self.owner.x, self.owner.y + self.owner.height
 
@@ -97,6 +100,7 @@ function GhostPlayer:update()
 	end
 	scale = .4 + scale * .4
 	self.radius = 40 * scale
+  self.alpha = math.min(self.alpha + tickRate, 1)
 end
 
 function GhostPlayer:despawn()
@@ -107,6 +111,7 @@ end
 function GhostPlayer:draw()
 	local g = love.graphics
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  local alpha = math.lerp(self.prevalpha, self.alpha, tickDelta / tickRate)
 
 	local scale = math.min(self.owner.deathTimer, 2) / 2
 	local maxJuju = 7
@@ -115,13 +120,13 @@ function GhostPlayer:draw()
 	end
 	scale = .4 + scale * .4
 	local alphaScale = math.min(self.owner.deathTimer * 6 / maxJuju, 1)
-	g.setColor(255, 255, 255, 30 * alphaScale)
+	g.setColor(255, 255, 255, 30 * alpha * alphaScale)
 	g.draw(self.image, x, y, self.angle, 1 * scale, 1 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
-	g.setColor(255, 255, 255, 75 * alphaScale)
+	g.setColor(255, 255, 255, 75 * alpha * alphaScale)
 	g.draw(self.image, x, y, self.angle, .75 * scale, .75 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
-	g.setColor(255, 255, 255, 200 * alphaScale)
+	g.setColor(255, 255, 255, 200 * alpha * alphaScale)
 	g.draw(self.image, x, y, self.angle, .6 * scale, .6 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
 
-	g.setColor(255, 255, 255, 10)
+	g.setColor(255, 255, 255, 15)
 	g.circle('fill', self.owner.x, self.owner.y + self.owner.height, self.maxDis)
 end
