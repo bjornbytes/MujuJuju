@@ -65,9 +65,9 @@ function Juju:update()
 		local ghost = p.ghost
 
     local distance, direction = math.vector(self.x, self.y, ghost.x, ghost.y)
-    local threshold = self.amount + 100
+    local threshold = self.amount + 90
     local factor = math.clamp((threshold - distance) / threshold, 0, 1)
-    local speed = threshold * (factor ^ .25) * tickRate * 2
+    local speed = threshold * (factor ^ .1) * tickRate * 4
     self.x = self.x + math.dx(speed, direction)
     self.y = self.y + math.dy(speed, direction)
 

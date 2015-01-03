@@ -31,6 +31,7 @@ function Player:init()
 	self.prevy = self.y
 
 	self.selected = 1
+  self.maxPopulation = 3
 	self.recentSelect = 0
 	self.invincible = 0
 
@@ -169,8 +170,9 @@ end
 function Player:summon()
 	local minion = self.deck[self.selected].code
 	local cooldown = self.deck[self.selected].cooldown
+  local population = self:getPopulation()
 	local cost = 12
-	if cooldown == 0 and self:spend(cost) then
+	if cooldown == 0 and population < self.maxPopulation and self:spend(cost) then
 		ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
 		self.deck[self.selected].cooldown = 3
 
@@ -252,14 +254,14 @@ function Player:initDeck()
       runes = {},
       skin = {}
     },
-    { code = 'thuju',
+    --[[{ code = 'thuju',
       runes = {},
       skin = {}
     },
     { code = 'kuju',
       runes = {},
       skin = {}
-    }
+    }]]
   }
 
   self.deck = {}
@@ -290,6 +292,10 @@ end
 
 function Player:contains(x, y)
   math.inside(x, y, self.x - self.width / 2, self.y, self.width, self.height)
+end
+
+function Player:getPopulation()
+  return table.count(ctx.units:filter(function(u) return u.player == self end))
 end
 
 function Player:hasUnitAbility(unit, ability)

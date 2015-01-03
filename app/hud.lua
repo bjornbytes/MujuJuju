@@ -53,6 +53,8 @@ function Hud:init()
   self.health = HudHealth()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
+  self.shrujuPatch1 = HudShrujuPatch(ctx.sp1)
+  self.shrujuPatch2 = HudShrujuPatch(ctx.sp2)
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end
@@ -68,6 +70,9 @@ function Hud:update()
 
   self.upgrades:update()
   self.units:update()
+
+  self.shrujuPatch1:update()
+  self.shrujuPatch2:update()
 
 	-- Update Timer
 	self:score()
@@ -207,7 +212,13 @@ function Hud:gui()
 		g.setColor(255, 255, 255)
 		g.print(str, w - 25 - g.getFont():getWidth(str), 25)
 
+    local pop = p:getPopulation()
+    g.print(pop .. ' / ' .. p.maxPopulation, w - 25 - g.getFont():getWidth(str), 50)
+
     self.health:draw()
+
+    self.shrujuPatch1:draw()
+    self.shrujuPatch2:draw()
 
 		-- Protect message
 		if self.protectAlpha > .1 then
@@ -368,6 +379,8 @@ function Hud:gui()
 end
 
 function Hud:keypressed(key)
+  self.shrujuPatch1:keypressed(key)
+  self.shrujuPatch2:keypressed(key)
   do return self.upgrades:keypressed(key) end
 
 	if (key == 'tab' or key == 'e') and math.abs(p.x - ctx.shrine.x) < p.width and not ctx.ded then
@@ -424,6 +437,8 @@ function Hud:gamepadpressed(gamepad, button)
 end
 
 function Hud:mousepressed(x, y, b)
+  self.shrujuPatch1:mousepressed(x, y, b)
+  self.shrujuPatch2:mousepressed(x, y, b)
 	if not self.upgrading or ctx.ded then return end
 	if math.inside(x, y, 670, 502, 48, 48) then
 		self.upgrading = false

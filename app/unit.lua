@@ -287,8 +287,8 @@ function Unit:die()
   self:abilityCall('deactivate')
 
   if not self.player then
-    local amount = love.math.random(14 + (ctx.units.level ^ .85) * .75, 20 + (ctx.units.level ^ .85))
-    local jujus = love.math.random(2, 5)
+    local amount = love.math.random(12 + (ctx.units.level ^ .85) * .75, 20 + (ctx.units.level ^ .85))
+    local jujus = 1
     for i = 1, jujus do
       ctx.jujus:add({
         x = self.x,

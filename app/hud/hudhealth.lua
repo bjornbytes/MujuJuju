@@ -51,7 +51,6 @@ function HudHealth:draw()
 
   ctx.players:each(function(player)
     local x, y, hard, soft = player:getHealthbar()
-
     local color = (p and player.team == p.team) and green or red
     bar(x, y - 20, hard, soft, color, 80, 3)
   end)
@@ -72,4 +71,14 @@ function HudHealth:draw()
     local x, y, hard, soft = unit:getHealthbar()
     bar(x, y - 30 - 5 * t[location], hard, soft, color, 50, 3)
   end)
+
+  if ctx.sp1 and ctx.sp1.timer > 0 then
+    local x, y = ctx.sp1.x, ctx.sp1.y
+    bar(x, y - ctx.sp1.height - 20, ctx.sp1.timer / Shrujus[ctx.sp1.growing].time, nil, orange, 120, 10)
+  end
+
+  if ctx.sp2 and ctx.sp2.timer > 0 then
+    local x, y = ctx.sp2.x, ctx.sp2.y
+    bar(x, y - ctx.sp2.height - 20, ctx.sp2.timer / Shrujus[ctx.sp2.growing].time, nil, orange, 120, 10)
+  end
 end

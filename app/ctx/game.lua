@@ -11,6 +11,9 @@ function Game:load()
   self.map = Map()
   self.players = Players()
   ctx.players:add(1)
+
+  self.shrujuTimer = love.math.random(30, 60)
+
   self.hud = Hud()
   self.upgrades = Upgrades()
   self.shrines = Manager()
@@ -46,6 +49,20 @@ function Game:update()
 	self.hud:update()
 	self.effects:update()
 	self.particles:update()
+  self.shrujuTimer = timer.rot(self.shrujuTimer, function()
+    if not self.sp1 then
+      self.sp1 = ShrujuPatch()
+      self.sp1:activate(1)
+      self.hud.shrujuPatch1.patch = self.sp1
+      return love.math.random(120, 180)
+    else
+      self.sp2 = ShrujuPatch()
+      self.sp2:activate(2)
+      self.hud.shrujuPatch2.patch = self.sp2
+    end
+  end)
+  if self.sp1 then self.sp1:update() end
+  if self.sp2 then self.sp2:update() end
 end
 
 function Game:unload()
@@ -81,7 +98,7 @@ function Game:textinput(char)
 end
 
 function Game:mousepressed(...)
-	if self.hud.upgrading or self.paused or self.ded then return self.hud:mousepressed(...) end
+	if true or self.hud.upgrading or self.paused or self.ded then return self.hud:mousepressed(...) end
 end
 
 function Game:mousereleased(...)
