@@ -49,6 +49,7 @@ function Hud:init()
 	self.pauseScreen = data.media.graphics.pauseMenu
 	self.protectAlpha = 3
   self.u, self.v = love.graphics.getDimensions()
+  self.tooltip = Tooltip()
   self.health = HudHealth()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
@@ -206,39 +207,6 @@ function Hud:gui()
 		g.setColor(255, 255, 255)
 		g.print(str, w - 25 - g.getFont():getWidth(str), 25)
 
-		-- Minion indicator
-		local yy = 135
-		for i = 1, #p.deck do
-			local bg = self.selectBg[i]
-			local scale = .75 + (.15 * self.selectFactor[i]) + (.1 * self.selectExtra[i])
-			local xx = 48 - 10 * (1 - self.selectFactor[i])
-			local f, cost = g.getFont(), tostring(12)
-			local tx, ty = xx - f:getWidth(cost) / 2 - (bg:getWidth() * .75 / 2) + 4, yy - f:getHeight() / 2 - (bg:getHeight() * .75 / 2) + 4
-			local alpha = .65 + self.selectFactor[i] * .35
-
-			-- Backdrop
-			g.setColor(255, 255, 255, 80 * alpha)
-			g.draw(bg, xx, yy, 0, scale, scale, bg:getWidth() / 2, bg:getHeight() / 2)
-
-			-- Cooldown
-			local _, qy = self.selectQuad[i]:getViewport()
-			g.setColor(255, 255, 255, (150 + (100 * (p.deck[i].cooldown == 0 and 1 or 0))) * alpha)
-			g.draw(bg, self.selectQuad[i], xx, yy + qy * scale, 0, scale, scale, bg:getWidth() / 2, bg:getHeight() / 2)
-
-			-- Juice
-			g.setBlendMode('additive')
-			g.setColor(255, 255, 255, 60 * self.selectExtra[i])
-			g.draw(bg, xx, yy, 0, scale + .2 * self.selectExtra[i], scale + .2 * self.selectExtra[i], bg:getWidth() / 2, bg:getHeight() / 2)
-			g.setBlendMode('alpha')
-
-			-- Cost
-			g.setColor(0, 0, 0, 200 + 55 * self.selectFactor[i])
-			g.print(cost, tx + 1, ty + 1)
-			g.setColor(255, 255, 255, 200 + 55 * self.selectFactor[i])
-			g.print(cost, tx, ty)
-			yy = yy + self.selectBg[i]:getHeight() * 1
-		end
-
     self.health:draw()
 
 		-- Protect message
@@ -388,6 +356,8 @@ function Hud:gui()
 		end
 	end
 
+  self.tooltip:draw()
+
 	if self.upgrading or ctx.paused or ctx.ded then
 		if p.gamepad then
 			local xx, yy = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
@@ -398,7 +368,7 @@ function Hud:gui()
 end
 
 function Hud:keypressed(key)
-  do return self.upgrades:keypressed() end
+  do return self.upgrades:keypressed(key) end
 
 	if (key == 'tab' or key == 'e') and math.abs(p.x - ctx.shrine.x) < p.width and not ctx.ded then
 		self.upgrading = not self.upgrading

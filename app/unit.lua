@@ -63,8 +63,6 @@ function Unit:activate()
 
     scale('health')
     scale('damage')
-
-    print(self.health)
   end
 
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
@@ -83,7 +81,7 @@ function Unit:activate()
   self.backCanvas = g.newCanvas(200, 200)
   self.canvas = g.newCanvas(200, 200)
 
-  local r = love.math.random(0, 40)
+  local r = love.math.random(0, 20)
   self.y = self.y + r
   self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
 
@@ -289,13 +287,17 @@ function Unit:die()
   self:abilityCall('deactivate')
 
   if not self.player then
-    ctx.jujus:add({
-      x = self.x,
-      y = self.y,
-      amount = love.math.random(14 + (ctx.units.level ^ .85) * .75, 20 + (ctx.units.level ^ .85)),
-      vx = love.math.random(-35, 35),
-      vy = love.math.random(-300, -100)
-    })
+    local amount = love.math.random(14 + (ctx.units.level ^ .85) * .75, 20 + (ctx.units.level ^ .85))
+    local jujus = love.math.random(2, 5)
+    for i = 1, jujus do
+      ctx.jujus:add({
+        x = self.x,
+        y = self.y,
+        amount = amount / jujus,
+        vx = love.math.random(-50, 50),
+        vy = love.math.random(-300, -100)
+      })
+    end
   end
 
   ctx.units:remove(self)

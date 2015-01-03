@@ -10,6 +10,10 @@ timer.rot = function(v, fn)
 	return v
 end
 
+function isa(instance, class)
+  return getmetatable(instance).__index == class
+end
+
 function math.insideCircle(x, y, cx, cy, r)
   return math.distance(x, y, cx, cy) < r
 end

@@ -64,6 +64,13 @@ function Juju:update()
 	if p.deathTimer > 0 then
 		local ghost = p.ghost
 
+    local distance, direction = math.vector(self.x, self.y, ghost.x, ghost.y)
+    local threshold = self.amount + 100
+    local factor = math.clamp((threshold - distance) / threshold, 0, 1)
+    local speed = threshold * (factor ^ .25) * tickRate * 2
+    self.x = self.x + math.dx(speed, direction)
+    self.y = self.y + math.dy(speed, direction)
+
 		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
 			ctx.sound:play({sound = 'juju1'})
 			self.dead = true

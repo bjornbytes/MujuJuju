@@ -1,9 +1,6 @@
 [submodule "lib/deps/slam"]
 	path = lib/deps/slam
 	url = https://github.com/vrld/slam
-[submodule "lib/deps/lume"]
-	path = lib/deps/lume
-	url = https://github.com/rxi/lume
 [submodule "lib/deps/spine"]
 	path = lib/deps/spine
 	url = https://github.com/bjornswenson/spine-runtimes
