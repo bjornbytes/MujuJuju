@@ -130,16 +130,10 @@ function Unit:draw()
     self.canvas:clear(0, 255, 0, 0)
     self.backCanvas:clear(0, 255, 0, 0)
     g.setColor(0, 255, 0)
-    self.canvas:clear(0, 0, 0, 0)
-    self.backCanvas:clear(0, 0, 0, 0)
-    g.setColor(0, 0, 0)
   else
     self.canvas:clear(255, 0, 0, 0)
     self.backCanvas:clear(255, 0, 0, 0)
     g.setColor(255, 0, 0)
-    self.canvas:clear(0, 0, 0, 0)
-    self.backCanvas:clear(0, 0, 0, 0)
-    g.setColor(0, 0, 0)
   end
 
   local shader = data.media.shaders.colorize
@@ -149,7 +143,7 @@ function Unit:draw()
     g.setShader()
   end)
 
-  local selected = true
+  local selected = false
   data.media.shaders.horizontalBlur:send('amount', selected and .004 or .002)
   data.media.shaders.verticalBlur:send('amount', selected and .004 or .002)
   g.setColor(255, 255, 255)
