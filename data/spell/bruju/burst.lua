@@ -3,7 +3,7 @@ Burst.code = 'burst'
 
 local g = love.graphics
 
-Burst.maxHealth = .5
+Burst.depth = -10
 
 function Burst:activate()
   local unit, player = self:getUnit(), self:getPlayer()
@@ -11,21 +11,11 @@ function Burst:activate()
   self.x = unit.x
   self.y = unit.y
 
-  if ctx.tag == 'server' then
-    assert(self.damage and self.heal)
+  self.team = unit.team
 
-    self.team = unit.team
-
-    table.each(ctx.target:inRange(self, self.range, 'enemy', 'unit', 'player'), function(target)
-      target:hurt(self.damage, unit)
-    end)
-
-    table.each(ctx.target:inRange(self, self.range, 'ally', 'unit', 'player'), function(target)
-      target:heal(target.maxHealth * self.heal, unit)
-    end)
-
-    return ctx.spells:remove(self)
-  end
+  table.each(ctx.target:inRange(self, self.range, 'enemy', 'unit', 'player'), function(target)
+    target:hurt(self.damage, unit)
+  end)
 
   self.scale = 0
   self.prevscale = self.scale
@@ -42,11 +32,13 @@ function Burst:deactivate()
 end
 
 function Burst:update()
-  if ctx.tag == 'client' then
-    self.health = timer.rot(self.health, function() ctx.spells:remove(self) end)
-    self.prevscale = self.scale
-    self.scale = math.lerp(self.scale, 1, 20 * tickRate)
-  end
+  self.health = timer.rot(self.health, function() ctx.spells:remove(self) end)
+  self.prevscale = self.scale
+  self.scale = math.lerp(self.scale, 1, math.min(20 * tickRate, 1))
+
+  table.each(ctx.target:inRange(self, self.range, 'ally', 'unit'), function(target)
+    target:heal(self.heal * tickRate)
+  end)
 end
 
 function Burst:draw()

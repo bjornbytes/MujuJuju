@@ -126,9 +126,7 @@ end
 
 function Menu:keypressed(key)
 	if key == 'return' and table.has(self.user.biomes, config.biomeOrder[self.selectedBiome]) then
-    self.menuSounds:stop()
-    Context:remove(ctx)
-    Context:add(Game, self.user, config.biomeOrder[self.selectedBiome])
+    self:startGame()
   elseif key == 'left' then
     self.selectedBiome = self.selectedBiome - 1
     if self.selectedBiome <= 0 then self.selectedBiome = #config.biomeOrder end
@@ -157,9 +155,25 @@ function Menu:mousepressed(mx, my, b)
         end
       end
     end
+  else
+    if b == 'l' then
+      local biomes = self.geometry.biomes
+      for i = 1, #biomes do
+        local x, y, w, h = unpack(biomes[i])
+        if math.inside(mx, my, x, y, w, h) then
+          self:startGame()
+        end
+      end
+    end
   end
 end
 
 function Menu:mousereleased(x, y, b)
+  --
+end
 
+function Menu:startGame()
+  self.menuSounds:stop()
+  Context:remove(ctx)
+  Context:add(Game, self.user, config.biomeOrder[self.selectedBiome])
 end

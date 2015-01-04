@@ -50,21 +50,26 @@ end
 
 function HudUnits:update()
   local p = ctx.players:get(ctx.id)
-
-  ctx.hud.tooltip = nil
   local mx, my = love.mouse.getPosition()
+
+  local hover = false
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
     for j = 1, #upgrades[i] do
       local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
       local x, y, r = unpack(upgrades[i][j])
       if math.insideCircle(mx, my, x, y, r) then
-        local str = ctx.upgrades.makeTooltip(who, what)
-        ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
-				ctx.hud.tooltipRaw = str:gsub('{%a+}', '')
+        if not ctx.hud.tooltip then
+          local str = ctx.upgrades.makeTooltip(who, what)
+          ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
+          ctx.hud.tooltipRaw = str:gsub('{%a+}', '')
+        end
+        hover = true
       end
     end
   end
+
+  if not hover then ctx.hud.tooltip = nil end
 
 	for i = 1, #self.selectFactor do
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selected == i and 1 or 0, 18 * tickRate)
@@ -154,8 +159,8 @@ function HudUnits:mousereleased(mx, my, b)
         local nextLevel = upgrade.level + 1
         local cost = upgrade.costs[nextLevel]
         if ctx.upgrades.canBuy(who, what) and p:spend(cost) then
-          upgrade.level = nextLevel
-          ctx.sound:play({sound = 'menuClick'})
+          ctx.upgrades.unlock(who, what)
+          ctx.hud.tooltip = nil
         end
       end
     end

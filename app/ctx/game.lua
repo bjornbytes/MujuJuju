@@ -3,7 +3,7 @@ Game = class()
 function Game:load(user, biome)
   self.id = 1
   self.user = user
-  self.biome = biome and 'volcano'
+  self.biome = biome
 
 	self.paused = false
 	self.ded = false
@@ -75,6 +75,7 @@ function Game:update()
 	self.units:update()
 	self.shrines:update()
 	self.jujus:update()
+  self.spells:update()
 	self.view:update()
 	self.hud:update()
 	self.effects:update()

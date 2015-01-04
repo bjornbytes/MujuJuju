@@ -65,7 +65,7 @@ Bruju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        table.insert(unit.abilities, 'burst')
+        unit:addAbility('burst')
       end
     end
   },
@@ -81,7 +81,7 @@ Bruju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        table.insert(unit.abilities, 'siphon')
+        unit:addAbility('siphon')
       end
     end
   },
@@ -94,12 +94,7 @@ Bruju.upgrades = {
       [1] = '10 hp/s for 3 seconds.',
       [2] = '20 hp/s for 4 seconds.',
       [3] = '30 hp/s for 5 seconds.'
-    },
-    apply = function(self, unit)
-      if self.level > 0 then
-        table.insert(unit.abilities, 'sanctuary')
-      end
-    end
+    }
   }
 }
 

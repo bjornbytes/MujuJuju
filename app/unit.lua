@@ -20,8 +20,10 @@ function Unit:activate()
     if data.data.name == 'attack' then
       if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
         self.buffs:preattack(self.target, self.damage)
+        self:abilityCall('preattack', self.target, self.damage)
         local amount = self.target:hurt(self.damage, self, 'attack')
         self.buffs:postattack(self.target, amount)
+        self:abilityCall('postattack', self.target, amount)
         if not self.target or self.target.dying then
           self.target = nil
           self.animation:set('idle')
@@ -330,4 +332,8 @@ end
 
 function Unit:hasAbility(code)
   return next(table.filter(self.abilities, function(ability) return ability.code == code end))
+end
+
+function Unit:upgradeLevel(code)
+  return self.class.upgrades[code] and self.class.upgrades[code].level or 0
 end
