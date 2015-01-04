@@ -43,6 +43,13 @@ function UnitBuffs:postupdate()
     attackSpeed = attackSpeed * (1 - frenzy.frenzy)
   end)
 
+  -- Apply Attack Speed Decreases
+  local exhausts = self:buffsWithTag('exhaust')
+  local attackSpeed = self.unit.class.attackSpeed
+  table.each(exhausts, function(exhaust)
+    attackSpeed = attackSpeed + attackSpeed * (1 - exhaust.exhaust)
+  end)
+
   -- Apply DoTs
   local dots = self:buffsWithTag('dot')
   table.each(dots, function(dot)
@@ -148,7 +155,13 @@ function UnitBuffs:posthurt(amount, source, kind)
 end
 
 function UnitBuffs:preattack(target, damage)
-  table.with(self.list, 'preattack', target, damage)
+  table.each(self.list, function(buff)
+    if buff.preattack then
+      damage = buff:preattack(target, damage) or damage
+    end
+  end)
+
+  return damage
 end
 
 function UnitBuffs:postattack(target, damage)

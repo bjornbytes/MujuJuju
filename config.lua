@@ -1,5 +1,35 @@
 return {
   minions = {'bruju', 'thuju', 'kuju'},
+  elites = {
+    baseModifier = .005,
+    levelModifier = .0015,
+    scale = 1.5,
+    minimumLevel = 5,
+    buffs = {
+      sinister = {
+        damageModifier = 10
+      },
+      chilling = {
+        exhaust = .3,
+        slow = .3
+      },
+      parasitic = {
+        lifesteal = .5
+      },
+      spined = {
+        reflect = 1 
+      },
+      venomous = {
+        dotModifier = .75,
+        dotTimer = 3
+      },
+      hulking = {
+        healthModifier = 3,
+        slow = .5
+      },
+      pure = {}
+    }
+  },
   biomeOrder = {'forest', 'tundra', 'volcano'},
   biomes = {
     forest = {
@@ -86,7 +116,6 @@ return {
         maxTimer = 130
       }
     }
-    
   },
   defaultUser = {
     deck = {},

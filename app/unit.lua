@@ -14,15 +14,19 @@ Unit.depth = -3
 -- Core
 ----------------
 function Unit:activate()
-  self.animation = data.animation[self.class.code]()
+  self.animation = data.animation[self.class.code]({
+    scale = (self.elite and config.elites.scale) or nil
+  })
+
   self.animation.flipped = self.player and not self.player.animation.flipped
 
   self.animation:on('event', function(data)
     if data.data.name == 'attack' then
       if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
-        self:abilityCall('preattack', self.target, self.damage)
-        self.buffs:preattack(self.target, self.damage)
-        local amount = self.target:hurt(self.damage, self, 'attack')
+        local amount = self.damage
+        amount = self:abilityCall('preattack', self.target, amount) or amount
+        amount = self.buffs:preattack(self.target, amount) or amount
+        amount = self.target:hurt(amount, self, 'attack')
         self:abilityCall('postattack', self.target, amount)
         self.buffs:postattack(self.target, amount)
         if not self.target or self.target.dying then

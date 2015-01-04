@@ -64,11 +64,24 @@ function HudHealth:draw()
 
   local t = {}
   ctx.units:each(function(unit)
+    local x, y, hard, soft = unit:getHealthbar()
+    local eliteBuffs = unit.buffs:buffsWithTag('elite')
     local location = math.floor(unit.x)
     stack(t, location, unit.width * 2, 1)
-    local color = green
+
+    if next(eliteBuffs) then
+      local string = ''
+      table.each(eliteBuffs, function(buff)
+        string = string .. buff.name .. ' '
+      end)
+      g.setFont('pixel', 8)
+      g.setColor(0, 0, 0)
+      g.printCenter(string, x + 1, (y - 30 - 5 * t[location]) - 12 + 1)
+      g.setColor(255, 255, 255)
+      g.printCenter(string, x, (y - 30 - 5 * t[location]) - 12)
+    end
+
     local color = (p and unit.team == p.team) and green or red
-    local x, y, hard, soft = unit:getHealthbar()
     bar(x, y - 30 - 5 * t[location], hard, soft, color, 50, 3)
   end)
 
