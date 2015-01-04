@@ -48,7 +48,7 @@ Upgrades.clear = function()
     upgrade.level = upgrade.level + 1
     table.each(ctx.units.objects, function(unit)
       if unit.class.code == who then
-        upgrade.apply(upgrade, unit)
+        f.exe(upgrade.apply, upgrade, unit)
       end
     end)
     ctx.sound:play({sound = 'menuClick'})
