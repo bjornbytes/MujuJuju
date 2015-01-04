@@ -14,19 +14,19 @@ Duju.states.spawn = {
 Duju.states.idle = {
   priority = 1,
   loop = true,
-  speed = 1
+  speed = .31
 }
 
 Duju.states.walk = {
   priority = 1,
   loop = true,
-  speed = .5
+  speed = 1
 }
 
 Duju.states.attack = {
   priority = 1,
   loop = true,
-  speed = .4
+  speed = .5
 }
 
 Duju.states.headbutt = {

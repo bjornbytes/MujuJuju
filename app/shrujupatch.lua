@@ -28,11 +28,12 @@ ShrujuEffects = {
     pickup = function(self)
       local p = ctx.players:get(ctx.id)
       self.amount = 1.9 + (.2 * self.strength)
-      p.jujuRate = p.jujuRate * self.amount
+      p.jujuRate = p.jujuRate / self.amount
     end,
 
     drop = function(self)
-      p.jujuRate = p.jujuRate / self.amount
+      local p = ctx.players:get(ctx.id)
+      p.jujuRate = p.jujuRate * self.amount
     end
   }
 }
@@ -41,13 +42,14 @@ ShrujuPatch = class()
 
 ShrujuPatch.width = 40
 ShrujuPatch.height = 40
-ShrujuPatch.depth = -1
+ShrujuPatch.depth = -9
 
 function ShrujuPatch:activate()
 	self.y = ctx.map.height - ctx.map.groundHeight
   self.types = {'population', 'juju'}
   self.timer = 0
   self.slot = nil
+  self.animation = nil
   ctx.event:emit('view.register', {object = self})
 end
 
@@ -70,6 +72,8 @@ function ShrujuPatch:draw()
     g.rectangle('line', self.x - self.width / 2, self.y - self.height, self.width, self.height)
     g.setLineWidth(1)
   end
+
+  if self.animation then self.animation:draw(self.x, self.y) end
 end
 
 function ShrujuPatch:grow(what)
@@ -82,6 +86,7 @@ function ShrujuPatch:take()
   if not self:playerNearby() or not self.slot then return end
   local slot = self.slot
   self.slot = nil
+  self.animation = nil
   return slot
 end
 
@@ -97,12 +102,19 @@ function ShrujuPatch:makeShruju()
     -- Randomly give it a random magical effect
     if love.math.random() < 1 then
       local effects = table.keys(ShrujuEffects)
-      local effect = setmetatable({}, {__index = effects[love.math.random(1, #effects)]})
+      local effect = setmetatable({}, {__index = ShrujuEffects[effects[love.math.random(1, #effects)]]})
       effect.strength = love.math.random()
       shruju.effect = effect
     end
 
     self.slot = shruju
     self.growing = nil
+
+    self.animation = data.animation.shruju1()
+    self.animation:on('complete', function(data)
+      if data.state.name == 'spawn' then
+        self.animation:set('idle')
+      end
+    end)
   end
 end
