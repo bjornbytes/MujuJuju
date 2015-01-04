@@ -2,8 +2,10 @@ local Siphon = extend(Ability)
 Siphon.code = 'siphon'
 
 function Siphon:postattack(target, amount)
-  local lifesteal = amount * (.1 * self.unit:upgradeLevel('siphon'))
-  self.unit:heal(lifesteal)
+  if amount then
+    local lifesteal = amount * (.1 * self.unit:upgradeLevel('siphon'))
+    self.unit:heal(lifesteal)
+  end
 end
 
 return Siphon
