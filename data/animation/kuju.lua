@@ -4,7 +4,7 @@ Kuju.code = 'kuju'
 Kuju.scale = .35
 Kuju.offsety = 64
 Kuju.backwards = true
-Kuju.default = 'idle'
+Kuju.default = 'spawn'
 Kuju.states = {}
 
 Kuju.states.spawn = {

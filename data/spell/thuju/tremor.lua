@@ -11,22 +11,13 @@ function Tremor:activate()
   self.timer = self.maxHealth
   self.direction = self:getAbility():getUnitDirection()
 
-  self.x = unit.x + (unit.width / 2 + self.width) * self.direction
+  self.x = unit.x + (unit.width / 2 + self.width / 2) * self.direction
   self.team = unit.team
 
   table.each(ctx.target:inRange(self, self.width / 2, 'enemy', 'unit'), function(target)
-    target:hurt(ability.damage, unit)
+    target:hurt(self.damage, unit)
     target.buffs:add('tremorstun', {stun = self.stun, timer = self.stun})
-    if self.silence then
-      target.buffs:add('tremorsilence', {silence = self.silence, timer = self.silence})
-    end
   end)
-
-  if self.structureDamageMultiplier then
-    table.each(ctx.target:inRange(self, self.width / 2, 'enemy', 'shrine'), function(target)
-      target:hurt(ability.damage * self.structureDamageMultiplier, unit)
-    end)
-  end
 
   self.x = unit.x
 

@@ -15,6 +15,7 @@ Unit.depth = -3
 ----------------
 function Unit:activate()
   self.animation = data.animation[self.class.code]()
+  self.animation.flipped = self.player and not self.player.animation.flipped
 
   self.animation:on('event', function(data)
     if data.data.name == 'attack' then
@@ -45,6 +46,7 @@ function Unit:activate()
     end
 
     if not data.state.loop then self.animation:set('idle', {force = true}) end
+    self.attackStart = tick
   end)
 
   self.buffs = UnitBuffs(self)
@@ -70,7 +72,7 @@ function Unit:activate()
   self.dying = false
   self.casting = false
   self.channeling = false
-  self.spawning = false
+  self.spawning = true
 
   table.each(self.class.upgrades, function(upgrade)
     f.exe(upgrade.apply, upgrade, self)
@@ -141,7 +143,7 @@ function Unit:draw()
     g.setShader()
   end)
 
-  local selected = false
+  local selected = true
   data.media.shaders.horizontalBlur:send('amount', selected and .004 or .002)
   data.media.shaders.verticalBlur:send('amount', selected and .004 or .002)
   g.setColor(255, 255, 255)
@@ -205,7 +207,7 @@ end
 ----------------
 function Unit:changeTarget(target)
   local taunt = self.buffs:taunted()
-  self.target = taunt and taunt.target or target
+  self.target = taunt or target
 end
 
 function Unit:inRange(target)
@@ -316,9 +318,10 @@ end
 ----------------
 Unit.ai = {}
 function Unit.ai.useAbilities(self)
-  print(#self.abilities)
   table.each(self.abilities, function(ability)
-    f.exe(ability.use, ability)
+    if ability:canUse() and love.math.random() < .5 then
+      f.exe(ability.use, ability)
+    end
   end)
 end
 

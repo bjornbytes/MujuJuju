@@ -2,58 +2,27 @@ local Tremor = extend(Ability)
 Tremor.code = 'tremor'
 
 ----------------
--- Meta
-----------------
-Tremor.name = 'Tremor'
-Tremor.description = 'Thuju slams the ground in the direction he is facing, causing the tectonic plates of the Earth to erupt in front of him.  Any enemies unfortunate enough to be caught in the area of impact take $damage damage and are stunned for $stun second$s.'
-
-
-----------------
--- Data
-----------------
-Tremor.cooldown = 5
-Tremor.damage = 40
-Tremor.stun = .75
-Tremor.width = 125
-
-
-----------------
 -- Behavior
 ----------------
-function Tremor:use()
-  local width, stun, silence, structureDamageMultiplier = self.width, self.stun, nil, nil
+function Tremor:activate()
+  self.unit.animation:on('event', function(data)
+    if data.data.name == 'tremor' then
+      local level = self.unit:upgradeLevel('tremor')
+      local damages = {[0] = 0, 30, 50, 80}
+      local damage = damages[level]
+      local stun = .5 * level
+      local widths = {[0] = 0, 100, 150, 175}
+      local width = widths[level]
 
-  if self:hasUpgrade('concussion') then
-    stun = self.upgrades.concussion.stun
-    silence = self.upgrades.concussion.silence
-  end
-
-  if self:hasUpgrade('fissure') then
-    width = width * self.upgrades.fissure.widthMultiplier
-    structureDamageMultiplier = self.upgrades.fissure.structureDamageMultiplier
-  end
-
-  self:createSpell({width = width, stun = stun, silence = silence, structureDamageMultiplier = structureDamageMultiplier})
+      self:createSpell({damage = damage, width = width, stun = stun})
+    end
+  end)
 end
 
-
-----------------
--- Upgrades
-----------------
-local Concussion = {}
-Concussion.code = 'concussion'
-Concussion.name = 'Concussion'
-Concussion.description = 'Tremor now gives enemies a concussion, increasing the stun to $stun second$s and applying a $silence second silence.'
-Concussion.stun = 1.5
-Concussion.silence = 4
-
-local Fissure = {}
-Fissure.code = 'fissure'
-Fissure.name = 'Fissure'
-Fissure.description = 'Thuju slams with increased force, creating a fissure in the ground.  The width of Tremor is %widthMultiplier of the normal width.  Additionally, tremor deals %structureDamageMultiplier damage to structures.'
-Fissure.widthMultiplier = 2
-Fissure.structureDamageMultiplier = 2
-
-Tremor.upgrades = {Concussion, Fissure}
+function Tremor:use()
+  self.unit.animation:set('tremor')
+  self.unit.casting = true
+  self.timer = 12
+end
 
 return Tremor

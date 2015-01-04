@@ -53,7 +53,13 @@ function ShrujuPatch:activate()
   self.types = {'population', 'juju'}
   self.timer = 0
   self.slot = nil
-  self.animation = nil
+
+  self.animation = data.animation.shrujupatch()
+  self.animation:on('complete', function(data)
+    if data.state.name == 'spawn' then self.animation:set('idle') end
+  end)
+
+  self.shrujuAnimation = nil
   ctx.event:emit('view.register', {object = self})
 end
 
@@ -68,16 +74,17 @@ function ShrujuPatch:update()
 end
 
 function ShrujuPatch:draw()
-  g.setColor(0, 0, 255, 200)
+  self.animation:draw(self.x, self.y)
+  --[[g.setColor(0, 0, 255, 200)
   g.rectangle('fill', self.x - self.width / 2, self.y - self.height, self.width, self.height)
   if self.slot then
     g.setLineWidth(2)
     g.setColor(0, 255, 0)
     g.rectangle('line', self.x - self.width / 2, self.y - self.height, self.width, self.height)
     g.setLineWidth(1)
-  end
+  end]]
 
-  if self.animation then self.animation:draw(self.x, self.y) end
+  if self.shrujuAnimation then self.shrujuAnimation:draw(self.x, self.y) end
 end
 
 function ShrujuPatch:grow(what)
@@ -90,7 +97,7 @@ function ShrujuPatch:take()
   if not self:playerNearby() or not self.slot then return end
   local slot = self.slot
   self.slot = nil
-  self.animation = nil
+  self.shrujuAnimation = nil
   return slot
 end
 
@@ -114,10 +121,10 @@ function ShrujuPatch:makeShruju()
     self.slot = shruju
     self.growing = nil
 
-    self.animation = data.animation.shruju1()
-    self.animation:on('complete', function(data)
+    self.shrujuAnimation = data.animation.shruju1()
+    self.shrujuAnimation:on('complete', function(data)
       if data.state.name == 'spawn' then
-        self.animation:set('idle')
+        self.shrujuAnimation:set('idle')
       end
     end)
   end

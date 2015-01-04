@@ -3,12 +3,12 @@ Thuju.code = 'thuju'
 
 Thuju.scale = .35
 Thuju.offsety = 64
-Thuju.default = 'idle'
+Thuju.default = 'spawn'
 Thuju.states = {}
 
 Thuju.states.spawn = {
   priority = 5,
-  speed = .21
+  speed = .75
 }
 
 Thuju.states.idle = {
