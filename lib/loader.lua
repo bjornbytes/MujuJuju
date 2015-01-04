@@ -5,14 +5,26 @@ data.load = function()
 	local function lookup(ext, fn)
 		local function halp(s, k)
 			local base = s._path .. '/' .. k
-			if love.filesystem.exists(base .. ext) then
-				s[k] = fn(base .. ext)
-			elseif love.filesystem.isDirectory(base) then
-				local t = {}
-				t._path = base
-				setmetatable(t, {__index = halp})
-				s[k] = t
-			end
+      local function extLoad(ext)
+        if love.filesystem.exists(base .. ext) then
+          s[k] = fn(base .. ext)
+        elseif love.filesystem.isDirectory(base) then
+          local t = {}
+          t._path = base
+          setmetatable(t, {__index = halp})
+          s[k] = t
+        else
+          return false
+        end
+
+        return true
+      end
+
+      if type(ext) == 'table' then
+        table.each(ext, function(e) return extLoad(e) end)
+      else
+        extLoad(ext)
+      end
 
 			return rawget(s, k)
 		end
@@ -21,7 +33,7 @@ data.load = function()
 	end
 
   data.media = {}
-	data.media.graphics = setmetatable({_path = 'media/graphics'}, {__index = lookup('.png', love.graphics and love.graphics.newImage or f.empty)})
+	data.media.graphics = setmetatable({_path = 'media/graphics'}, {__index = lookup({'.png', '.dds'}, love.graphics and love.graphics.newImage or f.empty)})
 	data.media.shaders = setmetatable({_path = 'media/shaders'}, {__index = lookup('.shader', love.graphics and love.graphics.newShader or f.empty)})
 	data.media.sounds = setmetatable({_path = 'media/sounds'}, {__index = lookup('.ogg', love.audio and love.audio.newSource or f.empty)})
 
