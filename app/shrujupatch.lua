@@ -10,18 +10,6 @@ Shrujus = {
       p.maxPopulation = p.maxPopulation + 1
     end
   },
-  juju = {
-    name = 'Juju',
-    description = 'On use, instantly grants you 50 juju.',
-    time = 60,
-    eat = function()
-      local p = ctx.players:get(ctx.id)
-      p.juju = p.juju + 50
-			for i = 1, 40 do
-				ctx.particles:add(JujuSex, {x = 52, y = 52})
-			end
-    end
-  },
   restoration = {
     name = 'Restoration',
     description = 'On use, heals your shrine for 10% of its maximum health.',
