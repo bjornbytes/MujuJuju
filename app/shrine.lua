@@ -17,6 +17,7 @@ function Shrine:init()
   self.hurtFactor = 0
 	self.color = {255, 255, 255}
 	self.highlight = 0
+  self.regen = 0
 
   ctx.event:emit('view.register', {object = self})
 end
@@ -31,6 +32,8 @@ function Shrine:update()
     self.color = table.interpolate(self.color, p.dead and {160, 100, 225} or {255, 255, 255}, math.min(.6 * tickRate, 1))
     self.highlight = math.lerp(self.highlight, p:atShrine() and 128 or 0, math.min(5 * tickRate, 1))
   end
+
+  self.health = math.min(self.health + math.max(self.regen, 0) * tickRate, self.maxHealth)
 end
 
 function Shrine:draw()

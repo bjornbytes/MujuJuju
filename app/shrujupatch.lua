@@ -4,7 +4,7 @@ Shrujus = {
   population = {
     name = 'Population',
     description = 'On use, increases the maximum number of minions you can have summoned at a time by 1.',
-    time = 50,
+    time = 60,
     eat = function()
       local p = ctx.players:get(ctx.id)
       p.maxPopulation = p.maxPopulation + 1
@@ -13,10 +13,10 @@ Shrujus = {
   juju = {
     name = 'Juju',
     description = 'On use, instantly grants you 50 juju.',
-    time = 50,
+    time = 60,
     eat = function()
       local p = ctx.players:get(ctx.id)
-      p.juju = p.juju + love.math.random(10, 20)
+      p.juju = p.juju + 50
 			for i = 1, 40 do
 				ctx.particles:add(JujuSex, {x = 52, y = 52})
 			end
@@ -24,20 +24,20 @@ Shrujus = {
   },
   restoration = {
     name = 'Restoration',
-    description = 'On use, heals your shrine for 20% of its maximum health.',
-    time = 50,
+    description = 'On use, heals your shrine for 10% of its maximum health.',
+    time = 60,
     eat = function()
       local p = ctx.players:get(ctx.id)
       local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
       if shrine then
-        shrine.health = math.min(shrine.health + shrine.maxHealth * .2, shrine.maxHealth)
+        shrine.health = math.min(shrine.health + shrine.maxHealth * .1, shrine.maxHealth)
       end
     end
   },
   harvest = {
     name = 'Harvest',
     description = 'Permanently causes all shruju to grow 3 seconds faster.',
-    time = 50,
+    time = 60,
     eat = function()
       ctx.shrujuPatches.harvestLevel = ctx.shrujuPatches.harvestLevel + 1
     end
@@ -45,7 +45,7 @@ Shrujus = {
   flow = {
     name = 'Flow',
     description = 'The cooldown for minion summoning is reduced by .25s.',
-    time = 50,
+    time = 60,
     eat = function()
       local p = ctx.players:get(ctx.id)
       p.flatCooldownReduction = p.flatCooldownReduction + .25
@@ -56,6 +56,7 @@ Shrujus = {
 -- Amount is always between 0 and 1 and determines how strong the magic effect is.
 ShrujuEffects = {
   wealth = {
+    name = 'Wealth',
     description = 'Doubles your passive juju income rate.',
 
     pickup = function(self)
@@ -67,6 +68,57 @@ ShrujuEffects = {
     drop = function(self)
       local p = ctx.players:get(ctx.id)
       p.jujuRate = p.jujuRate * self.amount
+    end
+  },
+  sugarrush = {
+    name = 'Sugar Rush',
+    description = 'Muju moves faster.',
+
+    pickup = function(self)
+      local p = ctx.players:get(ctx.id)
+      self.amount = 1.5 + (1 * self.strength)
+      p.walkSpeed = p.walkSpeed * self.amount
+    end,
+
+    drop = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.walkSpeed = p.walkSpeed / self.amount
+    end
+  },
+  imbue = {
+    name = 'Imbue',
+    description = 'Shrine heals health per second.',
+
+    pickup = function(self)
+      local p = ctx.players:get(ctx.id)
+      local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
+      self.amount = 15 + self.strength * 10
+      if shrine then
+        shrine.regen = shrine.regen + self.amount
+      end
+    end,
+
+    drop = function(self)
+      local p = ctx.players:get(ctx.id)
+      local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
+      if shrine then
+        shrine.regen = shrine.regen - self.amount
+      end
+    end
+  },
+  zeal = {
+    name = 'Zeal',
+    description = 'Muju moves faster in the juju realm.',
+
+    pickup = function(self)
+      local p = ctx.players:get(ctx.id)
+      self.amount = 1.75 + (.5 * self.strength)
+      p.ghostSpeedMultiplier = p.ghostSpeedMultiplier * self.amount
+    end,
+
+    drop = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.ghostSpeedMultiplier = p.ghostSpeedMultiplier / self.amount
     end
   }
 }
@@ -131,7 +183,7 @@ function ShrujuPatch:makeShruju()
     local shruju = setmetatable({}, {__index = Shrujus[self.growing]})
 
     -- Randomly give it a random magical effect
-    if love.math.random() < 1 then
+    if love.math.random() < .2 then
       local effects = table.keys(ShrujuEffects)
       local effect = setmetatable({}, {__index = ShrujuEffects[effects[love.math.random(1, #effects)]]})
       effect.strength = love.math.random()

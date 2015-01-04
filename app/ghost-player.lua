@@ -37,7 +37,7 @@ function GhostPlayer:update()
 
 	local px, py = self.owner.x, self.owner.y + self.owner.height
 
-	local speed = 140
+	local speed = 140 * self.owner.ghostSpeedMultiplier
 
 	local gx, gy = 0, 0
 	if self.owner.gamepad then

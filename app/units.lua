@@ -45,4 +45,5 @@ end
 function Units:remove(unit)
   f.exe(unit.deactivate, unit)
   self.objects[unit] = nil
+  unit = nil
 end

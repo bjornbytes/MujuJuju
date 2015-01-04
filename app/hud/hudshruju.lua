@@ -37,7 +37,7 @@ function HudShruju:update()
         local shruju = p.shrujus[i]
         local str = '{title}' .. (shruju.effect and '{purple}' or '{white}') .. shruju.name .. '{normal}\n'
         str = str .. '{whoCares}' .. shruju.description .. '{white}\n'
-        if shruju.effect then str = str .. '{purple}' .. shruju.effect.description end
+        if shruju.effect then str = str .. '{purple}' .. shruju.effect.name .. ' - ' .. shruju.effect.description end
         ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
         ctx.hud.tooltipRaw = str:gsub('{%a+}', '')
       end

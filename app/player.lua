@@ -37,6 +37,7 @@ function Player:init()
 	self.recentSelect = 0
 	self.invincible = 0
   self.flatCooldownReduction = 0
+  self.ghostSpeedMultiplier = 1
 
 	local joysticks = love.joystick.getJoysticks()
 	for _, joystick in ipairs(joysticks) do
