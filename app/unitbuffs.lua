@@ -57,7 +57,6 @@ function UnitBuffs:add(code, vars)
   if self:get(code) then return self:reapply(code, vars) end
   local buff = data.buff[code]()
   buff.unit = self.unit
-  buff.ability = ability
   self.list[buff] = buff
   table.merge(vars, buff, true)
   if buff.stack then buff.stacks = 1 end

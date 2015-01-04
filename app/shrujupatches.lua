@@ -3,6 +3,8 @@ ShrujuPatches = class()
 function ShrujuPatches:init()
   self.objects = {}
   self.timer = self:start()
+  self.harvestLevel = 0
+  self.harvestFactor = 3 -- How many seconds are shaved off per level in harvest
 end
 
 function ShrujuPatches:update()

@@ -4,7 +4,7 @@ Shrujus = {
   population = {
     name = 'Population',
     description = 'On use, increases the maximum number of minions you can have summoned at a time by 1.',
-    time = 40,
+    time = 50,
     eat = function()
       local p = ctx.players:get(ctx.id)
       p.maxPopulation = p.maxPopulation + 1
@@ -12,14 +12,43 @@ Shrujus = {
   },
   juju = {
     name = 'Juju',
-    description = 'On use, instantly grants you 10 - 20 juju.',
-    time = 30,
+    description = 'On use, instantly grants you 50 juju.',
+    time = 50,
     eat = function()
       local p = ctx.players:get(ctx.id)
       p.juju = p.juju + love.math.random(10, 20)
 			for i = 1, 40 do
 				ctx.particles:add(JujuSex, {x = 52, y = 52})
 			end
+    end
+  },
+  restoration = {
+    name = 'Restoration',
+    description = 'On use, heals your shrine for 20% of its maximum health.',
+    time = 50,
+    eat = function()
+      local p = ctx.players:get(ctx.id)
+      local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
+      if shrine then
+        shrine.health = math.min(shrine.health + shrine.maxHealth * .2, shrine.maxHealth)
+      end
+    end
+  },
+  harvest = {
+    name = 'Harvest',
+    description = 'Permanently causes all shruju to grow 3 seconds faster.',
+    time = 50,
+    eat = function()
+      ctx.shrujuPatches.harvestLevel = ctx.shrujuPatches.harvestLevel + 1
+    end
+  },
+  flow = {
+    name = 'Flow',
+    description = 'The cooldown for minion summoning is reduced by .25s.',
+    time = 50,
+    eat = function()
+      local p = ctx.players:get(ctx.id)
+      p.flatCooldownReduction = p.flatCooldownReduction + .25
     end
   }
 }
@@ -50,7 +79,7 @@ ShrujuPatch.depth = 1
 
 function ShrujuPatch:activate()
 	self.y = ctx.map.height - ctx.map.groundHeight
-  self.types = {'population', 'juju'}
+  self.types = table.keys(Shrujus)
   self.timer = 0
   self.slot = nil
 
@@ -75,21 +104,12 @@ end
 
 function ShrujuPatch:draw()
   self.animation:draw(self.x, self.y)
-  --[[g.setColor(0, 0, 255, 200)
-  g.rectangle('fill', self.x - self.width / 2, self.y - self.height, self.width, self.height)
-  if self.slot then
-    g.setLineWidth(2)
-    g.setColor(0, 255, 0)
-    g.rectangle('line', self.x - self.width / 2, self.y - self.height, self.width, self.height)
-    g.setLineWidth(1)
-  end]]
-
   if self.shrujuAnimation then self.shrujuAnimation:draw(self.x, self.y) end
 end
 
 function ShrujuPatch:grow(what)
   if not self:playerNearby() or not table.has(self.types, what) or self.growing or self.slot then return end
-  self.timer = Shrujus[what].time
+  self.timer = math.max(Shrujus[what].time - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
   self.growing = what
 end
 

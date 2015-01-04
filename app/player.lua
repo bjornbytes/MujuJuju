@@ -36,6 +36,7 @@ function Player:init()
   self.maxPopulation = 3
 	self.recentSelect = 0
 	self.invincible = 0
+  self.flatCooldownReduction = 0
 
 	local joysticks = love.joystick.getJoysticks()
 	for _, joystick in ipairs(joysticks) do
@@ -186,7 +187,7 @@ function Player:summon()
 	local cost = 12
 	if cooldown == 0 and population < self.maxPopulation and self:spend(cost) then
 		ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
-		self.deck[self.selected].cooldown = 3
+		self.deck[self.selected].cooldown = math.max(3 - self.flatCooldownReduction, .5)
 
 		self.animation:set('summon')
 		local summonSound = love.math.random(1, 3)
