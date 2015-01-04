@@ -47,7 +47,6 @@ function HudShruju:update()
 end
 
 function HudShruju:draw()
-  do return end
   local p = ctx.players:get(ctx.id)
   local shruju = self.geometry.shruju
   for i = 1, #shruju do
