@@ -63,7 +63,7 @@ function HudShrujuPatch:draw()
     g.rectangle('fill', x, y, w, h)
 
     g.setColor(255, 255, 255)
-    local str = self.patch.slot or 'empty'
+    local str = self.patch.slot and self.patch.slot.name or 'empty'
     g.print(str, x + w / 2 - g.getFont():getWidth(str) / 2, y + 2)
     if self.patch.slot then
       g.rectangle('line', x + .5, y + .5, w, h)
@@ -82,6 +82,8 @@ end
 function HudShrujuPatch:mousepressed(x, y, b)
   if not self.patch or not self.active or self.patch.timer > 0 then return end
 
+  local p = ctx.players:get(ctx.id)
+
   if b == 'l' then
     local types = self.geometry.types
     for i = 1, #types do
@@ -94,9 +96,11 @@ function HudShrujuPatch:mousepressed(x, y, b)
   if self.patch.slot and math.inside(x, y, unpack(self.geometry.slot)) then
     if b == 'r' then
       local shruju = self.patch:take()
-      Shrujus[shruju].eat()
-    elseif b == 'l' then
-      -- put in inventory
+      shruju:eat()
+    elseif b == 'l' and #p.shrujus < 3 then
+      local shruju = self.patch:take()
+      table.insert(p.shrujus, shruju)
+      if shruju.effect then shruju.effect:pickup(shruju) end
     end
   end
 end

@@ -58,11 +58,11 @@ Thuju.upgrades = {
     costs = {50, 75, 110, 155, 210},
     description = 'Thuju hardens his body when he is struck.  He takes reduced damage from all sources for 3 seconds, stacking multiple times.',
     values = {
-      [1] = '4% damage reduction, stacking up to 3 times',
-      [2] = '6% damage reduction, stacking up to 3 times',
-      [3] = '8% damage reduction, stacking up to 3 times',
-      [4] = '10% damage reduction, stacking up to 4 times',
-      [5] = '12% damage reduction, stacking up to 5 times'
+      [1] = '5% damage reduction, stacking up to 3 times',
+      [2] = '6% damage reduction, stacking up to 4 times',
+      [3] = '7% damage reduction, stacking up to 5 times',
+      [4] = '8% damage reduction, stacking up to 6 times',
+      [5] = '10% damage reduction, stacking up to 7 times'
     },
     apply = function(self, unit)
       if self.level > 0 then

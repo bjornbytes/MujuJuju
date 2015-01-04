@@ -2,20 +2,37 @@ local g = love.graphics
 
 Shrujus = {
   population = {
-    time = 20,
+    name = 'Population',
+    time = 40,
     eat = function()
       local p = ctx.players:get(ctx.id)
       p.maxPopulation = p.maxPopulation + 1
     end
   },
   juju = {
-    time = 15,
+    name = 'Juju',
+    time = 30,
     eat = function()
       local p = ctx.players:get(ctx.id)
       p.juju = p.juju + love.math.random(10, 20)
 			for i = 1, 40 do
 				ctx.particles:add(JujuSex, {x = 52, y = 52})
 			end
+    end
+  }
+}
+
+-- Amount is always between 0 and 1 and determines how strong the magic effect is.
+ShrujuEffects = {
+  wealth = {
+    pickup = function(self)
+      local p = ctx.players:get(ctx.id)
+      self.amount = 1.9 + (.2 * self.strength)
+      p.jujuRate = p.jujuRate * self.amount
+    end,
+
+    drop = function(self)
+      p.jujuRate = p.jujuRate / self.amount
     end
   }
 }
@@ -40,8 +57,7 @@ end
 
 function ShrujuPatch:update()
   self.timer = timer.rot(self.timer, function()
-    self.slot = self.growing
-    self.growing = nil
+    self:makeShruju()
   end)
 end
 
@@ -72,4 +88,21 @@ end
 function ShrujuPatch:playerNearby()
   local p = ctx.players:get(ctx.id)
   return not p.dead and math.abs(p.x - self.x) <= self.width / 2 + p.width / 2
+end
+
+function ShrujuPatch:makeShruju()
+  if self.growing and not self.slot then
+    local shruju = setmetatable({}, {__index = Shrujus[self.growing]})
+
+    -- Randomly give it a random magical effect
+    if love.math.random() < 1 then
+      local effects = table.keys(ShrujuEffects)
+      local effect = setmetatable({}, {__index = effects[love.math.random(1, #effects)]})
+      effect.strength = love.math.random()
+      shruju.effect = effect
+    end
+
+    self.slot = shruju
+    self.growing = nil
+  end
 end

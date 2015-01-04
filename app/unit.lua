@@ -19,11 +19,11 @@ function Unit:activate()
   self.animation:on('event', function(data)
     if data.data.name == 'attack' then
       if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
-        self.buffs:preattack(self.target, self.damage)
         self:abilityCall('preattack', self.target, self.damage)
+        self.buffs:preattack(self.target, self.damage)
         local amount = self.target:hurt(self.damage, self, 'attack')
-        self.buffs:postattack(self.target, amount)
         self:abilityCall('postattack', self.target, amount)
+        self.buffs:postattack(self.target, amount)
         if not self.target or self.target.dying then
           self.target = nil
           self.animation:set('idle')
@@ -62,7 +62,6 @@ function Unit:activate()
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
   self.maxHealth = self.health
-  self.healthDisplay = self.health
   self.stance = 'aggressive'
   self.dying = false
   self.casting = false
@@ -75,6 +74,7 @@ function Unit:activate()
 
   self.range = self.range + love.math.random(-10, 10)
 
+  self.healthDisplay = self.health
   self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
   self.backCanvas = g.newCanvas(200, 200)
   self.canvas = g.newCanvas(200, 200)
@@ -259,13 +259,13 @@ end
 function Unit:hurt(amount, source, kind)
   if self.dying then return end
 
-  amount = self.buffs:prehurt(amount, source, kind)
   self:abilityCall('prehurt', amount, source, kind)
+  amount = self.buffs:prehurt(amount, source, kind)
 
   self.health = math.max(self.health - amount, 0)
 
-  self.buffs:posthurt(amount, source, kind)
   self:abilityCall('posthurt', amount, source, kind)
+  self.buffs:posthurt(amount, source, kind)
 
   if self.health <= 0 then
     self.animation:set('death', {force = true})
@@ -326,6 +326,7 @@ function Unit:hasRunes()
 end
 
 function Unit:addAbility(code)
+  if self:hasAbility(code) then return end
   local Ability = data.ability[self.class.code][code]
   assert(Ability, 'Added invalid ability ' .. code)
   local ability = Ability()

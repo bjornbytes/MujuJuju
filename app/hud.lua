@@ -53,6 +53,7 @@ function Hud:init()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
   self.shrujuPatches = {HudShrujuPatch(), HudShrujuPatch()}
+  self.shruju = HudShruju()
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end
@@ -215,6 +216,7 @@ function Hud:gui()
     self.health:draw()
 
     table.with(self.shrujuPatches, 'draw')
+    self.shruju:draw()
 
 		-- Protect message
 		if self.protectAlpha > .1 then
@@ -438,6 +440,7 @@ function Hud:gamepadpressed(gamepad, button)
 end
 
 function Hud:mousepressed(x, y, b)
+  self.shruju:mousepressed(x, y, b)
   table.with(self.shrujuPatches, 'mousepressed', x, y, b)
 	if not self.upgrading or ctx.ded then return end
 	if math.inside(x, y, 670, 502, 48, 48) then

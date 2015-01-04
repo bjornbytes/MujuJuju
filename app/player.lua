@@ -2,8 +2,8 @@ Player = class()
 
 Player.width = 45
 Player.height = 90
-
 Player.depth = 0
+Player.walkSpeed = 65
 
 
 ----------------
@@ -14,7 +14,7 @@ function Player:init()
 	self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.direction = 1
   self.speed = 0
-  self.walkSpeed = 65
+  self.walkSpeed = Player.walkSpeed
 
   self.maxHealth = 100
   self.health = self.maxHealth
@@ -26,6 +26,8 @@ function Player:init()
   self.juju = 300
   self.jujuTimer = 1
   self.jujuRate = 1
+
+  self.shrujus = {}
 
 	self.prevx = self.x
 	self.prevy = self.y

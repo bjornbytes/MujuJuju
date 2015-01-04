@@ -60,6 +60,7 @@ function UnitBuffs:add(code, vars)
   buff.ability = ability
   self.list[buff] = buff
   table.merge(vars, buff, true)
+  if buff.stack then buff.stacks = 1 end
   f.exe(buff.activate, buff)
   return buff
 end
@@ -83,6 +84,9 @@ function UnitBuffs:reapply(code, vars)
   local buff = self:get(code)
   if buff then
     table.merge(vars, buff, true)
+    if buff.stacks then
+      buff.stacks = math.min((buff.stacks or 1) + 1, buff.maxStacks or 1)
+    end
   else
     self:add(code, vars)
   end
