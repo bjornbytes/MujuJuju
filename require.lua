@@ -9,6 +9,8 @@ local function load(dir)
 	if love.filesystem.exists(dir .. '.lua') then require(dir) end
 end
 
+json = require 'lib/deps/dkjson'
+
 require 'lib/deps/lutil/util'
 require 'lib/deps/spine/love/spine'
 load 'lib/deps/slam'

@@ -55,7 +55,7 @@ end
 function Shrine:hurt(value)
 	self.health = math.max(self.health - value, 0)
   self.lastHurt = tick
-	if self.health <= 0 then
+	if self.health <= 0 and not ctx.ded then
     ctx.event:emit('shrine.dead', {shrine = self})
 		return true
 	end

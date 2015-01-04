@@ -23,7 +23,7 @@ function Player:init()
   self.dead = false
   self.deathTimer = 0
 
-  self.juju = 30
+  self.juju = 300
   self.jujuTimer = 1
   self.jujuRate = 1
 
@@ -249,44 +249,28 @@ function Player:atShrine()
 end
 
 function Player:initDeck()
-  local deck = {
-    { code = 'bruju',
-      runes = {},
-      skin = {}
-    },
-    --[[{ code = 'thuju',
-      runes = {},
-      skin = {}
-    },
-    { code = 'kuju',
-      runes = {},
-      skin = {}
-    }]]
-  }
-
   self.deck = {}
 
-  for i = 1, #deck do
-    local entry = deck[i]
+  for i = 1, #ctx.user.deck do
+    local code = ctx.user.deck[i]
 
-    self.deck[entry.code] = {
-      runes = table.map(entry.runes, function(rune) return setmetatable({level = 0}, runes[rune]) end),
+    self.deck[code] = {
       abilities = {},
       upgrades = {},
       cooldown = 0,
       instance = nil,
-      code = entry.code
+      code = code
     }
 
-    table.each(data.unit[entry.code].abilities, function(code, i)
-      self.deck[entry.code].abilities[code] = false
+    table.each(data.unit[code].abilities, function(ability, i)
+      self.deck[code].abilities[ability] = false
     end)
 
-    table.each(data.unit[entry.code].abilities, function(code)
-      self.deck[entry.code].upgrades[code] = {}
+    table.each(data.unit[code].abilities, function(ability)
+      self.deck[code].upgrades[ability] = {}
     end)
 
-    self.deck[i] = self.deck[entry.code]
+    self.deck[i] = self.deck[code]
   end
 end
 

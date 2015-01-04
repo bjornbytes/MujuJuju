@@ -5,8 +5,7 @@ function Units:init()
   Manager.init(self)
   self.level = 0
   self.nextEnemy = 5
-  self.minEnemyRate = 6
-  self.maxEnemyRate = 9
+  table.merge(config.units[ctx.biome], self)
 end
 
 function Units:update()
@@ -28,7 +27,7 @@ function Units:update()
     self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, .75 * tickRate))
   end
 
-  self.level = self.level + tickRate / (16 + self.level / 2)
+  self.level = self.level + (tickRate / (16 + self.level / 2)) * config.units[ctx.biome].levelScale
 
   return Manager.update(self)
 end

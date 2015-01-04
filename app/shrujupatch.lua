@@ -26,8 +26,7 @@ ShrujuPatch.width = 40
 ShrujuPatch.height = 40
 ShrujuPatch.depth = -1
 
-function ShrujuPatch:activate(id)
-  self.x = ctx.map.width * (.2 + (id == 2 and .6 or 0))
+function ShrujuPatch:activate()
 	self.y = ctx.map.height - ctx.map.groundHeight
   self.types = {'population', 'juju'}
   self.timer = 0
@@ -49,6 +48,12 @@ end
 function ShrujuPatch:draw()
   g.setColor(0, 0, 255, 200)
   g.rectangle('fill', self.x - self.width / 2, self.y - self.height, self.width, self.height)
+  if self.slot then
+    g.setLineWidth(2)
+    g.setColor(0, 255, 0)
+    g.rectangle('line', self.x - self.width / 2, self.y - self.height, self.width, self.height)
+    g.setLineWidth(1)
+  end
 end
 
 function ShrujuPatch:grow(what)

@@ -72,13 +72,10 @@ function HudHealth:draw()
     bar(x, y - 30 - 5 * t[location], hard, soft, color, 50, 3)
   end)
 
-  if ctx.sp1 and ctx.sp1.timer > 0 then
-    local x, y = ctx.sp1.x, ctx.sp1.y
-    bar(x, y - ctx.sp1.height - 20, ctx.sp1.timer / Shrujus[ctx.sp1.growing].time, nil, orange, 120, 10)
-  end
-
-  if ctx.sp2 and ctx.sp2.timer > 0 then
-    local x, y = ctx.sp2.x, ctx.sp2.y
-    bar(x, y - ctx.sp2.height - 20, ctx.sp2.timer / Shrujus[ctx.sp2.growing].time, nil, orange, 120, 10)
-  end
+  table.each(ctx.shrujuPatches.objects, function(patch)
+    if patch.timer > 0 then
+      local x, y = patch.x, patch.y
+      bar(x, y - patch.height - 20, patch.timer / Shrujus[patch.growing].time, nil, orange, 120, 10)
+    end
+  end)
 end

@@ -1,45 +1,163 @@
+local g = love.graphics
+
 Menu = class()
 
-function Menu:load()
+function Menu:load(selectedBiome)
 	self.sound = Sound()
 	self.menuSounds = self.sound:loop({sound = 'menu'})
-	self.bg = data.media.graphics.mainMenu
-	self.font = love.graphics.newFont('media/fonts/pixel.ttf', 8)
-	self.creditsAlpha = 0
 	love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor.png'))
+
+  self.geometry = setmetatable({}, {__index = function(t, k)
+    return rawset(t, k, self.geometryFunctions[k]())[k]
+  end})
+
+  self.geometryFunctions = {
+    minions = function()
+      local u, v = love.graphics.getDimensions()
+      local minions = config.minions
+      local size = .2 * v
+      local inc = size + .1 * v
+      local x = u * .5 - inc * ((#minions - 1) / 2)
+      local y = .6 * v
+      local res = {}
+      for i = 1, #minions do
+        table.insert(res, {x, y, size / 2})
+        x = x + inc
+      end
+      return res
+    end,
+
+    deck = function()
+      local u, v = love.graphics.getDimensions()
+      local size = .2 * v
+      local inc = size + .1 * v
+      local x = u * .5 - inc * ((#self.user.deck - 1) / 2)
+      local y = .7 * v
+      local res = {}
+      for i = 1, #self.user.deck do
+        table.insert(res, {x, y, size / 2})
+        x = x + inc
+      end
+      return res
+    end,
+
+    biomes = function()
+      local u, v = love.graphics.getDimensions()
+      local width = .3 * v
+      local height = width * .75
+      local inc = width + .1 * v
+      local x = u * .5
+      local y = .3 * v
+      local res = {}
+      for i = 1, #config.biomeOrder do
+        local offset = (inc * (self.selectedBiome - i))
+        table.insert(res, {x - width / 2 - offset, y, width, height})
+      end
+      return res
+    end
+  }
+
+  if not love.filesystem.exists('save/user.json') then
+    love.filesystem.createDirectory('save')
+    love.filesystem.write('save/user.json', json.encode(config.defaultUser))
+  end
+
+  local str = love.filesystem.read('save/user.json')
+  self.user = json.decode(str)
+
+  if not self.user.deck or #self.user.deck == 0 then
+    self.choosing = true
+  end
+
+  self.selectedBiome = selectedBiome or 1
 end
 
 function Menu:update()
-	self.creditsAlpha = timer.rot(self.creditsAlpha)
+  --
 end
 
 function Menu:draw()
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.draw(self.bg)
-	love.graphics.setFont(self.font)
-	love.graphics.setColor(255, 255, 255, math.min(self.creditsAlpha * 255, 255))
-	love.graphics.print('We do not mind who gets the credit.', 2, 0)
+  local u, v = love.graphics.getDimensions()
+  if self.choosing then
+    g.setFont('inglobalb', .08 * v)
+    local str = 'Welcome to Muju Juju'
+    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, 2)
+    local str = 'Choose your minion'
+    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, .2 * v)
+
+    local minions = self.geometry.minions
+    for i = 1, #minions do
+      local x, y, r = unpack(minions[i])
+      local image = data.media.graphics.unit.portrait[config.minions[i]]
+      local scale = (r * 2) / image:getWidth()
+      g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    end
+  else
+    local deck = self.geometry.deck
+    g.setColor(255, 255, 255)
+    for i = 1, #deck do
+      local x, y, r = unpack(deck[i])
+      local image = data.media.graphics.unit.portrait[self.user.deck[i]]
+      local scale = (r * 2) / image:getWidth()
+      g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    end
+
+    local biomes = self.geometry.biomes
+    for i = 1, #biomes do
+      local biome = config.biomeOrder[i]
+      local x, y, w, h = unpack(biomes[i])
+      if self.selectedBiome == i then g.setColor(255, 255, 255)
+      else g.setColor(255, 255, 255, 100) end
+      g.rectangle('fill', x, y, w, h)
+      if table.has(self.user.biomes, biome) then g.setColor(0, 255, 0)
+      else g.setColor(255, 0, 0) end
+      g.rectangle('line', x + .5, y + .5, w, h)
+      g.setColor(0, 0, 0)
+      g.setFont('pixel', 8)
+      g.printCenter(config.biomes[biome].name, x + w / 2, y + h / 2)
+      g.setColor(255, 255, 255)
+      local minutes = math.floor(self.user.highscores[biome] / 60)
+      local seconds = self.user.highscores[biome] % 60
+      local time = string.format('%02d:%02d', minutes, seconds)
+      g.printCenter('highscore: ' .. time, x + w / 2, y + h + 16)
+    end
+  end
 end
 
 function Menu:keypressed(key)
-	
+	if key == 'return' and table.has(self.user.biomes, config.biomeOrder[self.selectedBiome]) then
+    self.menuSounds:stop()
+    Context:remove(ctx)
+    Context:add(Game, self.user, config.biomeOrder[self.selectedBiome])
+  elseif key == 'left' then
+    self.selectedBiome = self.selectedBiome - 1
+    if self.selectedBiome <= 0 then self.selectedBiome = #config.biomeOrder end
+    table.clear(self.geometry)
+  elseif key == 'right' then
+    self.selectedBiome = self.selectedBiome + 1
+    if self.selectedBiome >= #config.biomeOrder + 1 then self.selectedBiome = 1 end
+    table.clear(self.geometry)
+  end
 end
 
 function Menu:keyreleased(key)
 
 end
 
-function Menu:mousepressed(x, y, b)
-	if math.inside(x, y, 435, 220, 190, 90) then
-		self.menuSounds:stop()
-		Context:remove(ctx)
-		Context:add(Game)
-	elseif math.inside(x, y, 425, 335, 210, 90) then
-		print('Harry Truman bitch!')
-		self.creditsAlpha = 2
-	elseif math.inside(x, y, 455, 445, 160, 90) then
-		love.event.quit()
-	end
+function Menu:mousepressed(mx, my, b)
+  if self.choosing then
+    if b == 'l' then
+      local minions = self.geometry.minions
+      for i = 1, #minions do
+        local x, y, r = unpack(minions[i])
+        if math.distance(mx, my, x, y) < r then
+          self.user.deck = {config.minions[i]}
+          saveUser(self.user)
+          self.choosing = false
+        end
+      end
+    end
+  end
 end
 
 function Menu:mousereleased(x, y, b)

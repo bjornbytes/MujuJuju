@@ -44,14 +44,6 @@ function Unit:activate()
   self.buffs = UnitBuffs(self)
 
   self.abilities = {}
-  for i = 1, 2 do
-    local ability = data.ability[self.class.code][self.class.abilities[i]]
-    assert(ability, 'Missing ability ' .. i .. ' for ' .. self.class.name)
-    self.abilities[i] = ability()
-    self.abilities[i].unit = self
-  end
-
-  self:abilityCall('activate')
 
   if not self.player then
     local function scale(stat)
@@ -75,7 +67,9 @@ function Unit:activate()
   self.channeling = false
   self.spawning = false
 
-  if self.player then self.player.deck[self.class.code].instance = self end
+  table.each(self.class.upgrades, function(upgrade)
+    f.exe(upgrade.apply, upgrade, self)
+  end)
 
   self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
   self.backCanvas = g.newCanvas(200, 200)
@@ -308,12 +302,10 @@ end
 -- Helper
 ----------------
 function Unit:abilityCall(key, ...)
-  for i = 1, 2 do
-    if self.player and self.player:hasUnitAbility(self.class.code, i) then
-      local ability = self.abilities[i]
-      f.exe(ability[key], ability, ...)
-    end
-  end
+  local arg = {...}
+  table.each(self.abilities, function(ability)
+    f.exe(ability[key], ability, unpack(arg))
+  end)
 end
 
 function Unit:contains(...)
@@ -322,4 +314,17 @@ end
 
 function Unit:hasRunes()
   return self.runes and #self.runes > 0
+end
+
+function Unit:addAbility(code)
+  local Ability = data.ability[self.class.code][code]
+  assert(Ability, 'Added invalid ability ' .. code)
+  local ability = Ability()
+  ability.unit = self
+  table.insert(self.abilities, ability)
+  f.exe(ability.activate, ability)
+end
+
+function Unit:hasAbility(code)
+  return next(table.filter(self.abilities, function(ability) return ability.code == code end))
 end

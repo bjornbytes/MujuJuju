@@ -5,7 +5,7 @@ local g = love.graphics
 function View:init()
   self.x = 0
   self.y = 0
-  self.width = 960
+  self.width = 1067
   self.height = 600
   self.xmin = 0
   self.ymin = 0

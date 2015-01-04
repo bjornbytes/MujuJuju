@@ -1,35 +1,45 @@
-Upgrades = class()
+Upgrades = {}
 
-Upgrades.costs = {}
-Upgrades.costs.ability = 50
-Upgrades.costs.abilityUpgrade = 100
-Upgrades.costs.population = 100
+Upgrades.clear = function()
+	Upgrades.makeTooltip = function(who, what)
+    local p = ctx.players:get(ctx.id)
+		local pieces = {}
+		local upgrade = data.unit[who].upgrades[what]
+		table.insert(pieces, '{white}{title}' .. what:capitalize() .. '{normal}')
+		table.insert(pieces, '{whoCares}' .. upgrade.description .. '\n')
+		table.insert(pieces, '{white}{bold}Level ' .. upgrade.level .. (upgrade.values[upgrade.level] and ': ' .. upgrade.values[upgrade.level] or ''))
+		if not upgrade.values[upgrade.level + 1] then
+			table.insert(pieces, '{whoCares}{normal}Max Level')
+		else
+			table.insert(pieces, '{white}{bold}Next Level: ' .. upgrade.values[upgrade.level + 1])
+			local color = p.juju >= upgrade.costs[upgrade.level + 1] and '{green}' or '{red}'
+			table.insert(pieces, color .. upgrade.costs[upgrade.level + 1] .. ' juju')
+			if upgrade.prerequisites then
+				for name, min in pairs(upgrade.prerequisites) do
+          local color = data.unit[who].upgrades[name].level >= min and '{green}' or '{red}'
+          local points = (min == 1) and 'point' or 'points'
+          table.insert(pieces, color .. min .. ' ' .. points .. ' in ' .. name:capitalize())
+				end
+			end
+		end
 
-function Upgrades:process(data, player)
-  local function spend(amount)
-    return ctx.tag == 'server' and player:spend(amount) or true
-  end
+		return table.concat(pieces, '\n')
+	end
 
-  local deck = data.unit and player.deck[data.unit]
-  local abilityCount = data.unit and table.count(deck.upgrades)
-  local unit = data.unit and _G['data'].unit[deck.code]
-  local ability = data.unit and data.ability and _G['data'].ability[unit.code][unit.abilities[data.ability]]
-  local upgrade = unit and ability and data.upgrade and ability.upgrades[data.upgrade].code
+	Upgrades.canBuy = function(who, what)
+    local p = ctx.players:get(ctx.id)
+		local upgrade = data.unit[who].upgrades[what]
+		if not upgrade.costs[upgrade.level + 1] then return false end
+		if p.juju < upgrade.costs[upgrade.level + 1] then return false end
+		return Upgrades.checkPrerequisites(who, what)
+	end
 
-  if ability and not upgrade and spend(self.costs.ability) then
-    deck.abilities[ability.code] = true
-    return true
-  elseif ability and upgrade and spend(self.costs.abilityUpgrade) then
-    deck.upgrades[ability.code][upgrade] = true
-    return true
-  elseif data.unit and data.rune then
-    -- Coming soon
-    return true
-  elseif data.other == 'population' and spend(self.costs.population) then
-    player.maxPopulation = player.maxPopulation + 1
-    return true
-  end
-
-  return false
+	Upgrades.checkPrerequisites = function(who, what)
+		local upgrade = data.unit[who].upgrades[what]
+		if not upgrade.prerequisites then return true end
+		for key, level in pairs(upgrade.prerequisites) do
+			if data.unit[who].upgrades[key].level < level then return false end
+		end
+		return true
+	end
 end
-

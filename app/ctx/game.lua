@@ -1,7 +1,9 @@
 Game = class()
 
-function Game:load()
+function Game:load(user, biome)
   self.id = 1
+  self.user = user
+  self.biome = biome and 'volcano'
 
 	self.paused = false
 	self.ded = false
@@ -11,11 +13,9 @@ function Game:load()
   self.map = Map()
   self.players = Players()
   ctx.players:add(1)
-
-  self.shrujuTimer = love.math.random(30, 60)
-
+  self.shrujuPatches = ShrujuPatches()
   self.hud = Hud()
-  self.upgrades = Upgrades()
+  self.upgrades = Upgrades
   self.shrines = Manager()
   self.shrines:add(Shrine, {x = ctx.map.width / 2, team = 1})
   self.units = Units()
@@ -27,8 +27,38 @@ function Game:load()
   self.sound = Sound()
 	self.effects = Effects()
 
+  Upgrades.clear()
+
   self.event:on('shrine.dead', function(data)
     self.ded = true
+
+    local time = math.round(self.hud.timer.total * tickRate)
+    if time > self.user.highscores[self.biome] then
+      self.user.highscores[self.biome] = time
+      saveUser(self.user)
+    end
+
+    if time >= config.biomes[self.biome].benchmarks.bronze then
+      -- give some runes randomly proabbilsithi
+    end
+
+    if time >= config.biomes[self.biome].benchmarks.silver then
+      local nextBiome = config.biomes[self.biome].rewards.silver
+      if nextBiome then
+        table.insert(self.user.biomes, nextBiome)
+        saveUser(self.user)
+      else
+        -- give a fancy rune
+      end
+    end
+
+    if time >= config.biomes[self.biome].benchmarks.gold then
+      local nextMinion = config.biomes[self.biome].rewards.gold
+      if nextMinion and not table.has(self.user.deck, nextMinion) then
+        table.insert(self.user.deck, nextMinion)
+        saveUser(self.user)
+      end
+    end
   end)
 
 	backgroundSound = self.sound:loop({sound = 'background'})
@@ -49,20 +79,7 @@ function Game:update()
 	self.hud:update()
 	self.effects:update()
 	self.particles:update()
-  self.shrujuTimer = timer.rot(self.shrujuTimer, function()
-    if not self.sp1 then
-      self.sp1 = ShrujuPatch()
-      self.sp1:activate(1)
-      self.hud.shrujuPatch1.patch = self.sp1
-      return love.math.random(120, 180)
-    else
-      self.sp2 = ShrujuPatch()
-      self.sp2:activate(2)
-      self.hud.shrujuPatch2.patch = self.sp2
-    end
-  end)
-  if self.sp1 then self.sp1:update() end
-  if self.sp2 then self.sp2:update() end
+  self.shrujuPatches:update()
 end
 
 function Game:unload()
@@ -84,13 +101,12 @@ function Game:keypressed(key)
 		elseif key == 'm' then self.sound:mute()
 		elseif key == 'f' then love.window.setFullscreen(not love.window.getFullscreen()) end
 	end
-	if self.hud.upgrading or self.paused or self.ded then return self.hud:keypressed(key) end
 	self.hud:keypressed(key)
 	self.players:keypressed(key)
 end
 
 function Game:keyreleased(...)
-	if self.hud.upgrading or self.paused or self.ded then return self.hud:keyreleased(...) end
+  self.hud:keyreleased(...)
 end
 
 function Game:textinput(char)
@@ -98,16 +114,15 @@ function Game:textinput(char)
 end
 
 function Game:mousepressed(...)
-	if true or self.hud.upgrading or self.paused or self.ded then return self.hud:mousepressed(...) end
+  self.hud:mousepressed(...)
 end
 
 function Game:mousereleased(...)
-	if self.hud.upgrading or self.paused or self.ded then return self.hud:mousereleased(...) end
+  self.hud:mousereleased(...)
 end
 
 function Game:gamepadpressed(gamepad, button)
 	if button == 'start' or button == 'guide' then self.paused = not self.paused end
-	if self.hud.upgrading or self.paused or self.ded then return self.hud:gamepadpressed(gamepad, button) end
 	self.hud:gamepadpressed(gamepad, button)
 	self.players:gamepadpressed(gamepad, button)
 end

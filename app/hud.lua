@@ -49,12 +49,10 @@ function Hud:init()
 	self.pauseScreen = data.media.graphics.pauseMenu
 	self.protectAlpha = 3
   self.u, self.v = love.graphics.getDimensions()
-  self.tooltip = Tooltip()
   self.health = HudHealth()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
-  self.shrujuPatch1 = HudShrujuPatch(ctx.sp1)
-  self.shrujuPatch2 = HudShrujuPatch(ctx.sp2)
+  self.shrujuPatches = {HudShrujuPatch(), HudShrujuPatch()}
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end
@@ -71,8 +69,7 @@ function Hud:update()
   self.upgrades:update()
   self.units:update()
 
-  self.shrujuPatch1:update()
-  self.shrujuPatch2:update()
+  table.with(self.shrujuPatches, 'update')
 
 	-- Update Timer
 	self:score()
@@ -217,8 +214,7 @@ function Hud:gui()
 
     self.health:draw()
 
-    self.shrujuPatch1:draw()
-    self.shrujuPatch2:draw()
+    table.with(self.shrujuPatches, 'draw')
 
 		-- Protect message
 		if self.protectAlpha > .1 then
@@ -282,23 +278,23 @@ function Hud:gui()
 				end
 			end
 		end
-
-		if self.tooltip then
-			local mx, my = love.mouse.getPosition()
-			if p.gamepad then
-				mx, my = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
-				mx, my = math.round(mx), math.round(my)
-			end
-			local textWidth, lines = normalFont:getWrap(self.tooltipRaw, 300)
-			local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
-			local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))
-			g.setColor(30, 50, 70, 240)
-			g.rectangle('fill', xx, yy, textWidth + 14, lines * g.getFont():getHeight() + 16 + 5)
-			g.setColor(10, 30, 50, 255)
-			g.rectangle('line', xx + .5, yy + .5, textWidth + 14, lines * g.getFont():getHeight() + 16 + 5)
-			self.tooltip:draw(xx + 8, yy + 4)
-		end
 	end
+
+  if self.tooltip then
+    local mx, my = love.mouse.getPosition()
+    if p.gamepad then
+      mx, my = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
+      mx, my = math.round(mx), math.round(my)
+    end
+    local textWidth, lines = normalFont:getWrap(self.tooltipRaw, 300)
+    local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
+    local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))
+    g.setColor(30, 50, 70, 240)
+    g.rectangle('fill', xx, yy, textWidth + 14, lines * g.getFont():getHeight() + 16 + 5)
+    g.setColor(10, 30, 50, 255)
+    g.rectangle('line', xx + .5, yy + .5, textWidth + 14, lines * g.getFont():getHeight() + 16 + 5)
+    self.tooltip:draw(xx + 8, yy + 4)
+  end
 
 	-- Death Screen
 	if ctx.ded then
@@ -306,7 +302,7 @@ function Hud:gui()
 			g.setColor(244, 188, 80, 255 * self.deadAlpha)
 			g.setFont(deadFontBig)
 			local str = 'YOUR SHRINE HAS BEEN DESTROYED!'
-			g.printf(str, 50, 30, 700, 'center')
+			g.printf(str, .0625 * self.u, 30, .875 * self.u, 'center')
 
 			g.setColor(253, 238, 65, 255 * self.deadAlpha)
 			g.setFont(deadFontSmall)
@@ -315,6 +311,16 @@ function Hud:gui()
 
 			g.setColor(240, 240, 240, 255 * self.deadAlpha)
 			str = tostring(math.floor(self.timer.total * tickRate))
+      local benchmark
+      if math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.gold then
+        benchmark = 'Gold'
+      elseif math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.silver then
+        benchmark = 'Silver'
+      elseif math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmakrs.bronze then
+        benchmark = 'Bronze'
+      end
+
+      if benchmark then str = str .. ' (' .. benchmark .. ')' end
 			g.printf(str, 0, h * .41, w, 'center')
 			
 			g.setColor(253, 238, 65, 255 * self.deadAlpha)
@@ -367,8 +373,6 @@ function Hud:gui()
 		end
 	end
 
-  self.tooltip:draw()
-
 	if self.upgrading or ctx.paused or ctx.ded then
 		if p.gamepad then
 			local xx, yy = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
@@ -379,29 +383,26 @@ function Hud:gui()
 end
 
 function Hud:keypressed(key)
-  self.shrujuPatch1:keypressed(key)
-  self.shrujuPatch2:keypressed(key)
-  do return self.upgrades:keypressed(key) end
+  table.with(self.shrujuPatches, 'keypressed', key)
+  self.upgrades:keypressed(key)
 
-	if (key == 'tab' or key == 'e') and math.abs(p.x - ctx.shrine.x) < p.width and not ctx.ded then
+	--[[if (key == 'tab' or key == 'e') and math.abs(p.x - ctx.shrine.x) < p.width and not ctx.ded then
 		self.upgrading = not self.upgrading
 		return true
-	end
+	end]]
 
-	if key == 'escape' and self.upgrading and not ctx.ded then
+	--[[if key == 'escape' and self.upgrading and not ctx.ded then
 		self.upgrading = false
-	end
+	end]]
 
 	if ctx.ded and self.deadAlpha > .9 then
-		if key == 'backspace' then
-			self.deadName = self.deadName:sub(1, -2)
-		elseif key == 'return' then
-			if self.deadScreen == 1 then self:sendScore() end
-		end
-		
 		if key == 'escape' then
 			Context:remove(ctx)
-			Context:add(Menu)
+      local biomeIndex = nil
+      for i = 1, #config.biomeOrder do
+        if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end
+      end
+			Context:add(Menu, biomeIndex)
 		end
 	end
 end
@@ -437,8 +438,7 @@ function Hud:gamepadpressed(gamepad, button)
 end
 
 function Hud:mousepressed(x, y, b)
-  self.shrujuPatch1:mousepressed(x, y, b)
-  self.shrujuPatch2:mousepressed(x, y, b)
+  table.with(self.shrujuPatches, 'mousepressed', x, y, b)
 	if not self.upgrading or ctx.ded then return end
 	if math.inside(x, y, 670, 502, 48, 48) then
 		self.upgrading = false
@@ -447,35 +447,9 @@ end
 
 function Hud:mousereleased(x, y, b)
   local p = ctx.players:get(ctx.id)
-	if self.upgrading and b == 'l' and not ctx.ded then
-		for who in pairs(self.upgradeGeometry) do
-			for what, geometry in pairs(self.upgradeGeometry[who]) do
-				if math.distance(x, y, geometry[1], geometry[2]) < geometry[3] then
-					local upgrade = ctx.upgrades[who][what]
-					local nextLevel = upgrade.level + 1
-					local cost = upgrade.costs[nextLevel]
-
-					if ctx.upgrades.canBuy(who, what) and p:spend(cost) then
-						ctx.upgrades[who][what].level = nextLevel
-						ctx.sound:play({sound = 'menuClick'})
-						for i = 1, 80 do
-							self.particles:add(UpgradeParticle, {x = x, y = y})
-						end
-						self.upgradeDotAlpha[who .. what .. nextLevel] = 0
-					end
-				end
-			end
-		end
-
-		if #p.deck < 2 and math.distance(x, y, 560, 140) < 38 and p:spend(80) then
-			--table.insert(p.deck, Vuju)
-			--table.insert(p.minioncds, 0)
-			for i = 1, 100 do
-				self.particles:add(UpgradeParticle, {x = x, y = y})
-			end
-			self.upgradesBought = self.upgradesBought + 1
-		end
-	end
+  if self.upgrades.active then
+    self.units:mousereleased(x, y, b)
+  end
 
 	if b == 'l' and ctx.ded then
 		if self.deadScreen == 1 then

@@ -2,7 +2,7 @@ Map = class()
 
 local g = love.graphics
 
-Map.width, Map.height = 800, 600
+Map.width, Map.height = 1067, 600
 Map.depth = -100
 
 function Map:init()
@@ -19,8 +19,8 @@ function Map:init()
   self.background = {
     depth = 10,
     draw = function()
-      local image = data.media.graphics.map.background
-      local scale = self.height / data.media.graphics.map.background:getHeight()
+      local image = data.media.graphics.map[ctx.biome]
+      local scale = self.height / image:getHeight()
       g.setColor(255, 255, 255)
       g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
 
@@ -28,7 +28,7 @@ function Map:init()
       local p = ctx.players:get(ctx.id)
       alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .5)
       g.setColor(255, 255, 255, alpha)
-      g.draw(data.media.graphics.map.backgroundSpirit, 0 * scale, 0 * scale, 0, scale, scale)
+      g.draw(data.media.graphics.map[ctx.biome .. 'Spirit'], 0 * scale, 0 * scale, 0, scale, scale)
     end
   }
 

@@ -2,6 +2,13 @@ require 'require'
 
 function love.load()
   data.load()
+  config = dofile('config.lua')
+
+  function saveUser(user)
+    love.filesystem.createDirectory('save')
+    love.filesystem.write('save/user.json', json.encode(user))
+  end
+
 	Context:add(Menu)
 end
 
