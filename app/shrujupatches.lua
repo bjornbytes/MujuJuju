@@ -27,7 +27,7 @@ end
 
 function ShrujuPatches:start()
   self.index = self.index and (self.index + 1) or 1
-  local config = config.shrujuPatches[ctx.biome][self.index]
+  local config = config.biomes[ctx.biome].shrujuPatches[self.index]
   if config then
     return love.math.random(config.minTimer, config.maxTimer)
   end

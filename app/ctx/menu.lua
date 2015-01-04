@@ -14,7 +14,7 @@ function Menu:load(selectedBiome)
   self.geometryFunctions = {
     minions = function()
       local u, v = love.graphics.getDimensions()
-      local minions = config.minions
+      local minions = config.starters
       local size = .2 * v
       local inc = size + .1 * v
       local x = u * .5 - inc * ((#minions - 1) / 2)
@@ -88,7 +88,7 @@ function Menu:draw()
     local minions = self.geometry.minions
     for i = 1, #minions do
       local x, y, r = unpack(minions[i])
-      local image = data.media.graphics.unit.portrait[config.minions[i]]
+      local image = data.media.graphics.unit.portrait[config.starters[i]]
       local scale = (r * 2) / image:getWidth()
       g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     end
@@ -149,7 +149,7 @@ function Menu:mousepressed(mx, my, b)
       for i = 1, #minions do
         local x, y, r = unpack(minions[i])
         if math.distance(mx, my, x, y) < r then
-          self.user.deck = {config.minions[i]}
+          self.user.deck = {config.starters[i]}
           saveUser(self.user)
           self.choosing = false
         end

@@ -296,6 +296,9 @@ function Unit:die()
   self:abilityCall('deactivate')
 
   if not self.player then
+    local juju = config.biomes[ctx.biome].juju
+    local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
+    local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
     local amount = love.math.random(8 + (ctx.units.level ^ .8) * .75, 12 + (ctx.units.level ^ .85))
     local jujus = 1
 

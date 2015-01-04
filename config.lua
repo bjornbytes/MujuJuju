@@ -1,5 +1,17 @@
 return {
-  minions = {'bruju', 'thuju', 'kuju'},
+
+  starters = {
+    'bruju',
+    'thuju',
+    'kuju'
+  },
+
+  biomeOrder = {
+    'forest',
+    'tundra',
+    'volcano'
+  },
+
   elites = {
     baseModifier = .005,
     levelModifier = .0015,
@@ -31,8 +43,9 @@ return {
       pure = {}
     }
   },
-  biomeOrder = {'forest', 'tundra', 'volcano'},
+
   biomes = {
+
     forest = {
       name = 'Forest',
       benchmarks = {
@@ -43,8 +56,36 @@ return {
       rewards = {
         silver = 'tundra',
         gold = 'thuju'
+      },
+      juju = {
+        minimum = {
+          base = 8,
+          exponent = .8,
+          coefficient = .75
+        },
+        maximum = {
+          base = 12,
+          exponent = .85,
+          coefficient = 1
+        }
+      },
+      units = {
+        minEnemyRate = 6,
+        maxEnemyRate = 9,
+        levelScale = 1
+      },
+      shrujuPatches = {
+        [1] = {
+          minTimer = 30,
+          maxTimer = 40
+        },
+        [2] = {
+          minTimer = 120,
+          maxTimer = 130
+        }
       }
     },
+
     tundra = {
       name = 'Tundra',
       benchmarks = {
@@ -55,8 +96,36 @@ return {
       rewards = {
         silver = 'volcano',
         gold = 'kuju'
+      },
+      juju = {
+        minimum = {
+          base = 8,
+          exponent = .8,
+          coefficient = .75
+        },
+        maximum = {
+          base = 12,
+          exponent = .85,
+          coefficient = 1
+        }
+      },
+      units = {
+        minEnemyRate = 5,
+        maxEnemyRate = 7,
+        levelScale = 1.5
+      },
+      shrujuPatches = {
+        [1] = {
+          minTimer = 30,
+          maxTimer = 40
+        },
+        [2] = {
+          minTimer = 120,
+          maxTimer = 130
+        }
       }
     },
+
     volcano = {
       name = 'Volcano',
       benchmarks = {
@@ -66,58 +135,37 @@ return {
       },
       rewards = {
         gold = 'bruju'
+      },
+      juju = {
+        minimum = {
+          base = 8,
+          exponent = .8,
+          coefficient = .75
+        },
+        maximum = {
+          base = 12,
+          exponent = .85,
+          coefficient = 1
+        }
+      },
+      units = {
+        minEnemyRate = 4,
+        maxEnemyRate = 5,
+        levelScale = 2
+      },
+      shrujuPatches = {
+        [1] = {
+          minTimer = 30,
+          maxTimer = 40
+        },
+        [2] = {
+          minTimer = 120,
+          maxTimer = 130
+        }
       }
     }
   },
-  units = {
-    forest = {
-      minEnemyRate = 6,
-      maxEnemyRate = 9,
-      levelScale = 1
-    },
-    tundra = {
-      minEnemyRate = 5,
-      maxEnemyRate = 7,
-      levelScale = 1.5
-    },
-    volcano = {
-      minEnemyRate = 4,
-      maxEnemyRate = 5,
-      levelScale = 2
-    }
-  },
-  shrujuPatches = {
-    forest = {
-      [1] = {
-        minTimer = 30,
-        maxTimer = 40
-      },
-      [2] = {
-        minTimer = 120,
-        maxTimer = 130
-      }
-    },
-    tundra = {
-      [1] = {
-        minTimer = 30,
-        maxTimer = 40
-      },
-      [2] = {
-        minTimer = 120,
-        maxTimer = 130
-      }
-    },
-    volcano = {
-      [1] = {
-        minTimer = 30,
-        maxTimer = 40
-      },
-      [2] = {
-        minTimer = 120,
-        maxTimer = 130
-      }
-    }
-  },
+
   defaultUser = {
     deck = {},
     biomes = {'forest'},
