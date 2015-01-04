@@ -37,13 +37,14 @@ function Map:init()
     draw = function()
       local image = data.media.graphics.grass
       local scale = self.height / data.media.graphics.map[ctx.biome]:getHeight()
+      local shearx = math.sin(tick / 100) * math.cos(tick / 50) * .08
       g.setColor(200, 200, 200)
-      g.draw(image, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight())
+      g.draw(image, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight(), shearx)
       local alpha = self.spiritAlpha * 255
       local p = ctx.players:get(ctx.id)
       alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .5)
       g.setColor(200, 200, 200, alpha)
-      g.draw(data.media.graphics.spiritGrass, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight())
+      g.draw(data.media.graphics.spiritGrass, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight(), shearx)
     end
   }
 
