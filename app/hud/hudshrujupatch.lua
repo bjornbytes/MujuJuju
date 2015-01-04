@@ -74,7 +74,7 @@ function HudShrujuPatch:draw()
 end
 
 function HudShrujuPatch:keypressed(key)
-  if self.patch and key == 'e' and self:playerNearby() then
+  if self.patch and (key == 'e' or key == 'tab') and self:playerNearby() then
     self.active = not self.active
   end
 end
