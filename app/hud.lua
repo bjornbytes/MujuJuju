@@ -316,7 +316,7 @@ function Hud:gui()
         benchmark = 'Gold'
       elseif math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.silver then
         benchmark = 'Silver'
-      elseif math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmakrs.bronze then
+      elseif math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.bronze then
         benchmark = 'Bronze'
       end
 
