@@ -3,7 +3,7 @@ Game = class()
 function Game:load(user, biome)
   self.id = 1
   self.user = user
-  self.biome = biome and 'volcano'
+  self.biome = biome
 
 	self.paused = false
 	self.ded = false

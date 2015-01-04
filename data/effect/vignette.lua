@@ -9,7 +9,7 @@ end
 
 function Vignette:update()
   local p = ctx.players:get(ctx.id)
-	self.blur = math.lerp(self.blur, p.dead and 1.15 or .45, 2 * tickRate)
+	self.blur = math.lerp(self.blur, p.dead and .8 or .45, 2 * tickRate)
 	--self.radius = math.lerp(self.radius, p.dead and .85 - (.35 * p.deathTimer / 7) or .85, 4 * tickRate)
 	self.shader:send('blur', self.blur)
 	self.shader:send('radius', self.radius)

@@ -200,7 +200,7 @@ function Hud:gui()
 		end
 
 		-- Timer
-		local total = self.timer.total * tickRate
+		--[[local total = self.timer.total * tickRate
 		self.timer.seconds = math.floor(total % 60)
 		self.timer.minutes = math.floor(total / 60)
 		if self.timer.minutes < 10 then
@@ -215,7 +215,7 @@ function Hud:gui()
 		g.print(str, w - 25 - g.getFont():getWidth(str), 25)
 
     local pop = p:getPopulation()
-    g.print(pop .. ' / ' .. p.maxPopulation, w - 25 - g.getFont():getWidth(str), 50)
+    g.print(pop .. ' / ' .. p.maxPopulation, w - 25 - g.getFont():getWidth(str), 50)]]
 
     self.health:draw()
 
