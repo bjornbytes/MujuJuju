@@ -130,6 +130,7 @@ end
 function Player:paused()
   self.prevx = self.x
   self.prevy = self.y
+  self.animation:set('idle')
   if self.ghost then
     self.ghost.prevx = self.ghost.x
     self.ghost.prevy = self.ghost.y

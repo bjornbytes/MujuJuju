@@ -29,6 +29,10 @@ function Players:mousepressed(x, y, b)
   end
 end
 
+function Players:paused()
+  table.with(self.players, 'paused')
+end
+
 function Players:add(id, vars)
   local player = self:get(id)
   if player then return player end
