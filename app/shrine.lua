@@ -4,7 +4,7 @@ Shrine.code = 'shrine'
 Shrine.width = 128 
 Shrine.height = 128 
 
-Shrine.maxHealth = 2500
+Shrine.maxHealth = 3000
 
 Shrine.depth = 5
 
@@ -49,7 +49,7 @@ function Shrine:draw()
 end
 
 function Shrine:getHealthbar()
-  return self.x, self.y, self.health / self.maxHealth
+  return self.x, self.y, self.healthDisplay / self.maxHealth, self.healthDisplay / self.maxHealth
 end
 
 function Shrine:hurt(value)

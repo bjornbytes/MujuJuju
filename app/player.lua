@@ -127,6 +127,15 @@ function Player:gamepadpressed(gamepad, button)
 	end
 end
 
+function Player:paused()
+  self.prevx = self.x
+  self.prevy = self.y
+  if self.ghost then
+    self.ghost.prevx = self.ghost.x
+    self.ghost.prevy = self.ghost.y
+  end
+end
+
 
 ----------------
 -- Behavior

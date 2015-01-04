@@ -10,6 +10,10 @@ function Manager:update()
   table.with(self.objects, 'update')
 end
 
+function Manager:paused()
+  table.with(self.objects, 'paused')
+end
+
 function Manager:add(kind, vars)
   if type(kind) == 'string' then kind = data[self.manages][kind] end
   local object = kind()
