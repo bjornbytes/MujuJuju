@@ -1,3 +1,4 @@
+local rich = require 'lib/deps/richtext/richtext'
 local g = love.graphics
 
 HudShruju = class()
@@ -23,6 +24,26 @@ function HudShruju:init()
       return res
     end
   }
+end
+
+function HudShruju:update()
+  local shruju = self.geometry.shruju
+  local mx, my = love.mouse.getPosition()
+  local p = ctx.players:get(ctx.id)
+  for i = 1, #shruju do
+    local x, y, r = unpack(self.geometry.shruju[i])
+    if p.shrujus[i] and math.insideCircle(mx, my, x, y, r) then
+      if not ctx.hud.tooltip then
+        local shruju = p.shrujus[i]
+        local str = '{title}' .. (shruju.effect and '{purple}' or '{white}') .. shruju.name .. '{normal}\n'
+        str = str .. '{whoCares}' .. shruju.description .. '{white}\n'
+        if shruju.effect then str = str .. '{purple}' .. shruju.effect.description end
+        ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
+        ctx.hud.tooltipRaw = str:gsub('{%a+}', '')
+      end
+      ctx.hud.tooltipHover = true
+    end
+  end
 end
 
 function HudShruju:draw()

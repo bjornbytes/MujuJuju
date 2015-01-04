@@ -8,7 +8,7 @@ local fancyFont = love.graphics.newFont('media/fonts/inglobal.ttf', 24)
 local boldFont = love.graphics.newFont('media/fonts/inglobalb.ttf', 14)
 local deadFontBig = love.graphics.newFont('media/fonts/inglobal.ttf', 64)
 local deadFontSmall = love.graphics.newFont('media/fonts/inglobal.ttf', 44)
-Hud.richOptions = {title = fancyFont, bold = boldFont, normal = normalFont, white = {255, 255, 255}, whoCares = {230, 230, 230}, red = {255, 100, 100}, green = {100, 255, 100}}
+Hud.richOptions = {title = fancyFont, bold = boldFont, normal = normalFont, white = {255, 255, 255}, whoCares = {230, 230, 230}, red = {255, 100, 100}, green = {100, 255, 100}, purple = {115, 75, 150}}
 
 function Hud:init()
 	self.cursorImage = g.newImage('media/graphics/cursor.png')
@@ -54,6 +54,7 @@ function Hud:init()
   self.units = HudUnits()
   self.shrujuPatches = {HudShrujuPatch(), HudShrujuPatch()}
   self.shruju = HudShruju()
+  self.tooltipHover = false
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end
@@ -61,6 +62,7 @@ end
 function Hud:update()
   local p = ctx.players:get(ctx.id)
 
+  self.tooltipHover = false
 	self.upgradeAlpha = math.lerp(self.upgradeAlpha, self.upgrading and 1 or 0, 12 * tickRate)
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
@@ -68,8 +70,8 @@ function Hud:update()
 	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
 
   self.upgrades:update()
+  self.shruju:update()
   self.units:update()
-
   table.with(self.shrujuPatches, 'update')
 
 	-- Update Timer
@@ -150,6 +152,8 @@ function Hud:update()
 	self.particles:update()
 
 	if ctx.ded then love.keyboard.setKeyRepeat(true) end
+
+  if not self.tooltipHover then self.tooltip = nil end
 end
 
 function Hud:health(x, y, percent, color, width, thickness)
@@ -300,7 +304,7 @@ function Hud:gui()
 
 	-- Death Screen
 	if ctx.ded then
-		if self.deadScreen == 1 then
+		if false and self.deadScreen == 1 then
 			g.setColor(244, 188, 80, 255 * self.deadAlpha)
 			g.setFont(deadFontBig)
 			local str = 'YOUR SHRINE HAS BEEN DESTROYED!'
@@ -347,7 +351,7 @@ function Hud:gui()
 			g.setColor(255, 255, 255, 255 * self.deadAlpha)
 			g.draw(self.deadOk, w / 2 - self.deadOk:getWidth() / 2, h * .825)
 		else
-			if self.highscores then
+			if false and self.highscores then
 				g.setColor(253, 238, 65, 255 * self.deadAlpha)
 				g.setFont(deadFontSmall)
 				g.printf('Highscores', 0, h * .05, w, 'center')
@@ -365,9 +369,23 @@ function Hud:gui()
 				g.draw(self.deadReplay, w * .4, h * .825, 0, 1, 1, self.deadReplay:getWidth() / 2)
 				g.draw(self.deadQuit, w * .6, h * .825, 0, 1, 1, self.deadQuit:getWidth() / 2)
 			else
-				g.setColor(253, 238, 65, 255 * self.deadAlpha)
-				g.setFont(deadFontSmall)
-				g.printf('Unable to load highscores :[', 0, h * .4, w, 'center')
+        g.setFont(deadFontSmall)
+        str = 'Your Score:'
+        g.printf(str, 0, h * .325, w, 'center')
+
+        g.setColor(240, 240, 240, 255 * self.deadAlpha)
+        str = tostring(math.floor(self.timer.total * tickRate))
+        local benchmark
+        if math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.gold then
+          benchmark = 'Gold'
+        elseif math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.silver then
+          benchmark = 'Silver'
+        elseif math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.bronze then
+          benchmark = 'Bronze'
+        end
+
+        if benchmark then str = str .. ' (' .. benchmark .. ')' end
+        g.printf(str, 0, h * .41, w, 'center')
 
 				g.draw(self.deadReplay, w * .4, h * .825, 0, 1, 1, self.deadReplay:getWidth() / 2)
 				g.draw(self.deadQuit, w * .6, h * .825, 0, 1, 1, self.deadQuit:getWidth() / 2)
@@ -455,23 +473,27 @@ function Hud:mousereleased(x, y, b)
   end
 
 	if b == 'l' and ctx.ded then
-		if self.deadScreen == 1 then
+		if false and self.deadScreen == 1 then
 			local img = self.deadOk
 			local w2 = g.getWidth() / 2
 			if math.inside(x, y, w2 - img:getWidth() / 2, g.getHeight() * .825, img:getDimensions()) then
 				self:sendScore()
 			end
-		elseif self.deadScreen == 2 then
+		elseif true or self.deadScreen == 2 then
 			local img1 = self.deadReplay
 			local img2 = self.deadQuit
 			local w = g.getWidth()
 			local h = g.getHeight()
 			if math.inside(x, y, w * .4 - img1:getWidth() / 2, h * .825, img1:getDimensions()) then
 				Context:remove(ctx)
-				Context:add(Game)
+        local biomeIndex = nil
+        for i = 1, #config.biomeOrder do
+          if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end
+        end
+				Context:add(Menu, biomeIndex)
 			elseif math.inside(x, y, w * .6 - img2:getWidth() / 2, h * .825, img2:getDimensions()) then
 				Context:remove(ctx)
-				Context:add(Menu)
+				Context:add(Game, ctx.user, ctx.biome)
 			end
 		end
 	end

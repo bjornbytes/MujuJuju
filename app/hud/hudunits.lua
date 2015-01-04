@@ -52,7 +52,6 @@ function HudUnits:update()
   local p = ctx.players:get(ctx.id)
   local mx, my = love.mouse.getPosition()
 
-  local hover = false
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
     for j = 1, #upgrades[i] do
@@ -64,12 +63,10 @@ function HudUnits:update()
           ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
           ctx.hud.tooltipRaw = str:gsub('{%a+}', '')
         end
-        hover = true
+        ctx.hud.tooltipHover = true
       end
     end
   end
-
-  if not hover then ctx.hud.tooltip = nil end
 
 	for i = 1, #self.selectFactor do
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selected == i and 1 or 0, 18 * tickRate)

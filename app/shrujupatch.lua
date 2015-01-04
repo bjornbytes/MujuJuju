@@ -3,6 +3,7 @@ local g = love.graphics
 Shrujus = {
   population = {
     name = 'Population',
+    description = 'On use, increases the maximum number of minions you can have summoned at a time by 1.',
     time = 40,
     eat = function()
       local p = ctx.players:get(ctx.id)
@@ -11,6 +12,7 @@ Shrujus = {
   },
   juju = {
     name = 'Juju',
+    description = 'On use, instantly grants you 10 - 20 juju.',
     time = 30,
     eat = function()
       local p = ctx.players:get(ctx.id)
@@ -25,6 +27,8 @@ Shrujus = {
 -- Amount is always between 0 and 1 and determines how strong the magic effect is.
 ShrujuEffects = {
   wealth = {
+    description = 'Doubles your passive juju income rate.',
+
     pickup = function(self)
       local p = ctx.players:get(ctx.id)
       self.amount = 1.9 + (.2 * self.strength)

@@ -28,6 +28,8 @@ function Unit:activate()
           self.target = nil
           self.animation:set('idle')
         end
+
+        self.ai.useAbilities(self)
       end
     end
   end)
@@ -38,9 +40,11 @@ function Unit:activate()
     elseif data.state.name == 'spawn' then
       self.spawning = false
       self.animation:set('idle', {force = true})
+    elseif self.casting then
+      self.casting = false
     end
 
-    if not data.state.loop then self.animation:set('idle') end
+    if not data.state.loop then self.animation:set('idle', {force = true}) end
   end)
 
   self.buffs = UnitBuffs(self)
@@ -304,6 +308,18 @@ function Unit:die()
   end)
 
   ctx.units:remove(self)
+end
+
+
+----------------
+-- AI
+----------------
+Unit.ai = {}
+function Unit.ai.useAbilities(self)
+  print(#self.abilities)
+  table.each(self.abilities, function(ability)
+    f.exe(ability.use, ability)
+  end)
 end
 
 
