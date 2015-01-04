@@ -46,7 +46,7 @@ ShrujuPatch = class()
 
 ShrujuPatch.width = 40
 ShrujuPatch.height = 40
-ShrujuPatch.depth = -9
+ShrujuPatch.depth = 1
 
 function ShrujuPatch:activate()
 	self.y = ctx.map.height - ctx.map.groundHeight
