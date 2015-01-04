@@ -57,14 +57,19 @@ function ShrujuPatch:draw()
 end
 
 function ShrujuPatch:grow(what)
-  if not table.has(self.types, what) or self.growing or self.slot then return end
+  if not self:playerNearby() or not table.has(self.types, what) or self.growing or self.slot then return end
   self.timer = Shrujus[what].time
   self.growing = what
 end
 
 function ShrujuPatch:take()
-  if not self.slot then return end
+  if not self:playerNearby() or not self.slot then return end
   local slot = self.slot
   self.slot = nil
   return slot
+end
+
+function ShrujuPatch:playerNearby()
+  local p = ctx.players:get(ctx.id)
+  return not p.dead and math.abs(p.x - self.x) <= self.width / 2 + p.width / 2
 end

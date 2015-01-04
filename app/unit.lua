@@ -73,6 +73,8 @@ function Unit:activate()
     f.exe(upgrade.apply, upgrade, self)
   end)
 
+  self.speed = self.speed + love.math.random(-10, 10)
+
   self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
   self.backCanvas = g.newCanvas(200, 200)
   self.canvas = g.newCanvas(200, 200)
@@ -282,7 +284,7 @@ function Unit:die()
   self:abilityCall('deactivate')
 
   if not self.player then
-    local amount = love.math.random(12 + (ctx.units.level ^ .85) * .75, 20 + (ctx.units.level ^ .85))
+    local amount = love.math.random(8 + (ctx.units.level ^ .8) * .75, 12 + (ctx.units.level ^ .85))
     local jujus = 1
     for i = 1, jujus do
       ctx.jujus:add({

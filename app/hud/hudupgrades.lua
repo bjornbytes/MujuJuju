@@ -14,19 +14,21 @@ end
 
 function HudUpgrades:update()
   self.prevTime = self.time
+  if not ctx.players:get(ctx.id):atShrine() then self.active = false end
   if self.active then self.time = math.min(self.time + tickRate, self.maxTime)
   else self.time = math.max(self.time - tickRate, 0) end
 end
 
 function HudUpgrades:keypressed(key)
-  if key == 'tab' then
+  if key == 'tab' or key == 'e' then
     self.lastPress = tick
     self.active = not self.active
+    if not ctx.players:get(ctx.id):atShrine() then self.active = false end
   end
 end
 
 function HudUpgrades:keyreleased(key)
-  if key == 'tab' then
+  if key == 'tab' or key == 'e' then
     if (tick - self.lastPress) * tickRate > self.maxTime then
       self.active = false
     end

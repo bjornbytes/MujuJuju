@@ -102,8 +102,5 @@ function HudShrujuPatch:mousepressed(x, y, b)
 end
 
 function HudShrujuPatch:playerNearby()
-  if not self.patch then return false end
-
-  local p = ctx.players:get(ctx.id)
-  return math.abs(p.x - self.patch.x) <= self.patch.width / 2 + p.width / 2
+  return self.patch and self.patch:playerNearby()
 end
