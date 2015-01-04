@@ -73,7 +73,7 @@ function Unit:activate()
     f.exe(upgrade.apply, upgrade, self)
   end)
 
-  self.speed = self.speed + love.math.random(-10, 10)
+  self.range = self.range + love.math.random(-10, 10)
 
   self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
   self.backCanvas = g.newCanvas(200, 200)
@@ -260,10 +260,12 @@ function Unit:hurt(amount, source, kind)
   if self.dying then return end
 
   amount = self.buffs:prehurt(amount, source, kind)
+  self:abilityCall('prehurt', amount, source, kind)
 
   self.health = math.max(self.health - amount, 0)
 
   self.buffs:posthurt(amount, source, kind)
+  self:abilityCall('posthurt', amount, source, kind)
 
   if self.health <= 0 then
     self.animation:set('death', {force = true})

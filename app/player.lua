@@ -23,7 +23,7 @@ function Player:init()
   self.dead = false
   self.deathTimer = 0
 
-  self.juju = 30
+  self.juju = 300
   self.jujuTimer = 1
   self.jujuRate = 1
 

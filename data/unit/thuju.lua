@@ -16,6 +16,24 @@ Thuju.speed = 35
 -- Upgrades
 ----------------
 Thuju.upgrades = {
+  wardofthorns = {
+    level = 0,
+    costs = {35, 60, 100, 150, 250},
+    description = 'Thuju protrudes splintering thorns from his hide, causing him to reflect a portion of melee damage dealt to him.',
+    values = {
+      [0] = '10% reflected',
+      [1] = '25% reflected',
+      [2] = '45% reflected',
+      [3] = '70% reflected',
+      [4] = '100% reflected',
+      [5] = '150% reflected'
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('wardofthorns')
+      end
+    end
+  },
   tenacity = {
     level = 0,
     costs = {45, 75, 115, 165, 225},
@@ -35,76 +53,57 @@ Thuju.upgrades = {
       unit.maxHealth = unit.maxHealth + difference
     end
   },
-  wardofthorns = {
-    level = 0,
-    costs = {35, 60, 100, 150, 250},
-    description = 'Thuju protrudes splintering thorns from his hide, causing him to reflect a portion of melee damage dealt to him.',
-    values = {
-      [0] = '10% reflected',
-      [1] = '25% reflected',
-      [2] = '45% reflected',
-      [3] = '70% reflected',
-      [4] = '100% reflected',
-      [5] = '150% reflected'
-    },
-    apply = function(self, unit)
-      if self.level > 0 then
-        unit:addAbility('wardofthorns')
-      end
-    end
-  },
   impenetrablehide = {
     level = 0,
     costs = {50, 75, 110, 155, 210},
-    description = 'Thuju burst into a spirit flame on death, damaging nearby enemies.',
+    description = 'Thuju hardens his body when he is struck.  He takes reduced damage from all sources for 3 seconds, stacking multiple times.',
     values = {
-      [1] = '20 damage',
-      [2] = '40 damage',
-      [3] = '60 damage',
-      [4] = '80 damage',
-      [5] = '100 damage'
+      [1] = '4% damage reduction, stacking up to 3 times',
+      [2] = '6% damage reduction, stacking up to 3 times',
+      [3] = '8% damage reduction, stacking up to 3 times',
+      [4] = '10% damage reduction, stacking up to 4 times',
+      [5] = '12% damage reduction, stacking up to 5 times'
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit:addAbility('burst')
+        unit:addAbility('impenetrablehide')
       end
     end
   },
-  siphon = {
+  taunt = {
     level = 0,
     costs = {80, 160, 240},
-    prerequisites = {empower = 3, fortify = 3},
-    description = 'Thuju siphon life from their enemies with every strike, granting them lifesteal.',
+    prerequisites = {wardofthorns = 3, tenacity = 3},
+    description = 'Thuju beats his chest, forcing nearby enemies to attack him for 3 seconds.',
     values = {
-      [1] = '10% lifesteal',
-      [2] = '20% lifesteal',
-      [3] = '30% lifesteal'
+      [1] = '100 range, 12 second cooldown',
+      [2] = '150 range, 10 second cooldown',
+      [3] = '200 range, 8 second cooldown'
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit:addAbility('siphon')
+        unit:addAbility('taunt')
       end
     end
   },
-  sanctuary = {
+  tremor = {
     level = 0,
     costs = {80, 160, 240},
-    prerequisites = {fortify = 3, burst = 3},
-    description = 'The spirit flame leaves behind an aura that slowly heals allies.',
+    prerequisites = {tenacity = 3, impenetrablehide = 3},
+    description = 'Thuju slams the ground in the direction he is facing, causing the tectonic plates of the Earth to erupt in front of him.  Any units unfortunate enough to be caught in the area of impact take damage and are stunned.',
     values = {
-      [1] = '10 hp/s for 3 seconds.',
-      [2] = '20 hp/s for 4 seconds.',
-      [3] = '30 hp/s for 5 seconds.'
-    }
+      [1] = '100 range, 30 damage, .5s stun',
+      [2] = '150 range, 50 damage, 1s stun',
+      [3] = '175 range, 80 damage, 1.5s stun'
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('tremor')
+      end
+    end
   }
 }
 
-Thuju.upgradeOrder = {'empower', 'fortify', 'burst', 'siphon', 'sanctuary'}
-
-
-----------------
--- Abilities
-----------------
-Thuju.abilities = {'taunt', 'tremor'}
+Thuju.upgradeOrder = {'wardofthorns', 'tenacity', 'impenetrablehide', 'taunt', 'tremor'}
 
 return Thuju
