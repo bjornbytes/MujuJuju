@@ -3,8 +3,8 @@ Effects = class()
 function Effects:init()
   self.active = love.graphics.isSupported('shader')
   self.effects = {}
-	self:add('vignette')
-	--self:add('bloom')
+	--self:add('vignette')
+	self:add('bloom')
 	self:add('wave')
 	self:add('deathBlur')
 end
