@@ -3,8 +3,9 @@ return {
   elites = {
     baseModifier = .005,
     levelModifier = .0015,
-    scale = 1.5,
+    jujuModifier = 2,
     minimumLevel = 5,
+    scale = 1.5,
     buffs = {
       sinister = {
         damageModifier = 10

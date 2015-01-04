@@ -298,6 +298,11 @@ function Unit:die()
   if not self.player then
     local amount = love.math.random(8 + (ctx.units.level ^ .8) * .75, 12 + (ctx.units.level ^ .85))
     local jujus = 1
+
+    if self.elite then
+      amount = amount * config.elites.jujuModifier
+    end
+
     for i = 1, jujus do
       ctx.jujus:add({
         x = self.x,
