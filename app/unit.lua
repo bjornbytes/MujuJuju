@@ -88,14 +88,13 @@ end
 
 function Unit:update()
   self.prev.healthDisplay = self.healthDisplay
+  self.prev.x = self.x
+  self.prev.y = self.y
 
   if self.dying then
     self.healthDisplay = math.lerp(self.healthDisplay, 0, 20 * tickRate)
     return
   end
-
-  self.prev.x = self.x
-  self.prev.y = self.y
 
   self:abilityCall('update')
   self:abilityCall('rot')
@@ -293,6 +292,10 @@ function Unit:die()
       })
     end
   end
+
+  table.each(ctx.units.objects, function(u)
+    if u.target == self then u.target = nil end
+  end)
 
   ctx.units:remove(self)
 end
