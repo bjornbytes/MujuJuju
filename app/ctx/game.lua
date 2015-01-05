@@ -167,7 +167,7 @@ end
 
 function Game:keypressed(key)
 	if not self.ded then
-		if (key == 'p' or key == 'escape') and not self.hud.upgrading then self.paused = not self.paused
+		if key == 'p' and not self.hud.upgrading then self.paused = not self.paused
 		elseif key == 'm' then self.sound:mute()
 		elseif key == 'f' then love.window.setFullscreen(not love.window.getFullscreen()) end
 	end
