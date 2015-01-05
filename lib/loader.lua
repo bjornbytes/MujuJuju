@@ -110,5 +110,6 @@ data.load = function()
   load('data/particle', 'particle')
   load('data/effect', 'effect')
   load('data/gooey', 'gooey')
+  load('data/shruju', 'shruju')
 end
 
