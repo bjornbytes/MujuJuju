@@ -135,11 +135,16 @@ function Menu:keypressed(key)
     self.selectedBiome = self.selectedBiome + 1
     if self.selectedBiome >= #config.biomeOrder + 1 then self.selectedBiome = 1 end
     table.clear(self.geometry)
+  elseif key == 'x' and love.keyboard.isDown('lctrl') then
+    love.filesystem.remove('save/user.json')
+    self.menuSounds:stop()
+    Context:remove(ctx)
+    Context:add(Menu)
   end
 end
 
 function Menu:keyreleased(key)
-
+  
 end
 
 function Menu:mousepressed(mx, my, b)

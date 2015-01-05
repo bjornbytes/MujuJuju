@@ -4,6 +4,15 @@ function love.load()
   data.load()
   config = dofile('config.lua')
 
+  for stat in pairs({'damage', 'health'}) do
+    local rune = {
+      stat = stat,
+      flat = something,
+      scaling = something, -- per minute
+      ability = 'code' -- which ability does this rune benefit
+    }
+  end
+
   function saveUser(user)
     love.filesystem.createDirectory('save')
     love.filesystem.write('save/user.json', json.encode(user))

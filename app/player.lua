@@ -265,26 +265,18 @@ end
 function Player:initDeck()
   self.deck = {}
 
-  for i = 1, #ctx.user.deck do
-    local code = ctx.user.deck[i]
+  for i = 1, 3 do
+    local code = ctx.user.deck.minions[i]
 
-    self.deck[code] = {
-      abilities = {},
-      upgrades = {},
-      cooldown = 0,
-      instance = nil,
-      code = code
-    }
+    if code then
+      self.deck[code] = {
+        runes = ctx.user.deck.runes[i],
+        cooldown = 0,
+        code = code
+      }
 
-    table.each(data.unit[code].abilities, function(ability, i)
-      self.deck[code].abilities[ability] = false
-    end)
-
-    table.each(data.unit[code].abilities, function(ability)
-      self.deck[code].upgrades[ability] = {}
-    end)
-
-    self.deck[i] = self.deck[code]
+      self.deck[i] = self.deck[code]
+    end
   end
 end
 
