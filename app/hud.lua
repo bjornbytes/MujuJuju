@@ -211,7 +211,7 @@ function Hud:gui()
 
 		-- Timer
     local angle = math.anglerp(self.prevJujuAngle, self.jujuAngle, tickDelta / tickRate)
-    local image = data.media.graphics.hudStatusBar
+    local image = data.media.graphics.hud.statusBar
     local scale = v * .07 / image:getHeight()
     local width, height = 425 * scale, 60 * scale
     g.draw(image, u, 0, 0, scale, scale, image:getWidth(), 0)
@@ -231,7 +231,7 @@ function Hud:gui()
     xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .04)
 
     -- Population Icon
-    local image = data.media.graphics.hudPopulation
+    local image = data.media.graphics.hud.population
     local scale = (height * .6) / image:getHeight()
     xx = xx + image:getWidth() * scale / 2
     g.draw(image, xx, height / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
@@ -242,7 +242,7 @@ function Hud:gui()
     xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .04)
 
     -- Timer Icon
-    local image = data.media.graphics.hudClockBlue
+    local image = data.media.graphics.hud.clockBlue
     local scale = (height * .6) / image:getHeight()
     xx = xx + image:getWidth() * scale / 2
     g.draw(image, xx, height / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
@@ -334,7 +334,7 @@ function Hud:gui()
   if self.tooltip then
     mx, my = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
     g.setFont(self.richOptions.normal)
-    local textWidth, lines = normalFont:getWrap(self.tooltipRaw, 300)
+    local textWidth, lines = self.richOptions.normal:getWrap(self.tooltipRaw, 300)
     local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
     local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))
     g.setColor(30, 50, 70, 240)

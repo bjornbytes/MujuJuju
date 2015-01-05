@@ -58,10 +58,11 @@ function HudUnits:update()
       local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
       local x, y, r = unpack(upgrades[i][j])
       if math.insideCircle(mx, my, x, y, r) then
-        if not ctx.hud.tooltip then
-          local str = ctx.upgrades.makeTooltip(who, what)
+        local str = ctx.upgrades.makeTooltip(who, what)
+        local raw = str:gsub('{%a+}', '')
+        if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
           ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
-          ctx.hud.tooltipRaw = str:gsub('{%a+}', '')
+          ctx.hud.tooltipRaw = raw
         end
         ctx.hud.tooltipHover = true
       end
@@ -95,7 +96,7 @@ function HudUnits:draw()
 
   for i = 1, self.count do
     local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
-    local bg = data.media.graphics.hudMinion
+    local bg = data.media.graphics.hud.minion
     local w, h = bg:getDimensions()
     local scale = (.25 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / w
     local yy = v * (.01 * selectFactor)
@@ -119,10 +120,14 @@ function HudUnits:draw()
     g.printCenter(unit.name, math.round(xx), math.round(yy + (.05 * v * scale)))
 
     g.setFont('mesmerize', .04 * scale * v)
-    g.setColor(0, 0, 0)
-    g.printCenter(unit.cost, xx - (.19 * v * scale) + 1, yy + (.204 * v * scale) + 1)
+    g.setColor(0, 100, 0, 200)
+    g.printCenter(unit.cost, xx - (.19 * v * scale) + 1, yy + (.204 * v * scale) + 2)
+    g.setColor(255, 255, 255)
+    g.printCenter(unit.cost, xx - (.19 * v * scale), yy + (.204 * v * scale))
 
     local count = table.count(ctx.units:filter(function(u) return u.class.code == p.deck[i].code end))
+    g.setColor(0, 100, 0, 200)
+    g.printCenter(count, xx + (.1825 * v * scale) + 1, yy + (.21 * v * scale) + 2)
     g.setColor(255, 255, 255)
     g.printCenter(count, xx + (.1825 * v * scale), yy + (.21 * v * scale))
     
@@ -162,6 +167,8 @@ function HudUnits:mousereleased(mx, my, b)
         if ctx.upgrades.canBuy(who, what) and p:spend(cost) then
           ctx.upgrades.unlock(who, what)
           ctx.hud.tooltip = nil
+        else
+          ctx.sound:play('misclick')
         end
       end
     end

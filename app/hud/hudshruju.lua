@@ -33,13 +33,14 @@ function HudShruju:update()
   for i = 1, #shruju do
     local x, y, r = unpack(self.geometry.shruju[i])
     if p.shrujus[i] and math.insideCircle(mx, my, x, y, r) then
-      if not ctx.hud.tooltip then
-        local shruju = p.shrujus[i]
-        local str = '{title}' .. (shruju.effect and '{purple}' or '{white}') .. shruju.name .. '{normal}\n'
-        str = str .. '{whoCares}' .. shruju.description .. '{white}\n'
-        if shruju.effect then str = str .. '{purple}' .. shruju.effect.name .. ' - ' .. shruju.effect.description end
+      local shruju = p.shrujus[i]
+      local str = '{title}' .. (shruju.effect and '{purple}' or '{white}') .. shruju.name .. '{normal}\n'
+      str = str .. '{whoCares}' .. shruju.description .. '{white}\n'
+      if shruju.effect then str = str .. '{purple}' .. shruju.effect.name .. ' - ' .. shruju.effect.description end
+      local raw = str:gsub('{%a+}', '')
+      if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
         ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
-        ctx.hud.tooltipRaw = str:gsub('{%a+}', '')
+        ctx.hud.tooltipRaw = raw
       end
       ctx.hud.tooltipHover = true
     end

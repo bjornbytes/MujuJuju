@@ -63,11 +63,12 @@ function HudShrujuPatch:update()
       local x, y, w, h = unpack(types[i])
       -- Tooltip
       if math.inside(mx, my, x, y, w, h) then
-        if not ctx.hud.tooltip then
-          local str = '{title}{white}'  .. shruju.name .. '{normal}\n'
+        local str = '{title}{white}'  .. shruju.name .. '{normal}\n'
+        local raw = str:gsub('{%a+}', '')
+        if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
           str = str .. '{whoCares}' .. shruju.description
           ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
-          ctx.hud.tooltipRaw = str:gsub('{%a+}', '')
+          ctx.hud.tooltipRaw = raw
         end
         ctx.hud.tooltipHover = true
       end
@@ -98,7 +99,7 @@ function HudShrujuPatch:draw()
       local x, y, w, h = unpack(types[i])
 
       g.setColor(255, 255, 255, alphaFactor * 200)
-      local image = data.media.graphics.hudFrame
+      local image = data.media.graphics.hud.frame
       local scale = w / 125
       local xx, yy = x - 60 * scale, y - 60 * scale
       g.draw(image, xx, yy, 0, scale, scale)
@@ -107,7 +108,7 @@ function HudShrujuPatch:draw()
       local scale = (h - .02 * v) / image:getHeight()
       g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
-      local image = data.media.graphics.hudTitle
+      local image = data.media.graphics.hud.title
       local scale = (w + 5) / 125
       g.draw(image, x + (w / 2), y + (120 * scale), 0, scale, scale, image:getWidth() / 2)
 
@@ -121,7 +122,7 @@ function HudShrujuPatch:draw()
       local code = self.patch.growing or self.patch.slot.code
 
       local x, y, w, h = unpack(self.geometry.slot)
-      local image = data.media.graphics.hudFrame
+      local image = data.media.graphics.hud.frame
       local scale = w / 125
       local xx, yy = x - 60 * scale, y - 60 * scale
       g.draw(image, xx, yy, 0, scale, scale)
@@ -130,7 +131,7 @@ function HudShrujuPatch:draw()
       local scale = (h - .02 * v) / image:getHeight()
       g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
-      local image = data.media.graphics.hudTitle
+      local image = data.media.graphics.hud.title
       local scale = (w + 5) / 125
       g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
 
