@@ -183,14 +183,17 @@ return {
 
   runes = {
     health = {
+      name = 'Rune of Fortitude',
       flatRange = {10, 250},
       scalingRange = {2, 25}
     },
     damage = {
+      name = 'Rune of Might',
       flatRange = {3, 80},
       scalingRange = {1, 15}
     },
     speed = {
+      name = 'Rune of Agility',
       flatRange = {5, 80},
       scalingRange = {1, 5}
     }

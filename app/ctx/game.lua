@@ -32,9 +32,13 @@ function Game:load(user, biome)
   self.event:on('shrine.dead', function(data)
     self.ded = true
 
+    -- So the hud can draw them
+    self.rewards = {runes = {}, biomes = {}, minions = {}}
+
     local time = math.round(self.hud.timer.total * tickRate)
     if time > self.user.highscores[self.biome] then
       self.user.highscores[self.biome] = time
+      self.rewards.highscore = true
       saveUser(self.user)
     end
 
@@ -60,22 +64,28 @@ function Game:load(user, biome)
       local upgrade = love.math.random() < config.biomes[ctx.biome].runes.specialChance * (runeLevel / 100)
       if upgrade then
         local upgrades = {}
+        local function halp(unit, upgrade)
+          local obj = unit.upgrades[upgrade]
+          table.insert(upgrades, upgrade)
+          upgrades[upgrade] = obj.name
+        end
 
         -- Tier 2 check
         if love.math.random() < .5 * (runeLevel / 100) then
           table.each(config.starters, function(code)
-            table.insert(upgrades, data.unit[code].upgradeOrder[4])
-            table.insert(upgrades, data.unit[code].upgradeOrder[5])
+            halp(data.unit[code], data.unit[code].upgradeOrder[4])
+            halp(data.unit[code], data.unit[code].upgradeOrder[5])
           end)
         else
           table.each(config.starters, function(code)
-            table.insert(upgrades, data.unit[code].upgradeOrder[1])
-            table.insert(upgrades, data.unit[code].upgradeOrder[2])
-            table.insert(upgrades, data.unit[code].upgradeOrder[3])
+            halp(data.unit[code], data.unit[code].upgradeOrder[1])
+            halp(data.unit[code], data.unit[code].upgradeOrder[2])
+            halp(data.unit[code], data.unit[code].upgradeOrder[3])
           end)
         end
 
         rune.upgrade = upgrades[love.math.random(1, #upgrades)]
+        rune.name = 'Rune of ' .. upgrades[rune.upgrade]:capitalize()
       else
         local stats = table.keys(config.runes)
         local stat = stats[love.math.random(1, #stats)]
@@ -85,9 +95,14 @@ function Game:load(user, biome)
         else
           rune.scaling = math.lerp(config.stats.scalingRange[1], config.stats.scalingRange[2], runeLevel / 100)
         end
+
+        rune.name = config.runes[rune.stat].name
       end
 
+      -- Prefixes and Suffixes
+
       table.insert(self.user.runes, rune)
+      table.insert(self.rewards.runes, rune)
     end
 
     saveUser(self.user)
@@ -97,9 +112,8 @@ function Game:load(user, biome)
       local nextBiome = config.biomes[self.biome].rewards.silver
       if nextBiome then
         table.insert(self.user.biomes, nextBiome)
+        table.insert(self.rewards.biomes, nextBiome)
         saveUser(self.user)
-      else
-        -- give a fancy rune
       end
     end
 
@@ -108,6 +122,7 @@ function Game:load(user, biome)
       local nextMinion = config.biomes[self.biome].rewards.gold
       if nextMinion and not table.has(self.user.deck, nextMinion) then
         table.insert(self.user.deck, nextMinion)
+        table.insert(self.rewards.minions, nextMinion)
         saveUser(self.user)
       end
     end

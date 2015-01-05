@@ -339,6 +339,8 @@ function Hud:gui()
 
       if benchmark then str = str .. ' (' .. benchmark .. ')' end
 			g.printf(str, 0, h * .41, w, 'center')
+
+
 			
 			g.setColor(253, 238, 65, 255 * self.deadAlpha)
 			str = 'Your Name:'
@@ -397,6 +399,23 @@ function Hud:gui()
 
         if benchmark then str = str .. ' (' .. benchmark .. ')' end
         g.printf(str, 0, h * .41, w, 'center')
+
+        local rewards = 'Cool Stuff:'
+        if ctx.rewards.highscore then rewards = rewards .. '\nNew highscore!' end
+        if #ctx.rewards.runes > 0 then 
+          local names = table.map(ctx.rewards.runes, function(rune) return rune.name end)
+          rewards = rewards .. '\n' .. table.concat(names, ', ')
+        end
+
+        if #ctx.rewards.biomes > 0 then
+          rewards = rewards .. '\n' .. table.concat(ctx.rewards.biomes, ', ')
+        end
+
+        if #ctx.rewards.minions > 0 then
+          rewards = rewards .. '\n' .. table.concat(ctx.rewards.minions, ', ')
+        end
+
+        g.printf(rewards, 0, h * .5, w, 'center')
 
 				g.draw(self.deadReplay, w * .4, h * .825, 0, 1, 1, self.deadReplay:getWidth() / 2)
 				g.draw(self.deadQuit, w * .6, h * .825, 0, 1, 1, self.deadQuit:getWidth() / 2)
