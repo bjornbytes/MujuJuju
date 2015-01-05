@@ -84,11 +84,4 @@ function HudHealth:draw()
     local color = (p and unit.team == p.team) and green or red
     bar(x, y - 30 - 5 * t[location], hard, soft, color, 50, 3)
   end)
-
-  table.each(ctx.shrujuPatches.objects, function(patch)
-    if patch.timer > 0 then
-      local x, y = patch.x, patch.y
-      bar(x, y - patch.height - 20, patch.timer / data.shruju[patch.growing].time, nil, orange, 120, 10)
-    end
-  end)
 end
