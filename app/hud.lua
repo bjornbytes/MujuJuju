@@ -37,7 +37,7 @@ function Hud:init()
 	self.tooltip = nil
 	self.tooltipRaw = ''
 	self.jujuIcon = data.media.graphics.juju
-	self.jujuIconScale = .75
+	self.jujuIconScale = 1
 	self.timer = {total = 0, minutes = 0, seconds = 0}
 	self.particles = Particles()
 	self.selectBg = {data.media.graphics.unit.portrait.bruju, data.media.graphics.unit.portrait.huju, data.media.graphics.unit.portrait.huju}
@@ -64,6 +64,8 @@ function Hud:init()
   self.shrujuPatches = {HudShrujuPatch(), HudShrujuPatch()}
   self.shruju = HudShruju()
   self.tooltipHover = false
+  self.jujuAngle = 2 * math.pi
+  self.prevJujuAngle = self.jujuAngle
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end
@@ -76,7 +78,7 @@ function Hud:update()
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
 	self.protectAlpha = math.max(self.protectAlpha - tickRate, 0)
-	self.jujuIconScale = math.lerp(self.jujuIconScale, .75, 12 * tickRate)
+	self.jujuIconScale = math.lerp(self.jujuIconScale, 1, 12 * tickRate)
 
   self.upgrades:update()
   self.shruju:update()
@@ -168,6 +170,9 @@ function Hud:update()
 	if ctx.ded then love.keyboard.setKeyRepeat(true) end
 
   if not self.tooltipHover then self.tooltip = nil end
+
+  self.prevJujuAngle = self.jujuAngle
+  self.jujuAngle = math.lerp(self.jujuAngle, 2 * math.pi, math.min(3 * tickRate, 1))
 end
 
 function Hud:health(x, y, percent, color, width, thickness)
@@ -199,21 +204,50 @@ end
 
 function Hud:gui()
 	local w, h = love.graphics.getDimensions()
+  local u, v = self.u, self.v
   local p = ctx.players:get(ctx.id)
 
 	if not ctx.ded then
 
-		-- Juju icon
-		g.setFont(boldFont)
-		if not self.upgrading then
-			g.setColor(255, 255, 255, 255 * (1 - self.upgradeAlpha))
-			g.draw(self.jujuIcon, 52, 55, 0, self.jujuIconScale, self.jujuIconScale, self.jujuIcon:getWidth() / 2, self.jujuIcon:getHeight() / 2)
-			g.setColor(0, 0, 0)
-			g.printf(math.floor(p.juju), 16, 18 + self.jujuIcon:getHeight() * .375 - (g.getFont():getHeight() / 2), self.jujuIcon:getWidth() * .75, 'center')
-			g.setColor(255, 255, 255)
-		end
-
 		-- Timer
+    local angle = math.anglerp(self.prevJujuAngle, self.jujuAngle, tickDelta / tickRate)
+    local image = data.media.graphics.hudStatusBar
+    local scale = v * .07 / image:getHeight()
+    local width, height = 425 * scale, 60 * scale
+    g.draw(image, u, 0, 0, scale, scale, image:getWidth(), 0)
+
+    -- Juju Icon
+    local image = data.media.graphics.juju
+    local scale = (height * .6) / image:getHeight()
+    local s = scale * self.jujuIconScale
+    local xx = u - width + (v * .035) + image:getWidth() / 2 * scale
+    g.draw(image, xx, height / 2, angle, s, s, image:getWidth() / 2, image:getHeight() / 2)
+
+    -- Juju Text
+    g.setFont('mesmerize', height * .4)
+    g.setColor(255, 255, 255)
+    local str = math.floor(p.juju)
+    g.print(str, xx + (v * .03), (height * .5) - g.getFont():getHeight() / 2)
+    xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .04)
+
+    -- Population Icon
+    local image = data.media.graphics.hudPopulation
+    local scale = (height * .6) / image:getHeight()
+    xx = xx + image:getWidth() * scale / 2
+    g.draw(image, xx, height / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
+    -- Population Text
+    local str = p:getPopulation() .. ' / ' .. p.maxPopulation
+    g.print(str, xx + (v * .025), (height * .5) - g.getFont():getHeight() / 2)
+    xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .04)
+
+    -- Timer Icon
+    local image = data.media.graphics.hudClockBlue
+    local scale = (height * .6) / image:getHeight()
+    xx = xx + image:getWidth() * scale / 2
+    g.draw(image, xx, height / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
+    -- Timer Text
 		local total = self.timer.total * tickRate
 		self.timer.seconds = math.floor(total % 60)
 		self.timer.minutes = math.floor(total / 60)
@@ -226,10 +260,7 @@ function Hud:gui()
 		local str = self.timer.minutes .. ':' .. self.timer.seconds
 
 		g.setColor(255, 255, 255)
-		g.print(str, w - 25 - g.getFont():getWidth(str), 25)
-
-    local pop = p:getPopulation()
-    g.print(pop .. ' / ' .. p.maxPopulation, w - 25 - g.getFont():getWidth(str), 50)
+		g.print(str, xx + (.025 * v), (height * .5) - g.getFont():getHeight() / 2)
 
     self.health:draw()
 
