@@ -91,9 +91,9 @@ function Game:load(user, biome)
         local stat = stats[love.math.random(1, #stats)]
         rune.stat = stat
         if love.math.random() < .5 then
-          rune.amount = math.lerp(config.stats.flatRange[1], config.stats.flatRange[2], runeLevel / 100)
+          rune.amount = math.lerp(config.runes[stat].flatRange[1], config.runes[stat].flatRange[2], runeLevel / 100)
         else
-          rune.scaling = math.lerp(config.stats.scalingRange[1], config.stats.scalingRange[2], runeLevel / 100)
+          rune.scaling = math.lerp(config.runes[stat].scalingRange[1], config.runes[stat].scalingRange[2], runeLevel / 100)
         end
 
         rune.name = config.runes[rune.stat].name
