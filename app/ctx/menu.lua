@@ -5,7 +5,7 @@ Menu = class()
 function Menu:load(selectedBiome)
 	self.sound = Sound()
 	self.menuSounds = self.sound:loop({sound = 'menu'})
-	--love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor.png'))
+	love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor.png'))
 
   self.geometry = setmetatable({}, {__index = function(t, k)
     return rawset(t, k, self.geometryFunctions[k]())[k]
@@ -109,17 +109,7 @@ function Menu:load(selectedBiome)
 end
 
 function Menu:update()
-  love.mouse.setCursor(love.mouse.getSystemCursor('arrow'))
-  
-  if not self.choosing then
-    local biomes = self.geometry.biomes
-    local mx, my = love.mouse.getPosition()
-    for i = 1, #biomes do
-      if math.inside(mx, my, unpack(biomes[i])) then
-        love.mouse.setCursor(love.mouse.getSystemCursor('hand'))
-      end
-    end
-  end
+  --
 end
 
 function Menu:draw()
@@ -308,5 +298,4 @@ function Menu:startGame()
   self.menuSounds:stop()
   Context:remove(ctx)
   Context:add(Game, self.user, config.biomeOrder[self.selectedBiome])
-  love.mouse.setCursor(love.mouse.getSystemCursor('arrow'))
 end
