@@ -67,7 +67,7 @@ function Player:update()
 	self:animate()
 
 	self.deathTimer = timer.rot(self.deathTimer, function()
-		self.invincible = 2
+		self.invincible = 3
 		self.health = self.maxHealth
 		self.dead = false
 		self.ghost:despawn()
