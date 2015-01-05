@@ -122,6 +122,8 @@ function ShrujuPatch:activate()
   self.types = table.keys(Shrujus)
   self.timer = 0
   self.slot = nil
+  self.highlight = 0
+  self.prevHighlight = self.highlight
 
   self.animation = data.animation.shrujupatch()
   self.animation:on('complete', function(data)
@@ -140,10 +142,26 @@ function ShrujuPatch:update()
   self.timer = timer.rot(self.timer, function()
     self:makeShruju()
   end)
+
+  self.prevHighlight = self.highlight
+	self.highlight = math.lerp(self.highlight, self:playerNearby() and 128 or 0, math.min(5 * tickRate))
 end
 
 function ShrujuPatch:draw()
   self.animation:draw(self.x, self.y)
+
+  local highlight = math.lerp(self.prevHighlight, self.highlight, tickDelta / tickRate)
+  table.each(self.animation.spine.skeleton.slots, function(slot)
+    slot.a = highlight / 255
+    slot.data.additiveBlending = true
+  end)
+  self.animation:draw(self.x, self.y)
+  table.each(self.animation.spine.skeleton.slots, function(slot)
+    slot.a = 1
+    slot.data.additiveBlending = false
+  end)
+  g.setBlendMode('alpha')
+
   if self.shrujuAnimation then self.shrujuAnimation:draw(self.x, self.y) end
 end
 

@@ -8,7 +8,16 @@ local fancyFont = love.graphics.newFont('media/fonts/inglobal.ttf', 24)
 local boldFont = love.graphics.newFont('media/fonts/inglobalb.ttf', 14)
 local deadFontBig = love.graphics.newFont('media/fonts/inglobal.ttf', 64)
 local deadFontSmall = love.graphics.newFont('media/fonts/inglobal.ttf', 44)
-Hud.richOptions = {title = fancyFont, bold = boldFont, normal = normalFont, white = {255, 255, 255}, whoCares = {230, 230, 230}, red = {255, 100, 100}, green = {100, 255, 100}, purple = {115, 75, 150}}
+Hud.richOptions = {
+  title = g.setFont('mesmerize', 24),
+  bold = g.setFont('mesmerize', 14),
+  normal = g.setFont('mesmerize', 14),
+  white = {255, 255, 255},
+  whoCares = {230, 230, 230},
+  red = {255, 100, 100},
+  green = {100, 255, 100},
+  purple = {115, 75, 150}
+}
 
 function Hud:init()
 	self.cursorImage = g.newImage('media/graphics/cursor.png')
@@ -95,7 +104,12 @@ function Hud:update()
 		vy = vy * self.cursorSpeed * len
 		self.cursorX = self.cursorX + vx * tickRate
 		self.cursorY = self.cursorY + vy * tickRate
-	end
+  else
+    self.prevCursorX = self.cursorX
+    self.prevCursorY = self.cursorY
+    self.cursorX = math.lerp(self.cursorX, love.mouse.getX(), 8 * tickRate)
+    self.cursorY = math.lerp(self.cursorY, love.mouse.getY(), 8 * tickRate)
+  end
 
 	for key in pairs(self.upgradeDotAlpha) do
 		self.upgradeDotAlpha[key] = math.lerp(self.upgradeDotAlpha[key], 1, 5 * tickRate)
@@ -287,12 +301,8 @@ function Hud:gui()
 	end
 
   if self.tooltip then
-    local mx, my = love.mouse.getPosition()
-    if p.gamepad then
-      mx, my = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
-      mx, my = math.round(mx), math.round(my)
-    end
-    g.setFont(boldFont)
+    mx, my = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
+    g.setFont(self.richOptions.normal)
     local textWidth, lines = normalFont:getWrap(self.tooltipRaw, 300)
     local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
     local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))

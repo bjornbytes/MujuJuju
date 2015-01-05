@@ -5,7 +5,7 @@ Upgrades.clear = function()
     local p = ctx.players:get(ctx.id)
 		local pieces = {}
 		local upgrade = data.unit[who].upgrades[what]
-		table.insert(pieces, '{white}{title}' .. what:capitalize() .. '{normal}')
+		table.insert(pieces, '{white}{title}' .. upgrade.name .. '{normal}')
 		table.insert(pieces, '{whoCares}' .. upgrade.description .. '\n')
 		table.insert(pieces, '{white}{bold}Level ' .. upgrade.level .. (upgrade.values[upgrade.level] and ': ' .. upgrade.values[upgrade.level] or ''))
 		if not upgrade.values[upgrade.level + 1] then

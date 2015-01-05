@@ -24,7 +24,7 @@ function HudUnits:init()
       for i = 1, self.count do
         res[i] = {}
 
-        local yy = (.2 * upgradeFactor) * v + (.25 * v)
+        local yy = (.1375 * upgradeFactor) * v + (.25 * v)
         local x = xx - (inc * (3 - 1) / 2)
         for j = 1, 3 do
           table.insert(res[i], {x, yy, radius})
@@ -69,7 +69,8 @@ function HudUnits:update()
   end
 
 	for i = 1, #self.selectFactor do
-		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selected == i and 1 or 0, 18 * tickRate)
+    self.prevSelectFactor[i] = self.selectFactor[i]
+		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selected == i and 1 or 0, 8 * tickRate)
 	end
 end
 
@@ -93,27 +94,37 @@ function HudUnits:draw()
   g.rectangle('fill', 0, 0, ctx.view.frame.width, ctx.view.frame.height)
 
   for i = 1, self.count do
-    local selectFactor = math.max(self.selectFactor[i], upgradeFactor)
+    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
     local bg = data.media.graphics.hudMinion
     local w, h = bg:getDimensions()
-    local scale = (.25 + (.2 * upgradeFactor)) * v / w
-    local yy = v * (.01 + (.00 * upgradeFactor))
-    local alpha = .65 + selectFactor * .35
-    local font = g.setFont('sourcesanspro', .04 * scale * v)
+    local scale = (.25 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / w
+    local yy = v * (.01 * selectFactor)
+    local alpha = .45 + selectFactor * .35
 
     -- Backdrop
-    g.setColor(255, 255, 255, 200 * alpha)
+    g.setColor(255, 255, 255, 255 * alpha)
     g.draw(bg, xx, yy, 0, scale, scale, w / 2, 0)
 
     -- Animation
-    self.animations[i]:draw(xx, yy + .2 * scale * v)
+    self.canvas[i]:clear(0, 0, 0, 0)
+    g.setCanvas(self.canvas[i])
+    self.animations[i]:draw(100, 100)
+    g.setCanvas()
+    g.draw(self.canvas[i], xx, yy + .2 * scale * v, 0, scale, scale, 100, 100)
 
     -- Text
     local unit = data.unit[p.deck[i].code]
-    g.setColor(255, 255, 255, 200 * alpha)
-    g.printCenter(unit.name--[[unit.name:gsub('%w*', string.upper)]], math.round(xx), math.round(yy + (.05 * v * scale)))
-    g.setColor(0, 0, 0, 200 * alpha)
-    g.printCenter(unit.cost, xx - (.185 * v * scale) + 1, yy + (.2175 * v * scale) + 1)
+    local font = g.setFont('mesmerize', .04 * scale * v)
+    g.setColor(255, 255, 255)
+    g.printCenter(unit.name, math.round(xx), math.round(yy + (.05 * v * scale)))
+
+    g.setFont('mesmerize', .04 * scale * v)
+    g.setColor(0, 0, 0)
+    g.printCenter(unit.cost, xx - (.19 * v * scale) + 1, yy + (.204 * v * scale) + 1)
+
+    local count = table.count(ctx.units:filter(function(u) return u.class.code == p.deck[i].code end))
+    g.setColor(255, 255, 255)
+    g.printCenter(count, xx + (.1825 * v * scale), yy + (.21 * v * scale))
     
     xx = xx + inc
   end
@@ -162,12 +173,31 @@ function HudUnits:ready()
 
   self.count = #p.deck
   self.selectFactor = {}
+  self.prevSelectFactor = {}
   self.animations = {}
+  self.canvas = {}
+
+  local animationScaleFactors = {
+    bruju = 1.5,
+    thuju = .85
+  }
+
+  local animationOffsets = {
+    bruju = 0,
+    thuju = -14
+  }
 
   for i = 1, self.count do
     self.selectFactor[i] = 0
-    local scale = data.animation[p.deck[i].code].scale / 2
-    self.animations[i] = data.animation[p.deck[i].code]({scale = scale})
-    self.animations[i]:set('idle')
+    self.prevSelectFactor[i] = self.selectFactor[i]
+    local code = p.deck[i].code
+    local animation = data.animation[code]
+    local scale = animation.scale * animationScaleFactors[code]
+    local offsety = animation.offsety + animationOffsets[code]
+    self.animations[i] = data.animation[p.deck[i].code]({scale = scale, offsety = offsety})
+    self.canvas[i] = love.graphics.newCanvas(200, 200)
+    self.animations[i]:on('complete', function()
+      self.animations[i]:set('idle', {force = true})
+    end)
   end
 end
