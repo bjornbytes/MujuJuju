@@ -120,7 +120,7 @@ function Game:load(user, biome)
     -- Distribute minions
     if gold then
       local nextMinion = config.biomes[self.biome].rewards.gold
-      if nextMinion and not table.has(self.user.deck, nextMinion) then
+      if nextMinion and not table.has(self.user.minions, nextMinion) and not table.has(self.user.deck.minions, nextMinion) then
         table.insert(self.user.deck, nextMinion)
         table.insert(self.rewards.minions, nextMinion)
         saveUser(self.user)

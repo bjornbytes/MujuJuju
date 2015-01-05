@@ -26,7 +26,7 @@ Duju.states.walk = {
 Duju.states.attack = {
   priority = 1,
   loop = true,
-  speed = .4
+  speed = .3
 }
 
 Duju.states.headbutt = {

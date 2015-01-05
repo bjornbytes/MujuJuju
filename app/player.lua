@@ -19,6 +19,8 @@ function Player:init()
   self.maxHealth = 100
   self.health = self.maxHealth
   self.healthDisplay = self.health
+  self.prevHealthDisplay = self.healthDisplay
+  self.prevHealth = self.health
 
   self.dead = false
   self.deathTimer = 0
@@ -62,6 +64,8 @@ end
 function Player:update()
 	self.prevx = self.x
 	self.prevy = self.y
+  self.prevHealthDisplay = self.healthDisplay
+  self.prevHealth = self.health
 
   self:move()
 	self:animate()
@@ -83,7 +87,7 @@ function Player:update()
 
 	self:hurt(self.maxHealth * .033 * tickRate)
 
-	self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+	self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
 	self.jujuTimer = timer.rot(self.jujuTimer, function()
 		self.juju = self.juju + 1
@@ -251,7 +255,11 @@ end
 -- Helper
 ----------------
 function Player:getHealthbar()
-  return self.x, self.y, self.healthDisplay / self.maxHealth
+  local x = math.lerp(self.prevx, self.x, tickDelta / tickRate)
+  local y = math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  local healthDisplay = math.lerp(self.prevHealthDisplay, self.healthDisplay, tickDelta / tickRate)
+  local health = math.lerp(self.prevHealth, self.health, tickDelta / tickRate)
+  return x, y, health / self.maxHealth, healthDisplay / self.maxHealth
 end
 
 function Player:atShrine()

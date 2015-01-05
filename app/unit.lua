@@ -104,9 +104,10 @@ function Unit:update()
   self.prev.healthDisplay = self.healthDisplay
   self.prev.x = self.x
   self.prev.y = self.y
+  self.prev.health = self.health
 
   if self.dying then
-    self.healthDisplay = math.lerp(self.healthDisplay, 0, 20 * tickRate)
+    self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * tickRate, 1))
     return
   end
 
@@ -121,7 +122,7 @@ function Unit:update()
 
   self.buffs:postupdate()
 
-  self.healthDisplay = math.lerp(self.healthDisplay, self.health, 20 * tickRate)
+  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
   if self.player then self:hurt(self.maxHealth * .02 * tickRate) end
 end
@@ -171,7 +172,7 @@ end
 
 function Unit:getHealthbar()
   local lerpd = table.interpolate(self.prev, self, tickDelta / tickRate)
-  return lerpd.x, lerpd.y, lerpd.healthDisplay / self.maxHealth
+  return lerpd.x, lerpd.y, lerpd.health / self.maxHealth, lerpd.healthDisplay / self.maxHealth
 end
 
 function Unit:paused()

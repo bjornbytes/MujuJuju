@@ -52,7 +52,7 @@ function HudHealth:draw()
   ctx.players:each(function(player)
     local x, y, hard, soft = player:getHealthbar()
     local color = (p and player.team == p.team) and green or red
-    bar(x, y - 20, hard, soft, color, 80, 3)
+    bar(x, y - 20, hard, soft, color, 100, 3)
   end)
 
   ctx.shrines:each(function(shrine)
@@ -67,7 +67,7 @@ function HudHealth:draw()
     local x, y, hard, soft = unit:getHealthbar()
     local eliteBuffs = unit.buffs:buffsWithTag('elite')
     local location = math.floor(unit.x)
-    stack(t, location, unit.width * 2, 1)
+    stack(t, location, unit.width, 2)
 
     if next(eliteBuffs) then
       local string = ''
@@ -82,6 +82,6 @@ function HudHealth:draw()
     end
 
     local color = (p and unit.team == p.team) and green or red
-    bar(x, y - 30 - 5 * t[location], hard, soft, color, 50, 3)
+    bar(x, y - 30 - 5 * t[location], hard, soft, color, 80, 3)
   end)
 end
