@@ -110,24 +110,18 @@ function UnitBuffs:isCrowdControl(buff)
 end
 
 function UnitBuffs:applyRunes()
-  if not self.unit:hasRunes() then return end
+  if not self.unit.player or not self.unit:hasRunes() then return end
 
-  local unit, player = self.unit, self.unit.player
-  local runes = player.deck[unit.class.code].runes
-  
+  local runes = self.unit.player.deck[self.unit.class.code].runes
   table.each(runes, function(rune)
-    local level = rune.level
-    if level > 0 then
-      table.each(rune.values, function(levels, stat)
-        local value = levels[level]
-        if type(value) == 'number' then
-          unit[stat] = unit[stat] + value
-        elseif type(value) == 'string' and value:match('%%') then
-          local original = unit.class[stat]
-          local percent = tonumber(value:match('%-?%d')) / 100
-          unit[stat] = unit[stat] + original * percent
-        end
-      end)
+    local stat = rune.stat
+    if stat then
+      if rune.amount then
+        self.unit[stat] = self.unit[stat] + rune.amount
+      elseif rune.scaling then
+        local minutes = math.floor(ctx.hud.timer.total * tickRate / 60)
+        self.unit[stat] = self.unit[stat] + (rune.scaling * minutes)
+      end
     end
   end)
 end

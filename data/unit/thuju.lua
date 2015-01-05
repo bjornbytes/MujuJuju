@@ -11,6 +11,8 @@ Thuju.range = 32
 Thuju.attackSpeed = 1.5
 Thuju.speed = 35
 
+Thuju.cost = 12
+
 
 ----------------
 -- Upgrades
@@ -47,10 +49,10 @@ Thuju.upgrades = {
       [5] = '500 health'
     },
     apply = function(self, unit)
-      local healths = {[0] = 150, 200, 250, 300, 400, 500}
-      local difference = healths[self.level] - unit.maxHealth
-      unit.health = unit.health + difference
-      unit.maxHealth = unit.maxHealth + difference
+      local healthIncreases = {[0] = 0, 50, 100, 150, 250, 350}
+      local increase = healthIncreases[self.level]
+      unit.health = unit.health + increase
+      unit.maxHealth = unit.maxHealth + increase
     end
   },
   impenetrablehide = {

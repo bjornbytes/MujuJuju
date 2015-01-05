@@ -11,6 +11,8 @@ Bruju.range = 32
 Bruju.attackSpeed = 1
 Bruju.speed = 45
 
+Bruju.cost = 12
+
 
 ----------------
 -- Upgrades
@@ -29,8 +31,8 @@ Bruju.upgrades = {
       [5] = '70 damage'
     },
     apply = function(self, unit)
-      local damages = {[0] = 20, 26, 34, 44, 56, 70}
-      unit.damage = damages[self.level]
+      local damageIncreases = {[0] = 0, 6, 14, 24, 36, 50}
+      unit.damage = unit.damage + damageIncreases[self.level]
     end
   },
   fortify = {
@@ -46,10 +48,10 @@ Bruju.upgrades = {
       [5] = '400 health'
     },
     apply = function(self, unit)
-      local healths = {[0] = 80, 125, 175, 235, 300, 400}
-      local difference = healths[self.level] - unit.maxHealth
-      unit.health = unit.health + difference
-      unit.maxHealth = unit.maxHealth + difference
+      local healthIncreases = {[0] = 0, 45, 95, 155, 280, 380}
+      local increase = healthIncreases[self.level]
+      unit.health = unit.health + increase
+      unit.maxHealth = unit.maxHealth + increase
     end
   },
   burst = {

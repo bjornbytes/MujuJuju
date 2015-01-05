@@ -353,7 +353,7 @@ function Unit:contains(...)
 end
 
 function Unit:hasRunes()
-  local runes = self.owner and self.owner.deck[self.class.code].runes
+  local runes = self.player and self.player.deck[self.class.code].runes
   return runes and #runes > 0
 end
 

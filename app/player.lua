@@ -276,6 +276,12 @@ function Player:initDeck()
       }
 
       self.deck[i] = self.deck[code]
+
+      -- Perform a one-time application of upgrade runes.
+      table.each(ctx.user.deck.runes[i], function(rune)
+        local upgrade = rune.upgrade and data.unit[code].upgrades[rune.upgrade]
+        if upgrade then upgrade.level = upgrade.level + 1 end
+      end)
     end
   end
 end

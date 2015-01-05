@@ -38,11 +38,57 @@ function Game:load(user, biome)
       saveUser(self.user)
     end
 
-    if time >= config.biomes[self.biome].benchmarks.bronze then
-      -- give some runes randomly proabbilsithi
+    local bronze = time >= config.biomes[self.biome].benchmarks.bronze
+    local silver = time >= config.biomes[self.biome].benchmarks.silver
+    local gold = time >= config.biomes[self.biome].benchmarks.gold
+
+    -- Distribute runes
+    local runeCount = 0
+    if bronze and love.math.random() < .75 then runeCount = runeCount + 1 end
+    if silver and love.math.random() < .50 then runeCount = runeCount + 1 end
+    if gold and love.math.random() < .25 then runeCount = runeCount + 1 end
+    print('you got ' .. runeCount .. ' runes')
+    for i = 1, runeCount do
+      local runeLevel = 0
+      local maxLevel = config.biomes[ctx.biome].runes.maxLevel
+
+      if gold then runeLevel = love.math.random(.67 * maxLevel, maxLevel)
+      elseif silver then runeLevel = love.math.random(.33 * maxLevel, .67 * maxLevel)
+      elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
+
+      local upgrade = love.math.random() < config.biomes[ctx.biome].runes.specialChance * (runeLevel / 100)
+      if upgrade then
+        local upgrades = {}
+
+        -- Tier 2 check
+        if love.math.random() < .5 * (runeLevel / 100) then
+          table.each(config.starters, function(code)
+            table.insert(upgrades, data.unit[code].upgradeOrder[4])
+            table.insert(upgrades, data.unit[code].upgradeOrder[5])
+          end)
+        else
+          table.each(config.starters, function(code)
+            table.insert(upgrades, data.unit[code].upgradeOrder[1])
+            table.insert(upgrades, data.unit[code].upgradeOrder[2])
+            table.insert(upgrades, data.unit[code].upgradeOrder[3])
+          end)
+        end
+
+        rune.upgrade = upgrades[love.math.random(1, #upgrades)]
+      else
+        local stats = table.keys(config.runes)
+        local stat = stats[love.math.random(1, #stats)]
+        rune.stat = stat
+        if love.math.random() < .5 then
+          rune.amount = math.lerp(config.stats.flatRange[1], config.stats.flatRange[2], runeLevel / 100)
+        else
+          rune.scaling = math.lerp(config.stats.scalingRange[1], config.stats.scalingRange[2], runeLevel / 100)
+        end
+      end
     end
 
-    if time >= config.biomes[self.biome].benchmarks.silver then
+    -- Distribute biomes
+    if silver then
       local nextBiome = config.biomes[self.biome].rewards.silver
       if nextBiome then
         table.insert(self.user.biomes, nextBiome)
@@ -52,7 +98,8 @@ function Game:load(user, biome)
       end
     end
 
-    if time >= config.biomes[self.biome].benchmarks.gold then
+    -- Distribute minions
+    if gold then
       local nextMinion = config.biomes[self.biome].rewards.gold
       if nextMinion and not table.has(self.user.deck, nextMinion) then
         table.insert(self.user.deck, nextMinion)

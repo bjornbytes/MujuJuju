@@ -72,7 +72,8 @@ return {
       units = {
         minEnemyRate = 6,
         maxEnemyRate = 9,
-        levelScale = 1
+        levelScale = 1,
+        upgradeCostIncrease = 1,
       },
       shrujuPatches = {
         [1] = {
@@ -83,6 +84,10 @@ return {
           minTimer = 120,
           maxTimer = 130
         }
+      },
+      runes = {
+        maxLevel = 25,
+        specialChance = .01
       }
     },
 
@@ -112,7 +117,8 @@ return {
       units = {
         minEnemyRate = 5,
         maxEnemyRate = 7,
-        levelScale = 1.5
+        levelScale = 1.5,
+        upgradeCostIncrease = 2
       },
       shrujuPatches = {
         [1] = {
@@ -123,6 +129,10 @@ return {
           minTimer = 120,
           maxTimer = 130
         }
+      },
+      runes = {
+        maxLevel = 50,
+        specialChance = .04
       }
     },
 
@@ -134,7 +144,7 @@ return {
         gold = 600
       },
       rewards = {
-        gold = 'bruju'
+        gold = 'bruju',
       },
       juju = {
         minimum = {
@@ -151,7 +161,8 @@ return {
       units = {
         minEnemyRate = 4,
         maxEnemyRate = 5,
-        levelScale = 2
+        levelScale = 2,
+        upgradeCostIncrease = 3
       },
       shrujuPatches = {
         [1] = {
@@ -162,12 +173,31 @@ return {
           minTimer = 120,
           maxTimer = 130
         }
+      },
+      runes = {
+        maxLevel = 100,
+        specialChance = .08
       }
     }
   },
 
+  runes = {
+    health = {
+      flatRange = {10, 250},
+      scalingRange = {2, 25}
+    },
+    damage = {
+      flatRange = {3, 80},
+      scalingRange = {1, 15}
+    },
+    speed = {
+      flatRange = {5, 80},
+      scalingRange = {1, 5}
+    }
+  },
+
   defaultUser = {
-    deck = {},
+    deck = {minions = {}, runes = {}},
     biomes = {'forest'},
     highscores = {forest = 0, tundra = 0, volcano = 0}
   }

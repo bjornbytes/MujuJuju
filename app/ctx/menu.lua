@@ -31,10 +31,10 @@ function Menu:load(selectedBiome)
       local u, v = love.graphics.getDimensions()
       local size = .2 * v
       local inc = size + .1 * v
-      local x = u * .5 - inc * ((#self.user.deck - 1) / 2)
+      local x = u * .5 - inc * ((#self.user.deck.minions - 1) / 2)
       local y = .7 * v
       local res = {}
-      for i = 1, #self.user.deck do
+      for i = 1, #self.user.deck.minions do
         table.insert(res, {x, y, size / 2})
         x = x + inc
       end
@@ -65,7 +65,7 @@ function Menu:load(selectedBiome)
   local str = love.filesystem.read('save/user.json')
   self.user = json.decode(str)
 
-  if not self.user.deck or #self.user.deck == 0 then
+  if not self.user.deck or #self.user.deck.minions == 0 then
     self.choosing = true
   end
 
@@ -97,7 +97,7 @@ function Menu:draw()
     g.setColor(255, 255, 255)
     for i = 1, #deck do
       local x, y, r = unpack(deck[i])
-      local image = data.media.graphics.unit.portrait[self.user.deck[i]]
+      local image = data.media.graphics.unit.portrait[self.user.deck.minions[i]]
       local scale = (r * 2) / image:getWidth()
       g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     end
@@ -154,7 +154,7 @@ function Menu:mousepressed(mx, my, b)
       for i = 1, #minions do
         local x, y, r = unpack(minions[i])
         if math.distance(mx, my, x, y) < r then
-          self.user.deck = {config.starters[i]}
+          self.user.deck.minions = {config.starters[i]}
           saveUser(self.user)
           self.choosing = false
         end
