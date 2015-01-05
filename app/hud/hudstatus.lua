@@ -48,7 +48,6 @@ function HudStatus:draw()
   local lerpd = {}
   for k in pairs(self.prev) do
     lerpd[k] = math.lerp(self.prev[k], self[k], tickDelta / tickRate)
-    print(k)
   end
 
   -- Status bar
