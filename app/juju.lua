@@ -32,13 +32,14 @@ function Juju:update()
 	self.prevy = self.y
 	
 	if self.dead then
-		local tx, ty = 52, 52
+		local tx, ty = 866, 18
 		self.x, self.y = math.lerp(self.x, tx, 10 * tickRate), math.lerp(self.y, ty, 10 * tickRate)
 		self.scale = math.lerp(self.scale, .1, 5 * tickRate)
 		if math.distance(self.x, self.y, tx, ty) < 16 then
 			ctx.jujus:remove(self)
 			p.juju = p.juju + self.amount
-			ctx.hud.jujuIconScale = 1
+			ctx.hud.jujuIconScale = 2
+      ctx.hud.jujuAngle = 0
 			for i = 1, 20 do
 				ctx.particles:add(JujuSex, {x = tx, y = ty})
 			end
