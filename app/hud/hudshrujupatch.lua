@@ -23,7 +23,7 @@ function HudShrujuPatch:init(patch)
       local u, v = ctx.hud.u, ctx.hud.v
       local ct = #self.patch.types
       local factor, t = self:getFactor()
-      local length = .35 * v * factor
+      local length = .45 * v * factor
       local angleIncrement = .28
       local angle = (-math.pi / 2) - (angleIncrement * (ct - 1) / 2)
 
@@ -43,7 +43,7 @@ function HudShrujuPatch:init(patch)
     slot = function()
       local u, v = ctx.hud.u, ctx.hud.v
       local size = v * .1
-      return {self.patch.x - size / 2, self.patch.y - self.patch.height - size * 2 - size - v * .01, size, size}
+      return {self.patch.x - size / 2, self.patch.y - .35 * v, size, size}
     end
   }
 end
@@ -97,7 +97,7 @@ function HudShrujuPatch:draw()
       local shruju = data.shruju[self.patch.types[i]]
       local x, y, w, h = unpack(types[i])
 
-      g.setColor(255, 255, 255, alphaFactor * 255)
+      g.setColor(255, 255, 255, alphaFactor * 200)
       local image = data.media.graphics.hudFrame
       local scale = w / 125
       local xx, yy = x - 60 * scale, y - 60 * scale
@@ -108,25 +108,38 @@ function HudShrujuPatch:draw()
       g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
       local image = data.media.graphics.hudTitle
-      local scale = w / 125
-      g.draw(image, x, y + (135 * scale), 0, scale, scale)
+      local scale = (w + 5) / 125
+      g.draw(image, x + (w / 2), y + (120 * scale), 0, scale, scale, image:getWidth() / 2)
 
-      g.setFont('mesmerize', image:getHeight() * scale - 8)
-      g.printCenter(shruju.name, x + (image:getWidth() * scale) / 2, y + (135 * scale) + (image:getHeight() * scale) / 2)
+      g.setFont('mesmerize', image:getHeight() * scale - 7)
+      g.printCenter(shruju.name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
     end
 
-    --[[g.setColor(0, 0, 0)
-    local x, y, w, h = unpack(self.geometry.slot)
-    g.rectangle('fill', x, y, w, h)
+    if self.patch.growing or self.patch.slot then
+      g.setColor(255, 255, 255, self.patch.slot and 200 or 120)
 
-    g.setColor(255, 255, 255)
-    local str = self.patch.slot and self.patch.slot.name or 'empty'
-    g.print(str, x + w / 2 - g.getFont():getWidth(str) / 2, y + 2)
-    if self.patch.slot then
-      g.rectangle('line', x + .5, y + .5, w, h)
-      local str = 'lmb to take, rmb to eat'
-      g.print(str, x + w / 2 - g.getFont():getWidth(str) / 2, y - 2 - g.getFont():getHeight())
-    end]]
+      local code = self.patch.growing or self.patch.slot.code
+
+      local x, y, w, h = unpack(self.geometry.slot)
+      local image = data.media.graphics.hudFrame
+      local scale = w / 125
+      local xx, yy = x - 60 * scale, y - 60 * scale
+      g.draw(image, xx, yy, 0, scale, scale)
+
+      local image = data.media.graphics.shruju[code]
+      local scale = (h - .02 * v) / image:getHeight()
+      g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
+      local image = data.media.graphics.hudTitle
+      local scale = (w + 5) / 125
+      g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
+
+      g.setColor(255, 255, 255)
+      g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / 60)), scale)
+
+      g.setFont('mesmerize', image:getHeight() * scale - 7)
+      g.printCenter(data.shruju[code].name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
+    end
   end
 end
 
