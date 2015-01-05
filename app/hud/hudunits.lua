@@ -15,16 +15,16 @@ function HudUnits:init()
       local p = ctx.players:get(ctx.id)
       local upgradeFactor, t = ctx.hud.upgrades:getFactor()
       local upgradeAlphaFactor = (t / ctx.hud.upgrades.maxTime) ^ 3
-      local minionInc = u * (.1 + (.18 * upgradeFactor))
-      local inc = .1 * upgradeFactor * v
+      local minionInc = (.2 * u) + (.075 * upgradeFactor * u)
+      local inc = .15 * upgradeFactor * v
       local xx = .5 * u - (minionInc * (self.count - 1) / 2)
-      local yy = v * (.07 + (.1 * upgradeFactor)) + (.11 * v)
-      local radius = math.max(.035 * v * upgradeFactor, .01)
+      local radius = math.max(.05 * v * upgradeFactor, .01)
       local res = {}
 
       for i = 1, self.count do
         res[i] = {}
 
+        local yy = (.2 * upgradeFactor) * v + (.25 * v)
         local x = xx - (inc * (3 - 1) / 2)
         for j = 1, 3 do
           table.insert(res[i], {x, yy, radius})
@@ -32,7 +32,7 @@ function HudUnits:init()
         end
 
         local x = xx - (inc * (2 - 1) / 2)
-        yy = yy + .08 * v
+        yy = yy + .12 * v
         for j = 1, 2 do
           table.insert(res[i], {x, yy, radius})
           x = x + inc
@@ -70,11 +70,6 @@ function HudUnits:update()
 
 	for i = 1, #self.selectFactor do
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selected == i and 1 or 0, 18 * tickRate)
-		self.cooldownPop[i] = math.lerp(self.cooldownPop[i], 0, 5 * tickRate)
-		if p.deck[i] then
-			local y = self.bg[i]:getHeight() * (p.deck[i].cooldown / 3)
-			self.selectQuad[i]:setViewport(0, y, self.bg[i]:getWidth(), self.bg[i]:getHeight() - y)
-		end
 	end
 end
 
@@ -89,39 +84,37 @@ function HudUnits:draw()
 
   local upgradeFactor, t = ctx.hud.upgrades:getFactor()
   local upgradeAlphaFactor = (t / ctx.hud.upgrades.maxTime) ^ 3
-  local inc = u * (.1 + (.18 * upgradeFactor))
+  local inc = u * (.2 + (.075 * upgradeFactor))
   local xx = .5 * u - (inc * (ct - 1) / 2)
-  local font = ctx.hud.boldFont
 
   if t < 1 then table.clear(self.geometry) end
 
-  g.setColor(0, 0, 0, 65 * math.clamp(upgradeFactor, 0, 1))
+  g.setColor(0, 0, 0, 80 * math.clamp(upgradeFactor, 0, 1))
   g.rectangle('fill', 0, 0, ctx.view.frame.width, ctx.view.frame.height)
 
   for i = 1, self.count do
-    local bg = self.bg[i]
+    local selectFactor = math.max(self.selectFactor[i], upgradeFactor)
+    local bg = data.media.graphics.hudMinion
     local w, h = bg:getDimensions()
-    local scale = (.1 + (.0175 * self.selectFactor[i]) + (.02 * upgradeFactor)) * v / w
-    local yy = v * (.07 + (.07 * upgradeFactor))
-    local f, cost = font, tostring('12')
-    local alpha = .65 + self.selectFactor[i] * .35
+    local scale = (.25 + (.2 * upgradeFactor)) * v / w
+    local yy = v * (.01 + (.00 * upgradeFactor))
+    local alpha = .65 + selectFactor * .35
+    local font = g.setFont('sourcesanspro', .04 * scale * v)
 
     -- Backdrop
-    g.setColor(255, 255, 255, 80 * alpha)
-    g.draw(bg, xx, yy, 0, scale, scale, w / 2, h / 2)
+    g.setColor(255, 255, 255, 200 * alpha)
+    g.draw(bg, xx, yy, 0, scale, scale, w / 2, 0)
+
+    -- Animation
+    self.animations[i]:draw(xx, yy + .2 * scale * v)
+
+    -- Text
+    local unit = data.unit[p.deck[i].code]
+    g.setColor(255, 255, 255, 200 * alpha)
+    g.printCenter(unit.name--[[unit.name:gsub('%w*', string.upper)]], math.round(xx), math.round(yy + (.05 * v * scale)))
+    g.setColor(0, 0, 0, 200 * alpha)
+    g.printCenter(unit.cost, xx - (.185 * v * scale) + 1, yy + (.2175 * v * scale) + 1)
     
-    -- Cooldown
-    local _, qy = self.selectQuad[i]:getViewport()
-    local val = (150 + (100 * (p.deck[i].cooldown == 0 and 1 or 0))) * alpha
-    g.setColor(255, 255, 255, val)
-    g.draw(bg, self.selectQuad[i], xx, yy + qy * scale, 0, scale, scale, w / 2, h / 2)
-
-    -- Juice
-    g.setBlendMode('additive')
-    g.setColor(255, 255, 255, 60 * self.cooldownPop[i])
-    g.draw(bg, xx, yy, 0, scale * (1 + .2 * self.cooldownPop[i]), scale * (1 + .2 * self.cooldownPop[i]), w / 2, h / 2)
-    g.setBlendMode('alpha')
-
     xx = xx + inc
   end
 
@@ -168,15 +161,13 @@ function HudUnits:ready()
   local p = ctx.players:get(ctx.id)
 
   self.count = #p.deck
-  self.bg = {}
   self.selectFactor = {}
-  self.cooldownPop = {}
-  self.selectQuad = {}
+  self.animations = {}
 
   for i = 1, self.count do
-    self.bg[i] = data.media.graphics.unit.portrait[p.deck[i].code] or data.media.graphics.menuCove
     self.selectFactor[i] = 0
-    self.cooldownPop[i] = 0
-    self.selectQuad[i] = g.newQuad(0, 0, self.bg[i]:getWidth(), self.bg[i]:getHeight(), self.bg[i]:getWidth(), self.bg[i]:getHeight())
+    local scale = data.animation[p.deck[i].code].scale / 2
+    self.animations[i] = data.animation[p.deck[i].code]({scale = scale})
+    self.animations[i]:set('idle')
   end
 end

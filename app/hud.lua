@@ -292,6 +292,7 @@ function Hud:gui()
       mx, my = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
       mx, my = math.round(mx), math.round(my)
     end
+    g.setFont(boldFont)
     local textWidth, lines = normalFont:getWrap(self.tooltipRaw, 300)
     local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
     local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))

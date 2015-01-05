@@ -91,9 +91,7 @@ function Player:update()
 	end)
 
   for i = 1, #self.deck do
-    self.deck[i].cooldown = timer.rot(self.deck[i].cooldown, function()
-      ctx.hud.units.cooldownPop[i] = 1
-    end)
+    self.deck[i].cooldown = timer.rot(self.deck[i].cooldown)
   end
 
 	self.recentSelect = timer.rot(self.recentSelect)
@@ -264,13 +262,18 @@ end
 
 function Player:initDeck()
   self.deck = {}
+  local deck = ctx.user.deck
+  local deck = {
+    minions = {'bruju', 'thuju', 'thuju'},
+    runes = {{}, {}, {}}
+  }
 
   for i = 1, 3 do
-    local code = ctx.user.deck.minions[i]
+    local code = deck.minions[i]
 
     if code then
       self.deck[code] = {
-        runes = ctx.user.deck.runes[i],
+        runes = deck.runes[i],
         cooldown = 0,
         code = code
       }
@@ -278,7 +281,7 @@ function Player:initDeck()
       self.deck[i] = self.deck[code]
 
       -- Perform a one-time application of upgrade runes.
-      table.each(ctx.user.deck.runes[i], function(rune)
+      table.each(deck.runes[i], function(rune)
         local upgrade = rune.upgrade and data.unit[code].upgrades[rune.upgrade]
         if upgrade then upgrade.level = upgrade.level + 1 end
       end)
