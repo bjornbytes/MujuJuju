@@ -174,7 +174,7 @@ function HudUnits:draw()
     g.printCenter(count, xx + (.1825 * v * scale), yy + (.21 * v * scale))
 
     -- Runes
-    local runeCount = #p.deck[i].runes
+    local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
     local runeSize = v * .032 * scale
     local runeInc = runeSize * 3
     local runex = xx - (runeInc * (runeCount - 1) / 2)

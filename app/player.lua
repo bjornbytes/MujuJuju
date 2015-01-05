@@ -269,7 +269,7 @@ function Player:initDeck()
 
     if code then
       self.deck[code] = {
-        runes = deck.runes[i],
+        runes = deck.runes[i] or {},
         cooldown = 0,
         code = code
       }
