@@ -276,7 +276,7 @@ function Unit:hurt(amount, source, kind)
   if self.dying then return end
 
   self:abilityCall('prehurt', amount, source, kind)
-  amount = self.buffs:prehurt(amount, source, kind)
+  amount = self.buffs:prehurt(amount, source, kind) or amount
 
   self.health = math.max(self.health - amount, 0)
 
