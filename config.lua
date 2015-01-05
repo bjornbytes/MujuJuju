@@ -188,7 +188,7 @@ return {
       scalingRange = {2, 25}
     },
     damage = {
-      names = {'Rune of Might', 'Rune of Force', 'Rune of the Boulder', 'Rune of Power'},
+      names = {'Rune of Might', 'Rune of Force', 'Rune of Ruin', 'Rune of Power'},
       flatRange = {3, 80},
       scalingRange = {1, 15}
     },
