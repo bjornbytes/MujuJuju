@@ -24,7 +24,7 @@ function HudUnits:init()
       for i = 1, self.count do
         res[i] = {}
 
-        local yy = (.1375 * upgradeFactor) * v + (.25 * v)
+        local yy = (.15 * upgradeFactor) * v + (.25 * v)
         local x = xx - (inc * (3 - 1) / 2)
         for j = 1, 3 do
           table.insert(res[i], {x, yy, radius})

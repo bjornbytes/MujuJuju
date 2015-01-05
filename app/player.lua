@@ -98,7 +98,7 @@ function Player:update()
 end
 
 function Player:draw()
-	if math.floor(self.invincible * 4) % 2 == 0 then
+	if math.floor(self.invincible * 8) % 2 == 0 then
     local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 		love.graphics.setColor(255, 255, 255)
 		self.animation:draw(x, y)
@@ -183,7 +183,7 @@ function Player:summon()
 	local minion = self.deck[self.selected].code
 	local cooldown = self.deck[self.selected].cooldown
   local population = self:getPopulation()
-	local cost = 12
+	local cost = data.unit[minion].cost
 	if cooldown == 0 and population < self.maxPopulation and self:spend(cost) then
 		ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
 		self.deck[self.selected].cooldown = math.max(3 - self.flatCooldownReduction, .5)
