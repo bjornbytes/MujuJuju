@@ -73,6 +73,48 @@ function HudUnits:update()
     self.prevSelectFactor[i] = self.selectFactor[i]
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selected == i and 1 or 0, 8 * tickRate)
 	end
+
+  local u, v = ctx.hud.u, ctx.hud.v
+  local ct = self.count
+  local upgradeFactor, t = ctx.hud.upgrades:getFactor()
+  local inc = u * (.2 + (.075 * upgradeFactor))
+  local xx = .5 * u - (inc * (ct - 1) / 2)
+  for i = 1, ct do
+    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
+    local bg = data.media.graphics.hud.minion
+    local w, h = bg:getDimensions()
+    local scale = (.25 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / w
+    local yy = v * (.01 * selectFactor)
+    local runeCount = #p.deck[i].runes
+    local runeSize = v * .032 * scale
+    local runeInc = runeSize * 3
+    local runex = xx - (runeInc * (runeCount - 1) / 2)
+    local runey = yy + .365 * v * scale
+    for j = 1, runeCount do
+      if math.insideCircle(mx, my, runex, runey, runeSize) then
+        local rune = p.deck[i].runes[j]
+        local str = '{white}{title}' .. rune.name .. '{normal}\n'
+        if rune.stat then
+          str = str .. '+' .. (rune.amount or rune.scaling) .. ' ' .. rune.stat:capitalize() .. (rune.scaling and ' per second' or '') .. '\n'
+        elseif rune.upgrade then
+          local name = nil
+          for i = 1, #data.unit do
+            local upgrade = data.unit[i].upgrades[rune.upgrade]
+            if upgrade then name = upgrade.name break end
+          end
+          str = str .. '+1 to ' .. name:capitalize() .. '\n'
+        end
+        local raw = str:gsub('{%a+}', '')
+        if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
+          ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
+          ctx.hud.tooltipRaw = raw
+        end
+        ctx.hud.tooltipHover = true
+      end
+      runex = runex + runeInc
+    end
+    xx = xx + inc
+  end
 end
 
 function HudUnits:draw()
@@ -130,6 +172,18 @@ function HudUnits:draw()
     g.printCenter(count, xx + (.1825 * v * scale) + 1, yy + (.21 * v * scale) + 2)
     g.setColor(255, 255, 255)
     g.printCenter(count, xx + (.1825 * v * scale), yy + (.21 * v * scale))
+
+    -- Runes
+    local runeCount = #p.deck[i].runes
+    local runeSize = v * .032 * scale
+    local runeInc = runeSize * 3
+    local runex = xx - (runeInc * (runeCount - 1) / 2)
+    local runey = yy + .365 * v * scale
+    g.setColor(255, 255, 255, 255 * alpha)
+    for i = 1, runeCount do
+      g.circle('line', runex, runey, runeSize)
+      runex = runex + runeInc
+    end
     
     xx = xx + inc
   end

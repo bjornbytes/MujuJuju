@@ -50,15 +50,19 @@ end
 function HudShruju:draw()
   local p = ctx.players:get(ctx.id)
   local shruju = self.geometry.shruju
+  local u, v = ctx.hud.u, ctx.hud.v
   for i = 1, #shruju do
     local x, y, r = unpack(self.geometry.shruju[i])
 
-    g.setColor(0, 0, 0, 200)
-    g.circle('fill', x, y, r)
+    local image = data.media.graphics.hud.frame
+    local scale = (2 * r) / 125
+    g.setColor(255, 255, 255, p.shrujus[i] and 220 or 150)
+    g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
     if p.shrujus[i] then
-      g.setColor(p.shrujus[i].effect and {100, 0, 200} or {255, 255, 255})
-      g.circle('line', x, y, r)
+      local image = data.media.graphics.shruju[p.shrujus[i].code]
+      local scale = (2 * r - (.02 * v)) / (image:getHeight() - 8)
+      g.draw(image, x, y, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     end
   end
 end

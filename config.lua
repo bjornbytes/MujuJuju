@@ -200,6 +200,8 @@ return {
   },
 
   defaultUser = {
+    minions = {},
+    runes = {},
     deck = {minions = {}, runes = {}},
     biomes = {'forest'},
     highscores = {forest = 0, tundra = 0, volcano = 0}

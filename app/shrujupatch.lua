@@ -72,7 +72,7 @@ ShrujuEffects = {
 
 ShrujuPatch = class()
 
-ShrujuPatch.width = 40
+ShrujuPatch.width = 80
 ShrujuPatch.height = 40
 ShrujuPatch.depth = 1
 

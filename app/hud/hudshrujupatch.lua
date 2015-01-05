@@ -13,6 +13,8 @@ function HudShrujuPatch:init(patch)
   self.maxTime = .45
   self.factor = {value = 0}
   self.tween = tween.new(self.maxTime, self.factor, {value = 1}, 'inOutBack')
+  self.growingFactor = 0
+  self.prevGrowingFactor = self.growingFactor
 
   self.geometry = setmetatable({}, {__index = function(t, k)
     return rawset(t, k, self.geometryFunctions[k]())[k]
@@ -23,7 +25,8 @@ function HudShrujuPatch:init(patch)
       local u, v = ctx.hud.u, ctx.hud.v
       local ct = #self.patch.types
       local factor, t = self:getFactor()
-      local length = .45 * v * factor
+      local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
+      local length = .35 * v * factor + (.1 * growingFactor * v)
       local angleIncrement = .28
       local angle = (-math.pi / 2) - (angleIncrement * (ct - 1) / 2)
 
@@ -51,12 +54,13 @@ end
 function HudShrujuPatch:update()
   if not self.patch then return end
   local p = ctx.players:get(ctx.id)
+  local mx, my = love.mouse.getPosition()
+
   if not self:playerNearby() then
     self.active = false
   end
 
   if self.active then
-    local mx, my = love.mouse.getPosition()
     local types = self.geometry.types
     for i = 1, #types do
       local shruju = data.shruju[self.patch.types[i]]
@@ -64,9 +68,9 @@ function HudShrujuPatch:update()
       -- Tooltip
       if math.inside(mx, my, x, y, w, h) then
         local str = '{title}{white}'  .. shruju.name .. '{normal}\n'
+        str = str .. '{whoCares}' .. shruju.description
         local raw = str:gsub('{%a+}', '')
         if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-          str = str .. '{whoCares}' .. shruju.description
           ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
           ctx.hud.tooltipRaw = raw
         end
@@ -75,9 +79,24 @@ function HudShrujuPatch:update()
     end
   end
 
+  if (self.patch.growing or self.patch.slot) and math.inside(mx, my, unpack(self.geometry.slot)) then
+    local shruju = data.shruju[self.patch.growing] or self.patch.slot
+    local str = '{title}{white}'  .. shruju.name .. '{normal}\n'
+    str = str .. '{whoCares}' .. shruju.description
+    local raw = str:gsub('{%a+}', '')
+    if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
+      ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
+      ctx.hud.tooltipRaw = raw
+    end
+    ctx.hud.tooltipHover = true
+  end
+
   self.prevTime = self.time
   if self.active then self.time = math.min(self.time + tickRate, self.maxTime)
   else self.time = math.max(self.time - tickRate, 0) end
+
+  self.prevGrowingFactor = self.growingFactor
+  self.growingFactor = math.lerp(self.growingFactor, (self.patch.growing or self.patch.slot) and 1 or 0, math.min(8 * tickRate, 1))
 end
 
 function HudShrujuPatch:draw()
@@ -89,7 +108,7 @@ function HudShrujuPatch:draw()
     local factor, t = self:getFactor()
     local alphaFactor = (t / self.maxTime) ^ 4
 
-    if t < 1 then table.clear(self.geometry)
+    if t < 1 or (self.growingFactor > .01 and self.growingFactor < .99) then table.clear(self.geometry)
     elseif t == 0 then return end
 
     local types = self.geometry.types
@@ -133,6 +152,7 @@ function HudShrujuPatch:draw()
 
       local image = data.media.graphics.hud.title
       local scale = (w + 5) / 125
+      g.setColor(255, 255, 255, 80)
       g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
 
       g.setColor(255, 255, 255)
