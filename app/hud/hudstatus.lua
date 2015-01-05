@@ -85,8 +85,8 @@ function HudStatus:draw()
   -- Population Text
   local str = p:getPopulation() .. ' / ' .. p.maxPopulation
   local r = math.lerp(255, 255, lerpd.maxPopFactor)
-  local gg = math.lerp(255, 100, lerpd.maxPopFactor)
-  local b = math.lerp(255, 100, lerpd.maxPopFactor)
+  local gg = math.lerp(255, 150, lerpd.maxPopFactor)
+  local b = math.lerp(255, 150, lerpd.maxPopFactor)
   g.setColor(r, gg, b)
   g.print(str, xx + (v * .025), (height * .5) - g.getFont():getHeight() / 2)
   xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .04)
