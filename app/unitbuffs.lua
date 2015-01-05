@@ -119,7 +119,7 @@ function UnitBuffs:applyRunes()
       if rune.amount then
         self.unit[stat] = self.unit[stat] + rune.amount
       elseif rune.scaling then
-        local minutes = math.floor(ctx.hud.timer.total * tickRate / 60)
+        local minutes = math.floor(ctx.timer * tickRate / 60)
         self.unit[stat] = self.unit[stat] + (rune.scaling * minutes)
       end
     end

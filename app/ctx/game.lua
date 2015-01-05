@@ -9,6 +9,7 @@ function Game:load(user, biome)
 
 	self.paused = false
 	self.ded = false
+  self.timer = 0
 
   self.event = Event()
 	self.view = View()
@@ -142,6 +143,7 @@ function Game:update()
     self.units:paused()
 		return
 	end
+  self.timer = self.timer + 1
 	self.players:update()
 	self.units:update()
 	self.shrines:update()
@@ -179,10 +181,6 @@ end
 
 function Game:keyreleased(...)
   self.hud:keyreleased(...)
-end
-
-function Game:textinput(char)
-	self.hud:textinput(char)
 end
 
 function Game:mousepressed(...)
