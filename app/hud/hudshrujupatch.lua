@@ -1,3 +1,4 @@
+local rich = require 'lib/deps/richtext/richtext'
 local g = love.graphics
 
 HudShrujuPatch = class()
@@ -40,6 +41,25 @@ function HudShrujuPatch:update()
   if not self:playerNearby() then
     self.active = false
   end
+
+  if self.active then
+    local mx, my = love.mouse.getPosition()
+    local types = self.geometry.types
+    for i = 1, #types do
+      local shruju = data.shruju[self.patch.types[i]]
+      local x, y, w, h = unpack(types[i])
+      -- Tooltip
+      if math.inside(mx, my, x, y, w, h) then
+        if not ctx.hud.tooltip then
+          local str = '{title}{white}'  .. shruju.name .. '{normal}\n'
+          str = str .. '{whoCares}' .. shruju.description .. '{white}\n\n'
+          ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
+          ctx.hud.tooltipRaw = str:gsub('{%a+}', '')
+        end
+        ctx.hud.tooltipHover = true
+      end
+    end
+  end
 end
 
 function HudShrujuPatch:draw()
@@ -47,7 +67,7 @@ function HudShrujuPatch:draw()
     local types = self.geometry.types
     g.setFont('pixel', 8)
     for i = 1, #types do
-      local str = self.patch.types[i]
+      local shruju = data.shruju[self.patch.types[i]]
       local x, y, w, h = unpack(types[i])
       g.setColor(0, 0, 0)
       g.rectangle('fill', x, y, w, h)
@@ -55,7 +75,8 @@ function HudShrujuPatch:draw()
       if not self.patch.growing and not self.patch.slot then
         g.rectangle('line', x + .5, y + .5, w, h)
       end
-      g.print(str, x + w / 2 - g.getFont():getWidth(self.patch.types[i]) / 2, y + 2)
+
+      g.print(shruju.name, x + w / 2 - g.getFont():getWidth(shruju.name) / 2, y + 2)
     end
 
     g.setColor(0, 0, 0)

@@ -1,46 +1,5 @@
 local g = love.graphics
 
-Shrujus = {
-  population = {
-    name = 'Population',
-    description = 'On use, increases the maximum number of minions you can have summoned at a time by 1.',
-    time = 60,
-    eat = function()
-      local p = ctx.players:get(ctx.id)
-      p.maxPopulation = p.maxPopulation + 1
-    end
-  },
-  restoration = {
-    name = 'Restoration',
-    description = 'On use, heals your shrine for 10% of its maximum health.',
-    time = 60,
-    eat = function()
-      local p = ctx.players:get(ctx.id)
-      local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
-      if shrine then
-        shrine.health = math.min(shrine.health + shrine.maxHealth * .1, shrine.maxHealth)
-      end
-    end
-  },
-  harvest = {
-    name = 'Harvest',
-    description = 'Permanently causes all shruju to grow 3 seconds faster.',
-    time = 60,
-    eat = function()
-      ctx.shrujuPatches.harvestLevel = ctx.shrujuPatches.harvestLevel + 1
-    end
-  },
-  flow = {
-    name = 'Flow',
-    description = 'The cooldown for minion summoning is reduced by .25s.',
-    time = 60,
-    eat = function()
-      local p = ctx.players:get(ctx.id)
-      p.flatCooldownReduction = p.flatCooldownReduction + .25
-    end
-  }
-}
-
 -- Amount is always between 0 and 1 and determines how strong the magic effect is.
 ShrujuEffects = {
   wealth = {
@@ -119,7 +78,12 @@ ShrujuPatch.depth = 1
 
 function ShrujuPatch:activate()
 	self.y = ctx.map.height - ctx.map.groundHeight
-  self.types = table.keys(Shrujus)
+  self.types = {} 
+
+  for i = 1, #data.shruju do
+    table.insert(self.types, data.shruju[i].code)
+  end
+
   self.timer = 0
   self.slot = nil
   self.highlight = 0
@@ -167,7 +131,7 @@ end
 
 function ShrujuPatch:grow(what)
   if not self:playerNearby() or not table.has(self.types, what) or self.growing or self.slot then return end
-  self.timer = math.max(Shrujus[what].time - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
+  self.timer = math.max(data.shruju[what].time - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
   self.growing = what
 end
 
@@ -186,7 +150,7 @@ end
 
 function ShrujuPatch:makeShruju()
   if self.growing and not self.slot then
-    local shruju = setmetatable({}, {__index = Shrujus[self.growing]})
+    local shruju = setmetatable({}, {__index = data.shruju[self.growing]})
 
     -- Randomly give it a random magical effect
     if love.math.random() < .2 then
