@@ -26,7 +26,7 @@ function Unit:activate()
         local amount = self.damage
         amount = self:abilityCall('preattack', self.target, amount) or amount
         amount = self.buffs:preattack(self.target, amount) or amount
-        amount = self.target:hurt(amount, self, 'attack')
+        amount = self.target:hurt(amount, self, 'attack') or amount
         self:abilityCall('postattack', self.target, amount)
         self.buffs:postattack(self.target, amount)
         if not self.target or self.target.dying then
