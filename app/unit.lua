@@ -174,6 +174,12 @@ function Unit:getHealthbar()
   return lerpd.x, lerpd.y, lerpd.healthDisplay / self.maxHealth
 end
 
+function Unit:paused()
+  self.prev.x = self.x
+  self.prev.y = self.y
+  self.animation:set('idle')
+end
+
 
 ----------------
 -- Stances
