@@ -263,10 +263,6 @@ end
 function Player:initDeck()
   self.deck = {}
   local deck = ctx.user.deck
-  local deck = {
-    minions = {'bruju', 'thuju', 'thuju'},
-    runes = {{}, {}, {}}
-  }
 
   for i = 1, 3 do
     local code = deck.minions[i]
