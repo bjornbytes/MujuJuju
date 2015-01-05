@@ -34,101 +34,7 @@ function Game:load(user, biome)
 
   self.event:on('shrine.dead', function(data)
     self.ded = true
-
-    -- So the hud can draw them
-    self.rewards = {runes = {}, biomes = {}, minions = {}}
-
-    local time = math.floor(self.timer * tickRate)
-    if time > self.user.highscores[self.biome] then
-      self.user.highscores[self.biome] = time
-      self.rewards.highscore = true
-      saveUser(self.user)
-    end
-
-    local bronze = time >= config.biomes[self.biome].benchmarks.bronze
-    local silver = time >= config.biomes[self.biome].benchmarks.silver
-    local gold = time >= config.biomes[self.biome].benchmarks.gold
-
-    -- Distribute runes
-    local runeCount = 0
-    if bronze and love.math.random() < .75 then runeCount = runeCount + 1 end
-    if silver and love.math.random() < .50 then runeCount = runeCount + 1 end
-    if gold and love.math.random() < .25 then runeCount = runeCount + 1 end
-    print('you got ' .. runeCount .. ' runes')
-    for i = 1, runeCount do
-      local rune = {}
-      local runeLevel = 0
-      local maxLevel = config.biomes[ctx.biome].runes.maxLevel
-
-      if gold then runeLevel = love.math.random(.67 * maxLevel, maxLevel)
-      elseif silver then runeLevel = love.math.random(.33 * maxLevel, .67 * maxLevel)
-      elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
-
-      local upgrade = love.math.random() < config.biomes[ctx.biome].runes.specialChance * (runeLevel / 100)
-      if upgrade then
-        local upgrades = {}
-        local function halp(unit, upgrade)
-          local obj = unit.upgrades[upgrade]
-          table.insert(upgrades, upgrade)
-          upgrades[upgrade] = obj.name
-        end
-
-        -- Tier 2 check
-        if love.math.random() < .5 * (runeLevel / 100) then
-          table.each(config.starters, function(code)
-            halp(data.unit[code], data.unit[code].upgradeOrder[4])
-            halp(data.unit[code], data.unit[code].upgradeOrder[5])
-          end)
-        else
-          table.each(config.starters, function(code)
-            halp(data.unit[code], data.unit[code].upgradeOrder[1])
-            halp(data.unit[code], data.unit[code].upgradeOrder[2])
-            halp(data.unit[code], data.unit[code].upgradeOrder[3])
-          end)
-        end
-
-        rune.upgrade = upgrades[love.math.random(1, #upgrades)]
-        rune.name = 'Rune of ' .. upgrades[rune.upgrade]:capitalize()
-      else
-        local stats = table.keys(config.runes)
-        local stat = stats[love.math.random(1, #stats)]
-        rune.stat = stat
-        if love.math.random() < .5 then
-          rune.amount = math.lerp(config.runes[stat].flatRange[1], config.runes[stat].flatRange[2], runeLevel / 100)
-        else
-          rune.scaling = math.lerp(config.runes[stat].scalingRange[1], config.runes[stat].scalingRange[2], runeLevel / 100)
-        end
-
-        rune.name = config.runes[rune.stat].name
-      end
-
-      -- Prefixes and Suffixes
-
-      table.insert(self.user.runes, rune)
-      table.insert(self.rewards.runes, rune)
-    end
-
-    saveUser(self.user)
-
-    -- Distribute biomes
-    if silver then
-      local nextBiome = config.biomes[self.biome].rewards.silver
-      if nextBiome then
-        table.insert(self.user.biomes, nextBiome)
-        table.insert(self.rewards.biomes, nextBiome)
-        saveUser(self.user)
-      end
-    end
-
-    -- Distribute minions
-    if gold then
-      local nextMinion = config.biomes[self.biome].rewards.gold
-      if nextMinion and not table.has(self.user.minions, nextMinion) and not table.has(self.user.deck.minions, nextMinion) then
-        table.insert(self.user.deck, nextMinion)
-        table.insert(self.rewards.minions, nextMinion)
-        saveUser(self.user)
-      end
-    end
+    self:distribute()
   end)
 
 	backgroundSound = self.sound:loop({sound = 'background'})
@@ -195,4 +101,107 @@ function Game:gamepadpressed(gamepad, button)
 	if button == 'start' or button == 'guide' then self.paused = not self.paused end
 	self.hud:gamepadpressed(gamepad, button)
 	self.players:gamepadpressed(gamepad, button)
+end
+
+function Game:distribute()
+
+  -- So the hud can draw them
+  self.rewards = {runes = {}, biomes = {}, minions = {}}
+
+  local time = math.floor(self.timer * tickRate)
+  if time > self.user.highscores[self.biome] then
+    self.user.highscores[self.biome] = time
+    self.rewards.highscore = true
+    saveUser(self.user)
+  end
+
+  local bronze = time >= config.biomes[self.biome].benchmarks.bronze
+  local silver = time >= config.biomes[self.biome].benchmarks.silver
+  local gold = time >= config.biomes[self.biome].benchmarks.gold
+
+  -- Distribute runes
+  local runeCount = 0
+  if bronze and love.math.random() < .75 then runeCount = runeCount + 1 end
+  if silver and love.math.random() < .50 then runeCount = runeCount + 1 end
+  if gold and love.math.random() < .25 then runeCount = runeCount + 1 end
+  print('you got ' .. runeCount .. ' runes')
+  for i = 1, runeCount do
+    local rune = {}
+    local runeLevel = 0
+    local maxLevel = config.biomes[ctx.biome].runes.maxLevel
+
+    if gold then runeLevel = love.math.random(.67 * maxLevel, maxLevel)
+    elseif silver then runeLevel = love.math.random(.33 * maxLevel, .67 * maxLevel)
+    elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
+
+    local upgrade = love.math.random() < config.biomes[ctx.biome].runes.specialChance * (runeLevel / 100)
+    if upgrade then
+      local upgrades = {}
+      local function halp(unit, upgrade)
+        local obj = unit.upgrades[upgrade]
+        table.insert(upgrades, upgrade)
+        upgrades[upgrade] = obj.name
+      end
+
+      -- Tier 2 check
+      if love.math.random() < .5 * (runeLevel / 100) then
+        table.each(config.starters, function(code)
+          halp(data.unit[code], data.unit[code].upgradeOrder[4])
+          halp(data.unit[code], data.unit[code].upgradeOrder[5])
+        end)
+      else
+        table.each(config.starters, function(code)
+          halp(data.unit[code], data.unit[code].upgradeOrder[1])
+          halp(data.unit[code], data.unit[code].upgradeOrder[2])
+          halp(data.unit[code], data.unit[code].upgradeOrder[3])
+        end)
+      end
+
+      rune.upgrade = upgrades[love.math.random(1, #upgrades)]
+      rune.name = 'Rune of ' .. upgrades[rune.upgrade]:capitalize()
+    else
+      local stats = table.keys(config.runes)
+      local stat = stats[love.math.random(1, #stats)]
+      rune.stat = stat
+      if love.math.random() < .5 then
+        rune.amount = math.lerp(config.runes[stat].flatRange[1], config.runes[stat].flatRange[2], runeLevel / 100)
+      else
+        rune.scaling = math.lerp(config.runes[stat].scalingRange[1], config.runes[stat].scalingRange[2], runeLevel / 100)
+      end
+
+      local names = config.runes[rune.stat].names
+      rune.name = names[love.math.random(1, #names)]
+
+      local prefixes = config.runes.prefixes
+      local prefixLevel = math.clamp(runeLevel + love.math.random(-3, 3), 0, 100)
+      local prefix = prefixes[1 + math.round((prefixLevel / 100) * (#prefixes - 1))]
+
+      rune.name = prefix .. ' ' .. rune.name
+    end
+
+    table.insert(self.user.runes, rune)
+    table.insert(self.rewards.runes, rune)
+  end
+
+  saveUser(self.user)
+
+  -- Distribute biomes
+  if silver then
+    local nextBiome = config.biomes[self.biome].rewards.silver
+    if nextBiome then
+      table.insert(self.user.biomes, nextBiome)
+      table.insert(self.rewards.biomes, nextBiome)
+      saveUser(self.user)
+    end
+  end
+
+  -- Distribute minions
+  if gold then
+    local nextMinion = config.biomes[self.biome].rewards.gold
+    if nextMinion and not table.has(self.user.minions, nextMinion) and not table.has(self.user.deck.minions, nextMinion) then
+      table.insert(self.user.deck, nextMinion)
+      table.insert(self.rewards.minions, nextMinion)
+      saveUser(self.user)
+    end
+  end
 end

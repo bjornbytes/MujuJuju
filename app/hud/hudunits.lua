@@ -74,6 +74,7 @@ function HudUnits:update()
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selected == i and 1 or 0, 8 * tickRate)
 	end
 
+  -- TODO clean up rune tooltips
   local u, v = ctx.hud.u, ctx.hud.v
   local ct = self.count
   local upgradeFactor, t = ctx.hud.upgrades:getFactor()
@@ -95,7 +96,7 @@ function HudUnits:update()
         local rune = p.deck[i].runes[j]
         local str = '{white}{title}' .. rune.name .. '{normal}\n'
         if rune.stat then
-          str = str .. '+' .. (rune.amount or rune.scaling) .. ' ' .. rune.stat:capitalize() .. (rune.scaling and ' per second' or '') .. '\n'
+          str = str .. '+' .. math.round(rune.amount or rune.scaling) .. ' ' .. rune.stat:capitalize() .. (rune.scaling and ' per second' or '') .. '\n'
         elseif rune.upgrade then
           local name = nil
           for i = 1, #data.unit do

@@ -183,19 +183,38 @@ return {
 
   runes = {
     health = {
-      name = 'Rune of Fortitude',
+      names = {'Rune of Fortitude', 'Rune of Vitality', 'Rune of Stamina', 'Rune of the Soul'},
       flatRange = {10, 250},
       scalingRange = {2, 25}
     },
     damage = {
-      name = 'Rune of Might',
+      names = {'Rune of Might', 'Rune of Force', 'Rune of the Boulder', 'Rune of Power'},
       flatRange = {3, 80},
       scalingRange = {1, 15}
     },
     speed = {
-      name = 'Rune of Agility',
+      names = {'Rune of Agility', 'Rune of Momentum', 'Rune of Swiftness', 'Rune of Feathers'}
       flatRange = {5, 80},
       scalingRange = {1, 5}
+    },
+    prefixes = {
+      'Broken',
+      'Unpolished',
+      'Damaged',
+      'Scratched',
+      'Lost',
+      'Lesser',
+      'Ordinary',
+      'Prosaic',
+      'Common',
+      'Uncommon',
+      'Greater',
+      'Polished',
+      'Adept',
+      'Godly',
+      'Exquisite',
+      'Grand',
+      'Legendary'
     }
   },
 
