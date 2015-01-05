@@ -70,8 +70,8 @@ return {
         }
       },
       units = {
-        minEnemyRate = 6,
-        maxEnemyRate = 9,
+        minEnemyRate = 7,
+        maxEnemyRate = 10,
         levelScale = 1,
         upgradeCostIncrease = 1,
       },

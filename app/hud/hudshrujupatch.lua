@@ -173,7 +173,7 @@ function HudShrujuPatch:keypressed(key)
 end
 
 function HudShrujuPatch:keyreleased(key)
-  if self.patch and key == 'tab' or key == 'e' then
+  if self.patch and key == 'tab' or key == 'e' or key == 'escape' then
     if (tick - self.lastPress) * tickRate > self.maxTime then
       self.active = false
     end
