@@ -49,6 +49,7 @@ function Game:load(user, biome)
     if gold and love.math.random() < .25 then runeCount = runeCount + 1 end
     print('you got ' .. runeCount .. ' runes')
     for i = 1, runeCount do
+      local rune = {}
       local runeLevel = 0
       local maxLevel = config.biomes[ctx.biome].runes.maxLevel
 
@@ -85,7 +86,11 @@ function Game:load(user, biome)
           rune.scaling = math.lerp(config.stats.scalingRange[1], config.stats.scalingRange[2], runeLevel / 100)
         end
       end
+
+      table.insert(self.user.runes, rune)
     end
+
+    saveUser(self.user)
 
     -- Distribute biomes
     if silver then
