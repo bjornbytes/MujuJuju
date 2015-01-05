@@ -169,15 +169,11 @@ function Hud:gui()
     g.printf(str, 0, h * .325, w, 'center')
 
     g.setColor(240, 240, 240, 255 * self.deadAlpha)
-    str = tostring(math.floor(self.timer.total * tickRate))
+    str = tostring(math.floor(ctx.timer * tickRate))
     local benchmark
-    if math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.gold then
-      benchmark = 'Gold'
-    elseif math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.silver then
-      benchmark = 'Silver'
-    elseif math.floor(self.timer.total * tickRate) >= config.biomes[ctx.biome].benchmarks.bronze then
-      benchmark = 'Bronze'
-    end
+    if math.floor(ctx.timer * tickRate) >= config.biomes[ctx.biome].benchmarks.gold then benchmark = 'Gold'
+    elseif math.floor(ctx.timer * tickRate) >= config.biomes[ctx.biome].benchmarks.silver then benchmark = 'Silver'
+    elseif math.floor(ctx.timer * tickRate) >= config.biomes[ctx.biome].benchmarks.bronze then benchmark = 'Bronze' end
 
     if benchmark then str = str .. ' (' .. benchmark .. ')' end
     g.printf(str, 0, h * .41, w, 'center')

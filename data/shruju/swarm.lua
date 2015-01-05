@@ -9,6 +9,7 @@ Swarm.time = 60
 function Swarm:eat()
  local p = ctx.players:get(ctx.id)
  p.maxPopulation = p.maxPopulation + 1
+ ctx.hud.status.populationScale = 2
 end
 
 return Swarm

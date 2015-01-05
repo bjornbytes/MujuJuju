@@ -38,7 +38,7 @@ function Game:load(user, biome)
     -- So the hud can draw them
     self.rewards = {runes = {}, biomes = {}, minions = {}}
 
-    local time = math.round(self.hud.timer.total * tickRate)
+    local time = math.floor(self.timer * tickRate)
     if time > self.user.highscores[self.biome] then
       self.user.highscores[self.biome] = time
       self.rewards.highscore = true

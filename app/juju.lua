@@ -38,8 +38,8 @@ function Juju:update()
 		if math.distance(self.x, self.y, tx, ty) < 16 then
 			ctx.jujus:remove(self)
 			p.juju = p.juju + self.amount
-			ctx.hud.jujuIconScale = 2
-      ctx.hud.jujuAngle = 0
+			ctx.hud.status.jujuScale = 2
+      ctx.hud.status.jujuAngle = 0
 			for i = 1, 20 do
 				ctx.particles:add(JujuSex, {x = tx, y = ty})
 			end
