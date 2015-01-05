@@ -85,7 +85,7 @@ function HudUnits:update()
     local w, h = bg:getDimensions()
     local scale = (.25 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / w
     local yy = v * (.01 * selectFactor)
-    local runeCount = #p.deck[i].runes
+    local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
     local runeSize = v * .032 * scale
     local runeInc = runeSize * 3
     local runex = xx - (runeInc * (runeCount - 1) / 2)
