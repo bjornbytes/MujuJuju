@@ -436,15 +436,6 @@ function Hud:keypressed(key)
   table.with(self.shrujuPatches, 'keypressed', key)
   self.upgrades:keypressed(key)
 
-	--[[if (key == 'tab' or key == 'e') and math.abs(p.x - ctx.shrine.x) < p.width and not ctx.ded then
-		self.upgrading = not self.upgrading
-		return true
-	end]]
-
-	--[[if key == 'escape' and self.upgrading and not ctx.ded then
-		self.upgrading = false
-	end]]
-
 	if ctx.ded and self.deadAlpha > .9 then
 		if key == 'escape' then
 			Context:remove(ctx)
@@ -458,7 +449,8 @@ function Hud:keypressed(key)
 end
 
 function Hud:keyreleased(key)
-	--
+  table.with(self.shrujuPatches, 'keyreleased', key)
+	self.upgrades:keyreleased(key)
 end
 
 function Hud:textinput(char)
