@@ -1,6 +1,8 @@
 Game = class()
 
 function Game:load(user, biome)
+  data.load()
+
   self.id = 1
   self.user = user
   self.biome = biome
