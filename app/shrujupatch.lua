@@ -175,3 +175,11 @@ end
 function ShrujuPatch:getGrowTime(code)
   return math.max(data.shruju[code].time - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
 end
+
+function ShrujuPatch:makeTooltip(shruju)
+  if type(shruju) == 'string' then shruju = data.shruju[shruju] end
+  local str = '{title}' .. (shruju.effect and '{purple}' or '{white}') .. shruju.name .. '{normal}\n'
+  str = str .. '{whoCares}' .. shruju.description .. '{white}\n'
+  if shruju.effect then str = str .. '{purple}' .. shruju.effect.name .. ' - ' .. shruju.effect.description end
+  return str
+end

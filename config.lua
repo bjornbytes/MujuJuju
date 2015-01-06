@@ -193,7 +193,7 @@ return {
       scalingRange = {1, 15}
     },
     speed = {
-      names = {'Rune of Agility', 'Rune of Momentum', 'Rune of Swiftness', 'Rune of Feathers'}
+      names = {'Rune of Agility', 'Rune of Momentum', 'Rune of Swiftness', 'Rune of Feathers'},
       flatRange = {5, 80},
       scalingRange = {1, 5}
     },

@@ -67,8 +67,7 @@ function HudShrujuPatch:update()
       local x, y, w, h = unpack(types[i])
       -- Tooltip
       if math.inside(mx, my, x, y, w, h) then
-        local str = '{title}{white}'  .. shruju.name .. '{normal}\n'
-        str = str .. '{whoCares}' .. shruju.description
+        local str = self.patch:makeTooltip(shruju)
         local raw = str:gsub('{%a+}', '')
         if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
           ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
@@ -81,8 +80,7 @@ function HudShrujuPatch:update()
 
   if (self.patch.growing or self.patch.slot) and math.inside(mx, my, unpack(self.geometry.slot)) then
     local shruju = data.shruju[self.patch.growing] or self.patch.slot
-    local str = '{title}{white}'  .. shruju.name .. '{normal}\n'
-    str = str .. '{whoCares}' .. shruju.description
+    local str = self.patch:makeTooltip(shruju)
     local raw = str:gsub('{%a+}', '')
     if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
       ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
@@ -183,11 +181,11 @@ function HudShrujuPatch:keyreleased(key)
 end
 
 function HudShrujuPatch:mousepressed(x, y, b)
-  if not self.patch or not self.active or self.patch.timer > 0 then return end
+  if not self.patch or self.patch.timer > 0 then return end
 
   local p = ctx.players:get(ctx.id)
 
-  if b == 'l' then
+  if self.active and b == 'l' then
     local types = self.geometry.types
     for i = 1, #types do
       if math.inside(x, y, unpack(types[i])) then
@@ -196,7 +194,7 @@ function HudShrujuPatch:mousepressed(x, y, b)
     end
   end
 
-  if self.patch.slot and math.inside(x, y, unpack(self.geometry.slot)) then
+  if self:playerNearby() and self.patch.slot and math.inside(x, y, unpack(self.geometry.slot)) then
     if b == 'r' then
       local shruju = self.patch:take()
       shruju:eat()
