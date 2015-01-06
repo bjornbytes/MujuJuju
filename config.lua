@@ -81,8 +81,8 @@ return {
       },
       shrujuPatches = {
         [1] = {
-          minTimer = 1,
-          maxTimer = 2
+          minTimer = 30,
+          maxTimer = 40
         },
         [2] = {
           minTimer = 120,
