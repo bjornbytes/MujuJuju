@@ -152,7 +152,7 @@ function ShrujuPatch:makeShruju()
     local shruju = data.shruju[self.growing]()
 
     -- Randomly give it a random magical effect
-    if love.math.random() < .4 then
+    if love.math.random() < .9 then
       local effects = table.keys(ShrujuEffects)
       shruju.effect = setmetatable({timer = 60}, {__index = ShrujuEffects[effects[love.math.random(1, #effects)]]})
     end
