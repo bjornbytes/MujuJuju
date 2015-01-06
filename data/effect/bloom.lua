@@ -20,10 +20,10 @@ function Bloom:applyEffect(source, target)
 	g.scale(.25)
 	g.draw(source)
 	g.pop()
-  self.hblur:send('amount', .005)
-  self.vblur:send('amount', .005)
+  self.hblur:send('amount', .007)
+  self.vblur:send('amount', .007)
   g.setColor(255, 255, 255)
-  for i = 1, 6 do
+  for i = 1, 3 do
     g.setShader(self.hblur)
     self.working:renderTo(function()
       g.draw(self.canvas)
@@ -37,11 +37,6 @@ function Bloom:applyEffect(source, target)
   g.setShader()
   g.setCanvas(target)
   g.draw(source)
-	table.each(ctx.particles.particles, function(particle)
-		if getmetatable(particle).__index == JujuSex then
-			particle:draw()
-		end
-	end)
 	local factor = p.dead and 1 or 1
   love.graphics.setColor(255, 255, 255, self.alpha * 100 * factor)
   g.setBlendMode('additive')
@@ -57,6 +52,12 @@ function Bloom:applyEffect(source, target)
 		p.ghost:draw()
 		table.each(ctx.jujus.jujus, function(juju) juju:draw() end)
 	end
+
+  table.each(ctx.particles.objects, function(particle)
+    if particle.code == 'jujusex' then
+      particle:draw()
+    end
+  end)
 
   g.setCanvas()
 

@@ -10,7 +10,6 @@ function GhostPlayer:init(owner)
   self.alpha = 0
 	self.vx = 0
 	self.vy = -600
-	self.magnetRange = 15
 	self.prevx = self.x
 	self.prevy = self.y
   self.prevalpha = self.alpha
@@ -22,7 +21,7 @@ function GhostPlayer:init(owner)
 	local maxJuju = 7
 	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.deathTimer / maxJuju)) ^ 3)
 
-	local sound = ctx.sound:play({sound = 'spirit'})
+	local sound = ctx.sound:play('spirit')
 	if sound then sound:setVolume(.12) end
 
 	ctx.view:register(self)

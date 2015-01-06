@@ -4,7 +4,7 @@ Menu = class()
 
 function Menu:load(selectedBiome)
 	self.sound = Sound()
-	self.menuSounds = self.sound:loop({sound = 'menu'})
+	self.menuSounds = self.sound:loop('menu')
 	love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor.png'))
 
   self.geometry = setmetatable({}, {__index = function(t, k)
@@ -16,7 +16,7 @@ function Menu:load(selectedBiome)
       local u, v = love.graphics.getDimensions()
       local minions = config.starters
       local size = .2 * v
-      local inc = size + .1 * v
+      local inc = (size * 2) + .1 * v
       local x = u * .5 - inc * ((#minions - 1) / 2)
       local y = .6 * v
       local res = {}
@@ -201,7 +201,7 @@ function Menu:keypressed(key)
     if self.selectedBiome >= #config.biomeOrder + 1 then self.selectedBiome = 1 end
   elseif key == 'x' and love.keyboard.isDown('lctrl') then
     love.filesystem.remove('save/user.json')
-    self.menuSounds:stop()
+    if self.menuSounds then self.menuSounds:stop() end
     Context:remove(ctx)
     Context:add(Menu)
   elseif key:match('%d') and not self.choosing then
@@ -298,7 +298,7 @@ function Menu:mousereleased(x, y, b)
 end
 
 function Menu:startGame()
-  self.menuSounds:stop()
+  if self.menuSounds then self.menuSounds:stop() end
   Context:remove(ctx)
   Context:add(Game, self.user, config.biomeOrder[self.selectedBiome])
 end

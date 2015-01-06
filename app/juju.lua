@@ -17,10 +17,7 @@ function Juju:init(data)
 	self.dead = false
 	table.merge(data, self)
 
-	for i = 1, 15 do
-		ctx.particles:add(JujuSex, {x = self.x, y = self.y})
-	end
-	ctx.view:register(self)
+  ctx.particles:emit('jujusex', self.x, self.y, 30)
 end
 
 function Juju:update()
@@ -38,13 +35,9 @@ function Juju:update()
 			p.juju = p.juju + self.amount
 			ctx.hud.status.jujuScale = 2
       ctx.hud.status.jujuAngle = 0
-			for i = 1, 20 do
-				ctx.particles:add(JujuSex, {x = tx, y = ty})
-			end
+      ctx.particles:emit('jujusex', self.x, self.y, 30, {speed = {80, 100}})
 		end
-		for i = 1, 2 do
-			ctx.particles:add(JujuSex, {x = self.x, y = self.y})
-		end
+    ctx.particles:emit('jujusex', self.x, self.y, 3)
 		return
 	end
 
@@ -56,9 +49,9 @@ function Juju:update()
 		self.y = self.y - 10 * tickRate
 	end
 	
-	if love.math.random() < 2 * tickRate then
-		ctx.particles:add(JujuSex, {x = self.x, y = self.y, vy = love.math.random(-150, -75), vx = love.math.random(-100, 100), alpha = .35})
-	end
+  if love.math.random() < 3 * tickRate then
+    ctx.particles:emit('jujusex', self.x, self.y, 1, {speed = {60, 80}})
+  end
 
 	if p.deathTimer > 0 then
 		local ghost = p.ghost
@@ -71,7 +64,7 @@ function Juju:update()
     self.y = self.y + math.dy(speed, direction)
 
 		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
-			ctx.sound:play({sound = 'juju1'})
+			ctx.sound:play('juju1')
 			self.dead = true
 		end
 	end

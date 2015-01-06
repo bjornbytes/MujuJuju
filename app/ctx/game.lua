@@ -40,7 +40,7 @@ function Game:load(user, biome)
     self:distribute()
   end)
 
-	backgroundSound = self.sound:loop({sound = 'background'})
+	backgroundSound = self.sound:loop('background')
 	love.keyboard.setKeyRepeat(false)
 end
 
@@ -50,6 +50,7 @@ function Game:update()
 		if self.ded then self.effects:get('deathBlur'):update() end
     self.players:paused()
     self.units:paused()
+    self.particles:update()
 		return
 	end
   self.timer = self.timer + 1

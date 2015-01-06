@@ -10,7 +10,7 @@ function Taunt:activate()
       local range = 50 + 50 * self.unit:upgradeLevel('taunt')
       table.each(ctx.target:inRange(self.unit, range, 'enemy', 'unit'), function(target)
         target.buffs:add('taunt', {timer = 3, target = self.unit})
-        ctx.sound:play('taunt')
+        ctx.sound:play(data.media.sounds.thuju.taunt)
       end)
     end
   end)

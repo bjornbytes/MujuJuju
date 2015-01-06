@@ -61,7 +61,7 @@ function HudUnits:update()
         local str = ctx.upgrades.makeTooltip(who, what)
         local raw = str:gsub('{%a+}', '')
         if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-          ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
+          ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
           ctx.hud.tooltipRaw = raw
         end
         ctx.hud.tooltipHover = true
@@ -96,7 +96,7 @@ function HudUnits:update()
         local rune = p.deck[i].runes[j]
         local str = '{white}{title}' .. rune.name .. '{normal}\n'
         if rune.stat then
-          str = str .. '+' .. math.round(rune.amount or rune.scaling) .. ' ' .. rune.stat:capitalize() .. (rune.scaling and ' per second' or '') .. '\n'
+          str = str .. '+' .. math.round(rune.amount or rune.scaling) .. ' ' .. rune.stat:capitalize() .. (rune.scaling and ' every minute (' .. math.round(rune.scaling * math.floor(ctx.timer * tickRate / 60)) .. ')' or '') .. '\n'
         elseif rune.upgrade then
           local name = nil
           for i = 1, #data.unit do
@@ -107,7 +107,7 @@ function HudUnits:update()
         end
         local raw = str:gsub('{%a+}', '')
         if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-          ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
+          ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
           ctx.hud.tooltipRaw = raw
         end
         ctx.hud.tooltipHover = true

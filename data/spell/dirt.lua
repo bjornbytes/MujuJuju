@@ -1,4 +1,4 @@
-local Dirt = class()
+local Dirt = extend(Spell)
 Dirt.code = 'dirt'
 
 function Dirt:activate()
@@ -39,7 +39,7 @@ function Dirt:update()
 		self.vx = math.lerp(self.vx, 0, 8 * tickRate)
 		if self.vx < 10 then
 			self.alpha = math.lerp(self.alpha, 0, 2 * tickRate)
-			if self.alpha < .05 then ctx.particles:remove(self) end
+			if self.alpha < .05 then ctx.spells:remove(self) end
 		end
 	end
 end

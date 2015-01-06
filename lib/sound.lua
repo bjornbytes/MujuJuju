@@ -14,24 +14,21 @@ function Sound:update()
   love.audio.setPosition(ctx.view.x + ctx.view.width / 2, ctx.view.y + ctx.view.height / 2, 200)
 end
 
-function Sound:play(options)
-  if type(options) == 'string' then options = {sound = options} end
-  local name = options.sound
-  if self.muted or not data.media.sounds[name] then return end
-  local sound = data.media.sounds[name]:play()
-  sound:setVolume(options.volume or 1)
-  sound:setRelative(options.relative or false)
-  sound:setRolloff(options.rolloff or 1)
-  sound:setPosition(options.x or 0, options.y or 0, options.z or 0)
-  sound:setAttenuationDistances(options.minrange or 10000, options.maxrange or 10000)
-  f.exe(options.with, sound)
+function Sound:play(sound, cb)
+  if self.muted or not sound then return end
+  if type(sound) == 'string' then sound = data.media.sounds[sound] end
+  if not sound then return end
+
+  local sound = sound:play()
+  if sound then f.exe(cb, sound) end
   return sound
 end
 
-function Sound:loop(data)
-  local sound = self:play(data)
-  if sound then sound:setLooping(true) end
-  return sound
+function Sound:loop(sound, cb)
+  return self:play(sound, function(sound)
+    sound:setLooping(true)
+    f.exe(cb, sound)
+  end)
 end
 
 function Sound:mute()

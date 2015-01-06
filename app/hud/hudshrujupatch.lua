@@ -70,7 +70,7 @@ function HudShrujuPatch:update()
         local str = ShrujuPatch:makeTooltip(shruju)
         local raw = str:gsub('{%a+}', '')
         if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-          ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
+          ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
           ctx.hud.tooltipRaw = raw
         end
         ctx.hud.tooltipHover = true
@@ -78,15 +78,22 @@ function HudShrujuPatch:update()
     end
   end
 
-  if (self.patch.growing or self.patch.slot) and math.inside(mx, my, unpack(self.geometry.slot)) then
-    local shruju = data.shruju[self.patch.growing] or self.patch.slot
-    local str = ShrujuPatch:makeTooltip(shruju)
-    local raw = str:gsub('{%a+}', '')
-    if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-      ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
-      ctx.hud.tooltipRaw = raw
+  if (self.patch.growing or self.patch.slot) then
+    local x, y, w, h = unpack(self.geometry.slot)
+    if math.inside(mx, my, x, y, w, h) then
+      local shruju = data.shruju[self.patch.growing] or self.patch.slot
+      local str = ShrujuPatch:makeTooltip(shruju)
+      local raw = str:gsub('{%a+}', '')
+      if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
+        ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
+        ctx.hud.tooltipRaw = raw
+      end
+      ctx.hud.tooltipHover = true
     end
-    ctx.hud.tooltipHover = true
+
+    if self.patch.slot and self.patch.slot.effect and love.math.random() < 4 * tickRate then
+      ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
+    end
   end
 
   self.prevTime = self.time

@@ -38,7 +38,7 @@ end
 function SpujuSkull:update()
   local image = data.media.graphics.spujuSkull
 	if self.health then
-		self.health = timer.rot(self.health, function() ctx.particles:remove(self) end)
+		self.health = timer.rot(self.health, function() ctx.spells:remove(self) end)
 		self.burstScale = math.lerp(self.burstScale, self.radius / data.media.graphics.spell.burst:getWidth(), 20 * tickRate)
 	else
 		self.x = self.x + self.vx * tickRate
@@ -47,9 +47,15 @@ function SpujuSkull:update()
 		self.angle = self.angle + math.sign(self.vx) * tickRate
 		if self.y + image:getWidth() >= love.graphics.getHeight() - ctx.map.groundHeight then
 			self.health = self.maxHealth
-      table.each(ctx.target:inRange(self, self.radius, 'enemy', 'unit', 'player', 'shrine'), function(target)
-        self.unit:attack(target)
+      local targets = ctx.target:inRange(self, self.radius, 'enemy', 'unit', 'player', 'shrine')
+      table.each(targets, function(target)
+        self.unit:attack(target, {nosound = true})
       end)
+      if next(targets) then
+        ctx.sound:play(data.media.sounds.spuju.attackHit, function(sound)
+          sound:setVolume(.4)
+        end)
+      end
 		end
 	end
 end

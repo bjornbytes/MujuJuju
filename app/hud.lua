@@ -18,6 +18,7 @@ Hud.richOptions = {
   green = {100, 255, 100},
   purple = {115, 75, 150}
 }
+Hud.richWidth = 350
 
 function Hud:init()
 	self.cursorImage = g.newImage('media/graphics/cursor.png')
@@ -149,16 +150,18 @@ function Hud:gui()
   if self.tooltip then
     mx, my = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
     g.setFont(self.richOptions.normal)
-    local textWidth, lines = self.richOptions.normal:getWrap(self.tooltipRaw, 300)
+    local normalText = self.tooltipRaw:sub(self.tooltipRaw:find('\n') + 1)
+    local textWidth, lines = self.richOptions.normal:getWrap(normalText, self.richWidth)
     local titleLine = self.tooltipRaw:sub(1, self.tooltipRaw:find('\n'))
-    local titleWidth = self.richOptions.title:getWrap(self.tooltipRaw, 300)
+    local titleWidth, titleLines = self.richOptions.title:getWrap(titleLine, self.richWidth)
     textWidth = math.max(textWidth, titleWidth)
+    textHeight = titleLines * self.richOptions.title:getHeight() + lines * g.getFont():getHeight()
     local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
     local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))
     g.setColor(30, 50, 70, 240)
-    g.rectangle('fill', xx, yy, textWidth + 14, lines * g.getFont():getHeight() + 16 + 5)
+    g.rectangle('fill', xx, yy, textWidth + 14, textHeight + 9)
     g.setColor(10, 30, 50, 255)
-    g.rectangle('line', xx + .5, yy + .5, textWidth + 14, lines * g.getFont():getHeight() + 16 + 5)
+    g.rectangle('line', xx + .5, yy + .5, textWidth + 14, textHeight + 9)
     self.tooltip:draw(xx + 8, yy + 4)
   end
 
@@ -176,7 +179,7 @@ function Hud:gui()
     elseif math.floor(ctx.timer * tickRate) >= config.biomes[ctx.biome].benchmarks.bronze then benchmark = 'Bronze' end
 
     if benchmark then str = str .. ' (' .. benchmark .. ')' end
-    g.printf(str, 0, h * .41, w, 'center')
+    g.printf(str, 0, h * .31, w, 'center')
 
     local rewards = 'Cool Stuff:'
     if ctx.rewards.highscore then rewards = rewards .. '\nNew highscore!' end
@@ -193,7 +196,7 @@ function Hud:gui()
       rewards = rewards .. '\n' .. table.concat(ctx.rewards.minions, ', ')
     end
 
-    g.printf(rewards, 0, h * .5, w, 'center')
+    g.printf(rewards, 0, h * .4, w, 'center')
 
     g.draw(self.deadReplay, w * .4, h * .825, 0, 1, 1, self.deadReplay:getWidth() / 2)
     g.draw(self.deadQuit, w * .6, h * .825, 0, 1, 1, self.deadQuit:getWidth() / 2)

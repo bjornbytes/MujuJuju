@@ -197,9 +197,9 @@ function Player:summon()
 
 		self.animation:set('summon')
 		local summonSound = love.math.random(1, 3)
-		ctx.sound:play({sound = 'summon' .. summonSound})
+		ctx.sound:play('summon' .. summonSound)
     for i = 1, 15 do
-      ctx.particles:add(Dirt, {x = self.x, y = self.y + self.height})
+      ctx.spells:add('dirt', {x = self.x, y = self.y + self.height})
     end
 	end
 end
@@ -243,7 +243,7 @@ function Player:hurt(amount, source)
 		self.ghost = GhostPlayer(self)
 
     self.animation:set('death')
-		ctx.sound:play({sound = 'death'})
+		ctx.sound:play('death')
 
 		if self.gamepad and self.gamepad:isVibrationSupported() then
 			self.gamepad:setVibration(1, 1, .5)

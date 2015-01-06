@@ -8,7 +8,7 @@ Duju.states = {}
 
 Duju.states.spawn = {
   priority = 5,
-  speed = 1
+  speed = .8
 }
 
 Duju.states.idle = {
@@ -26,7 +26,7 @@ Duju.states.walk = {
 Duju.states.attack = {
   priority = 1,
   loop = true,
-  speed = .5
+  speed = .4
 }
 
 Duju.states.headbutt = {

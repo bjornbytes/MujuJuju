@@ -13,7 +13,7 @@ function Units:createEnemy()
     local enemyType = love.math.random() < .5 and 'duju' or 'spuju'
     local elite = config.elites.baseModifier + (config.elites.levelModifier * self.level)
     local isElite = love.math.random() < elite and self.level > config.elites.minimumLevel
-    local x = love.math.random() < .5 and 0 or ctx.map.width
+    local x = love.math.random() < .5 and Unit.width / 2 or ctx.map.width - Unit.width / 2
     local unit = self:add(enemyType, {x = x, elite = isElite})
 
     if isElite then

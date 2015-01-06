@@ -18,7 +18,7 @@ return {
     levelModifier = .0015,
     jujuModifier = 2,
     minimumLevel = 5,
-    scale = 1.5,
+    scale = 1.35,
     buffs = {
       sinister = {
         damageModifier = 10
@@ -238,7 +238,7 @@ return {
       scalingRange = {1, 15}
     },
     speed = {
-      names = {'Rune of Agility', 'Rune of Momentum', 'Rune of Swiftness', 'Rune of Feathers'},
+      names = {'Rune of Agility', 'Rune of Haste', 'Rune of Swiftness', 'Rune of the Wind'},
       flatRange = {5, 80},
       scalingRange = {1, 5}
     },

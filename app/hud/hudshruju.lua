@@ -36,10 +36,14 @@ function HudShruju:update()
       local str = ShrujuPatch:makeTooltip(p.shrujus[i])
       local raw = str:gsub('{%a+}', '')
       if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-        ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
+        ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
         ctx.hud.tooltipRaw = raw
       end
       ctx.hud.tooltipHover = true
+    end
+
+    if p.shrujus[i] and p.shrujus[i].effect and love.math.random() < 4 * tickRate then
+      ctx.particles:emit('magicshruju', x, y, 1)
     end
   end
 end

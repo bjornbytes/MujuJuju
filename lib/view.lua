@@ -69,18 +69,18 @@ function View:update()
 
     if x.draw then
       for i = 1, #self.draws do
-        if self.draws[i] == x then table.remove(self.draws, i) return end
+        if self.draws[i] == x then table.remove(self.draws, i) i = #self.draws + 1 end
       end
     end
 
     if x.gui then
       for i = 1, #self.guis do
-        if self.guis[i] == x then table.remove(self.guis, i) return end
+        if self.guis[i] == x then table.remove(self.guis, i) i = #self.guis + 1 end
       end
     end
 
     for i = 1, #self.effects do
-      if self.effects[i] == x then table.remove(self.effects, i) return end
+      if self.effects[i] == x then table.remove(self.effects, i) i = #self.effects + 1 end
     end
 
     table.remove(self.toRemove, 1)

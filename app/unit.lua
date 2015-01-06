@@ -104,6 +104,10 @@ function Unit:update()
   self.prev.health = self.health
 
   if self.dying then
+    self.channeling = false
+    self.spawning = false
+    self.casting = false
+    self.animation:set('death', {force = true})
     self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * tickRate, 1))
     return
   end
@@ -255,8 +259,9 @@ function Unit:startAttacking(target)
   self.animation:set('attack')
 end
 
-function Unit:attack(target)
+function Unit:attack(target, options)
   if not target then return end
+  options = options or {}
   local amount = self.damage
   amount = self:abilityCall('preattack', target, amount) or amount
   amount = self.buffs:preattack(target, amount) or amount
@@ -264,6 +269,11 @@ function Unit:attack(target)
   self:abilityCall('postattack', target, amount)
   self.buffs:postattack(target, amount)
   self.ai.useAbilities(self)
+  if not options.nosound then
+    ctx.sound:play(data.media.sounds[self.class.code] and data.media.sounds[self.class.code].attackHit, function(sound)
+      sound:setVolume(.4)
+    end)
+  end
 end
 
 function Unit:useAbility(index, target)
