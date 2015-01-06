@@ -6,9 +6,9 @@ Spuju.code = 'spuju'
 -- Stats
 ----------------
 Spuju.health = 65
-Spuju.damage = 5
+Spuju.damage = 10
 Spuju.range = 150
-Spuju.attackSpeed = 1.1
+Spuju.attackSpeed = 1.3
 Spuju.speed = 20
 
 Spuju.healthScaling = {5, .9}

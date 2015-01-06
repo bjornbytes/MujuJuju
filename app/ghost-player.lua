@@ -127,5 +127,5 @@ function GhostPlayer:draw()
 	g.draw(self.image, x, y, self.angle, .6 * scale, .6 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
 
 	g.setColor(255, 255, 255, 15)
-	g.circle('fill', self.owner.x, self.owner.y + self.owner.height, self.maxDis)
+	g.arc('fill', self.owner.x, self.owner.y + self.owner.height, self.maxDis, 0, -math.pi, self.maxDis / 2)
 end

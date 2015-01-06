@@ -71,7 +71,7 @@ function Player:update()
 	self:animate()
 
 	self.deathTimer = timer.rot(self.deathTimer, function()
-		self.invincible = 3
+		self.invincible = 4.5
 		self.health = self.maxHealth
 		self.dead = false
 		self.ghost:despawn()
@@ -105,7 +105,7 @@ function Player:update()
 end
 
 function Player:draw()
-	if math.floor(self.invincible * 8) % 2 == 0 then
+	if math.floor(self.invincible * 5) % 2 == 0 then
     local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 		love.graphics.setColor(255, 255, 255)
 		self.animation:draw(x, y)
@@ -191,9 +191,21 @@ function Player:summon()
 	local cooldown = self.deck[self.selected].cooldown
   local population = self:getPopulation()
 	local cost = data.unit[minion].cost
-	if cooldown == 0 and population < self.maxPopulation and self:spend(cost) then
+	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(cost) then
 		ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
-		self.deck[self.selected].cooldown = math.max(3 - self.flatCooldownReduction, .5)
+
+    for i = 1, #self.deck do
+      if i == self.selected then
+        self.deck[i].cooldown = math.max(3 - self.flatCooldownReduction, .5)
+        self.deck[i].maxCooldown = self.deck[i].cooldown
+      else
+        local cd = math.max(1.5 - self.flatCooldownReduction, .5)
+        if cd > self.deck[i].cooldown then
+          self.deck[i].cooldown = cd
+          self.deck[i].maxCooldown = cd
+        end
+      end
+    end
 
 		self.animation:set('summon')
 		local summonSound = love.math.random(1, 3)
@@ -281,6 +293,7 @@ function Player:initDeck()
       self.deck[code] = {
         runes = deck.runes[i] or {},
         cooldown = 0,
+        maxCooldown = 3,
         code = code
       }
 

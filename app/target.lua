@@ -16,7 +16,7 @@ local getEntries = {
   end,
   player = function(source, teamFilter, t)
     ctx.players:each(function(player)
-      if source ~= player and not player.dead and teamFilter(source, player) then
+      if source ~= player and not player.dead and player.invincible == 0 and teamFilter(source, player) then
         table.insert(t, {player, math.abs(player.x - source.x)})
       end
     end)

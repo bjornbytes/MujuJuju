@@ -27,7 +27,7 @@ Spuju.states.walk = {
 Spuju.states.attack = {
   priority = 1,
   loop = true,
-  speed = .34
+  speed = 1
 }
 
 Spuju.states.death = {

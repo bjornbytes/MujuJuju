@@ -31,7 +31,7 @@ function Unit:activate()
         if self.class.attackSpell then
           ctx.spells:add(self.class.attackSpell, {unit = self, target = self.target})
         else
-          self:attack(self.target)
+          self:attack()
         end
       end
     end
@@ -113,6 +113,7 @@ function Unit:update()
     self.spawning = false
     self.casting = false
     self.animation:set('death', {force = true})
+    self.animation.speed = 1
     self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * tickRate, 1))
     return
   end
@@ -129,6 +130,13 @@ function Unit:update()
   self.buffs:postupdate()
 
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
+
+  if self.animation.state.name == 'attack' then
+    local current = self.animation.spine.animationState:getCurrent(0)
+    if current then self.animation.speed = current.endTime / self.class.attackSpeed end
+  else
+    self.animation.speed = 1
+  end
 
   if self.player then self:hurt(self.maxHealth * .02 * tickRate) end
 end
@@ -264,10 +272,11 @@ function Unit:startAttacking(target)
   self.animation:set('attack')
 end
 
-function Unit:attack(target, options)
-  if not target then return end
+function Unit:attack(options)
   options = options or {}
-  local amount = self.damage
+  local target = options.target or self.target
+  if not target then return end
+  local amount = options.damage or self.damage
   amount = self:abilityCall('preattack', target, amount) or amount
   amount = self.buffs:preattack(target, amount) or amount
   amount = target:hurt(amount, self, 'attack') or amount

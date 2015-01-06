@@ -149,6 +149,14 @@ function HudUnits:draw()
     g.setColor(255, 255, 255, 255 * alpha)
     g.draw(bg, xx, yy, 0, scale, scale, w / 2, 0)
 
+    -- Cooldown
+    local title = data.media.graphics.hud.title
+    local titlex = xx - (title:getWidth() / 2) * scale
+    g.setColor(255, 255, 255, 80 * alpha)
+    g.draw(title, xx, yy + (10 * scale), 0, scale, scale, title:getWidth() / 2, 0)
+    g.setColor(255, 255, 255, 255 * alpha)
+    g.draw(title, titlex, yy + (10 * scale), 0, scale * (1 - (p.deck[i].cooldown / p.deck[i].maxCooldown)), scale)
+
     -- Animation
     self.canvas[i]:clear(0, 0, 0, 0)
     g.setCanvas(self.canvas[i])
