@@ -76,7 +76,7 @@ function HudShruju:mousepressed(mx, my, b)
     if math.insideCircle(mx, my, x, y, r) and p.shrujus[i] then
       p.shrujus[i]:eat()
       if p.shrujus[i].effect then p.shrujus[i].effect:drop(p.shrujus[i]) end
-      table.remove(p.shrujus, i)
+      p.shrujus[i] = nil
     end
   end
 end
