@@ -77,6 +77,7 @@ return {
         maxEnemyRate = 12,
         levelScale = 1,
         upgradeCostIncrease = 1,
+        maxElites = 1
       },
       shrujuPatches = {
         [1] = {
@@ -122,6 +123,7 @@ return {
         maxEnemyRate = 9,
         levelScale = 1.25,
         upgradeCostIncrease = 2,
+        maxElites = 1
       },
       shrujuPatches = {
         [1] = {
@@ -165,7 +167,8 @@ return {
         minEnemyRate = 6,
         maxEnemyRate = 9,
         levelScale = 1.5,
-        upgradeCostIncrease = 3
+        upgradeCostIncrease = 3,
+        maxElites = 2
       },
       shrujuPatches = {
         [1] = {
@@ -209,7 +212,8 @@ return {
         minEnemyRate = 6,
         maxEnemyRate = 8,
         levelScale = 2,
-        upgradeCostIncrease = 4
+        upgradeCostIncrease = 4,
+        maxElites = 3
       },
       shrujuPatches = {
         [1] = {

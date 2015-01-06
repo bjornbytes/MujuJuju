@@ -11,9 +11,12 @@ end
 function Units:createEnemy()
   if self.enemyCount < 1 + self.level / 2 then
     local enemyType = love.math.random() < .5 and 'duju' or 'spuju'
-    local elite = config.elites.baseModifier + (config.elites.levelModifier * self.level)
-    local isElite = love.math.random() < elite and self.level > config.elites.minimumLevel
     local x = love.math.random() < .5 and Unit.width / 2 or ctx.map.width - Unit.width / 2
+    local eliteChance = config.elites.baseModifier + (config.elites.levelModifier * self.level)
+    local eliteCount = table.count(self:filter(function(u) return u.elite end))
+    local isElite = love.math.random() < eliteChance
+    isElite = isElite and self.level > config.elites.minimumLevel
+    isElite = isElite and eliteCount < config.biomes[ctx.biome].units.maxElites
     local unit = self:add(enemyType, {x = x, elite = isElite})
 
     if isElite then
