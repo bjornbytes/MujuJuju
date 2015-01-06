@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "ysj8IUp0DgFpwj0W7owWmO5CYYg", "spine": "2.1.07", "width": 369.58, "height": 336.79 },
+"skeleton": { "hash": "tyNhgRb6RsBXEGzoBk3tdx7q3vc", "spine": "2.1.07", "width": 367.12, "height": 331.02 },
 "bones": [
 	{ "name": "root", "x": -0.01, "scaleX": 0.953, "scaleY": 0.953 },
 	{ "name": "waist", "parent": "root", "x": -7.52, "y": 131.97 },
@@ -408,6 +408,80 @@
 		]
 	},
 	"death": {
+		"slots": {
+			"chest": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"head": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"leftarmlower": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"leftarmupper": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"lefthand": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"leftleglower": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"leftlegupper": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"rightarmlower": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"rightarmupper": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"righthand": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"rightleglower": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			},
+			"rightlegupper": {
+				"color": [
+					{ "time": 1.0666, "color": "ffffffff" },
+					{ "time": 1.2666, "color": "ffffff00" }
+				]
+			}
+		},
 		"bones": {
 			"waist": {
 				"rotate": [

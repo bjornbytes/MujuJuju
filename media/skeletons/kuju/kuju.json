@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "C0SeeVStQyKBorkbY5qOPCaVjJ8", "spine": "2.1.07", "width": 187.44, "height": 354.42 },
+"skeleton": { "hash": "EUNgP/BvbLAY7X+s0I23MMKZSTM", "spine": "2.1.07", "width": 183.04, "height": 351.08 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "Roto", "parent": "root", "x": 50.98, "y": 165.73 },
@@ -590,6 +590,92 @@
 		]
 	},
 	"death": {
+		"slots": {
+			"chest": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"face": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"hair": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"leftforearm": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"lefthand": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"leftshin": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"leftthigh": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"leftupperarm": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"neck": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"rightforearm": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"righthand": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"rightshin": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"rightthigh": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			},
+			"rightupperarm": {
+				"color": [
+					{ "time": 0.7666, "color": "ffffffff" },
+					{ "time": 0.9333, "color": "ffffff00" }
+				]
+			}
+		},
 		"bones": {
 			"root": {
 				"rotate": [

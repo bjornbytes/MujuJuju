@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "knkSIZWHuRPeiPXPksj3vJloRms", "spine": "2.1.07", "width": 131.38, "height": 120.12 },
+"skeleton": { "hash": "uP5jIkNC/s5EI2foQD6qdwk9Y0A", "spine": "2.1.07", "width": 226.88, "height": 113.19 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "chest", "parent": "root", "length": 53.15, "y": 72, "rotation": -94.08 },
@@ -225,6 +225,44 @@
 		]
 	},
 	"death": {
+		"slots": {
+			"chest": {
+				"color": [
+					{ "time": 0.6666, "color": "ffffffff" },
+					{ "time": 0.7666, "color": "ffffff00" }
+				]
+			},
+			"head": {
+				"color": [
+					{ "time": 0.6666, "color": "ffffffff" },
+					{ "time": 0.7666, "color": "ffffff00" }
+				]
+			},
+			"leftarmlower": {
+				"color": [
+					{ "time": 0.6666, "color": "ffffffff" },
+					{ "time": 0.7666, "color": "ffffff00" }
+				]
+			},
+			"leftarmupper": {
+				"color": [
+					{ "time": 0.6666, "color": "ffffffff" },
+					{ "time": 0.7666, "color": "ffffff00" }
+				]
+			},
+			"rightarmlower": {
+				"color": [
+					{ "time": 0.6666, "color": "ffffffff" },
+					{ "time": 0.7666, "color": "ffffff00" }
+				]
+			},
+			"rightarmupper": {
+				"color": [
+					{ "time": 0.6666, "color": "ffffffff" },
+					{ "time": 0.7666, "color": "ffffff00" }
+				]
+			}
+		},
 		"bones": {
 			"root": {
 				"rotate": [
@@ -755,6 +793,44 @@
 		}
 	},
 	"spawn": {
+		"slots": {
+			"chest": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.2333, "color": "ffffffff" }
+				]
+			},
+			"head": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.2333, "color": "ffffffff" }
+				]
+			},
+			"leftarmlower": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.2333, "color": "ffffffff" }
+				]
+			},
+			"leftarmupper": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.2333, "color": "ffffffff" }
+				]
+			},
+			"rightarmlower": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.2333, "color": "ffffffff" }
+				]
+			},
+			"rightarmupper": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.2333, "color": "ffffffff" }
+				]
+			}
+		},
 		"bones": {
 			"root": {
 				"rotate": [

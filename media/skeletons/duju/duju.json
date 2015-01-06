@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "quabhJrOFt0MHBAJ8guAhTwzNh4", "spine": "2.1.07", "width": 47.22, "height": 24.95 },
+"skeleton": { "hash": "LTcI+ZUmIBm69FHDENPqVYNi3kc", "spine": "2.1.07", "width": 100.44, "height": 47.81 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "chest", "parent": "root", "length": 29.36, "x": -14.2, "y": 4.52, "rotation": 5.39 },
@@ -201,6 +201,38 @@
 		]
 	},
 	"death": {
+		"slots": {
+			"chest": {
+				"color": [
+					{ "time": 0.4666, "color": "ffffffff" },
+					{ "time": 0.7, "color": "ffffff00" }
+				]
+			},
+			"head": {
+				"color": [
+					{ "time": 0.4666, "color": "ffffffff" },
+					{ "time": 0.7, "color": "ffffff00" }
+				]
+			},
+			"jaw": {
+				"color": [
+					{ "time": 0.4666, "color": "ffffffff" },
+					{ "time": 0.7, "color": "ffffff00" }
+				]
+			},
+			"leftarm": {
+				"color": [
+					{ "time": 0.4666, "color": "ffffffff" },
+					{ "time": 0.7, "color": "ffffff00" }
+				]
+			},
+			"rightarm": {
+				"color": [
+					{ "time": 0.4666, "color": "ffffffff" },
+					{ "time": 0.7, "color": "ffffff00" }
+				]
+			}
+		},
 		"bones": {
 			"root": {
 				"rotate": [
