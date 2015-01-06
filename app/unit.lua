@@ -56,8 +56,8 @@ function Unit:activate()
   self.buffs = UnitBuffs(self)
 
   if self.elite then
-    self.health = self.health * config.elite.healthModifier
-    self.damage = self.damage * config.elite.damageModifier
+    self.health = self.health * config.elites.healthModifier
+    self.damage = self.damage * config.elites.damageModifier
   end
 
   self.abilities = {}
