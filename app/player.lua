@@ -25,9 +25,9 @@ function Player:init()
   self.dead = false
   self.deathTimer = 0
 
-  self.juju = 30
-  self.jujuTimer = 1
-  self.jujuRate = 1
+  self.juju = config.player.baseJuju
+  self.jujuTimer = config.player.jujuRate
+  self.jujuRate = config.player.jujuRate
 
   self.magicShruju = {}
 
@@ -203,10 +203,10 @@ function Player:summon()
 
     for i = 1, #self.deck do
       if i == self.selected then
-        self.deck[i].cooldown = math.max(3 - self.flatCooldownReduction, .5)
+        self.deck[i].cooldown = math.max(config.player.baseCooldown - self.flatCooldownReduction, config.player.minCooldown)
         self.deck[i].maxCooldown = self.deck[i].cooldown
       else
-        local cd = math.max(1.5 - self.flatCooldownReduction, .5)
+        local cd = math.max(config.player.globalCooldown - self.flatCooldownReduction, config.player.minCooldown)
         if cd > self.deck[i].cooldown then
           self.deck[i].cooldown = cd
           self.deck[i].maxCooldown = cd

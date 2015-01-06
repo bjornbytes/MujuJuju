@@ -4,10 +4,14 @@ Harvest.code = 'harvest'
 Harvest.name = 'Harvest'
 Harvest.description = 'Permanently causes all shruju to grow 6 seconds faster.'
 
-Harvest.time = 60
-
 function Harvest:apply()
   ctx.shrujuPatches.harvestLevel = ctx.shrujuPatches.harvestLevel + 1
+
+  if config.shruju.growTime - (ctx.shrujuPatches.harvestLevel * config.shruju.harvestCooldownReduction) <= config.shruju.minGrowTime then
+    ctx.shrujuPatches:each(function(patch)
+      patch:removeType('harvest')
+    end)
+  end
 end
 
 return Harvest

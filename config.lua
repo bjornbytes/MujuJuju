@@ -47,6 +47,20 @@ return {
     }
   },
 
+  player = {
+    baseCooldown = 3,
+    minCooldown = .5,
+    globalCooldown = 1.5,
+    baseJuju = 30,
+    jujuRate = 1
+  },
+
+  shruju = {
+    growTime = 60,
+    minGrowTime = 10,
+    harvestCooldownReduction = 6
+  },
+
   biomes = {
 
     forest = {
@@ -62,12 +76,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
+          base = 10,
           exponent = .85,
           coefficient = .75
         },
         maximum = {
-          base = 20,
+          base = 15,
           exponent = .85,
           coefficient = 1
         }
@@ -108,12 +122,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
+          base = 10,
           exponent = .85,
           coefficient = .75
         },
         maximum = {
-          base = 20,
+          base = 15,
           exponent = .85,
           coefficient = 1
         }
@@ -153,12 +167,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
+          base = 10,
           exponent = .85,
           coefficient = .75
         },
         maximum = {
-          base = 20,
+          base = 15,
           exponent = .85,
           coefficient = 1
         }
@@ -198,12 +212,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
+          base = 10,
           exponent = .85,
           coefficient = .75
         },
         maximum = {
-          base = 20,
+          base = 15,
           exponent = .85,
           coefficient = 1
         }

@@ -58,6 +58,8 @@ function HudShrujuPatch:update()
   local p = ctx.players:get(ctx.id)
   local mx, my = love.mouse.getPosition()
 
+  if self.patch and #self.patch.types ~= self.geometry.types then self.geometry.types = nil end
+
   if not self:playerNearby() then
     self.active = false
   end

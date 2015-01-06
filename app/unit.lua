@@ -38,28 +38,7 @@ function Unit:activate()
         end
       end
     elseif event.data.name == 'death' then
-      if not self.player then
-        local juju = config.biomes[ctx.biome].juju
-        local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
-        local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
-        local amount = love.math.random(minAmount, maxAmount)
-        local jujus = math.random(1, 2)
-
-        if self.elite then
-          amount = amount * config.elites.jujuModifier
-          jujus = 1
-        end
-
-        for i = 1, jujus do
-          ctx.jujus:add({
-            x = self.x,
-            y = self.y,
-            amount = amount / jujus,
-            vx = love.math.random(-50, 50),
-            vy = love.math.random(-300, -100)
-          })
-        end
-      end
+      -- TODO drop juju
     end
   end)
 
@@ -367,6 +346,29 @@ end
 function Unit:die()
   self:abilityCall('die')
   self:abilityCall('deactivate')
+
+  if not self.player then
+    local juju = config.biomes[ctx.biome].juju
+    local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
+    local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
+    local amount = love.math.random(minAmount, maxAmount)
+    local jujus = math.random(1, 2)
+
+    if self.elite then
+      amount = amount * config.elites.jujuModifier
+      jujus = 1
+    end
+
+    for i = 1, jujus do
+      ctx.jujus:add({
+        x = self.x,
+        y = self.y,
+        amount = amount / jujus,
+        vx = love.math.random(-50, 50),
+        vy = love.math.random(-300, -100)
+      })
+    end
+  end
 
   table.each(ctx.units.objects, function(u)
     if u.target == self then u.target = nil end

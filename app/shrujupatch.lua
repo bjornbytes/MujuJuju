@@ -170,5 +170,11 @@ function ShrujuPatch:makeShruju()
 end
 
 function ShrujuPatch:getGrowTime(code)
-  return math.max(data.shruju[code].time - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
+  return math.max(config.shruju.growTime - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
+end
+
+function ShrujuPatch:removeType(code)
+  for i = 1, #self.types do
+    if self.types[i] == code then table.remove(self.types, i) return end
+  end
 end
