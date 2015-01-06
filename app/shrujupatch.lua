@@ -131,7 +131,7 @@ end
 
 function ShrujuPatch:grow(what)
   if not self:playerNearby() or not table.has(self.types, what) or self.growing or self.slot then return end
-  self.timer = math.max(data.shruju[what].time - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
+  self.timer = self:getGrowTime(what)
   self.growing = what
 end
 
@@ -170,4 +170,8 @@ function ShrujuPatch:makeShruju()
       end
     end)
   end
+end
+
+function ShrujuPatch:getGrowTime(code)
+  return math.max(data.shruju[code].time - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
 end

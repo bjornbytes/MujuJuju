@@ -152,11 +152,13 @@ function HudShrujuPatch:draw()
 
       local image = data.media.graphics.hud.title
       local scale = (w + 5) / 125
-      g.setColor(255, 255, 255, 80)
+      g.setColor(255, 255, 255, self.patch.growing and 80 or 255)
       g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
 
-      g.setColor(255, 255, 255)
-      g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / 60)), scale)
+      if self.patch.growing then
+        g.setColor(255, 255, 255)
+        g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / self.patch:getGrowTime(self.patch.growing))), scale)
+      end
 
       g.setFont('mesmerize', image:getHeight() * scale - 7)
       g.printCenter(data.shruju[code].name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
