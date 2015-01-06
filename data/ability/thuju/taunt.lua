@@ -5,8 +5,8 @@ Taunt.code = 'taunt'
 -- Behavior
 ----------------
 function Taunt:activate()
-  self.unit.animation:on('event', function(data)
-    if data.data.name == 'taunt' then
+  self.unit.animation:on('event', function(event)
+    if event.data.name == 'taunt' then
       local range = 50 + 50 * self.unit:upgradeLevel('taunt')
       table.each(ctx.target:inRange(self.unit, range, 'enemy', 'unit'), function(target)
         target.buffs:add('taunt', {timer = 3, target = self.unit})
