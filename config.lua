@@ -8,7 +8,7 @@ return {
 
   biomeOrder = {
     'forest',
-    'cave',
+    'cavern',
     'tundra',
     'volcano'
   },
@@ -93,7 +93,7 @@ return {
     },
 
     cavern = {
-      name = 'The Caverns',
+      name = 'The Cavern',
       benchmarks = {
         bronze = 300,
         silver = 900,
@@ -176,7 +176,7 @@ return {
         }
       },
       runes = {
-        maxLevel = 50,
+        maxLevel = 75,
         specialChance = .04
       }
     },
@@ -268,6 +268,6 @@ return {
     runes = {},
     deck = {minions = {}, runes = {}},
     biomes = {'forest'},
-    highscores = {forest = 0, tundra = 0, volcano = 0}
+    highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0}
   }
 }

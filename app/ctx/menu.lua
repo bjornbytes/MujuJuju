@@ -79,6 +79,7 @@ function Menu:load(selectedBiome)
 
     biomes = function()
       local u, v = love.graphics.getDimensions()
+      local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
       local width = .3 * v
       local height = width * .75
       local inc = width + .1 * v
@@ -86,7 +87,7 @@ function Menu:load(selectedBiome)
       local y = .3 * v
       local res = {}
       for i = 1, #config.biomeOrder do
-        local offset = (inc * (self.selectedBiome - i))
+        local offset = (inc * (biomeDisplay - i))
         table.insert(res, {x - width / 2 - offset, y, width, height})
       end
       return res
@@ -106,10 +107,14 @@ function Menu:load(selectedBiome)
   end
 
   self.selectedBiome = selectedBiome or 1
+  self.biomeDisplay = self.selectedBiome
+  self.prevBiomeDisplay = self.biomeDisplay
 end
 
 function Menu:update()
-  --
+  self.prevBiomeDisplay = self.biomeDisplay
+  self.biomeDisplay = math.lerp(self.biomeDisplay, self.selectedBiome, math.min(10 * tickRate, 1))
+  if math.abs(self.biomeDisplay - self.selectedBiome) > .01 then self.geometry.biomes = nil end
 end
 
 function Menu:draw()
@@ -162,7 +167,7 @@ function Menu:draw()
       g.setFont('pixel', 8)
       g.printCenter(config.biomes[biome].name, x + w / 2, y + h / 2)
       g.setColor(255, 255, 255)
-      local minutes = math.floor(self.user.highscores[biome] / 60)
+      local minutes = math.floor((self.user.highscores[biome] or 0) / 60)
       local seconds = self.user.highscores[biome] % 60
       local time = string.format('%02d:%02d', minutes, seconds)
       g.printCenter('highscore: ' .. time, x + w / 2, y + h + 16)
@@ -191,11 +196,9 @@ function Menu:keypressed(key)
   elseif key == 'left' then
     self.selectedBiome = self.selectedBiome - 1
     if self.selectedBiome <= 0 then self.selectedBiome = #config.biomeOrder end
-    table.clear(self.geometry)
   elseif key == 'right' then
     self.selectedBiome = self.selectedBiome + 1
     if self.selectedBiome >= #config.biomeOrder + 1 then self.selectedBiome = 1 end
-    table.clear(self.geometry)
   elseif key == 'x' and love.keyboard.isDown('lctrl') then
     love.filesystem.remove('save/user.json')
     self.menuSounds:stop()
