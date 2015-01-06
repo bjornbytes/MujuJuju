@@ -45,6 +45,11 @@ function SpujuSkull:update()
 		self.y = self.y + self.vy * tickRate
 		self.vy = self.vy + self.gravity * tickRate
 		self.angle = self.angle + math.sign(self.vx) * tickRate
+
+    if love.math.random() < 30 * tickRate then
+      ctx.particles:emit('spujuskulltrail', self.x, self.y, 1)
+    end
+
 		if self.y + image:getWidth() >= love.graphics.getHeight() - ctx.map.groundHeight then
 			self.health = self.maxHealth
       local targets = ctx.target:inRange(self, self.radius, 'enemy', 'unit', 'player', 'shrine')

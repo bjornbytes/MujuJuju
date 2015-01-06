@@ -62,7 +62,9 @@ function Particles:emit(code, x, y, count, options)
   self.systems[code]:emit(count)
 
   table.each(options, function(value, option)
-    self:apply(code, option, data.particle[code].options[option])
+    if data.particle[code].options[option] then
+      self:apply(code, option, data.particle[code].options[option])
+    end
   end)
 end
 

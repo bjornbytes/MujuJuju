@@ -165,9 +165,9 @@ function Unit:draw()
     g.setShader()
   end)
 
-  local selected = false
-  data.media.shaders.horizontalBlur:send('amount', selected and .004 or .002)
-  data.media.shaders.verticalBlur:send('amount', selected and .004 or .002)
+  local selected = true
+  data.media.shaders.horizontalBlur:send('amount', selected and .003 or .002)
+  data.media.shaders.verticalBlur:send('amount', selected and .003 or .002)
   g.setColor(255, 255, 255)
   for i = 1, 3 do
     g.setShader(data.media.shaders.horizontalBlur)
