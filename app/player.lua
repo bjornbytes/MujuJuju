@@ -29,7 +29,7 @@ function Player:init()
   self.jujuTimer = 1
   self.jujuRate = 1
 
-  self.shrujus = {}
+  self.magicShruju = {}
 
 	self.prevx = self.x
 	self.prevy = self.y
@@ -100,6 +100,13 @@ function Player:update()
   for i = 1, #self.deck do
     self.deck[i].cooldown = timer.rot(self.deck[i].cooldown)
   end
+
+  table.each(self.magicShruju, function(shruju, i)
+    shruju.effect.timer = timer.rot(shruju.effect.timer, function()
+      shruju.effect:deactivate()
+      table.remove(self.magicShruju, i)
+    end)
+  end)
 
 	self.recentSelect = timer.rot(self.recentSelect)
 end

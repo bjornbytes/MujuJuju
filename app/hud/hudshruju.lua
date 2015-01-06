@@ -12,13 +12,13 @@ function HudShruju:init()
     shruju = function()
       local u, v = ctx.hud.u, ctx.hud.v
       local p = ctx.players:get(ctx.id)
-      local radius = .04 * v
-      local inc = (radius * 2) + .02 * v
-      local x = u * .5 - (inc * (3 - 1) / 2)
-      local y = v - radius - .02 * v
+      local size = .08 * v
+      local inc = (size * 2) + .02 * v
+      local x = u * .5 - (inc * (#p.magicShruju - 1) / 2)
+      local y = v - (size / 2) - .02 * v
       local res = {}
-      for i = 1, 3 do
-        table.insert(res, {x, y, radius})
+      for i = 1, #p.magicShruju do
+        table.insert(res, {x - size / 2, y - size / 2, size, size})
         x = x + inc
       end
       return res
@@ -31,14 +31,18 @@ function HudShruju:update()
   local mx, my = love.mouse.getPosition()
   local p = ctx.players:get(ctx.id)
   for i = 1, #shruju do
-    local x, y, r = unpack(self.geometry.shruju[i])
-    if p.shrujus[i] and math.insideCircle(mx, my, x, y, r) then
-      ctx.hud.tooltip:setShrujuTooltip(p.shrujus[i])
+    local x, y, w, h = unpack(self.geometry.shruju[i])
+    if math.inside(mx, my, x, y, w, h) then
+      ctx.hud.tooltip:setMagicShrujuTooltip(p.magicShruju[i])
     end
 
-    if p.shrujus[i] and p.shrujus[i].effect and love.math.random() < 4 * tickRate then
-      ctx.particles:emit('magicshruju', x, y, 1)
+    if love.math.random() < 4 * tickRate then
+      ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
     end
+  end
+
+  if #p.magicShruju ~= self.geometry.shruju then
+    self.geometry.shruju = nil
   end
 end
 
@@ -47,32 +51,15 @@ function HudShruju:draw()
   local shruju = self.geometry.shruju
   local u, v = ctx.hud.u, ctx.hud.v
   for i = 1, #shruju do
-    local x, y, r = unpack(self.geometry.shruju[i])
+    local x, y, w, h = unpack(self.geometry.shruju[i])
 
     local image = data.media.graphics.hud.frame
-    local scale = (2 * r) / 125
-    g.setColor(255, 255, 255, p.shrujus[i] and 220 or 150)
-    g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    local scale = w / 125
+    g.setColor(255, 255, 255, 220)
+    g.draw(image, x, y, 0, scale, scale)
 
-    if p.shrujus[i] then
-      local image = data.media.graphics.shruju[p.shrujus[i].code]
-      local scale = (2 * r - (.02 * v)) / (image:getHeight() - 8)
-      g.draw(image, x, y, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-    end
-  end
-end
-
-function HudShruju:mousepressed(mx, my, b)
-  local p = ctx.players:get(ctx.id)
-  local shruju = self.geometry.shruju
-  for i = 1, #shruju do
-    local x, y, r = unpack(self.geometry.shruju[i])
-
-    if math.insideCircle(mx, my, x, y, r) and p.shrujus[i] then
-      p.shrujus[i]:eat()
-      ctx.sound:play('nomnom')
-      if p.shrujus[i].effect then p.shrujus[i].effect:drop(p.shrujus[i]) end
-      p.shrujus[i] = nil
-    end
+    local image = data.media.graphics.shruju[p.magicShruju[i].code]
+    local scale = (w - (.02 * v)) / (image:getHeight() - 8)
+    g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
   end
 end

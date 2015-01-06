@@ -1,4 +1,5 @@
 Hud = class()
+Hud.depth = -100
 
 local g = love.graphics
 
@@ -170,7 +171,6 @@ function Hud:gamepadpressed(gamepad, button)
 end
 
 function Hud:mousepressed(x, y, b)
-  self.shruju:mousepressed(x, y, b)
   table.with(self.shrujuPatches, 'mousepressed', x, y, b)
 end
 

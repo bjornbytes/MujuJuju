@@ -15,6 +15,8 @@ function HudShrujuPatch:init(patch)
   self.tween = tween.new(self.maxTime, self.factor, {value = 1}, 'inOutBack')
   self.growingFactor = 0
   self.prevGrowingFactor = self.growingFactor
+  self.slotScale = 1
+  self.prevSlotScale = self.slotScale
 
   self.geometry = setmetatable({}, {__index = function(t, k)
     return rawset(t, k, self.geometryFunctions[k]())[k]
@@ -80,6 +82,10 @@ function HudShrujuPatch:update()
     if self.patch.slot and self.patch.slot.effect and love.math.random() < 4 * tickRate then
       ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
     end
+
+    if self.patch.growing and self.patch.timer < 2 * tickRate then
+      self.slotScale = 1.4
+    end
   end
 
   self.prevTime = self.time
@@ -88,6 +94,9 @@ function HudShrujuPatch:update()
 
   self.prevGrowingFactor = self.growingFactor
   self.growingFactor = math.lerp(self.growingFactor, (self.patch.growing or self.patch.slot) and 1 or 0, math.min(8 * tickRate, 1))
+
+  self.prevSlotScale = self.slotScale
+  self.slotScale = math.lerp(self.slotScale, 1, math.min(10 * tickRate, 1))
 end
 
 function HudShrujuPatch:draw()
@@ -112,8 +121,7 @@ function HudShrujuPatch:draw()
       g.setColor(255, 255, 255, alphaFactor * 200)
       local image = data.media.graphics.hud.frame
       local scale = w / 125
-      local xx, yy = x - 60 * scale, y - 60 * scale
-      g.draw(image, xx, yy, 0, scale, scale)
+      g.draw(image, x, y, 0, scale, scale)
 
       local image = data.media.graphics.shruju[self.patch.types[i]]
       local scale = (h - .02 * v) / image:getHeight()
@@ -134,36 +142,41 @@ function HudShrujuPatch:draw()
 
       local x, y, w, h = unpack(self.geometry.slot)
       local image = data.media.graphics.hud.frame
-      local scale = w / 125
-      local xx, yy = x - 60 * scale, y - 60 * scale
-      g.draw(image, xx, yy, 0, scale, scale)
+      local frameWidth = image:getWidth()
+      local slotScale = math.lerp(self.prevSlotScale, self.slotScale, tickDelta / tickRate)
+      local scale = (w / frameWidth) * slotScale
+      g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
       if code then
         local image = data.media.graphics.shruju[code]
-        local scale = (h - .02 * v) / image:getHeight()
+        local scale = (h - .02 * v) / image:getHeight() * slotScale
         g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
         local image = data.media.graphics.hud.title
-        local scale = (w + 5) / 125
+        local scale = (w + 5) / data.media.graphics.hud.frame:getWidth()
         g.setColor(255, 255, 255, (self.patch.growing and 80 or 255) * growingFactor)
-        g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
+        g.draw(image, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
 
         if self.patch.growing then
           g.setColor(255, 255, 255 * growingFactor)
-          g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / self.patch:getGrowTime(self.patch.growing))), scale)
+          g.draw(image, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / self.patch:getGrowTime(self.patch.growing))), scale)
         end
 
         g.setFont('mesmerize', image:getHeight() * scale - 7)
-        g.printCenter(data.shruju[code].name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
+        g.printCenter(data.shruju[code].name, x + (image:getWidth() * (w / frameWidth)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
       end
     end
   end
 end
 
 function HudShrujuPatch:keypressed(key)
-  if self.patch and key == 'tab' or key == 'e' then
-    self.lastPress = tick
-    self.active = not self.active
+  if self.patch and (key == 'tab' or key == 'e') then
+    if self.patch.growing or self.patch.slot then
+      self.slotScale = 1.4
+    else
+      self.lastPress = tick
+      self.active = not self.active
+    end
     if not self:playerNearby() then self.active = false end
   end
 end
@@ -192,14 +205,11 @@ function HudShrujuPatch:mousepressed(x, y, b)
   end
 
   if self:playerNearby() and self.patch.slot and math.inside(x, y, unpack(self.geometry.slot)) then
-    if b == 'r' then
+    if b == 'l' then
       local shruju = self.patch:take()
       shruju:eat()
       ctx.sound:play('nomnom')
-    elseif b == 'l' and #p.shrujus < 3 then
-      local shruju = self.patch:take()
-      table.insert(p.shrujus, shruju)
-      if shruju.effect then shruju.effect:pickup(shruju) end
+      self.active = true
     end
   end
 end

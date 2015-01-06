@@ -1,71 +1,70 @@
 local g = love.graphics
 
--- Amount is always between 0 and 1 and determines how strong the magic effect is.
 ShrujuEffects = {
   wealth = {
+    code = 'wealth',
     name = 'Wealth',
     description = 'Doubles your passive juju income rate.',
 
-    pickup = function(self)
+    activate = function(self)
       local p = ctx.players:get(ctx.id)
-      self.amount = 1.9 + (.2 * self.strength)
-      p.jujuRate = p.jujuRate / self.amount
+      p.jujuRate = p.jujuRate / 2
     end,
 
-    drop = function(self)
+    deactivate = function(self)
       local p = ctx.players:get(ctx.id)
-      p.jujuRate = p.jujuRate * self.amount
+      p.jujuRate = p.jujuRate * 2
     end
   },
   sugarrush = {
+    code = 'sugarrush',
     name = 'Sugar Rush',
     description = 'Muju moves faster.',
 
-    pickup = function(self)
+    activate = function(self)
       local p = ctx.players:get(ctx.id)
-      self.amount = 1.5 + (1 * self.strength)
-      p.walkSpeed = p.walkSpeed * self.amount
+      p.walkSpeed = p.walkSpeed * 2
     end,
 
-    drop = function(self)
+    deactivate = function(self)
       local p = ctx.players:get(ctx.id)
-      p.walkSpeed = p.walkSpeed / self.amount
+      p.walkSpeed = p.walkSpeed / 2
     end
   },
   imbue = {
+    code = 'imbue',
     name = 'Imbue',
     description = 'Shrine heals health per second.',
 
-    pickup = function(self)
+    activate = function(self)
       local p = ctx.players:get(ctx.id)
       local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
-      self.amount = 15 + self.strength * 10
       if shrine then
-        shrine.regen = shrine.regen + self.amount
+        shrine.regen = shrine.regen + 20
       end
     end,
 
-    drop = function(self)
+    deactivate = function(self)
       local p = ctx.players:get(ctx.id)
       local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
       if shrine then
-        shrine.regen = shrine.regen - self.amount
+        shrine.regen = shrine.regen - 20
       end
     end
   },
   zeal = {
+    code = 'zeal',
     name = 'Zeal',
     description = 'Muju moves faster in the juju realm.',
 
-    pickup = function(self)
+    activate = function(self)
       local p = ctx.players:get(ctx.id)
-      self.amount = 1.75 + (.5 * self.strength)
-      p.ghostSpeedMultiplier = p.ghostSpeedMultiplier * self.amount
+      p.ghostSpeedMultiplier = p.ghostSpeedMultiplier * 2
     end,
 
-    drop = function(self)
+    deactivate = function(self)
       local p = ctx.players:get(ctx.id)
-      p.ghostSpeedMultiplier = p.ghostSpeedMultiplier / self.amount
+      p.ghostSpeedMultiplier = p.ghostSpeedMultiplier / 2
     end
   }
 }
@@ -150,14 +149,12 @@ end
 
 function ShrujuPatch:makeShruju()
   if self.growing and not self.slot then
-    local shruju = setmetatable({}, {__index = data.shruju[self.growing]})
+    local shruju = data.shruju[self.growing]()
 
     -- Randomly give it a random magical effect
-    if love.math.random() < .2 then
+    if love.math.random() < .4 then
       local effects = table.keys(ShrujuEffects)
-      local effect = setmetatable({}, {__index = ShrujuEffects[effects[love.math.random(1, #effects)]]})
-      effect.strength = love.math.random()
-      shruju.effect = effect
+      shruju.effect = setmetatable({timer = 60}, {__index = ShrujuEffects[effects[love.math.random(1, #effects)]]})
     end
 
     self.slot = shruju
@@ -174,12 +171,4 @@ end
 
 function ShrujuPatch:getGrowTime(code)
   return math.max(data.shruju[code].time - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
-end
-
-function ShrujuPatch:makeTooltip(shruju)
-  if type(shruju) == 'string' then shruju = data.shruju[shruju] end
-  local str = '{title}' .. (shruju.effect and '{purple}' or '{white}') .. shruju.name .. '{normal}\n'
-  str = str .. '{whoCares}' .. shruju.description .. '{white}\n'
-  if shruju.effect then str = str .. '{purple}' .. shruju.effect.name .. ' - ' .. shruju.effect.description end
-  return str
 end

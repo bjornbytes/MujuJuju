@@ -51,7 +51,7 @@ function Tooltip:draw()
     textWidth = math.max(textWidth, titleWidth)
     textHeight = titleLines * titleFont:getHeight() + lines * normalFont:getHeight()
     local xx = math.min(mx + 8, u - textWidth - 24)
-    local yy = math.min(my + 8, v - (lines * normalFont:getHeight() + 16 + 7))
+    local yy = math.min(my + 8, v - (textHeight + 20))
     g.setColor(30, 50, 70, 240)
     g.rectangle('fill', xx, yy, textWidth + 14, textHeight + 9)
     g.setColor(10, 30, 50, 255)
@@ -111,6 +111,14 @@ function Tooltip:setShrujuTooltip(shruju)
   table.insert(pieces, '{title}' .. (shruju.effect and '{purple}' or '{white}') .. shruju.name .. '{normal}')
   table.insert(pieces, '{whoCares}' .. shruju.description .. '{white}\n')
   if shruju.effect then table.insert(pieces, '{purple}' .. shruju.effect.name .. ' - ' .. shruju.effect.description) end
+  return self:setTooltip(table.concat(pieces, '\n'))
+end
+
+function Tooltip:setMagicShrujuTooltip(shruju)
+  local effect = shruju.effect
+  local pieces = {}
+  table.insert(pieces, '{purple}{title}' .. effect.name .. '{white}{normal}')
+  table.insert(pieces, '{purple}' .. effect.description)
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 
