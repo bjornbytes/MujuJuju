@@ -64,6 +64,7 @@ function Tooltip:setTooltip(str)
   local u, v = self:getUV()
   local raw = str:gsub('{%a+}', '')
   if raw ~= self.tooltipText then
+    g.setFont(self.richOptions.normal)
     self.tooltip = rich:new({str, u * self.maxWidth, self.richOptions}, {255, 255, 255})
     self.tooltipText = raw
   end

@@ -72,7 +72,16 @@ data.load = function()
       end)
     end
   end)
-  load('data/unit', 'unit')
+  load('data/unit', 'unit', function(unit)
+    if data.media.sounds[unit.code] and data.media.sounds[unit.code]['attackHit1'] then
+      for i = 2, 100 do
+        if not data.media.sounds[unit.code]['attackHit' .. i] then
+          unit.attackHitSoundCount = i - 1
+          break
+        end
+      end
+    end
+  end)
   load('data/spell', 'spell')
   load('data/animation', 'animation', function(animation)
     local keys = table.keys(animation.states)

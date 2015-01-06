@@ -25,11 +25,14 @@ function Unit:activate()
     self.animation.flipped = math.sign(self.x - shrine.x) > 0
   end
 
-  self.animation:on('event', function(data)
-    if data.data.name == 'attack' then
+  self.animation:on('event', function(event)
+    if event.data.name == 'attack' then
       if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
         if self.class.attackSpell then
           ctx.spells:add(self.class.attackSpell, {unit = self, target = self.target})
+          ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound)
+            sound:setVolume(.4)
+          end)
         else
           self:attack()
         end
@@ -284,7 +287,12 @@ function Unit:attack(options)
   self.buffs:postattack(target, amount)
   self.ai.useAbilities(self)
   if not options.nosound then
-    ctx.sound:play(data.media.sounds[self.class.code] and data.media.sounds[self.class.code].attackHit, function(sound)
+    local sounds = data.media.sounds[self.class.code]
+    local sound = sounds.attackHit
+    if self.class.attackHitSoundCount then
+      sound = sounds['attackHit' .. love.math.random(1, self.class.attackHitSoundCount)]
+    end
+    ctx.sound:play(sound, function(sound)
       sound:setVolume(.4)
     end)
   end
@@ -318,6 +326,9 @@ function Unit:hurt(amount, source, kind)
 
   if self.health <= 0 then
     self.animation:set('death', {force = true})
+    ctx.sound:play(data.media.sounds[self.class.code].death, function(sound)
+     sound:setVolume(.4)
+    end)
     self.dying = true
   end
 
