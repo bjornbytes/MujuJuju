@@ -33,7 +33,7 @@ function HudShruju:update()
   for i = 1, #shruju do
     local x, y, r = unpack(self.geometry.shruju[i])
     if p.shrujus[i] and math.insideCircle(mx, my, x, y, r) then
-      local str = self.patch:makeTooltip(p.shrujus[i])
+      local str = ShrujuPatch:makeTooltip(p.shrujus[i])
       local raw = str:gsub('{%a+}', '')
       if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
         ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
@@ -72,6 +72,7 @@ function HudShruju:mousepressed(mx, my, b)
 
     if math.insideCircle(mx, my, x, y, r) and p.shrujus[i] then
       p.shrujus[i]:eat()
+      ctx.sound:play('nomnom')
       if p.shrujus[i].effect then p.shrujus[i].effect:drop(p.shrujus[i]) end
       p.shrujus[i] = nil
     end

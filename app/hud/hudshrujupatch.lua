@@ -25,9 +25,8 @@ function HudShrujuPatch:init(patch)
       local u, v = ctx.hud.u, ctx.hud.v
       local ct = #self.patch.types
       local factor, t = self:getFactor()
-      local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
-      local length = .35 * v * factor + (.1 * growingFactor * v)
-      local angleIncrement = .28
+      local length = (.1 + (.2 * factor)) * v
+      local angleIncrement = .35
       local angle = (-math.pi / 2) - (angleIncrement * (ct - 1) / 2)
 
       local size = v * .08
@@ -45,8 +44,9 @@ function HudShrujuPatch:init(patch)
 
     slot = function()
       local u, v = ctx.hud.u, ctx.hud.v
-      local size = v * .1
-      return {self.patch.x - size / 2, self.patch.y - .35 * v, size, size}
+      local size = v * .08
+      local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
+      return {self.patch.x - size / 2, math.lerp(self.patch.y, v - size - .04 * v, growingFactor), size, size}
     end
   }
 end
@@ -67,7 +67,7 @@ function HudShrujuPatch:update()
       local x, y, w, h = unpack(types[i])
       -- Tooltip
       if math.inside(mx, my, x, y, w, h) then
-        local str = self.patch:makeTooltip(shruju)
+        local str = ShrujuPatch:makeTooltip(shruju)
         local raw = str:gsub('{%a+}', '')
         if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
           ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
@@ -80,7 +80,7 @@ function HudShrujuPatch:update()
 
   if (self.patch.growing or self.patch.slot) and math.inside(mx, my, unpack(self.geometry.slot)) then
     local shruju = data.shruju[self.patch.growing] or self.patch.slot
-    local str = self.patch:makeTooltip(shruju)
+    local str = ShrujuPatch:makeTooltip(shruju)
     local raw = str:gsub('{%a+}', '')
     if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
       ctx.hud.tooltip = rich:new({str, 300, ctx.hud.richOptions})
@@ -105,6 +105,7 @@ function HudShrujuPatch:draw()
 
     local factor, t = self:getFactor()
     local alphaFactor = (t / self.maxTime) ^ 4
+    local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
 
     if t < 1 or (self.growingFactor > .01 and self.growingFactor < .99) then table.clear(self.geometry)
     elseif t == 0 then return end
@@ -133,10 +134,10 @@ function HudShrujuPatch:draw()
       g.printCenter(shruju.name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
     end
 
-    if self.patch.growing or self.patch.slot then
-      g.setColor(255, 255, 255, self.patch.slot and 200 or 120)
+    if self.growingFactor > 0 then
+      g.setColor(255, 255, 255, (self.patch.slot and 200 or 120) * growingFactor)
 
-      local code = self.patch.growing or self.patch.slot.code
+      local code = (self.patch.growing or self.patch.slot) and (self.patch.growing or self.patch.slot.code) or nil
 
       local x, y, w, h = unpack(self.geometry.slot)
       local image = data.media.graphics.hud.frame
@@ -144,22 +145,24 @@ function HudShrujuPatch:draw()
       local xx, yy = x - 60 * scale, y - 60 * scale
       g.draw(image, xx, yy, 0, scale, scale)
 
-      local image = data.media.graphics.shruju[code]
-      local scale = (h - .02 * v) / image:getHeight()
-      g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+      if code then
+        local image = data.media.graphics.shruju[code]
+        local scale = (h - .02 * v) / image:getHeight()
+        g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
-      local image = data.media.graphics.hud.title
-      local scale = (w + 5) / 125
-      g.setColor(255, 255, 255, self.patch.growing and 80 or 255)
-      g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
+        local image = data.media.graphics.hud.title
+        local scale = (w + 5) / 125
+        g.setColor(255, 255, 255, (self.patch.growing and 80 or 255) * growingFactor)
+        g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
 
-      if self.patch.growing then
-        g.setColor(255, 255, 255)
-        g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / self.patch:getGrowTime(self.patch.growing))), scale)
+        if self.patch.growing then
+          g.setColor(255, 255, 255 * growingFactor)
+          g.draw(image, x - (scale - (w / 125)) * image:getWidth() / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / self.patch:getGrowTime(self.patch.growing))), scale)
+        end
+
+        g.setFont('mesmerize', image:getHeight() * scale - 7)
+        g.printCenter(data.shruju[code].name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
       end
-
-      g.setFont('mesmerize', image:getHeight() * scale - 7)
-      g.printCenter(data.shruju[code].name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
     end
   end
 end
@@ -190,6 +193,7 @@ function HudShrujuPatch:mousepressed(x, y, b)
     for i = 1, #types do
       if math.inside(x, y, unpack(types[i])) then
         self.patch:grow(self.patch.types[i])
+        self.active = false
       end
     end
   end
@@ -198,6 +202,7 @@ function HudShrujuPatch:mousepressed(x, y, b)
     if b == 'r' then
       local shruju = self.patch:take()
       shruju:eat()
+      ctx.sound:play('nomnom')
     elseif b == 'l' and #p.shrujus < 3 then
       local shruju = self.patch:take()
       table.insert(p.shrujus, shruju)

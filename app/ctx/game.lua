@@ -2,6 +2,9 @@ Game = class()
 
 function Game:load(user, biome)
   data.load()
+  data.media.graphics.juju:setMipmapFilter('linear', 1)
+  data.media.graphics.map.forest:setMipmapFilter('linear', 1)
+  data.media.graphics.map.forestSpirit:setMipmapFilter('linear', 1)
 
   self.id = 1
   self.user = user

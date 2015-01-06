@@ -62,7 +62,7 @@ function HudStatus:draw()
   local scale = (height * .6) / image:getHeight()
   local s = scale * lerpd.jujuScale
   local xx = u - width + (v * .035) + image:getWidth() / 2 * scale
-  g.draw(image, xx, height / 2, lerpd.angle, s, s, image:getWidth() / 2, image:getHeight() / 2)
+  g.draw(image, xx, height / 2, lerpd.jujuAngle, s, s, image:getWidth() / 2, image:getHeight() / 2)
 
   -- Juju Text
   g.setFont('mesmerize', height * .4)
