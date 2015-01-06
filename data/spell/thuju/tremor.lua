@@ -3,7 +3,7 @@ Tremor.code = 'tremor'
 
 local g = love.graphics
 
-Tremor.maxHealth = 1
+Tremor.maxHealth = 1.5
 
 function Tremor:activate()
   local ability, unit = self:getAbility(), self:getUnit()
@@ -21,6 +21,23 @@ function Tremor:activate()
 
   self.x = unit.x
 
+  self.spikeHeight = 100
+  self.spikeTargetY = ctx.map.height - ctx.map.groundHeight
+  self.spikeStartY = self.spikeTargetY + self.spikeHeight
+  self.spikes = {}
+  for i = 1, 3 do
+    self.spikes[i] = {
+      x = unit.x + (unit.width / 2 + self.width * (i / 3)) * self.direction,
+      y = self.spikeStartY,
+      alpha = 0
+    }
+  end
+  self.activeSpike = 1
+
+  for i = 1, 15 do
+    ctx.spells:add('dirt', {x = self.spikes[1].x, y = self.spikeTargetY})
+  end
+
   ctx.event:emit('view.register', {object = self})
 end
 
@@ -32,11 +49,33 @@ function Tremor:update()
   self.timer = timer.rot(self.timer, function()
     ctx.spells:remove(self)
   end)
+
+  if self.activeSpike then
+    local spike = self.spikes[self.activeSpike]
+    spike.y = math.max(spike.y - 650 * tickRate, self.spikeTargetY)
+    spike.alpha = 1 - ((spike.y - self.spikeTargetY) / (self.spikeStartY - self.spikeTargetY))
+    if spike.y == self.spikeTargetY then
+      self.activeSpike = self.activeSpike + 1
+      if self.activeSpike > #self.spikes then self.activeSpike = nil
+      else
+        for i = 1, 15 do
+          ctx.spells:add('dirt', {x = self.spikes[self.activeSpike].x, y = self.spikeTargetY})
+        end
+      end
+    end
+  end
 end
 
 function Tremor:draw()
-  local unit = self:getUnit()
+  local image = data.media.graphics.spell.tremor
+  local scale = self.spikeHeight / image:getHeight()
+  for i = 1, #self.spikes do
+    local spike = self.spikes[i]
+    g.setColor(255, 255, 255, (spike.alpha * math.clamp(self.timer, 0, .2) / .2) * 255)
+    g.draw(image, spike.x, spike.y, 0, scale, scale, image:getWidth() / 2, image:getHeight())
+  end
 
+  local unit = self:getUnit()
   local alpha = self.timer / self.maxHealth * 255
   g.setColor(unit.team == ctx.players:get(ctx.id).team and {0, 255, 0, alpha} or {255, 0, 0, alpha})
 
