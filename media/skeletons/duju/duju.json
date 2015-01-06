@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "LTcI+ZUmIBm69FHDENPqVYNi3kc", "spine": "2.1.07", "width": 100.44, "height": 47.81 },
+"skeleton": { "hash": "QYPuJPRDNqF++N+yfyroLjVaqEc", "spine": "2.1.07", "width": 95.69, "height": 54.97 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "chest", "parent": "root", "length": 29.36, "x": -14.2, "y": 4.52, "rotation": 5.39 },
@@ -58,7 +58,9 @@
 },
 "events": {
 	"attack": {},
-	"headbutt": {}
+	"deathjuju": {},
+	"headbutt": {},
+	"stepone": {}
 },
 "animations": {
 	"attack": {
@@ -205,31 +207,31 @@
 			"chest": {
 				"color": [
 					{ "time": 0.4666, "color": "ffffffff" },
-					{ "time": 0.7, "color": "ffffff00" }
+					{ "time": 0.8, "color": "ffffff00" }
 				]
 			},
 			"head": {
 				"color": [
 					{ "time": 0.4666, "color": "ffffffff" },
-					{ "time": 0.7, "color": "ffffff00" }
+					{ "time": 0.8, "color": "ffffff00" }
 				]
 			},
 			"jaw": {
 				"color": [
 					{ "time": 0.4666, "color": "ffffffff" },
-					{ "time": 0.7, "color": "ffffff00" }
+					{ "time": 0.8, "color": "ffffff00" }
 				]
 			},
 			"leftarm": {
 				"color": [
 					{ "time": 0.4666, "color": "ffffffff" },
-					{ "time": 0.7, "color": "ffffff00" }
+					{ "time": 0.8, "color": "ffffff00" }
 				]
 			},
 			"rightarm": {
 				"color": [
 					{ "time": 0.4666, "color": "ffffffff" },
-					{ "time": 0.7, "color": "ffffff00" }
+					{ "time": 0.8, "color": "ffffff00" }
 				]
 			}
 		},
@@ -380,7 +382,10 @@
 					{ "time": 0.6666, "x": 1, "y": 1 }
 				]
 			}
-		}
+		},
+		"events": [
+			{ "time": 0.6333, "name": "deathjuju" }
+		]
 	},
 	"headbutt": {
 		"bones": {

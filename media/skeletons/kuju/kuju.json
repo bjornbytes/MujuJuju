@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "EUNgP/BvbLAY7X+s0I23MMKZSTM", "spine": "2.1.07", "width": 183.04, "height": 351.08 },
+"skeleton": { "hash": "6VbfOFCoak1cdRWt6GB/ViZEh6U", "spine": "2.1.07", "width": 187.44, "height": 354.42 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "Roto", "parent": "root", "x": 50.98, "y": 165.73 },
@@ -138,6 +138,7 @@
 },
 "events": {
 	"attack": {},
+	"deathjuju": {},
 	"frozenorb": {},
 	"stepone": {},
 	"steptwo": {}
@@ -594,85 +595,85 @@
 			"chest": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"face": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"hair": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"leftforearm": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"lefthand": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"leftshin": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"leftthigh": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"leftupperarm": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"neck": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"rightforearm": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"righthand": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"rightshin": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"rightthigh": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			},
 			"rightupperarm": {
 				"color": [
 					{ "time": 0.7666, "color": "ffffffff" },
-					{ "time": 0.9333, "color": "ffffff00" }
+					{ "time": 1.1, "color": "ffffff00" }
 				]
 			}
 		},
@@ -1013,6 +1014,9 @@
 					{ "slot": "righthand", "offset": -3 }
 				]
 			}
+		],
+		"events": [
+			{ "time": 0.9333, "name": "deathjuju" }
 		]
 	},
 	"frozenorb": {
@@ -1846,6 +1850,92 @@
 		}
 	},
 	"spawn": {
+		"slots": {
+			"chest": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"face": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"hair": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"leftforearm": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"lefthand": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"leftshin": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"leftthigh": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"leftupperarm": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"neck": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"rightforearm": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"righthand": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"rightshin": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"rightthigh": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			},
+			"rightupperarm": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			}
+		},
 		"bones": {
 			"righthand": {
 				"rotate": [

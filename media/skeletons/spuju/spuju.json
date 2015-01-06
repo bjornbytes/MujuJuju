@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "/U7bKTpQZBFvdPUJEB+zTEEvjGk", "spine": "2.1.07", "width": 107.99, "height": 108.99 },
+"skeleton": { "hash": "uqGXfMUET4bL6rCt0l2PDRKgyyI", "spine": "2.1.07", "width": 107.99, "height": 108.99 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "glow", "parent": "root", "length": 35.22, "x": 3.5, "y": 96, "rotation": -83.7 },
@@ -46,7 +46,8 @@
 },
 "events": {
 	"attack": {},
-	"deathjuju": {}
+	"deathjuju": {},
+	"stepone": {}
 },
 "animations": {
 	"attack": {
@@ -416,7 +417,7 @@
 			}
 		},
 		"events": [
-			{ "time": 0.2, "name": "deathjuju" }
+			{ "time": 0.3333, "name": "deathjuju" }
 		]
 	},
 	"idle": {
@@ -938,7 +939,10 @@
 					{ "time": 0.6666, "x": 1, "y": 1 }
 				]
 			}
-		}
+		},
+		"events": [
+			{ "time": 0.1666, "name": "stepone" }
+		]
 	}
 }
 }
