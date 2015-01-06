@@ -1,6 +1,7 @@
 local Spuju = {}
-Spuju.name = 'Spuju'
 Spuju.code = 'spuju'
+Spuju.name = 'Spuju'
+Spuju.description = 'Yay Spuju.'
 
 ----------------
 -- Stats

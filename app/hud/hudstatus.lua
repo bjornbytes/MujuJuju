@@ -15,6 +15,7 @@ function HudStatus:init()
   end
 
   self.clockIcon = data.media.graphics.hud.clockBlue
+  self.hitboxes = {juju = {0, 0, 0, 0}, population = {0, 0, 0, 0}, timer = {0, 0, 0, 0}}
 end
 
 function HudStatus:update()
@@ -39,11 +40,21 @@ function HudStatus:update()
   if self.clockIcon ~= old then
     self.clockScale = 2
   end
+
+  local mx, my = love.mouse.getPosition()
+  if math.inside(mx, my, unpack(self.hitboxes.juju)) then
+    ctx.hud.tooltip:setTooltip('{white}{title}Juju{normal}\nUse it to summon minions and purchase upgrades.  Collect it in the juju realm.')
+  elseif math.inside(mx, my, unpack(self.hitboxes.population)) then
+    ctx.hud.tooltip:setTooltip('{white}{title}Population{normal}\nThe maximum number of minions you may summon at once.')
+  elseif math.inside(mx, my, unpack(self.hitboxes.timer)) then
+    ctx.hud.tooltip:setTooltip('{white}{title}Timer{normal}\nHow long you\'ve lasted.  Survive for a long time to unlock rewards!')
+  end
 end
 
 function HudStatus:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.players:get(ctx.id)
+  local mx, my = love.mouse.getPosition()
 
   local lerpd = {}
   for k in pairs(self.prev) do
@@ -62,6 +73,7 @@ function HudStatus:draw()
   local scale = (height * .6) / image:getHeight()
   local s = scale * lerpd.jujuScale
   local xx = u - width + (v * .035) + image:getWidth() / 2 * scale
+  local hitboxX = xx - image:getWidth() / 2 * scale
   g.draw(image, xx, height / 2, lerpd.jujuAngle, s, s, image:getWidth() / 2, image:getHeight() / 2)
 
   -- Juju Text
@@ -69,7 +81,14 @@ function HudStatus:draw()
   g.setColor(255, 255, 255)
   local str = math.floor(p.juju)
   g.print(str, xx + (v * .03), (height * .5) - g.getFont():getHeight() / 2)
+  local hitboxWidth = (xx + (v * .03) + g.getFont():getWidth(str)) - hitboxX
+  self.hitboxes.juju[1] = hitboxX
+  self.hitboxes.juju[2] = 0
+  self.hitboxes.juju[3] = hitboxWidth
+  self.hitboxes.juju[4] = height
+
   xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .04)
+  local hitboxX = xx
 
   -- Population Icon
   local image = data.media.graphics.hud.population
@@ -89,7 +108,14 @@ function HudStatus:draw()
   local b = math.lerp(255, 150, lerpd.maxPopFactor)
   g.setColor(r, gg, b)
   g.print(str, xx + (v * .025), (height * .5) - g.getFont():getHeight() / 2)
+  local hitboxWidth = (xx + (v * .025) + g.getFont():getWidth(str)) - hitboxX
+  self.hitboxes.population[1] = hitboxX
+  self.hitboxes.population[2] = 0
+  self.hitboxes.population[3] = hitboxWidth
+  self.hitboxes.population[4] = height
+
   xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .04)
+  local hitboxX = xx
   g.setColor(255, 255, 255)
 
   -- Timer Icon
@@ -109,4 +135,9 @@ function HudStatus:draw()
 
   g.setColor(255, 255, 255)
   g.print(str, xx + (.025 * v), (height * .5) - g.getFont():getHeight() / 2)
+  local hitboxWidth = (xx + (v * .025) + g.getFont():getWidth(str)) - hitboxX
+  self.hitboxes.timer[1] = hitboxX
+  self.hitboxes.timer[2] = 0
+  self.hitboxes.timer[3] = hitboxWidth
+  self.hitboxes.timer[4] = height
 end

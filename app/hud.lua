@@ -1,32 +1,14 @@
 Hud = class()
 
 local g = love.graphics
-local rich = require 'lib/deps/richtext/richtext'
 
 local normalFont = love.graphics.newFont('media/fonts/inglobal.ttf', 14)
 local fancyFont = love.graphics.newFont('media/fonts/inglobal.ttf', 24)
 local boldFont = love.graphics.newFont('media/fonts/inglobalb.ttf', 14)
 local deadFontBig = love.graphics.newFont('media/fonts/inglobal.ttf', 64)
 local deadFontSmall = love.graphics.newFont('media/fonts/inglobal.ttf', 44)
-Hud.richOptions = {
-  title = g.setFont('mesmerize', 24),
-  bold = g.setFont('mesmerize', 14),
-  normal = g.setFont('mesmerize', 14),
-  white = {255, 255, 255},
-  whoCares = {230, 230, 230},
-  red = {255, 100, 100},
-  green = {100, 255, 100},
-  purple = {147, 96, 200}
-}
-Hud.richWidth = 350
 
 function Hud:init()
-	self.cursorImage = g.newImage('media/graphics/cursor.png')
-	self.cursorX = g.getWidth() / 2
-	self.cursorY = g.getHeight() / 2
-	self.prevCursorX = self.cursorX
-	self.prevCursorY = self.cursorY
-	self.cursorSpeed = 0
 	self.tooltip = nil
 	self.tooltipRaw = ''
   self.deadAlpha = 0
@@ -43,7 +25,8 @@ function Hud:init()
   self.shrujuPatches = {HudShrujuPatch(), HudShrujuPatch()}
   self.shruju = HudShruju()
   self.status = HudStatus()
-  self.tooltipHover = false
+  self.tooltip = Tooltip()
+  
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end
@@ -51,45 +34,18 @@ end
 function Hud:update()
   local p = ctx.players:get(ctx.id)
 
-  self.tooltipHover = false
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
 	self.protectAlpha = math.max(self.protectAlpha - tickRate, 0)
 
+  self.tooltip:update()
   self.status:update()
   self.upgrades:update()
   self.shruju:update()
   self.units:update()
   table.with(self.shrujuPatches, 'update')
 
-	-- Virtual cursor for upgrades
-	if p.gamepad then
-		local vx, vy = 0, 0
-		local xx, yy = p.gamepad:getGamepadAxis('leftx'), p.gamepad:getGamepadAxis('lefty')
-		local cursorSpeed = 500
-		local len = (xx * xx + yy * yy) ^ .5
-		self.prevCursorX = self.cursorX
-		self.prevCursorY = self.cursorY
-		self.cursorSpeed = math.lerp(self.cursorSpeed, len > .2 and cursorSpeed or 0, 18 * tickRate)
-		len = len ^ 4
-		vx = xx / len
-		vy = yy / len
-		vx = math.clamp(vx, -1, 1)
-		vy = math.clamp(vy, -1, 1)
-		vx = vx * self.cursorSpeed * len
-		vy = vy * self.cursorSpeed * len
-		self.cursorX = self.cursorX + vx * tickRate
-		self.cursorY = self.cursorY + vy * tickRate
-  else
-    self.prevCursorX = self.cursorX
-    self.prevCursorY = self.cursorY
-    self.cursorX = math.lerp(self.cursorX, love.mouse.getX(), 8 * tickRate)
-    self.cursorY = math.lerp(self.cursorY, love.mouse.getY(), 8 * tickRate)
-  end
-
 	if ctx.ded then love.keyboard.setKeyRepeat(true) end
-
-  if not self.tooltipHover then self.tooltip = nil end
 end
 
 function Hud:health(x, y, percent, color, width, thickness)
@@ -147,24 +103,6 @@ function Hud:gui()
 
   self.units:draw()
 
-  if self.tooltip then
-    mx, my = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
-    g.setFont(self.richOptions.normal)
-    local normalText = self.tooltipRaw:sub(self.tooltipRaw:find('\n') + 1)
-    local textWidth, lines = self.richOptions.normal:getWrap(normalText, self.richWidth)
-    local titleLine = self.tooltipRaw:sub(1, self.tooltipRaw:find('\n'))
-    local titleWidth, titleLines = self.richOptions.title:getWrap(titleLine, self.richWidth)
-    textWidth = math.max(textWidth, titleWidth)
-    textHeight = titleLines * self.richOptions.title:getHeight() + lines * g.getFont():getHeight()
-    local xx = math.min(mx + 8, love.graphics.getWidth() - textWidth - 24)
-    local yy = math.min(my + 8, love.graphics.getHeight() - (lines * g.getFont():getHeight() + 16 + 7))
-    g.setColor(30, 50, 70, 240)
-    g.rectangle('fill', xx, yy, textWidth + 14, textHeight + 9)
-    g.setColor(10, 30, 50, 255)
-    g.rectangle('line', xx + .5, yy + .5, textWidth + 14, textHeight + 9)
-    self.tooltip:draw(xx + 8, yy + 4)
-  end
-
 	-- Death Screen
 	if ctx.ded then
     g.setFont(deadFontSmall)
@@ -203,13 +141,7 @@ function Hud:gui()
     g.draw(self.deadQuit, w * .6, h * .825, 0, 1, 1, self.deadQuit:getWidth() / 2)
 	end
 
-	if ctx.paused or ctx.ded then
-		if p.gamepad then
-			local xx, yy = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate), math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
-			g.setColor(255, 255, 255)
-			g.draw(self.cursorImage, xx, yy)
-		end
-	end
+  self.tooltip:draw()
 end
 
 function Hud:keypressed(key)
@@ -234,13 +166,7 @@ function Hud:keyreleased(key)
 end
 
 function Hud:gamepadpressed(gamepad, button)
-  local p = ctx.players:get(ctx.id)
-	if gamepad == p.gamepad and not ctx.ded then
-		if button == 'a' and (self.upgrades.active or ctx.paused or ctx.ded) then
-			self:mousepressed(self.cursorX, self.cursorY, 'l')
-			self:mousereleased(self.cursorX, self.cursorY, 'l')
-		end
-	end
+  --
 end
 
 function Hud:mousepressed(x, y, b)
@@ -281,4 +207,9 @@ function Hud:mousereleased(x, y, b)
 			Context:add(Menu)
 		end
 	end
+end
+
+function Hud:resize()
+  self.u, self.v = love.graphics.getDimensions()
+  self.tooltip:resize()
 end

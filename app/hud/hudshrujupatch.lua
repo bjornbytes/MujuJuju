@@ -65,15 +65,8 @@ function HudShrujuPatch:update()
     for i = 1, #types do
       local shruju = data.shruju[self.patch.types[i]]
       local x, y, w, h = unpack(types[i])
-      -- Tooltip
       if math.inside(mx, my, x, y, w, h) then
-        local str = ShrujuPatch:makeTooltip(shruju)
-        local raw = str:gsub('{%a+}', '')
-        if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-          ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
-          ctx.hud.tooltipRaw = raw
-        end
-        ctx.hud.tooltipHover = true
+        ctx.hud.tooltip:setShrujuTooltip(shruju)
       end
     end
   end
@@ -81,14 +74,7 @@ function HudShrujuPatch:update()
   if (self.patch.growing or self.patch.slot) then
     local x, y, w, h = unpack(self.geometry.slot)
     if math.inside(mx, my, x, y, w, h) then
-      local shruju = data.shruju[self.patch.growing] or self.patch.slot
-      local str = ShrujuPatch:makeTooltip(shruju)
-      local raw = str:gsub('{%a+}', '')
-      if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-        ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
-        ctx.hud.tooltipRaw = raw
-      end
-      ctx.hud.tooltipHover = true
+      ctx.hud.tooltip:setShrujuTooltip(data.shruju[self.patch.growing] or self.patch.slot)
     end
 
     if self.patch.slot and self.patch.slot.effect and love.math.random() < 4 * tickRate then

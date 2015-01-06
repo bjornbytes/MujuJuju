@@ -33,13 +33,7 @@ function HudShruju:update()
   for i = 1, #shruju do
     local x, y, r = unpack(self.geometry.shruju[i])
     if p.shrujus[i] and math.insideCircle(mx, my, x, y, r) then
-      local str = ShrujuPatch:makeTooltip(p.shrujus[i])
-      local raw = str:gsub('{%a+}', '')
-      if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-        ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
-        ctx.hud.tooltipRaw = raw
-      end
-      ctx.hud.tooltipHover = true
+      ctx.hud.tooltip:setShrujuTooltip(p.shrujus[i])
     end
 
     if p.shrujus[i] and p.shrujus[i].effect and love.math.random() < 4 * tickRate then

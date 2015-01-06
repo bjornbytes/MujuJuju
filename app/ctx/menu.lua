@@ -109,16 +109,65 @@ function Menu:load(selectedBiome)
   self.selectedBiome = selectedBiome or 1
   self.biomeDisplay = self.selectedBiome
   self.prevBiomeDisplay = self.biomeDisplay
+
+  self.u, self.v = love.graphics.getDimensions()
+  self.tooltip = Tooltip()
 end
 
 function Menu:update()
   self.prevBiomeDisplay = self.biomeDisplay
   self.biomeDisplay = math.lerp(self.biomeDisplay, self.selectedBiome, math.min(10 * tickRate, 1))
   if math.abs(self.biomeDisplay - self.selectedBiome) > .01 then self.geometry.biomes = nil end
+
+  self.tooltip:update()
+  
+  local mx, my = love.mouse.getPosition()
+  if self.choosing then
+    local minions = self.geometry.starters
+    for i = 1, #minions do
+      if math.insideCircle(mx, my, unpack(minions[i])) then
+        self.tooltip:setUnitTooltip(config.starters[i])
+        break
+      end
+    end
+  else
+    local deck = self.geometry.deck
+    for i = 1, #deck do
+      local x, y, r, runes = unpack(deck[i])
+      if math.insideCircle(mx, my, x, y, r) then
+        self.tooltip:setUnitTooltip(self.user.deck.minions[i])
+        break
+      else
+        for j = 1, #runes do
+          if self.user.deck.runes[i] and self.user.deck.runes[i][j] and math.insideCircle(mx, my, unpack(runes[j])) then
+            self.tooltip:setRuneTooltip(self.user.deck.runes[i][j])
+            break
+          end
+        end
+      end
+    end
+
+    local gutterRunes = self.geometry.gutterRunes
+    for i = 1, #gutterRunes do
+      if math.insideCircle(mx, my, unpack(gutterRunes[i])) then
+        self.tooltip:setRuneTooltip(self.user.runes[i])
+        break
+      end
+    end
+
+    local gutterMinions = self.geometry.gutterMinions
+    for i = 1, #gutterMinions do
+      if math.insideCircle(mx, my, unpack(gutterMinions[i])) then
+        self.tooltip:setUnitTooltip(self.user.minions[i])
+        break
+      end
+    end
+  end
 end
 
 function Menu:draw()
   local u, v = love.graphics.getDimensions()
+  g.setColor(255, 255, 255)
   if self.choosing then
     g.setFont('inglobalb', .08 * v)
     local str = 'Welcome to Muju Juju'
@@ -187,6 +236,8 @@ function Menu:draw()
       g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     end
   end
+
+  self.tooltip:draw()
 end
 
 function Menu:keypressed(key)

@@ -1,6 +1,7 @@
 local Duju = {}
-Duju.name = 'Duju'
 Duju.code = 'duju'
+Duju.name = 'Duju'
+Duju.description = 'Yay Duju.'
 
 ----------------
 -- Stats

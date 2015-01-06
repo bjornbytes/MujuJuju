@@ -58,13 +58,7 @@ function HudUnits:update()
       local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
       local x, y, r = unpack(upgrades[i][j])
       if math.insideCircle(mx, my, x, y, r) then
-        local str = ctx.upgrades.makeTooltip(who, what)
-        local raw = str:gsub('{%a+}', '')
-        if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-          ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
-          ctx.hud.tooltipRaw = raw
-        end
-        ctx.hud.tooltipHover = true
+        ctx.hud.tooltip:setUpgradeTooltip(who, what)
       end
     end
   end
@@ -93,24 +87,7 @@ function HudUnits:update()
     local runey = yy + .365 * v * scale
     for j = 1, runeCount do
       if math.insideCircle(mx, my, runex, runey, runeSize) then
-        local rune = p.deck[i].runes[j]
-        local str = '{white}{title}' .. rune.name .. '{normal}\n'
-        if rune.stat then
-          str = str .. '+' .. math.round(rune.amount or rune.scaling) .. ' ' .. rune.stat:capitalize() .. (rune.scaling and ' every minute (' .. math.round(rune.scaling * math.floor(ctx.timer * tickRate / 60)) .. ')' or '') .. '\n'
-        elseif rune.upgrade then
-          local name = nil
-          for i = 1, #data.unit do
-            local upgrade = data.unit[i].upgrades[rune.upgrade]
-            if upgrade then name = upgrade.name break end
-          end
-          str = str .. '+1 to ' .. name:capitalize() .. '\n'
-        end
-        local raw = str:gsub('{%a+}', '')
-        if not ctx.hud.tooltip or ctx.hud.tooltipRaw ~= raw then
-          ctx.hud.tooltip = rich:new({str, ctx.hud.richWidth, ctx.hud.richOptions})
-          ctx.hud.tooltipRaw = raw
-        end
-        ctx.hud.tooltipHover = true
+        ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
       end
       runex = runex + runeInc
     end
@@ -242,7 +219,6 @@ function HudUnits:mousereleased(mx, my, b)
         local cost = upgrade.costs[nextLevel]
         if ctx.upgrades.canBuy(who, what) and p:spend(cost) then
           ctx.upgrades.unlock(who, what)
-          ctx.hud.tooltip = nil
         else
           ctx.sound:play('misclick')
         end
