@@ -9,6 +9,7 @@ function Game:load(user, biome)
     data.media.graphics.runes[i]:setMipmapFilter('linear', 1)
   end
   data.media.graphics.hud.minion:setMipmapFilter('linear', 1)
+  data.media.graphics.hud.population:setMipmapFilter('linear', 1)
 
   self.id = 1
   self.user = user
