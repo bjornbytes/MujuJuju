@@ -1,8 +1,19 @@
+require 'lib/typo'
 local rich = require 'lib/deps/richtext/richtext'
 local g = love.graphics
 
 Tooltip = class()
 Tooltip.maxWidth = .35
+Tooltip.richOptions = {
+  title = g.setFont('mesmerize', 24),
+  bold = g.setFont('mesmerize', 14),
+  normal = g.setFont('mesmerize', 14),
+  white = {255, 255, 255},
+  whoCares = {230, 230, 230},
+  red = {255, 100, 100},
+  green = {100, 255, 100},
+  purple = {147, 96, 200}
+}
 
 function Tooltip:init()
   self.active = false
@@ -51,57 +62,24 @@ function Tooltip:setTooltip(str)
   self.active = true
 end
 
-function Tooltip:unitTooltip(code)
+function Tooltip:setUnitTooltip(code)
   local unit = data.unit[code]
-  if not unit then return end
   local pieces = {}
   table.insert(pieces, '{white}{title}' .. unit.name .. '{normal}')
-  table.insert(pieces, 'This unit is actually really cool.')
-  return table.concat(pieces, '\n')
+  table.insert(pieces, '{whoCares}' .. unit.description)
+  return setTooltip(table.concat(pieces, '\n'))
 end
 
-function Tooltip:runeTooltip(id)
-  local rune = runes[id]
-  if not rune then return end
-  local pieces = {}
-  table.insert(pieces, '{white}{title}' .. rune.name .. '{normal}')
-  table.insert(pieces, rune.description)
-  return table.concat(pieces, '\n')
+function Tooltip:setUpgradeTooltip(unit, code)
+  
 end
 
-function Tooltip:abilityTooltip(code, index)
-  local ability = data.ability[code][data.unit[code].abilities[index]]
-  if not ability then return end
-  local description = self:substitutions(ability)
-  local pieces = {}
-  table.insert(pieces, '{white}{title}' .. ability.name .. '{normal}')
-  table.insert(pieces, description)
-  table.insert(pieces, '\nCost: ' .. ctx.upgrades.costs.ability)
-  return table.concat(pieces, '\n')
+function Tooltip:setShrujuTooltip(shruju)
+  if type(shruju) == 'string' then shruju = data.shruju[shruju] end
 end
 
-function Tooltip:abilityUpgradeTooltip(code, ability, index)
-  local upgrade = data.ability[code][data.unit[code].abilities[ability]].upgrades[index]
-  if not upgrade then return end
-  local description = self:substitutions(upgrade)
-  local pieces = {}
-  table.insert(pieces, '{white}{title}' .. upgrade.name .. '{normal}')
-  table.insert(pieces, description)
-  table.insert(pieces, '\nCost: ' .. ctx.upgrades.costs.abilityUpgrade)
-  return table.concat(pieces, '\n')
-end
+function Tooltip:setRuneTooltip(rune)
 
-function Tooltip:substitutions(object)
-  local lastvar = nil
-  local description = object.description:gsub('%$(%w+)', function(var)
-    if var == 's' then return object[lastvar] ~= 1 and 's' or '' end
-    lastvar = var
-    return object[var]
-  end)
-  description = description:gsub('%%(%w+)', function(var)
-    return object[var] * 100 .. '%'
-  end)
-  return description
 end
 
 function Tooltip:resize()

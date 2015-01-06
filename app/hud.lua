@@ -16,7 +16,7 @@ Hud.richOptions = {
   whoCares = {230, 230, 230},
   red = {255, 100, 100},
   green = {100, 255, 100},
-  purple = {115, 75, 150}
+  purple = {147, 96, 200}
 }
 Hud.richWidth = 350
 

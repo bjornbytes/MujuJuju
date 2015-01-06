@@ -262,6 +262,9 @@ return {
       'Exquisite',
       'Grand',
       'Legendary'
+    },
+    colors = {
+      purple = {255, 255, 255}
     }
   },
 

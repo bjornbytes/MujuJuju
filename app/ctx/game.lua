@@ -5,6 +5,9 @@ function Game:load(user, biome)
   data.media.graphics.juju:setMipmapFilter('linear', 1)
   data.media.graphics.map.forest:setMipmapFilter('linear', 1)
   data.media.graphics.map.forestSpirit:setMipmapFilter('linear', 1)
+  for i = 1, 9 do
+    data.media.graphics.runes[i]:setMipmapFilter('linear', 1)
+  end
 
   self.id = 1
   self.user = user
@@ -182,6 +185,11 @@ function Game:distribute()
 
       rune.name = prefix .. ' ' .. rune.name
     end
+
+    local colors = config.runes.colors
+    rune.color = colors[love.math.random(1, #colors)]
+    rune.image = love.math.random(1, config.runes.imageCount)
+    rune.background = runeLevel < 30 and 'broken' or 'normal'
 
     table.insert(self.user.runes, rune)
     table.insert(self.rewards.runes, rune)
