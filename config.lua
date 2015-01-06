@@ -17,7 +17,7 @@ return {
     baseModifier = .005,
     levelModifier = .0015,
     jujuModifier = 2,
-    minimumLevel = 5,
+    minimumLevel = 20,
     scale = 1.35,
     healthModifier = 2,
     damageModifier = 1.5,
@@ -62,12 +62,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 8,
-          exponent = .8,
+          base = 14,
+          exponent = .85,
           coefficient = .75
         },
         maximum = {
-          base = 12,
+          base = 20,
           exponent = .85,
           coefficient = 1
         }
@@ -108,12 +108,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 8,
-          exponent = .8,
+          base = 14,
+          exponent = .85,
           coefficient = .75
         },
         maximum = {
-          base = 12,
+          base = 20,
           exponent = .85,
           coefficient = 1
         }
@@ -153,12 +153,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 8,
-          exponent = .8,
+          base = 14,
+          exponent = .85,
           coefficient = .75
         },
         maximum = {
-          base = 12,
+          base = 20,
           exponent = .85,
           coefficient = 1
         }
@@ -198,12 +198,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 8,
-          exponent = .8,
+          base = 14,
+          exponent = .85,
           coefficient = .75
         },
         maximum = {
-          base = 12,
+          base = 20,
           exponent = .85,
           coefficient = 1
         }
