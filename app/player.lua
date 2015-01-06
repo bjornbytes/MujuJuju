@@ -248,9 +248,8 @@ function Player:hurt(amount, source)
 		if self.gamepad and self.gamepad:isVibrationSupported() then
 			self.gamepad:setVibration(1, 1, .5)
 		end
-
-		return true
 	end
+  return amount
 end
 
 
