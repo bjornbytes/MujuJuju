@@ -19,9 +19,11 @@ return {
     jujuModifier = 2,
     minimumLevel = 5,
     scale = 1.35,
+    healthModifier = 2,
+    damageModifier = 1.5,
     buffs = {
       sinister = {
-        damageModifier = 10
+        damageModifier = 2
       },
       chilling = {
         exhaust = .3,
