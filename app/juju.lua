@@ -5,8 +5,6 @@ Juju.moveSpeed = 10
 Juju.depth = -6
 
 function Juju:init(data)
-	-- Data = ({amount, x, y, velocity,speed})
-	--self.amount = 20
 	self.x = 100
 	self.y = 100
 	self.prevx = self.x
@@ -83,8 +81,8 @@ function Juju:update()
 	end
 
 	self.angle = self.angle + (math.sin(tick * tickRate) * math.cos(tick * tickRate)) / love.math.random(9, 11)
-	self.scale = math.lerp(self.scale, math.clamp(self.amount / 50, .25, .6), 2 * tickRate)
-	self.alpha = math.lerp(self.alpha, 1, 2 * tickRate)
+	self.scale = math.lerp(self.scale, .15 + (math.min(self.amount, 200) / 200), 2 * tickRate)
+	self.alpha = math.lerp(self.alpha, p.ded and 1 or .5, 10 * tickRate)
 
 	self.x = math.clamp(self.x, self.amount, love.graphics.getWidth() - self.amount)
 end
@@ -95,11 +93,11 @@ function Juju:draw()
 	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 	local wave = math.sin(tick * tickRate * 4)
 
-	g.setBlendMode('additive')
-	g.setColor(255, 255, 255, 30 * self.alpha)
-	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale * (1.6 + wave / 12), self.scale * (1.6 + wave / 12), image:getWidth() / 2, image:getHeight() / 2)
-	g.setBlendMode('alpha')
-
 	g.setColor(255, 255, 255, 255 * self.alpha)
 	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)
+
+	g.setBlendMode('additive')
+	g.setColor(255, 255, 255, 40 * self.alpha)
+	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale * (1.5 + wave / 12), self.scale * (1.5 + wave / 12), image:getWidth() / 2, image:getHeight() / 2)
+	g.setBlendMode('alpha')
 end
