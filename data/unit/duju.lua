@@ -14,10 +14,4 @@ Duju.speed = 40
 Duju.healthScaling = {4, 1.1}
 Duju.damageScaling = {.5, 1}
 
-
-----------------
--- Abilities
-----------------
-Duju.abilities = {'headbutt', 'charge'}
-
 return Duju

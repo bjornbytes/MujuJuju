@@ -8,6 +8,7 @@ return {
 
   biomeOrder = {
     'forest',
+    'cave',
     'tundra',
     'volcano'
   },
@@ -47,7 +48,7 @@ return {
   biomes = {
 
     forest = {
-      name = 'Forest',
+      name = 'The Forest',
       benchmarks = {
         bronze = 300,
         silver = 900,
@@ -70,10 +71,55 @@ return {
         }
       },
       units = {
-        minEnemyRate = 6,
-        maxEnemyRate = 9,
+        minEnemyRate = 8,
+        maxEnemyRate = 12,
         levelScale = 1,
         upgradeCostIncrease = 1,
+      },
+      shrujuPatches = {
+        [1] = {
+          minTimer = 1,
+          maxTimer = 2
+        },
+        [2] = {
+          minTimer = 120,
+          maxTimer = 130
+        }
+      },
+      runes = {
+        maxLevel = 25,
+        specialChance = .01
+      }
+    },
+
+    cavern = {
+      name = 'The Caverns',
+      benchmarks = {
+        bronze = 300,
+        silver = 900,
+        gold = 1800
+      },
+      rewards = {
+        silver = 'tundra',
+        gold = 'bruju'
+      },
+      juju = {
+        minimum = {
+          base = 8,
+          exponent = .8,
+          coefficient = .75
+        },
+        maximum = {
+          base = 12,
+          exponent = .85,
+          coefficient = 1
+        }
+      },
+      units = {
+        minEnemyRate = 6,
+        maxEnemyRate = 9,
+        levelScale = 1.25,
+        upgradeCostIncrease = 2,
       },
       shrujuPatches = {
         [1] = {
@@ -99,8 +145,7 @@ return {
         gold = 1000
       },
       rewards = {
-        silver = 'volcano',
-        gold = 'kuju'
+        silver = 'volcano'
       },
       juju = {
         minimum = {
@@ -115,10 +160,10 @@ return {
         }
       },
       units = {
-        minEnemyRate = 5,
-        maxEnemyRate = 7,
+        minEnemyRate = 6,
+        maxEnemyRate = 9,
         levelScale = 1.5,
-        upgradeCostIncrease = 2
+        upgradeCostIncrease = 3
       },
       shrujuPatches = {
         [1] = {
@@ -144,7 +189,7 @@ return {
         gold = 600
       },
       rewards = {
-        gold = 'bruju',
+        --
       },
       juju = {
         minimum = {
@@ -159,10 +204,10 @@ return {
         }
       },
       units = {
-        minEnemyRate = 4,
-        maxEnemyRate = 5,
+        minEnemyRate = 6,
+        maxEnemyRate = 8,
         levelScale = 2,
-        upgradeCostIncrease = 3
+        upgradeCostIncrease = 4
       },
       shrujuPatches = {
         [1] = {

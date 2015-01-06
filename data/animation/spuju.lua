@@ -1,8 +1,9 @@
 local Spuju = extend(Animation)
 Spuju.code = 'spuju'
 
-Spuju.scale = .5
-Spuju.offsety = 48
+Spuju.scale = .75
+Spuju.offsety = 32
+Spuju.backwards = true
 Spuju.default = 'spawn'
 Spuju.states = {}
 

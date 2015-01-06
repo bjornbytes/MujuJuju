@@ -18,31 +18,28 @@ function Unit:activate()
     scale = (self.elite and config.elites.scale) or nil
   })
 
-  self.animation.flipped = self.player and not self.player.animation.flipped
+  if self.player then
+    self.animation.flipped = not self.player.animation.flipped
+  else
+    local _, shrine = next(ctx.shrines:filter(function(s) return s.team == ctx.players:get(ctx.id).team end))
+    self.animation.flipped = math.sign(self.x - shrine.x) > 0
+  end
 
   self.animation:on('event', function(data)
     if data.data.name == 'attack' then
       if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
-        local amount = self.damage
-        amount = self:abilityCall('preattack', self.target, amount) or amount
-        amount = self.buffs:preattack(self.target, amount) or amount
-        amount = self.target:hurt(amount, self, 'attack') or amount
-        self:abilityCall('postattack', self.target, amount)
-        self.buffs:postattack(self.target, amount)
-        if not self.target or self.target.dying then
-          self.target = nil
-          self.animation:set('idle')
+        if self.class.attackSpell then
+          ctx.spells:add(self.class.attackSpell, {unit = self, target = self.target})
+        else
+          self:attack(self.target)
         end
-
-        self.ai.useAbilities(self)
       end
     end
   end)
 
   self.animation:on('complete', function(data)
-    if data.state.name == 'death' then
-      self:die()
-    elseif data.state.name == 'spawn' then
+    if self.dying then return self:die() end
+    if data.state.name == 'spawn' then
       self.spawning = false
       self.animation:set('idle', {force = true})
     elseif self.casting then
@@ -190,7 +187,7 @@ function Unit.stances:defensive()
   self:changeTarget(ctx.target:closest(self, 'enemy', 'player', 'unit'))
 
   if self.target and self:inRange(self.target) then
-    self:attack(self.target)
+    self:startAttacking(self.target)
   else
     self.animation:set('idle')
   end
@@ -200,7 +197,7 @@ function Unit.stances:aggressive()
   self:changeTarget(ctx.target:closest(self, 'enemy', 'shrine', 'player', 'unit'))
 
   if self.target and self:inRange(self.target) then
-    self:attack(self.target)
+    self:startAttacking(self.target)
   elseif self.target then
     self:moveIntoRange(self.target)
   else
@@ -245,7 +242,7 @@ function Unit:moveTowards(target)
   self.animation.flipped = self.x > target.x
 end
 
-function Unit:attack(target)
+function Unit:startAttacking(target)
   if not self:inRange(target) or self.buffs:stunned() then
     self.target = nil
     self.animation:set('idle')
@@ -256,6 +253,17 @@ function Unit:attack(target)
   if self.animation.state.name ~= 'attack' then self.attackStart = tick end
   self.animation.flipped = self.x > target.x
   self.animation:set('attack')
+end
+
+function Unit:attack(target)
+  if not target then return end
+  local amount = self.damage
+  amount = self:abilityCall('preattack', target, amount) or amount
+  amount = self.buffs:preattack(target, amount) or amount
+  amount = target:hurt(amount, self, 'attack') or amount
+  self:abilityCall('postattack', target, amount)
+  self.buffs:postattack(target, amount)
+  self.ai.useAbilities(self)
 end
 
 function Unit:useAbility(index, target)
