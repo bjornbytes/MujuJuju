@@ -243,10 +243,7 @@ function HudHealth:draw()
           g.draw(data.media.graphics.healthbarBar, xx, y, 0, soft * math.round(barWidth - 6 * scale), scale)
         end
 
-        local elitebuffs = unit.buffs:buffswithtag('elite')
-        local location = math.floor(unit.x)
-        stack(t, location, unit.width, 2)
-
+        local elitebuffs = unit.buffs:buffsWithTag('elite')
         if next(elitebuffs) then
           local string = ''
           table.each(elitebuffs, function(buff)

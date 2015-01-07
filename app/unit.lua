@@ -29,7 +29,7 @@ function Unit:activate()
     if event.data.name == 'attack' then
       if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
         if self.class.attackSpell then
-          ctx.spells:add(self.class.attackSpell, {unit = self, target = self.target})
+          ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.target})
           ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
         else
           self:attack()
