@@ -246,10 +246,10 @@ function Unit:draw()
   self.animation:draw(x, y - lerpd.knockup, {noupdate = true})
 
   if self.buffs:feared() then
-    g.setColor(255, 255, 255, 200 * self.alpha)
+    g.setColor(255, 255, 255, 150 * self.alpha)
     local image = data.media.graphics.fear
-    local scale = 40 / image:getHeight()
-    g.draw(image, self.x, self.y - self.height - 20, math.cos(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    local scale = (40 / image:getHeight()) * (1 + math.cos(math.sin(tick) / 3) / 5)
+    g.draw(image, self.x, self.y - self.height - 35, math.cos(tick / 3) / 6, scale, scale, 53, 83)
   end
 end
 
