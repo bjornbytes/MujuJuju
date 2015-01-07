@@ -8,7 +8,7 @@ Thuju.description = 'Yay Thuju.'
 ----------------
 Thuju.health = 150
 Thuju.damage = 15
-Thuju.range = 32
+Thuju.range = 16
 Thuju.attackSpeed = 1.15
 Thuju.speed = 35
 
@@ -78,8 +78,8 @@ Thuju.upgrades = {
   },
   taunt = {
     level = 0,
-    costs = {80, 160, 240},
-    prerequisites = {wardofthorns = 3, tenacity = 3},
+    costs = {100, 200, 300},
+    prerequisites = {wardofthorns = 1, tenacity = 1},
     name = 'Taunt',
     description = 'Thuju beats his chest, forcing nearby enemies to attack him for 3 seconds.',
     values = {
@@ -95,14 +95,14 @@ Thuju.upgrades = {
   },
   tremor = {
     level = 0,
-    costs = {80, 160, 240},
-    prerequisites = {tenacity = 3, impenetrablehide = 3},
+    costs = {100, 200, 300},
+    prerequisites = {tenacity = 1, impenetrablehide = 1},
     name = 'Tremor',
     description = 'Thuju slams the ground in the direction he is facing, causing the tectonic plates of the Earth to erupt in front of him.  Any units unfortunate enough to be caught in the area of impact take damage and are stunned.',
     values = {
-      [1] = '100 range, 30 damage, .5s stun',
-      [2] = '150 range, 50 damage, 1s stun',
-      [3] = '175 range, 80 damage, 1.5s stun'
+      [1] = '30 damage, .5s stun',
+      [2] = '60 damage, 1s stun',
+      [3] = '90 damage, 80 damage, 1.5s stun'
     },
     apply = function(self, unit)
       if self.level > 0 then

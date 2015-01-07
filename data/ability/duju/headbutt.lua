@@ -16,7 +16,7 @@ Headbutt.damageModifier = 1.25
 function Headbutt:activate()
   self.unit.animation:on('event', function(event)
     if event.data.name == 'headbutt' then
-      local targets = ctx.target:inRange(self.unit, 48, 'enemy', 'unit', 'player')
+      local targets = ctx.target:inRange(self.unit, self.unit.width / 2 + 32, 'enemy', 'unit', 'player')
       local count = table.count(targets)
       local damage = (self.unit.damage * self.damageModifier) / count
       table.each(targets, function(target)

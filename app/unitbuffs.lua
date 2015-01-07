@@ -47,7 +47,6 @@ function UnitBuffs:postupdate()
 
   -- Apply Attack Speed Decreases
   local exhausts = self:buffsWithTag('exhaust')
-  local attackSpeed = self.unit.class.attackSpeed
   table.each(exhausts, function(exhaust)
     attackSpeed = attackSpeed + attackSpeed * (1 - exhaust.exhaust)
   end)

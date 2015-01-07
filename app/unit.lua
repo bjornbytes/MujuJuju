@@ -2,7 +2,7 @@ local g = love.graphics
 
 Unit = class()
 
-Unit.classStats = {'health', 'damage', 'range', 'attackSpeed', 'speed'}
+Unit.classStats = {'width', 'health', 'damage', 'range', 'attackSpeed', 'speed'}
 Unit.stanceList = {'defensive', 'aggressive', 'follow'}
 table.each(Unit.stanceList, function(stance, i) Unit.stanceList[stance] = i end)
 
@@ -181,7 +181,7 @@ function Unit:update()
 
   if self.animation.state.name == 'attack' then
     local current = self.animation.spine.animationState:getCurrent(0)
-    if current then self.animation.speed = current.endTime / self.class.attackSpeed end
+    if current then self.animation.speed = current.endTime / self.attackSpeed end
   elseif self.animation.state.name == 'walk' then
     self.animation.speed = self.speed / self.class.speed
   else
@@ -381,10 +381,15 @@ function Unit:attack(options)
   amount = target:hurt(amount, self, 'attack') or amount
   self:abilityCall('postattack', target, amount)
   self.buffs:postattack(target, amount)
+
   if not options.nosound then
     ctx.sound:play(data.media.sounds[self.class.code].attackHit, function(sound)
       sound:setVolume(.4)
     end)
+  end
+
+  if not options.noparticles and data.particle[self.class.code .. 'attack'] then
+    ctx.particles:emit(self.class.code .. 'attack', target.x + (target.width * .4 * -math.sign(target.x - self.x)), self.y + self.height * .4, 5)
   end
 end
 
