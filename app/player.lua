@@ -262,7 +262,7 @@ function Player:hurt(amount, source)
 		self.ghost = GhostPlayer(self)
 
     self.animation:set('death')
-		ctx.sound:play('death')
+		ctx.sound:play('death', function(sound) sound:setVolume(.18) end)
 
 		if self.gamepad and self.gamepad:isVibrationSupported() then
 			self.gamepad:setVibration(1, 1, .5)

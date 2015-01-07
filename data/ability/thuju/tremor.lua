@@ -5,8 +5,8 @@ Tremor.code = 'tremor'
 -- Behavior
 ----------------
 function Tremor:activate()
-  self.unit.animation:on('event', function(data)
-    if data.data.name == 'tremor' then
+  self.unit.animation:on('event', function(event)
+    if event.data.name == 'tremor' then
       local level = self.unit:upgradeLevel('tremor')
       local damages = {[0] = 0, 30, 50, 80}
       local damage = damages[level]
@@ -15,6 +15,8 @@ function Tremor:activate()
       local width = widths[level]
 
       self:createSpell({damage = damage, width = width, stun = stun})
+
+      ctx.sound:play(data.media.sounds.thuju.tremor, function(sound) sound:setVolume(.5) end)
     end
   end)
 end

@@ -30,9 +30,7 @@ function Unit:activate()
       if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
         if self.class.attackSpell then
           ctx.spells:add(self.class.attackSpell, {unit = self, target = self.target})
-          ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound)
-            sound:setVolume(.4)
-          end)
+          ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
         else
           self:attack()
         end
@@ -62,6 +60,8 @@ function Unit:activate()
 
         self.droppedJuju = true
       end
+    elseif event.data.name == 'spawn' then
+      ctx.sound:play(data.media.sounds[self.class.code].spawn, function(sound) sound:setVolume(.5) end)
     end
   end)
 

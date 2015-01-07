@@ -11,7 +11,7 @@ end
 function Units:createEnemy()
   if self.enemyCount < 1 + self.level / 2 then
     local enemies = config.enemies
-    local enemyType = enemies[love.math.random(1, #enemies) and 1]
+    local enemyType = enemies[love.math.random(1, #enemies)]
     local x = love.math.random() < .5 and Unit.width / 2 or ctx.map.width - Unit.width / 2
     local eliteChance = config.elites.baseModifier + (config.elites.levelModifier * self.level)
     local eliteCount = table.count(self:filter(function(u) return u.elite end))
