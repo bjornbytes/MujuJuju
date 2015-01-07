@@ -9,7 +9,7 @@ Kuju.description = 'Yay Kuju.'
 Kuju.health = 60
 Kuju.damage = 15
 Kuju.range = 140
-Kuju.attackSpeed = 1.15
+Kuju.attackSpeed = 1.45
 Kuju.speed = 30
 
 Kuju.healthScaling = {4, 1}
