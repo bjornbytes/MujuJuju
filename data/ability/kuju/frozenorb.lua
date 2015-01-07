@@ -11,8 +11,8 @@ FrozenOrb.description = 'Kuju sends out a frozen orb in the direction she is fac
 ----------------
 -- Data
 ----------------
-FrozenOrb.cooldown = 6
-FrozenOrb.damage = 10
+FrozenOrb.cooldown = 11
+FrozenOrb.damage = 8
 FrozenOrb.range = 200
 FrozenOrb.radius = 15
 FrozenOrb.speed = 400

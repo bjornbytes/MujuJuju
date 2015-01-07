@@ -2,8 +2,7 @@ return {
 
   starters = {
     'bruju',
-    'thuju',
-    'kuju'
+    'thuju'
   },
 
   enemies = {
@@ -57,7 +56,7 @@ return {
     baseCooldown = 3,
     minCooldown = .5,
     globalCooldown = 1.5,
-    baseJuju = 3000,
+    baseJuju = 30,
     jujuRate = 1,
     basePopulation = 3,
     maxPopulation = 10
@@ -66,7 +65,7 @@ return {
   shruju = {
     growTime = 60,
     minGrowTime = 10,
-    harvestCooldownReduction = 6,
+    harvestCooldownReduction = 5,
     magicDuration = 90
   },
 
@@ -80,27 +79,33 @@ return {
         gold = 1800
       },
       rewards = {
-        silver = 'tundra',
-        gold = 'thuju'
+        silver = 'cavern',
+        gold = 'unit'
       },
       juju = {
         minimum = {
-          base = 10,
-          exponent = .85,
+          base = 14,
+          exponent = .8,
           coefficient = .75
         },
         maximum = {
-          base = 15,
+          base = 20,
           exponent = .85,
           coefficient = 1
         }
       },
       units = {
-        minEnemyRate = 8,
-        maxEnemyRate = 12,
+        minEnemyRate = 12,
+        maxEnemyRate = 16,
+        maxEnemiesCoefficient = .4,
         levelScale = 1,
-        upgradeCostIncrease = 1,
-        maxElites = 1
+        upgradeCostIncrease = 2,
+        maxElites = 1,
+        thresholds = {
+          duju = 0,
+          spuju = 180,
+          kuju = 600
+        }
       },
       shrujuPatches = {
         [1] = {
@@ -108,13 +113,22 @@ return {
           maxTimer = 40
         },
         [2] = {
-          minTimer = 120,
-          maxTimer = 130
+          minTimer = 300,
+          maxTimer = 400
         }
       },
       runes = {
         maxLevel = 25,
         specialChance = .01
+      },
+      effects = {
+        vignette = {
+          blur = {.45, 1.15},
+          radius = {.85, .85}
+        },
+        bloom = {
+          alpha = {10, 70}
+        }
       }
     },
 
@@ -126,17 +140,16 @@ return {
         gold = 1800
       },
       rewards = {
-        silver = 'tundra',
-        gold = 'bruju'
+        silver = 'tundra'
       },
       juju = {
         minimum = {
-          base = 10,
-          exponent = .85,
+          base = 14,
+          exponent = .8,
           coefficient = .75
         },
         maximum = {
-          base = 15,
+          base = 20,
           exponent = .85,
           coefficient = 1
         }
@@ -144,9 +157,15 @@ return {
       units = {
         minEnemyRate = 6,
         maxEnemyRate = 9,
+        maxEnemiesCoefficient = .5,
         levelScale = 1.25,
-        upgradeCostIncrease = 2,
-        maxElites = 1
+        upgradeCostIncrease = 3,
+        maxElites = 1,
+        thresholds = {
+          spuju = 0,
+          duju = 300,
+          kuju = 300
+        }
       },
       shrujuPatches = {
         [1] = {
@@ -161,6 +180,15 @@ return {
       runes = {
         maxLevel = 25,
         specialChance = .01
+      },
+      effects = {
+        vignette = {
+          blur = {.6, 1.15},
+          radius = {.75, .75}
+        },
+        bloom = {
+          alpha = {5, 20}
+        }
       }
     },
 
@@ -176,12 +204,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 10,
-          exponent = .85,
+          base = 14,
+          exponent = .8,
           coefficient = .75
         },
         maximum = {
-          base = 15,
+          base = 20,
           exponent = .85,
           coefficient = 1
         }
@@ -189,9 +217,15 @@ return {
       units = {
         minEnemyRate = 6,
         maxEnemyRate = 9,
+        maxEnemiesCoefficient = .6,
         levelScale = 1.5,
-        upgradeCostIncrease = 3,
-        maxElites = 2
+        upgradeCostIncrease = 4,
+        maxElites = 2,
+        thresholds = {
+          kuju = 0,
+          spuju = 600,
+          duju = 600
+        }
       },
       shrujuPatches = {
         [1] = {
@@ -206,6 +240,15 @@ return {
       runes = {
         maxLevel = 75,
         specialChance = .04
+      },
+      effects = {
+        vignette = {
+          blur = {.45, 1.15},
+          radius = {.85, .85}
+        },
+        bloom = {
+          alpha = {10, 20}
+        }
       }
     },
 
@@ -221,12 +264,12 @@ return {
       },
       juju = {
         minimum = {
-          base = 10,
-          exponent = .85,
+          base = 14,
+          exponent = .8,
           coefficient = .75
         },
         maximum = {
-          base = 15,
+          base = 20,
           exponent = .85,
           coefficient = 1
         }
@@ -234,9 +277,15 @@ return {
       units = {
         minEnemyRate = 6,
         maxEnemyRate = 8,
+        maxEnemiesCoefficient = .7,
         levelScale = 2,
-        upgradeCostIncrease = 4,
-        maxElites = 3
+        upgradeCostIncrease = 5,
+        maxElites = 3,
+        thresholds = {
+          kuju = 0,
+          spuju = 0,
+          duju = 0
+        }
       },
       shrujuPatches = {
         [1] = {
@@ -251,6 +300,15 @@ return {
       runes = {
         maxLevel = 100,
         specialChance = .08
+      },
+      effects = {
+        vignette = {
+          blur = {.45, 1.15},
+          radius = {.85, .85}
+        },
+        bloom = {
+          alpha = {10, 70}
+        }
       }
     }
   },
@@ -291,8 +349,16 @@ return {
       'Legendary'
     },
     colors = {
-      purple = {255, 255, 255}
+      purple = {100, 0, 200},
+      green = {100, 200, 100},
+      blue = {100, 100, 200},
+      red = {200, 100, 100}
     }
+  },
+
+  units = {
+    baseHealthScaling = 3,
+    baseDamageScaling = 3
   },
 
   defaultUser = {

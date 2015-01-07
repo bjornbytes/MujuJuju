@@ -66,6 +66,99 @@ ShrujuEffects = {
       local p = ctx.players:get(ctx.id)
       p.ghostSpeedMultiplier = p.ghostSpeedMultiplier / 2
     end
+  },
+  civilization = {
+    code = 'civilization',
+    name = 'Civilization',
+    description = '+3 to maximum population.',
+
+    activate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.maxPopulation = p.maxPopulation + 3
+    end,
+
+    deactivate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.maxPopulation = p.maxPopulation - 3
+    end
+  },
+  marathon = {
+    code = 'marathon',
+    name = 'Marathon',
+    description = 'Fast minions!',
+
+    activate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.summonBuffs.marathon = 'marathon'
+      ctx.units:each(function(unit)
+        if unit.player == p then unit.buffs:add('marathon') end
+      end)
+    end,
+
+    deactivate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.summonBuffs.marathon = nil
+      ctx.units:each(function(unit)
+        if unit.player == p then unit.buffs:remove('marathon') end
+      end)
+    end
+  },
+  spinach = {
+    code = 'spinach',
+    name = 'Spinach',
+    description = 'Makes your minions stronger.',
+
+    activate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.summonBuffs.spinach = 'spinach'
+      ctx.units:each(function(unit)
+        if unit.player == p then unit.buffs:add('spinach') end
+      end)
+    end,
+
+    deactivate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.summonBuffs.spinach = nil
+      ctx.units:each(function(unit)
+        if unit.player == p then unit.buffs:remove('spinach') end
+      end)
+    end
+  },
+  frenzy = {
+    code = 'frenzy',
+    name = 'Frenzy',
+    description = 'Your minions attack twice as fast.',
+
+    activate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.summonBuffs.frenzy = 'frenzy'
+      ctx.units:each(function(unit)
+        if unit.player == p then unit.buffs:add('frenzy') end
+      end)
+    end,
+
+    deactivate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.summonBuffs.frenzy = nil
+      ctx.units:each(function(unit)
+        if unit.player == p then unit.buffs:remove('frenzy') end
+      end)
+    end
+  },
+  spiritblitz = {
+    code = 'spiritrush',
+    name = 'Spirit Rush',
+    description = 'Summon all day erry day.',
+
+    activate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.flatCooldownReduction = p.flatCooldownReduction + 10
+    end,
+
+    deactivate = function(self)
+      local p = ctx.players:get(ctx.id)
+      p.flatCooldownReduction = p.flatCooldownReduction - 10
+    end
   }
 }
 
@@ -153,7 +246,7 @@ function ShrujuPatch:makeShruju()
     local shruju = data.shruju[self.growing]()
 
     -- Randomly give it a random magical effect
-    if love.math.random() < .9 then
+    if love.math.random() < .33 then
       local effects = table.keys(ShrujuEffects)
       shruju.effect = setmetatable({timer = config.shruju.magicDuration}, {__index = ShrujuEffects[effects[love.math.random(1, #effects)]]})
     end

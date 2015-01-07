@@ -14,7 +14,8 @@ end
 
 function HudUpgrades:update()
   self.prevTime = self.time
-  if not ctx.players:get(ctx.id):atShrine() then self.active = false end
+  local p = ctx.players:get(ctx.id)
+  if not p:atShrine() or p.dead then self.active = false end
   if self.active then self.time = math.min(self.time + tickRate, self.maxTime)
   else self.time = math.max(self.time - tickRate, 0) end
 end

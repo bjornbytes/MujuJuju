@@ -36,6 +36,8 @@ function Unit:activate()
         end
       end
     elseif event.data.name == 'deathjuju' then
+      self:abilityCall('die')
+
       if not self.player and not self.droppedJuju then
         local juju = config.biomes[ctx.biome].juju
         local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
@@ -72,6 +74,8 @@ function Unit:activate()
       self.animation:set('idle', {force = true})
     elseif self.casting then
       self.casting = false
+    elseif data.state.name == 'attack' then
+      self.ai.useAbilities(self)
     end
 
     if not data.state.loop then self.animation:set('idle', {force = true}) end
@@ -98,6 +102,9 @@ function Unit:activate()
     scale('health')
     scale('damage')
   end
+
+  self.health = self.health + config.units.baseHealthScaling * (ctx.timer * tickRate / 60)
+  self.damage = self.damage + config.units.baseDamageScaling * (ctx.timer * tickRate / 60)
 
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
@@ -173,6 +180,8 @@ function Unit:update()
   if self.animation.state.name == 'attack' then
     local current = self.animation.spine.animationState:getCurrent(0)
     if current then self.animation.speed = current.endTime / self.class.attackSpeed end
+  elseif self.animation.state.name == 'walk' then
+    self.animation.speed = self.speed / self.class.speed
   else
     self.animation.speed = 1
   end
@@ -293,6 +302,9 @@ function Unit:inRange(target)
 end
 
 function Unit:moveIntoRange(target)
+  local feared = self.buffs:feared()
+  if feared then return self:runFrom(feared) end
+
   if self:inRange(target) then
     self.animation:set('idle')
     return
@@ -302,6 +314,9 @@ function Unit:moveIntoRange(target)
 end
 
 function Unit:moveTowards(target)
+  local feared = self.buffs:feared()
+  if feared then return self:runFrom(feared) end
+
   if math.abs(target.x - self.x) <= target.width / 2 + self.width / 2 then
     self.animation:set('idle')
     return
@@ -312,7 +327,16 @@ function Unit:moveTowards(target)
   self.animation.flipped = self.x > target.x
 end
 
+function Unit:runFrom(target)
+  self.x = self.x - self.speed * math.sign(target.x - self.x) * tickRate
+  self.animation:set('walk')
+  self.animation.flipped = self.x < target.x
+end
+
 function Unit:startAttacking(target)
+  local feared = self.buffs:feared()
+  if feared then return self:runFrom(feared) end
+
   if not self:inRange(target) or self.buffs:stunned() then
     self.target = nil
     self.animation:set('idle')
@@ -335,7 +359,6 @@ function Unit:attack(options)
   amount = target:hurt(amount, self, 'attack') or amount
   self:abilityCall('postattack', target, amount)
   self.buffs:postattack(target, amount)
-  self.ai.useAbilities(self)
   if not options.nosound then
     local sounds = data.media.sounds[self.class.code]
     local sound = sounds and sounds.attackHit
@@ -392,7 +415,6 @@ function Unit:heal(amount, source)
 end
 
 function Unit:die()
-  self:abilityCall('die')
   self:abilityCall('deactivate')
 
   table.each(ctx.units.objects, function(u)

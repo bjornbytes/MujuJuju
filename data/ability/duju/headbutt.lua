@@ -7,7 +7,7 @@ Headbutt.code = 'headbutt'
 ----------------
 Headbutt.cooldown = 5
 Headbutt.knockbackDistance = 100
-Headbutt.damageModifier = 1.5
+Headbutt.damageModifier = 1.25
 
 
 ----------------

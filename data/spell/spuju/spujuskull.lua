@@ -53,7 +53,7 @@ function SpujuSkull:update()
 		if self.y + image:getWidth() >= love.graphics.getHeight() - ctx.map.groundHeight then
 			self.health = self.maxHealth
       local targets = ctx.target:inRange(self, self.radius, 'enemy', 'unit', 'player', 'shrine')
-      local damage = self.unit.damage / table.count(targets)
+      local damage = self.unit.damage / math.min(table.count(targets), 3)
       table.each(targets, function(target)
         self.unit:attack({target = target, damage = damage, nosound = true})
       end)
