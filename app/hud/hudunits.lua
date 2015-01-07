@@ -198,6 +198,12 @@ function HudUnits:draw()
       local val = upgrade.level > 0 and 255 or 150
       g.setColor(val, val, val, 255 * upgradeAlphaFactor)
       g.draw(image, x, y, 0, scale, scale)
+
+      local image = data.media.graphics.hud.icons[what]
+      if image then
+        local scale = math.min((w - (v * .02)) / image:getWidth(), (h - (v * .02)) / image:getHeight())
+        g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+      end
     end
   end
 end
