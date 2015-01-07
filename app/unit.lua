@@ -29,7 +29,7 @@ function Unit:activate()
     if event.data.name == 'attack' then
       if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
         if self.class.attackSpell then
-          ctx.spells:add(self.class.attackSpell, {unit = self, target = self.target})
+          ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.target})
           ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
         else
           self:attack()
@@ -41,7 +41,7 @@ function Unit:activate()
         local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
         local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
         local amount = love.math.random(minAmount, maxAmount)
-        local jujus = math.random(1, 2)
+        local jujus = love.math.random(1, 2)
 
         if self.elite then
           amount = amount * config.elites.jujuModifier

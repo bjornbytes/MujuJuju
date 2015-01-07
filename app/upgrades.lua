@@ -30,6 +30,6 @@ Upgrades.clear = function()
       end
     end)
     data.unit[who].cost = data.unit[who].cost + config.biomes[ctx.biome].units.upgradeCostIncrease
-    ctx.sound:play('menuClick')
+    ctx.sound:play('menuHover', function(sound) sound:setVolume(2) end)
   end
 end

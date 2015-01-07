@@ -177,20 +177,20 @@ function HudHealth:draw()
 
   --[[ctx.units:each(function(unit)
     local x, y, hard, soft = unit:getHealthbar()
-    local eliteBuffs = unit.buffs:buffsWithTag('elite')
+    local elitebuffs = unit.buffs:buffswithtag('elite')
     local location = math.floor(unit.x)
     stack(t, location, unit.width, 2)
 
-    if next(eliteBuffs) then
+    if next(elitebuffs) then
       local string = ''
-      table.each(eliteBuffs, function(buff)
+      table.each(elitebuffs, function(buff)
         string = string .. buff.name .. ' '
       end)
-      g.setFont('pixel', 8)
-      g.setColor(0, 0, 0)
-      g.printCenter(string, x + 1, (y - 30 - 5 * t[location]) - 12 + 1)
-      g.setColor(255, 255, 255)
-      g.printCenter(string, x, (y - 30 - 5 * t[location]) - 12)
+      g.setfont('pixel', 8)
+      g.setcolor(0, 0, 0)
+      g.printcenter(string, x + 1, (y - 30 - 5 * t[location]) - 12 + 1)
+      g.setcolor(255, 255, 255)
+      g.printcenter(string, x, (y - 30 - 5 * t[location]) - 12)
     end
 
     local color = (p and unit.team == p.team) and green or red
@@ -231,15 +231,30 @@ function HudHealth:draw()
       local barHeight = data.media.graphics.healthbarGradient:getHeight()
 
       for j = 1, #bin.units do
-        g.setColor(color[1], color[2], color[3], 200 * bin.units[j].alpha)
-        local y = self.unitBarY[bin.units[j]] + math.round(3 * scale)
+        local unit = bin.units[j]
+        g.setColor(color[1], color[2], color[3], 200 * unit.alpha)
+        local y = self.unitBarY[unit] + math.round(3 * scale)
         --local y = math.round(yy + (j - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + 1.5))
-        local _, _, hard, soft = bin.units[j]:getHealthbar()
-        g.setColor(color[1], color[2], color[3], 100 * bin.units[j].alpha)
+        local _, _, hard, soft = unit:getHealthbar()
+        g.setColor(color[1], color[2], color[3], 100 * unit.alpha)
         g.draw(data.media.graphics.healthbarBar, xx, y, 0, hard * math.round(barWidth - 6 * scale), scale)
         if soft then
           g.setColor(color[1], color[2], color[3], 50)
           g.draw(data.media.graphics.healthbarBar, xx, y, 0, soft * math.round(barWidth - 6 * scale), scale)
+        end
+
+        local elitebuffs = unit.buffs:buffsWithTag('elite')
+        if next(elitebuffs) then
+          local string = ''
+          table.each(elitebuffs, function(buff)
+            string = string .. buff.name .. ' '
+          end)
+          g.setfont('pixel', 8)
+          local texty = y + data.media.graphics.healthbarBar:getHeight() * scale / 2 - g.getFont():getHeight() / 2
+          g.setcolor(0, 0, 0)
+          g.printcenter(string, x + 1, (y - 30 - 5 * t[location]) - 12 + 1)
+          g.setcolor(255, 255, 255)
+          g.printcenter(string, x, texty)
         end
       end
 

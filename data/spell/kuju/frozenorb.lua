@@ -1,5 +1,6 @@
 local FrozenOrb = extend(Spell)
 FrozenOrb.code = 'frozenorb'
+FrozenOrb.depth = -10
 
 function FrozenOrb:activate()
   local unit = self:getUnit()
@@ -41,19 +42,18 @@ function FrozenOrb:update()
     self.angle = self.angle - self.angularVelocity * tickRate
   end
 
-
   if math.abs(self.x - self.ability.unit.x) <= self.ability.unit.width / 2 and self.returning then
     self:deactivate()
   end
 
   table.each(ctx.target:inRange(self, self.radius, 'enemy', 'unit'), function(target)
-    if not self.damaged[target.id] then
+    if not self.damaged[target.viewId] then
       target.buffs:add('slow', {
         slow = self.slow,
         timer = self.duration
       })
       target:hurt(self.damage, unit)
-      self.damaged[target.id] = true
+      self.damaged[target.viewId] = true
     end
   end)
 end
