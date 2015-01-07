@@ -18,7 +18,7 @@ function HudUnits:init()
       local minionInc = (.2 * u) + (.075 * upgradeFactor * u)
       local inc = .15 * upgradeFactor * v
       local xx = .5 * u - (minionInc * (self.count - 1) / 2)
-      local radius = math.max(.05 * v * upgradeFactor, .01)
+      local size = math.max(.1 * v * upgradeFactor, .01)
       local res = {}
 
       for i = 1, self.count do
@@ -27,14 +27,14 @@ function HudUnits:init()
         local yy = (.15 * upgradeFactor) * v + (.25 * v)
         local x = xx - (inc * (3 - 1) / 2)
         for j = 1, 3 do
-          table.insert(res[i], {x, yy, radius})
+          table.insert(res[i], {x - size / 2, yy - size / 2, size, size})
           x = x + inc
         end
 
         local x = xx - (inc * (2 - 1) / 2)
         yy = yy + .12 * v
         for j = 1, 2 do
-          table.insert(res[i], {x, yy, radius})
+          table.insert(res[i], {x - size / 2, yy - size / 2, size, size})
           x = x + inc
         end
 
@@ -56,8 +56,8 @@ function HudUnits:update()
   for i = 1, #upgrades do
     for j = 1, #upgrades[i] do
       local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
-      local x, y, r = unpack(upgrades[i][j])
-      if math.insideCircle(mx, my, x, y, r) then
+      local x, y, w, h = unpack(upgrades[i][j])
+      if math.inside(mx, my, x, y, w, h) then
         ctx.hud.tooltip:setUpgradeTooltip(who, what)
       end
     end
@@ -191,13 +191,13 @@ function HudUnits:draw()
   for i = 1, #upgrades do
     for j = 1, 5 do
       local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
-      local x, y, r = unpack(upgrades[i][j])
-      local image = data.media.graphics.menuCove
-      local scale = r * 2 / 385
+      local x, y, w, h = unpack(upgrades[i][j])
+      local image = data.media.graphics.hud.frame
+      local scale = w / image:getWidth()
       local upgrade = data.unit[who].upgrades[what]
       local val = upgrade.level > 0 and 255 or 150
       g.setColor(val, val, val, 255 * upgradeAlphaFactor)
-      g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+      g.draw(image, x, y, 0, scale, scale)
     end
   end
 end
@@ -212,8 +212,8 @@ function HudUnits:mousereleased(mx, my, b)
   for i = 1, #upgrades do
     for j = 1, #upgrades[i] do
       local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
-      local x, y, r = unpack(upgrades[i][j])
-      if math.distance(mx, my, x, y) <= r then
+      local x, y, w, h = unpack(upgrades[i][j])
+      if math.inside(mx, my, x, y, w, h) then
         local upgrade = data.unit[who].upgrades[what]
         local nextLevel = upgrade.level + 1
         local cost = upgrade.costs[nextLevel]
