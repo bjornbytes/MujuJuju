@@ -13,6 +13,7 @@ function Harvest:apply()
     end)
   end
 
+  local p = ctx.players:get(ctx.id)
   ctx.spells:add('arcadetext', {
     text = '+5s shruju speed',
     x = p.x,

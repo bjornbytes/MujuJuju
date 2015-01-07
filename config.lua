@@ -155,15 +155,15 @@ return {
         }
       },
       units = {
-        minEnemyRate = 6,
-        maxEnemyRate = 9,
-        maxEnemiesCoefficient = .5,
+        minEnemyRate = 12,
+        maxEnemyRate = 16,
+        maxEnemiesCoefficient = .45,
         levelScale = 1.25,
         upgradeCostIncrease = 3,
         maxElites = 1,
         thresholds = {
           spuju = 0,
-          duju = 300,
+          duju = 150,
           kuju = 300
         }
       },
