@@ -59,6 +59,12 @@ function Player:activate()
     end
   end)
 
+  for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
+    self.animation.spine.skeleton:findSlot(slot).r = .5
+    self.animation.spine.skeleton:findSlot(slot).g = 0
+    self.animation.spine.skeleton:findSlot(slot).b = 1
+  end
+
   self:initDeck()
 
   ctx.event:emit('view.register', {object = self})
