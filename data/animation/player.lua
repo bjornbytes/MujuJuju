@@ -2,7 +2,7 @@ local Muju = extend(Animation)
 Muju.code = 'muju'
 
 Muju.scale = .65
-Muju.offsety = Player.height / 2
+Muju.offsety = Player.height + 16
 Muju.default = 'idle'
 Muju.states = {}
 
@@ -41,15 +41,13 @@ Muju.states.summon = {
 Muju.states.death = {
   priority = 3,
   blocking = true,
-  mix = {
-    resurrect = .2
-  }
+  speed = .7
 }
 
 Muju.states.resurrect = {
   priority = 3,
   blocking = true,
-  speed = 2
+  speed = .9
 }
 
 return Muju

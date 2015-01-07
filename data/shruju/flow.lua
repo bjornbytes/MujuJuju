@@ -13,6 +13,12 @@ function Flow:apply()
       patch:removeType('flow')
     end)
   end
+
+  ctx.spells:add('arcadetext', {
+    text = '.25s faster cooldown',
+    x = p.x,
+    y = p.y - 40
+  })
 end
 
 return Flow
