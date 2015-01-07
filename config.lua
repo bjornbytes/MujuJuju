@@ -54,12 +54,12 @@ return {
   },
 
   player = {
-    baseCooldown = .3,
+    baseCooldown = 3,
     minCooldown = .5,
     globalCooldown = 1.5,
-    baseJuju = 3000,
+    baseJuju = 30,
     jujuRate = 1,
-    basePopulation = 30,
+    basePopulation = 3,
     maxPopulation = 10
   },
 
