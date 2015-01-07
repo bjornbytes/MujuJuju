@@ -298,7 +298,8 @@ function Menu:mousepressed(mx, my, b)
       local biomes = self.geometry.biomes
       for i = 1, #biomes do
         local x, y, w, h = unpack(biomes[i])
-        if math.inside(mx, my, x, y, w, h) then
+        if math.inside(mx, my, x, y, w, h) and table.has(self.user.biomes, config.biomeOrder[i]) then
+          self.selectedBiome = i
           self:startGame()
         end
       end
