@@ -6,16 +6,13 @@ Kuju.description = 'Yay Kuju.'
 ----------------
 -- Stats
 ----------------
-Kuju.health = 55
-Kuju.damage = 22
-Kuju.range = 180
+Kuju.health = 60
+Kuju.damage = 15
+Kuju.range = 140
 Kuju.attackSpeed = 1.3
-Kuju.speed = 35
+Kuju.speed = 30
 
-
-----------------
--- Abilities
-----------------
-Kuju.abilities = {'frozenorb', 'frostbite'}
+Kuju.healthScaling = {4, 1}
+Kuju.damageScaling = {.8, 1}
 
 return Kuju

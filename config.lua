@@ -6,6 +6,12 @@ return {
     'kuju'
   },
 
+  enemies = {
+    'duju',
+    'spuju',
+    'kuju'
+  },
+
   biomeOrder = {
     'forest',
     'cavern',
@@ -48,17 +54,20 @@ return {
   },
 
   player = {
-    baseCooldown = 3,
+    baseCooldown = .3,
     minCooldown = .5,
     globalCooldown = 1.5,
-    baseJuju = 30,
-    jujuRate = 1
+    baseJuju = 3000,
+    jujuRate = 1,
+    basePopulation = 30,
+    maxPopulation = 10
   },
 
   shruju = {
     growTime = 60,
     minGrowTime = 10,
-    harvestCooldownReduction = 6
+    harvestCooldownReduction = 6,
+    magicDuration = 90
   },
 
   biomes = {

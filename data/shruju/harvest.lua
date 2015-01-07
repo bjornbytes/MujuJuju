@@ -8,7 +8,7 @@ function Harvest:apply()
   ctx.shrujuPatches.harvestLevel = ctx.shrujuPatches.harvestLevel + 1
 
   if config.shruju.growTime - (ctx.shrujuPatches.harvestLevel * config.shruju.harvestCooldownReduction) <= config.shruju.minGrowTime then
-    ctx.shrujuPatches:each(function(patch)
+    table.each(ctx.shrujuPatches.objects, function(patch)
       patch:removeType('harvest')
     end)
   end

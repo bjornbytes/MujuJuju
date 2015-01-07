@@ -9,7 +9,7 @@ Kuju.states = {}
 
 Kuju.states.spawn = {
   priority = 5,
-  speed = .21
+  speed = 1
 }
 
 Kuju.states.idle = {

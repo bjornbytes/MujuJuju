@@ -35,7 +35,7 @@ function Player:init()
 	self.prevy = self.y
 
 	self.selected = 1
-  self.maxPopulation = 3
+  self.maxPopulation = config.player.basePopulation
 	self.recentSelect = 0
 	self.invincible = 0
   self.flatCooldownReduction = 0

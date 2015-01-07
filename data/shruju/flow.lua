@@ -9,7 +9,7 @@ function Flow:apply()
   p.flatCooldownReduction = p.flatCooldownReduction + .25
 
   if config.player.baseCooldown - p.flatCooldownReduction <= config.player.minCooldown then
-    ctx.shrujuPatches:each(function(flow)
+    table.each(ctx.shrujuPatches.objects, function(patch)
       patch:removeType('flow')
     end)
   end

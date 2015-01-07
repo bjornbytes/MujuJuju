@@ -41,6 +41,7 @@ function Hud:update()
 
   self.tooltip:update()
   self.status:update()
+  self.health:update()
   self.upgrades:update()
   self.shruju:update()
   self.units:update()

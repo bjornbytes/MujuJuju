@@ -154,7 +154,7 @@ function ShrujuPatch:makeShruju()
     -- Randomly give it a random magical effect
     if love.math.random() < .9 then
       local effects = table.keys(ShrujuEffects)
-      shruju.effect = setmetatable({timer = 60}, {__index = ShrujuEffects[effects[love.math.random(1, #effects)]]})
+      shruju.effect = setmetatable({timer = config.shruju.magicDuration}, {__index = ShrujuEffects[effects[love.math.random(1, #effects)]]})
     end
 
     self.slot = shruju
@@ -170,7 +170,7 @@ function ShrujuPatch:makeShruju()
 end
 
 function ShrujuPatch:getGrowTime(code)
-  return math.max(config.shruju.growTime - (ctx.shrujuPatches.harvestLevel * ctx.shrujuPatches.harvestFactor), 10)
+  return math.max(config.shruju.growTime - (ctx.shrujuPatches.harvestLevel * config.shruju.harvestCooldownReduction), config.shruju.minGrowTime)
 end
 
 function ShrujuPatch:removeType(code)

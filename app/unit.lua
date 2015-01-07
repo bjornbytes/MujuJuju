@@ -314,7 +314,7 @@ function Unit:attack(options)
   self.ai.useAbilities(self)
   if not options.nosound then
     local sounds = data.media.sounds[self.class.code]
-    local sound = sounds.attackHit
+    local sound = sounds and sounds.attackHit
     if self.class.attackHitSoundCount then
       sound = sounds['attackHit' .. love.math.random(1, self.class.attackHitSoundCount)]
     end
