@@ -101,7 +101,12 @@ return {
         maxEnemiesCoefficient = .2,
         levelScale = 1,
         upgradeCostIncrease = 1,
-        maxElites = 1
+        maxElites = 1,
+        thresholds = {
+          duju = 0,
+          spuju = 180,
+          kuju = 600
+        }
       },
       shrujuPatches = {
         [1] = {

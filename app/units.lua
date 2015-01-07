@@ -10,8 +10,11 @@ end
 
 function Units:createEnemy()
   if self.enemyCount < 1 + self.level * config.biomes[ctx.biome].units.maxEnemiesCoefficient then
-    local enemies = config.enemies
-    local enemyType = enemies[love.math.random(1, #enemies)]
+    local choices = {}
+    table.each(config.biomes[ctx.biome].units.thresholds, function(time, code)
+      if ctx.timer >= time then table.insert(choices, code) end
+    end)
+    local enemyType = choices[love.math.random(1, #choices)]
     local x = love.math.random() < .5 and Unit.width / 2 or ctx.map.width - Unit.width / 2
     local eliteChance = config.elites.baseModifier + (config.elites.levelModifier * self.level)
     local eliteCount = table.count(self:filter(function(u) return u.elite end))
