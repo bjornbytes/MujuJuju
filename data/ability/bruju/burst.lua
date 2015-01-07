@@ -2,9 +2,9 @@ local Burst = extend(Ability)
 Burst.code = 'burst'
 
 function Burst:die()
-  local damage = 20 * self.unit:upgradeLevel('burst')
+  local damage = 25 * self.unit:upgradeLevel('burst')
   local range = 85 + (6 * self.unit:upgradeLevel('burst'))
-  local heal = 10 * self.unit:upgradeLevel('sanctuary')
+  local heal = 10 + 5 * self.unit:upgradeLevel('sanctuary')
 
   self:createSpell({
     damage = damage,

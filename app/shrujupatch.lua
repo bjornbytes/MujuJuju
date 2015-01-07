@@ -159,21 +159,6 @@ ShrujuEffects = {
       local p = ctx.players:get(ctx.id)
       p.flatCooldownReduction = p.flatCooldownReduction - 10
     end
-  },
-  theone = {
-    code = 'theone',
-    name = 'The One',
-    description = 'Take the red pill.',
-
-    activate = function(self)
-      local p = ctx.players:get(ctx.id)
-      p.invincible = p.invincible + 100
-    end,
-
-    deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
-      p.invincible = 0
-    end
   }
 }
 

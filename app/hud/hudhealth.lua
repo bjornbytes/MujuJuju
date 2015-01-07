@@ -237,10 +237,10 @@ function HudHealth:draw()
         --local y = math.round(yy + (j - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + 1.5))
         local _, _, hard, soft = unit:getHealthbar()
         g.setColor(color[1], color[2], color[3], 100 * unit.alpha)
-        g.draw(data.media.graphics.healthbarBar, xx, y, 0, hard * math.round(barWidth - 6 * scale), scale)
+        g.draw(data.media.graphics.healthbarBar, xx, y, 0, hard * barWidth, scale)
         if soft then
           g.setColor(color[1], color[2], color[3], 50)
-          g.draw(data.media.graphics.healthbarBar, xx, y, 0, soft * math.round(barWidth - 6 * scale), scale)
+          g.draw(data.media.graphics.healthbarBar, xx, y, 0, soft * barWidth, scale)
         end
 
         local elitebuffs = unit.buffs:buffsWithTag('elite')

@@ -41,7 +41,7 @@ function Units:update()
   self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
   if self.enemyCount == 0 and self.level > 1 then
-    self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, .75 * tickRate))
+    self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, 1 * tickRate))
   end
 
   self.level = self.level + (tickRate / (16 + self.level / 2)) * config.biomes[ctx.biome].units.levelScale

@@ -6,7 +6,7 @@ Kuju.description = 'Yay Kuju.'
 ----------------
 -- Stats
 ----------------
-Kuju.health = 60
+Kuju.health = 50
 Kuju.damage = 15
 Kuju.range = 140
 Kuju.attackSpeed = 1.45

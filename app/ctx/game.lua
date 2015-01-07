@@ -10,7 +10,7 @@ function Game:load(user, biome)
   end
   data.media.graphics.hud.minion:setMipmapFilter('linear', 1)
   data.media.graphics.hud.population:setMipmapFilter('linear', 1)
-
+  
   self.id = 1
   self.user = user
   self.biome = biome
@@ -189,8 +189,8 @@ function Game:distribute()
       rune.name = prefix .. ' ' .. rune.name
     end
 
-    local colors = config.runes.colors
-    rune.color = colors[love.math.random(1, #colors)]
+    local colors = table.keys(config.runes.colors)
+    rune.color = config.runes.colors[colors[love.math.random(1, #colors)]]
     rune.image = love.math.random(1, config.runes.imageCount)
     rune.background = runeLevel < 30 and 'broken' or 'normal'
 

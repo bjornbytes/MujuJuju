@@ -6,7 +6,7 @@ Bruju.description = 'Yay Bruju.'
 ----------------
 -- Stats
 ----------------
-Bruju.health = 80
+Bruju.health = 85
 Bruju.damage = 20
 Bruju.range = 32
 Bruju.attackSpeed = 1.15
@@ -43,15 +43,15 @@ Bruju.upgrades = {
     name = 'Fortify',
     description = 'Bruju is empowered with spiritual energy, increasing his maximum health.',
     values = {
-      [0] = '80 health',
-      [1] = '125 health',
-      [2] = '175 health',
-      [3] = '235 health',
+      [0] = '85 health',
+      [1] = '130 health',
+      [2] = '180 health',
+      [3] = '240 health',
       [4] = '300 health',
       [5] = '400 health'
     },
     apply = function(self, unit)
-      local healthIncreases = {[0] = 0, 45, 95, 155, 280, 380}
+      local healthIncreases = {[0] = 0, 45, 95, 145, 215, 315}
       local increase = healthIncreases[self.level]
       unit.health = unit.health + increase
       unit.maxHealth = unit.maxHealth + increase
@@ -59,15 +59,15 @@ Bruju.upgrades = {
   },
   burst = {
     level = 0,
-    costs = {50, 75, 100, 125, 150},
+    costs = {30, 60, 90, 120, 150},
     name = 'Burst',
     description = 'Bruju burst into a spirit flame on death, damaging nearby enemies.',
     values = {
-      [1] = '20 damage',
-      [2] = '40 damage',
-      [3] = '60 damage',
-      [4] = '80 damage',
-      [5] = '100 damage'
+      [1] = '25 damage',
+      [2] = '50 damage',
+      [3] = '75 damage',
+      [4] = '100 damage',
+      [5] = '125 damage'
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -77,7 +77,7 @@ Bruju.upgrades = {
   },
   siphon = {
     level = 0,
-    costs = {80, 160, 240},
+    costs = {100, 200, 300},
     prerequisites = {empower = 1, fortify = 1},
     name = 'Siphon',
     description = 'Bruju siphon life from their enemies with every strike, granting them lifesteal.',
@@ -94,14 +94,14 @@ Bruju.upgrades = {
   },
   sanctuary = {
     level = 0,
-    costs = {80, 160, 240},
+    costs = {100, 200, 300},
     prerequisites = {fortify = 1, burst = 1},
     name = 'Sanctuary',
     description = 'The spirit flame leaves behind an aura that slowly heals allies.',
     values = {
-      [1] = '10 hp/s for 3 seconds.',
+      [1] = '15 hp/s for 3 seconds.',
       [2] = '20 hp/s for 4 seconds.',
-      [3] = '30 hp/s for 5 seconds.'
+      [3] = '25 hp/s for 5 seconds.'
     }
   }
 }
