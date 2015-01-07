@@ -10,6 +10,12 @@ function Renew:apply()
   if shrine then
     shrine.health = math.min(shrine.health + shrine.maxHealth * .1, shrine.maxHealth)
   end
+
+  ctx.spells:add('arcadetext', {
+    text = 'shrine healed',
+    x = p.x,
+    y = p.y - 40
+  })
 end
 
 return Renew

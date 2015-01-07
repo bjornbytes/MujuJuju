@@ -14,6 +14,12 @@ function Rally:apply()
       patch:removeType('rally')
     end)
  end
+
+  ctx.spells:add('arcadetext', {
+    text = '+1 population',
+    x = p.x,
+    y = p.y - 40
+  })
 end
 
 return Rally

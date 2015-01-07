@@ -12,6 +12,12 @@ function Harvest:apply()
       patch:removeType('harvest')
     end)
   end
+
+  ctx.spells:add('arcadetext', {
+    text = '+5s shruju speed',
+    x = p.x,
+    y = p.y - 40
+  })
 end
 
 return Harvest
