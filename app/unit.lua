@@ -244,6 +244,13 @@ function Unit:draw()
   g.draw(self.backCanvas, x, y - lerpd.knockup, 0, 1, 1, 100, 100)
   g.setColor(255, 255, 255)
   self.animation:draw(x, y - lerpd.knockup, {noupdate = true})
+
+  if self.buffs:feared() then
+    g.setColor(255, 255, 255, 200 * self.alpha)
+    local image = data.media.graphics.fear
+    local scale = 40 / image:getHeight()
+    g.draw(image, self.x, self.y - self.height - 20, math.cos(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+  end
 end
 
 function Unit:getHealthbar()
