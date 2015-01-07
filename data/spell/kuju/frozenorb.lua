@@ -46,12 +46,14 @@ function FrozenOrb:update()
     self:deactivate()
   end
 
-  table.each(ctx.target:inRange(self, self.radius, 'enemy', 'unit'), function(target)
+  table.each(ctx.target:inRange(self, self.radius, 'enemy', 'unit', 'player'), function(target)
     if not self.damaged[target.viewId] then
-      target.buffs:add('slow', {
-        slow = self.slow,
-        timer = self.duration
-      })
+      if target.buffs then
+        target.buffs:add('slow', {
+          slow = self.slow,
+          timer = self.duration
+        })
+      end
       target:hurt(self.damage, unit)
       self.damaged[target.viewId] = true
     end

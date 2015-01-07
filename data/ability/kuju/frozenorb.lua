@@ -40,9 +40,11 @@ function FrozenOrb:activate()
 end
 
 function FrozenOrb:use()
-  self.unit.animation:set('frozenorb')
-  self.unit.casting = true
-  self.timer = self.cooldown
+  if self.unit.target and not isa(self.unit.target, Shrine) then
+    self.unit.animation:set('frozenorb')
+    self.unit.casting = true
+    self.timer = self.cooldown
+  end
 end
 
 return FrozenOrb
