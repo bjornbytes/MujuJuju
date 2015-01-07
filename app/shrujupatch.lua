@@ -104,6 +104,7 @@ end
 function ShrujuPatch:update()
   self.timer = timer.rot(self.timer, function()
     self:makeShruju()
+    ctx.sound:play('shrujuSpawn')
   end)
 
   self.prevHighlight = self.highlight

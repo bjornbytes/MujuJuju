@@ -50,13 +50,21 @@ function UnitBuffs:postupdate()
     attackSpeed = attackSpeed + attackSpeed * (1 - exhaust.exhaust)
   end)
 
+  self.unit.attackSpeed = attackSpeed
+
   -- Apply DoTs
   local dots = self:buffsWithTag('dot')
   table.each(dots, function(dot)
     self.unit:hurt(dot.dot * tickRate)
   end)
 
-  self.unit.attackSpeed = attackSpeed
+  -- Apply Knockups
+  self.unit.prev.knockup = self.unit.knockup
+  self.unit.knockup = 0
+  local knockups = self:buffsWithTag('knockup')
+  table.each(knockups, function(knockup)
+    self.unit.knockup = self.unit.knockup + knockup.knockup
+  end)
 end
 
 function UnitBuffs:add(code, vars)

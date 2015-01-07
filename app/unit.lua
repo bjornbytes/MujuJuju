@@ -108,13 +108,14 @@ function Unit:activate()
   self.channeling = false
   self.spawning = true
   self.droppedJuju = false
+  self.knockup = 0
 
   table.each(self.class.upgrades, function(upgrade)
     f.exe(upgrade.apply, upgrade, self)
   end)
 
   table.each(self.class.startingAbilities, function(ability)
-    --
+    self:addAbility(ability)
   end)
 
   self.range = self.range + love.math.random(-10, 10)
@@ -141,6 +142,7 @@ function Unit:update()
   self.prev.x = self.x
   self.prev.y = self.y
   self.prev.health = self.health
+  self.prev.knockup = self.knockup
 
   self.alpha = math.lerp(self.alpha, self.dying and 0 or 1, math.min(10 * tickRate, 1))
 
@@ -151,6 +153,7 @@ function Unit:update()
     self.animation:set('death', {force = true})
     self.animation.speed = 1
     self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * tickRate, 1))
+    self.buffs:postupdate()
     return
   end
 
@@ -229,9 +232,9 @@ function Unit:draw()
   g.setShader()
   
   g.setColor(255, 255, 255, 128 * self.alpha)
-  g.draw(self.backCanvas, self.x, self.y, 0, 1, 1, 100, 100)
+  g.draw(self.backCanvas, x, y - lerpd.knockup, 0, 1, 1, 100, 100)
   g.setColor(255, 255, 255)
-  self.animation:draw(self.x, self.y, {noupdate = true})
+  self.animation:draw(x, y - lerpd.knockup, {noupdate = true})
 end
 
 function Unit:getHealthbar()

@@ -1,55 +1,38 @@
 local Headbutt = extend(Ability)
 Headbutt.code = 'headbutt'
 
-----------------
--- Meta
-----------------
-Headbutt.name = 'Headbutt'
-Headbutt.description = table.concat({
-  'Duju\'s next attack transforms into a powerful headbutt.',
-  'This attack deals extra damage and knocks the target back a short distance.',
-  'Deals %structureDamageModifier more damage to structures than a normal attack.'
-}, ' ')
 
 ----------------
 -- Data
 ----------------
 Headbutt.cooldown = 5
-
-Headbutt.damageModifier = 1
-Headbutt.knockbackDistance = 150
-Headbutt.structureDamageModifier = .3
+Headbutt.knockbackDistance = 100
+Headbutt.damageModifier = 1.5
 
 
 ----------------
 -- Behavior
 ----------------
-function Headbutt:use()
-  self.unit.buffs:add('headbutt', {
-    ability = self
-  })
+function Headbutt:activate()
+  self.unit.animation:on('event', function(event)
+    if event.data.name == 'headbutt' then
+      local targets = ctx.target:inRange(self.unit, 100, 'enemy', 'unit')
+      local count = table.count(targets)
+      local damage = (self.unit.damage * self.damageModifier) / count
+      table.each(targets, function(target)
+        if math.sign(target.x - self.unit.x) == self:getUnitDirection() then
+          target.buffs:add('headbutt', {offset = self.knockbackDistance * self:getUnitDirection()})
+          target:hurt(damage, self.unit)
+        end
+      end)
+    end
+  end)
 end
 
-
-----------------
--- Upgrades
-----------------
-local Bash = {}
-Bash.name = 'Bash'
-Bash.code = 'bash'
-Bash.knockModifier = .5
-Bash.stunDuration = 1
-Bash.description = 'Duju knocks enemies back %knockModifier further and stuns them for $stunDuration seconds.'
-
-local RazorHorns = {}
-RazorHorns.name = 'RazorHorns'
-RazorHorns.code = 'razorhorns'
-RazorHorns.dot = 25
-RazorHorns.slowAmount = .5
-RazorHorns.duration = 3
-RazorHorns.description = 'Headbutted enemies are impaled, causing them to take $dot damage per second and move %slowAmount slower for $duration second$s.'
-
-Headbutt.upgrades = {Bash, RazorHorns}
+function Headbutt:use()
+  self.unit.animation:set('headbutt')
+  self.unit.casting = true
+  self.timer = self.cooldown
+end
 
 return Headbutt
-

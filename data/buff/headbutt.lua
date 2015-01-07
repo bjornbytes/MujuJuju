@@ -1,28 +1,24 @@
 local Headbutt = extend(Buff)
 Headbutt.code = 'headbutt'
 Headbutt.name = 'Headbutt'
-Headbutt.tags = {}
+Headbutt.tags = {'knockback', 'knockup'}
 
-function Headbutt:postattack(target, damage)
-  local modifier = self.ability.damageModifier
-  local structure = target.code == 'shrine'
+function Headbutt:activate()
+  self.base = math.abs(self.offset)
+end
 
-  if structure then
-    modifier = self.ability.structureDamageModifier
-  else
-    local offset = self.ability.knockbackDistance
+function Headbutt:update()
+  local sign = math.sign(self.offset)
+  local knockbackFactor = math.max(math.abs(self.offset) / self.base, .5) * 600 * tickRate
+  local amount = knockbackFactor
 
-    if self.ability:hasUpgrade('bash') then
-      offset = self.ability.knockbackDistance + self.ability.knockbackDistance * self.ability.upgrades.bash.knockbackModifier
-    end
+  self.unit.x = self.unit.x + amount * sign
 
-    if target.buffs then target.buffs:add('headbuttknockback', {offset = offset, ability = self.ability}) end
-  end
+  local knockupFactor = 1 - (2 * math.abs(.5 - math.abs(self.offset / self.base)))
+  self.knockup = knockupFactor * 25
 
-  local damage = self.unit.damage * modifier
-  target:hurt(damage + damage * modifier, self.unit)
-
-  self.unit.buffs:remove(self)
+  self.offset = self.offset - math.min(math.abs(amount * sign), math.abs(self.offset)) * math.sign(self.offset)
+  if self.offset == 0 then self.unit.buffs:remove(self) end
 end
 
 return Headbutt
