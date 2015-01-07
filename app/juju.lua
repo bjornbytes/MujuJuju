@@ -32,7 +32,7 @@ function Juju:update()
 		self.scale = math.lerp(self.scale, .1, 5 * tickRate)
 		if math.distance(self.x, self.y, tx, ty) < 16 then
 			ctx.jujus:remove(self)
-			p.juju = p.juju + self.amount
+      p:addJuju(self.amount)
 			ctx.hud.status.jujuScale = 2
       ctx.hud.status.jujuAngle = 0
       ctx.particles:emit('jujusex', self.x, self.y, 30, {speed = {80, 100}})

@@ -26,6 +26,7 @@ function Player:init()
   self.deathTimer = 0
 
   self.juju = config.player.baseJuju
+  self.totalJuju = 0
   self.jujuTimer = config.player.jujuRate
   self.jujuRate = config.player.jujuRate
 
@@ -36,6 +37,7 @@ function Player:init()
 
 	self.selected = 1
   self.maxPopulation = config.player.basePopulation
+  self.totalSummoned = 0
 	self.recentSelect = 0
 	self.invincible = 0
   self.flatCooldownReduction = 0
@@ -93,7 +95,7 @@ function Player:update()
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
 	self.jujuTimer = timer.rot(self.jujuTimer, function()
-		self.juju = self.juju + 1
+    self:addJuju(1)
 		return self.jujuRate
 	end)
 
@@ -200,6 +202,7 @@ function Player:summon()
 	local cost = data.unit[minion].cost
 	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(cost) then
 		ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
+    self.totalSummoned = self.totalSummoned + 1
 
     for i = 1, #self.deck do
       if i == self.selected then
@@ -239,6 +242,11 @@ function Player:spend(amount)
   end
 
   return false
+end
+
+function Player:addJuju(amount)
+  self.juju = self.juju + amount
+  self.totalJuju = self.totalJuju + amount
 end
 
 function Player:hurt(amount, source)

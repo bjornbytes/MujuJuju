@@ -35,7 +35,7 @@ end
 function Hud:update()
   local p = ctx.players:get(ctx.id)
 
-  local tooltipStr = self.tooltip.tooltipText
+  local oldTitle = self.tooltip.tooltipText and self.tooltip.tooltipText:sub(1, self.tooltip.tooltipText:find('\n'))
 
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
@@ -49,7 +49,8 @@ function Hud:update()
   self.units:update()
   table.with(self.shrujuPatches, 'update')
 
-  if self.tooltip.active and tooltipStr ~= self.tooltip.tooltipText then
+  local newTitle = self.tooltip.tooltipText and self.tooltip.tooltipText:sub(1, self.tooltip.tooltipText:find('\n'))
+  if self.tooltip.active and oldTitle ~= newTitle then
     ctx.sound:play('menuHover', function(sound) sound:setVolume(2) end)
   end
 

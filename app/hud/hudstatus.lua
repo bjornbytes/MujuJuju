@@ -9,6 +9,9 @@ function HudStatus:init()
   self.maxPopFactor = 0
   self.jujuAngle = 2 * math.pi
 
+  self.jjpm = 0
+  self.jjpmTimer = 1
+
   self.prev = {}
   for _, k in pairs({'jujuScale', 'populationScale', 'clockScale', 'populationr', 'populationg', 'populationb', 'jujuAngle', 'maxPopFactor'}) do
     self.prev[k] = self[k]
@@ -41,11 +44,16 @@ function HudStatus:update()
     self.clockScale = 2
   end
 
+  self.jjpmTimer = timer.rot(self.jjpmTimer, function()
+    self.jjpm = math.round((p.totalJuju / (ctx.timer * tickRate / 60)) / .1) * .1
+    return .5
+  end)
+
   local mx, my = love.mouse.getPosition()
   if math.inside(mx, my, unpack(self.hitboxes.juju)) then
-    ctx.hud.tooltip:setTooltip('{white}{title}Juju{normal}\nUse it to summon minions and purchase upgrades.  Collect it in the juju realm.')
+    ctx.hud.tooltip:setTooltip('{white}{title}Juju{normal}\nUse it to summon minions and purchase upgrades.  Collect it in the juju realm.\n\n{green}' .. p.totalJuju .. ' {white}total juju ({green}' .. self.jjpm .. ' {white}per minute)')
   elseif math.inside(mx, my, unpack(self.hitboxes.population)) then
-    ctx.hud.tooltip:setTooltip('{white}{title}Population{normal}\nThe maximum number of minions you may summon at once.')
+    ctx.hud.tooltip:setTooltip('{white}{title}Population{normal}\nThe maximum number of minions you may summon at once.\n\n{green}' .. p.totalSummoned .. ' {white}minion' .. (p.totalSummoned == 1 and '' or 's') .. ' summoned.')
   elseif math.inside(mx, my, unpack(self.hitboxes.timer)) then
     ctx.hud.tooltip:setTooltip('{white}{title}Timer{normal}\nHow long you\'ve lasted.  Survive for a long time to unlock rewards!')
   end
