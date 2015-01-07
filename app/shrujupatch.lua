@@ -212,7 +212,9 @@ function ShrujuPatch:draw()
     slot.a = highlight / 255
     slot.data.additiveBlending = true
   end)
+
   self.animation:draw(self.x, self.y)
+
   table.each(self.animation.spine.skeleton.slots, function(slot)
     slot.a = 1
     slot.data.additiveBlending = false

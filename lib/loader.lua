@@ -74,12 +74,15 @@ data.load = function()
   end)
   load('data/unit', 'unit', function(unit)
     if data.media.sounds[unit.code] and data.media.sounds[unit.code]['attackHit1'] then
-      for i = 2, 100 do
-        if not data.media.sounds[unit.code]['attackHit' .. i] then
-          unit.attackHitSoundCount = i - 1
+      local sounds = {}
+      for i = 1, 100 do
+        if data.media.sounds[unit.code]['attackHit' .. i] then
+          table.insert(sounds, 'media/sounds/' .. unit.code .. '/attackHit' .. i .. '.ogg')
+        else
           break
         end
       end
+      data.media.sounds[unit.code].attackHit = love.audio.newSource(sounds)
     end
   end)
   load('data/spell', 'spell')

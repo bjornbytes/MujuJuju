@@ -132,6 +132,7 @@ function Unit:activate()
   self.backCanvas = g.newCanvas(200, 200)
   self.canvas = g.newCanvas(200, 200)
   self.alpha = 0
+  self.hurtGlow = 0
 
   local r = love.math.random(0, 20)
   self.y = self.y + r
@@ -152,6 +153,7 @@ function Unit:update()
   self.prev.knockup = self.knockup
 
   self.alpha = math.lerp(self.alpha, self.dying and 0 or 1, math.min(10 * tickRate, 1))
+  self.hurtGlow = math.lerp(self.hurtGlow, 0, 10 * tickRate)
 
   if self.dying then
     self.channeling = false
@@ -244,6 +246,19 @@ function Unit:draw()
   g.draw(self.backCanvas, x, y - lerpd.knockup, 0, 1, 1, 100, 100)
   g.setColor(255, 255, 255)
   self.animation:draw(x, y - lerpd.knockup, {noupdate = true})
+
+  if self.hurtGlow > .01 then
+    table.each(self.animation.spine.skeleton.slots, function(slot)
+      slot.a = self.hurtGlow
+      slot.data.additiveBlending = true
+    end)
+    self.animation:draw(x, y - lerpd.knockup, {noupdate = true})
+    table.each(self.animation.spine.skeleton.slots, function(slot)
+      slot.a = 1
+      slot.data.additiveBlending = false
+    end)
+    g.setBlendMode('alpha')
+  end
 
   if self.buffs:feared() then
     g.setColor(255, 255, 255, 150 * self.alpha)
@@ -367,12 +382,7 @@ function Unit:attack(options)
   self:abilityCall('postattack', target, amount)
   self.buffs:postattack(target, amount)
   if not options.nosound then
-    local sounds = data.media.sounds[self.class.code]
-    local sound = sounds and sounds.attackHit
-    if self.class.attackHitSoundCount then
-      sound = sounds['attackHit' .. love.math.random(1, self.class.attackHitSoundCount)]
-    end
-    ctx.sound:play(sound, function(sound)
+    ctx.sound:play(data.media.sounds[self.class.code].attackHit, function(sound)
       sound:setVolume(.4)
     end)
   end
@@ -410,6 +420,10 @@ function Unit:hurt(amount, source, kind)
      sound:setVolume(.4)
     end)
     self.dying = true
+  end
+
+  if amount > 5 then
+    self.hurtGlow = .2
   end
 
   return amount
