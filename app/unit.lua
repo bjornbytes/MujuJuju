@@ -113,12 +113,17 @@ function Unit:activate()
     f.exe(upgrade.apply, upgrade, self)
   end)
 
+  table.each(self.class.startingAbilities, function(ability)
+    --
+  end)
+
   self.range = self.range + love.math.random(-10, 10)
 
   self.healthDisplay = self.health
   self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
   self.backCanvas = g.newCanvas(200, 200)
   self.canvas = g.newCanvas(200, 200)
+  self.alpha = 0
 
   local r = love.math.random(0, 20)
   self.y = self.y + r
@@ -136,6 +141,8 @@ function Unit:update()
   self.prev.x = self.x
   self.prev.y = self.y
   self.prev.health = self.health
+
+  self.alpha = math.lerp(self.alpha, self.dying and 0 or 1, math.min(10 * tickRate, 1))
 
   if self.dying then
     self.channeling = false
@@ -174,15 +181,23 @@ function Unit:draw()
   local lerpd = table.interpolate(self.prev, self, tickDelta / tickRate)
   local x, y, health = lerpd.x, lerpd.y, lerpd.health
 
-  if self.team == ctx.players:get(ctx.id).team then
-    self.canvas:clear(0, 255, 0, 0)
-    self.backCanvas:clear(0, 255, 0, 0)
-    g.setColor(0, 255, 0)
+  local r, gg, b
+  local max = self.player and self.class.health or self.maxHealth
+  if lerpd.healthDisplay > max then
+    local prc = (self.maxHealth - lerpd.healthDisplay) / (self.maxHealth - max)
+    r = math.lerp(128, 0, prc)
+    gg = math.lerp(0, 255, prc)
+    b = math.lerp(255, 0, prc)
   else
-    self.canvas:clear(255, 0, 0, 0)
-    self.backCanvas:clear(255, 0, 0, 0)
-    g.setColor(255, 0, 0)
+    local prc = math.min(lerpd.healthDisplay / self.class.health, 1)
+    r = math.lerp(255, 0, prc)
+    gg = math.lerp(0, 255, prc)
+    b = math.lerp(0, 0, prc)
   end
+
+  self.canvas:clear(r, gg, b, 0)
+  self.backCanvas:clear(r, gg, b, 0)
+  g.setColor(r, gg, b)
 
   local shader = data.media.shaders.colorize
   self.canvas:renderTo(function()
@@ -191,11 +206,10 @@ function Unit:draw()
     g.setShader()
   end)
 
-  local selected = true
-  data.media.shaders.horizontalBlur:send('amount', selected and .003 or .002)
-  data.media.shaders.verticalBlur:send('amount', selected and .003 or .002)
+  data.media.shaders.horizontalBlur:send('amount', .001)
+  data.media.shaders.verticalBlur:send('amount', .001)
   g.setColor(255, 255, 255)
-  for i = 1, 3 do
+  for i = 1, 1 do
     g.setShader(data.media.shaders.horizontalBlur)
     self.backCanvas:renderTo(function()
       g.draw(self.canvas)
@@ -206,11 +220,18 @@ function Unit:draw()
     end)
   end
 
+  g.setShader(data.media.shaders.colorize)
+  g.setColor(r, gg, b)
+  self.backCanvas:clear(r, gg, b, 0)
+  self.backCanvas:renderTo(function()
+    g.draw(self.canvas)
+  end)
   g.setShader()
-  g.setColor(255, 255, 255, 128)
-  g.draw(self.canvas, x, y, 0, 1, 1, 100, 100)
+  
+  g.setColor(255, 255, 255, 128 * self.alpha)
+  g.draw(self.backCanvas, self.x, self.y, 0, 1, 1, 100, 100)
   g.setColor(255, 255, 255)
-  self.animation:draw(x, y, {noupdate = true})
+  self.animation:draw(self.x, self.y, {noupdate = true})
 end
 
 function Unit:getHealthbar()

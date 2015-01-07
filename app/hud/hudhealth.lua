@@ -15,7 +15,7 @@ local function bar(x, y, hard, soft, color, width, height)
   x, y = ctx.view:screenPoint(x, y)
   width = width * ctx.view.scale
 
-  g.setColor(255, 255, 255)
+  g.setColor(255, 255, 255, 80)
   local w, h = data.media.graphics.healthbarFrame:getDimensions()
   local scale = width / w
   local xx = math.round(x - width / 2)
@@ -27,17 +27,17 @@ local function bar(x, y, hard, soft, color, width, height)
   yy = yy + math.round(3 * scale)
 
   local barHeight = data.media.graphics.healthbarGradient:getHeight()
-  g.setColor(color[1], color[2], color[3], 200)
+  g.setColor(color[1], color[2], color[3], 100)
   g.draw(data.media.graphics.healthbarBar, xx, yy, 0, hard * math.round(width - 6 * scale), scale)
 
   if soft then
-    g.setColor(color[1], color[2], color[3], 100)
+    g.setColor(color[1], color[2], color[3], 50)
     g.draw(data.media.graphics.healthbarBar, xx, yy, 0, soft * math.round(width - 6 * scale), scale)
   end
 
   g.setBlendMode('additive')
   g.setColor(255, 255, 255, 180)
-	g.draw(data.media.graphics.healthbarGradient, xx, yy, 0, 1 * math.round(width - 6 * scale), scale)
+	--g.draw(data.media.graphics.healthbarGradient, xx, yy, 0, 1 * math.round(width - 6 * scale), scale)
   g.setBlendMode('alpha')
 end
 
@@ -116,7 +116,7 @@ function HudHealth:update()
   local w, h = frame:getDimensions()
   local scale = 80 / w
   ctx.units:each(function(unit)
-    local startY = math.round(ctx.map.height - ctx.map.groundHeight - unit.height * 2 + (h * scale) + 1.5)
+    local startY = math.round(ctx.map.height - ctx.map.groundHeight - unit.height * 2 + (h * scale) + .5)
     self.unitBarY[unit] = self.unitBarY[unit] or startY
   end)
 
@@ -134,10 +134,10 @@ function HudHealth:update()
       end
     end
 
-    local targetY = math.round(ctx.map.height - ctx.map.groundHeight - unit.height * 2 - (binIndex - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + 1.5))
+    local targetY = math.round(ctx.map.height - ctx.map.groundHeight - unit.height * 2 - (binIndex - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + .5))
     targetY = targetY - (self.bins[unit.class.code][self.unitBins[unit]].offsetY or 0)
     self.unitBarPrevY[unit] = self.unitBarY[unit] or startY
-    self.unitBarY[unit] = self.unitBarY[unit] and math.lerp(self.unitBarY[unit], targetY, math.min(10 * tickRate, 1)) or startY
+    self.unitBarY[unit] = self.unitBarY[unit] and math.lerp(self.unitBarY[unit], targetY, math.min(200 * tickRate, 1)) or startY
   end)
 end
 
@@ -211,7 +211,6 @@ function HudHealth:draw()
       x, y = ctx.view:screenPoint(x, y)
       width = width * ctx.view.scale
 
-      g.setColor(255, 255, 255)
       local frame = data.media.graphics.healthbarFrame
       local w, h = frame:getDimensions()
       local scale = width / w
@@ -221,6 +220,7 @@ function HudHealth:draw()
       for j = 1, #bin.units do
         local unit = bin.units[j]
         local barY = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], tickDelta / tickRate)
+        g.setColor(255, 255, 255, 80 * bin.units[j].alpha)
         g.draw(frame, xx, barY, 0, scale, scale)
       end
 
@@ -229,16 +229,16 @@ function HudHealth:draw()
 
       local barWidth = math.round(width - 6 * scale)
       local barHeight = data.media.graphics.healthbarGradient:getHeight()
-      g.setColor(color[1], color[2], color[3], 200)
 
       for j = 1, #bin.units do
+        g.setColor(color[1], color[2], color[3], 200 * bin.units[j].alpha)
         local y = self.unitBarY[bin.units[j]] + math.round(3 * scale)
         --local y = math.round(yy + (j - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + 1.5))
         local _, _, hard, soft = bin.units[j]:getHealthbar()
-        g.setColor(color[1], color[2], color[3], 200)
+        g.setColor(color[1], color[2], color[3], 100 * bin.units[j].alpha)
         g.draw(data.media.graphics.healthbarBar, xx, y, 0, hard * math.round(barWidth - 6 * scale), scale)
         if soft then
-          g.setColor(color[1], color[2], color[3], 100)
+          g.setColor(color[1], color[2], color[3], 50)
           g.draw(data.media.graphics.healthbarBar, xx, y, 0, soft * math.round(barWidth - 6 * scale), scale)
         end
       end
@@ -247,7 +247,7 @@ function HudHealth:draw()
       for j = 1, #bin.units do
         local y = self.unitBarY[bin.units[j]] + math.round(3 * scale)
         g.setColor(255, 255, 255, 180)
-        g.draw(data.media.graphics.healthbarGradient, xx, y, 0, 1 * math.round(width - 6 * scale), scale)
+        --g.draw(data.media.graphics.healthbarGradient, xx, y, 0, 1 * math.round(width - 6 * scale), scale)
       end
       g.setBlendMode('alpha')
     end)

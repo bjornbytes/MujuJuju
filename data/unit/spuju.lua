@@ -17,4 +17,6 @@ Spuju.damageScaling = {1.1, .9}
 
 Spuju.attackSpell = 'spujuskull'
 
+Spuju.startingAbilities = {'fear'}
+
 return Spuju
