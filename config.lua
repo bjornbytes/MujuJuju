@@ -291,7 +291,10 @@ return {
       'Legendary'
     },
     colors = {
-      purple = {255, 255, 255}
+      purple = {100, 0, 200},
+      green = {100, 200, 100},
+      blue = {100, 100, 200},
+      red = {200, 100, 100}
     }
   },
 
