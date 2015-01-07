@@ -12,7 +12,7 @@ function Units:createEnemy()
   if self.enemyCount < 1 + self.level * config.biomes[ctx.biome].units.maxEnemiesCoefficient then
     local choices = {}
     table.each(config.biomes[ctx.biome].units.thresholds, function(time, code)
-      if ctx.timer >= time then table.insert(choices, code) end
+      if ctx.timer * tickRate >= time then table.insert(choices, code) end
     end)
     local enemyType = choices[love.math.random(1, #choices)]
     local x = love.math.random() < .5 and Unit.width / 2 or ctx.map.width - Unit.width / 2
