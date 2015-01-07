@@ -123,12 +123,20 @@ function GhostPlayer:draw()
 	end
 	scale = .4 + scale * .4
 	local alphaScale = math.min(self.owner.deathTimer * 6 / maxJuju, 1)
-	g.setColor(255, 255, 255, 30 * alpha * alphaScale)
-	g.draw(self.image, x, y, self.angle, 1 * scale, 1 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
-	g.setColor(255, 255, 255, 75 * alpha * alphaScale)
-	g.draw(self.image, x, y, self.angle, .75 * scale, .75 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
-	g.setColor(255, 255, 255, 200 * alpha * alphaScale)
+  local color = {128, 0, 255}
+  color = table.interpolate(color, {255, 255, 255}, .5)
+  color[4] = 200 * alpha * alphaScale
+	g.setColor(color)
 	g.draw(self.image, x, y, self.angle, .6 * scale, .6 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
+
+  g.setBlendMode('additive')
+  color[4] = 75 * alpha * alphaScale
+	g.setColor(color)
+	g.draw(self.image, x, y, self.angle, .75 * scale, .75 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
+  color[4] = 30 * alpha * alphaScale
+	g.setColor(color)
+	g.draw(self.image, x, y, self.angle, 1 * scale, 1 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
+  g.setBlendMode('alpha')
 
 	g.setColor(255, 255, 255, 15)
 	g.arc('fill', self.owner.x, self.owner.y + self.owner.height, self.maxDis, 0, -math.pi, self.maxDis / 2)
