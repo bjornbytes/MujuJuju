@@ -9,7 +9,7 @@ Thuju.description = 'Yay Thuju.'
 Thuju.health = 150
 Thuju.damage = 15
 Thuju.range = 32
-Thuju.attackSpeed = 1.3
+Thuju.attackSpeed = 1.15
 Thuju.speed = 35
 
 Thuju.cost = 12

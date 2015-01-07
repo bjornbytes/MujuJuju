@@ -9,7 +9,7 @@ Bruju.description = 'Yay Bruju.'
 Bruju.health = 80
 Bruju.damage = 20
 Bruju.range = 32
-Bruju.attackSpeed = 1.3
+Bruju.attackSpeed = 1.15
 Bruju.speed = 45
 
 Bruju.cost = 12
