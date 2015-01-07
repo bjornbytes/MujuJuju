@@ -99,6 +99,9 @@ function Unit:activate()
     scale('damage')
   end
 
+  self.health = self.health + config.units.baseHealthScaling * (ctx.timer * tickRate / 60)
+  self.damage = self.damage + config.units.baseDamageScaling * (ctx.timer * tickRate / 60)
+
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
   self.maxHealth = self.health
@@ -173,6 +176,8 @@ function Unit:update()
   if self.animation.state.name == 'attack' then
     local current = self.animation.spine.animationState:getCurrent(0)
     if current then self.animation.speed = current.endTime / self.class.attackSpeed end
+  elseif self.animation.state.name == 'walk' then
+    self.animation.speed = self.speed / self.class.speed
   else
     self.animation.speed = 1
   end

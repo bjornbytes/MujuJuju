@@ -29,8 +29,8 @@ function Units:createEnemy()
       unit.buffs:add(buff, config.elites.buffs[buff])
     end
 
-    self.minEnemyRate = math.max(self.minEnemyRate - .055 * math.clamp(self.minEnemyRate / 5, .1, .4), 1.4)
-    self.maxEnemyRate = math.max(self.maxEnemyRate - .03 * math.clamp(self.maxEnemyRate / 4, .1, .4), 2.75)
+    self.minEnemyRate = math.max(self.minEnemyRate - .055 * math.clamp(self.minEnemyRate / 5, .1, .6), 1.4)
+    self.maxEnemyRate = math.max(self.maxEnemyRate - .03 * math.clamp(self.maxEnemyRate / 4, .2, .8), 2.75)
   end
 
   return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)

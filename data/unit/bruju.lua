@@ -78,7 +78,7 @@ Bruju.upgrades = {
   siphon = {
     level = 0,
     costs = {80, 160, 240},
-    prerequisites = {empower = 3, fortify = 3},
+    prerequisites = {empower = 1, fortify = 1},
     name = 'Siphon',
     description = 'Bruju siphon life from their enemies with every strike, granting them lifesteal.',
     values = {
@@ -95,7 +95,7 @@ Bruju.upgrades = {
   sanctuary = {
     level = 0,
     costs = {80, 160, 240},
-    prerequisites = {fortify = 3, burst = 3},
+    prerequisites = {fortify = 1, burst = 1},
     name = 'Sanctuary',
     description = 'The spirit flame leaves behind an aura that slowly heals allies.',
     values = {

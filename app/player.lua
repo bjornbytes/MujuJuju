@@ -42,6 +42,7 @@ function Player:init()
 	self.invincible = 0
   self.flatCooldownReduction = 0
   self.ghostSpeedMultiplier = 1
+  self.summonBuffs = {}
 
 	local joysticks = love.joystick.getJoysticks()
 	for _, joystick in ipairs(joysticks) do
@@ -201,8 +202,12 @@ function Player:summon()
   local population = self:getPopulation()
 	local cost = data.unit[minion].cost
 	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(cost) then
-		ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
+		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
     self.totalSummoned = self.totalSummoned + 1
+
+    table.each(self.summonBuffs, function(code)
+      unit.buffs:add(code)
+    end)
 
     for i = 1, #self.deck do
       if i == self.selected then
@@ -230,7 +235,7 @@ function Player:animate()
   if self.dead then return end
 
   self.animation:set(math.abs(self.speed) > self.walkSpeed / 2 and 'walk' or 'idle')
-  self.animation.speed = self.animation.state.name == 'walk' and math.max(math.abs(self.speed / self.walkSpeed), .4) or 1
+  self.animation.speed = self.animation.state.name == 'walk' and math.max(math.abs(self.speed / Player.walkSpeed), .4) or 1
 
 	if self.speed ~= 0 then self.animation.flipped = math.sign(self.speed) > 0 end
 end

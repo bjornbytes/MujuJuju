@@ -66,7 +66,7 @@ return {
   shruju = {
     growTime = 60,
     minGrowTime = 10,
-    harvestCooldownReduction = 6,
+    harvestCooldownReduction = 5,
     magicDuration = 90
   },
 
@@ -85,8 +85,8 @@ return {
       },
       juju = {
         minimum = {
-          base = 10,
-          exponent = .85,
+          base = 12,
+          exponent = .8,
           coefficient = .75
         },
         maximum = {
@@ -98,9 +98,9 @@ return {
       units = {
         minEnemyRate = 8,
         maxEnemyRate = 12,
-        maxEnemiesCoefficient = .2,
+        maxEnemiesCoefficient = .4,
         levelScale = 1,
-        upgradeCostIncrease = 1,
+        upgradeCostIncrease = 2,
         maxElites = 1,
         thresholds = {
           duju = 0,
@@ -137,8 +137,8 @@ return {
       },
       juju = {
         minimum = {
-          base = 10,
-          exponent = .85,
+          base = 12,
+          exponent = .8,
           coefficient = .75
         },
         maximum = {
@@ -150,9 +150,9 @@ return {
       units = {
         minEnemyRate = 6,
         maxEnemyRate = 9,
-        maxEnemiesCoefficient = .4,
+        maxEnemiesCoefficient = .5,
         levelScale = 1.25,
-        upgradeCostIncrease = 2,
+        upgradeCostIncrease = 3,
         maxElites = 1
       },
       shrujuPatches = {
@@ -183,8 +183,8 @@ return {
       },
       juju = {
         minimum = {
-          base = 10,
-          exponent = .85,
+          base = 12,
+          exponent = .8,
           coefficient = .75
         },
         maximum = {
@@ -198,7 +198,7 @@ return {
         maxEnemyRate = 9,
         maxEnemiesCoefficient = .6,
         levelScale = 1.5,
-        upgradeCostIncrease = 3,
+        upgradeCostIncrease = 4,
         maxElites = 2
       },
       shrujuPatches = {
@@ -229,8 +229,8 @@ return {
       },
       juju = {
         minimum = {
-          base = 10,
-          exponent = .85,
+          base = 12,
+          exponent = .8,
           coefficient = .75
         },
         maximum = {
@@ -242,9 +242,9 @@ return {
       units = {
         minEnemyRate = 6,
         maxEnemyRate = 8,
-        maxEnemiesCoefficient = .8,
+        maxEnemiesCoefficient = .7,
         levelScale = 2,
-        upgradeCostIncrease = 4,
+        upgradeCostIncrease = 5,
         maxElites = 3
       },
       shrujuPatches = {
@@ -305,6 +305,11 @@ return {
       blue = {100, 100, 200},
       red = {200, 100, 100}
     }
+  },
+
+  units = {
+    baseHealthScaling = 3,
+    baseDamageScaling = 3
   },
 
   defaultUser = {
