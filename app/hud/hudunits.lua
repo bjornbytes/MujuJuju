@@ -68,6 +68,11 @@ function HudUnits:update()
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.selected == i and 1 or 0, 8 * tickRate)
 	end
 
+	for i = 1, #self.cooldownPop do
+    self.prevCooldownPop[i] = self.cooldownPop[i]
+		self.cooldownPop[i] = math.lerp(self.cooldownPop[i], 0, 12 * tickRate)
+	end
+
   -- TODO clean up rune tooltips
   local u, v = ctx.hud.u, ctx.hud.v
   local ct = self.count
@@ -133,6 +138,12 @@ function HudUnits:draw()
     g.draw(title, xx, yy + (10 * scale), 0, scale, scale, title:getWidth() / 2, 0)
     g.setColor(255, 255, 255, 255 * alpha)
     g.draw(title, titlex, yy + (10 * scale), 0, scale * (1 - (p.deck[i].cooldown / p.deck[i].maxCooldown)), scale)
+
+    local cooldownPop = math.lerp(self.prevCooldownPop[i], self.cooldownPop[i], tickDelta / tickRate)
+    g.setBlendMode('additive')
+    g.setColor(255, 255, 255, 200 * cooldownPop)
+    g.draw(title, xx, yy + (10 * scale), 0, scale, scale, title:getWidth() / 2, 0)
+    g.setBlendMode('alpha')
 
     -- Animation
     self.canvas[i]:clear(0, 0, 0, 0)
@@ -247,6 +258,8 @@ function HudUnits:ready()
   self.count = #p.deck
   self.selectFactor = {}
   self.prevSelectFactor = {}
+  self.cooldownPop = {}
+  self.prevCooldownPop = {}
   self.animations = {}
   self.canvas = {}
 
@@ -263,6 +276,8 @@ function HudUnits:ready()
   for i = 1, self.count do
     self.selectFactor[i] = 0
     self.prevSelectFactor[i] = self.selectFactor[i]
+    self.cooldownPop[i] = 0
+    self.prevCooldownPop[i] = self.cooldownPop[i]
     local code = p.deck[i].code
     local animation = data.animation[code]
     local scale = animation.scale * animationScaleFactors[code]

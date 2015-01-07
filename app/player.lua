@@ -107,7 +107,9 @@ function Player:update()
 	end)
 
   for i = 1, #self.deck do
-    self.deck[i].cooldown = timer.rot(self.deck[i].cooldown)
+    self.deck[i].cooldown = timer.rot(self.deck[i].cooldown, function()
+      ctx.hud.units.cooldownPop[i] = 1
+    end)
   end
 
   table.each(self.magicShruju, function(shruju, i)

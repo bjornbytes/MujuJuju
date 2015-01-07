@@ -18,6 +18,17 @@ function math.insideCircle(x, y, cx, cy, r)
   return math.distance(x, y, cx, cy) < r
 end
 
+function toTime(x, format)
+  x = math.floor(x)
+  local seconds = math.floor(x % 60)
+  local minutes = math.floor(x / 60)
+  if format then
+    if minutes < 10 then minutes = '0' .. minutes end
+  end
+  if seconds < 10 then seconds = '0' .. seconds end
+  return minutes .. ':' .. seconds
+end
+
 if love.graphics then
   local g = love.graphics
   function g.printCenter(what, x, y)

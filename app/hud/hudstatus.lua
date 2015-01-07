@@ -51,11 +51,17 @@ function HudStatus:update()
 
   local mx, my = love.mouse.getPosition()
   if math.inside(mx, my, unpack(self.hitboxes.juju)) then
-    ctx.hud.tooltip:setTooltip('{white}{title}Juju{normal}\nUse it to summon minions and purchase upgrades.  Collect it in the juju realm.\n\n{green}' .. p.totalJuju .. ' {white}total juju ({green}' .. self.jjpm .. ' {white}per minute)')
+    ctx.hud.tooltip:setTooltip('{white}{title}Juju{normal}\n{whoCares}Use it to summon minions and purchase upgrades.  Collect it in the juju realm.\n\n{green}' .. p.totalJuju .. ' {white}total juju ({green}' .. self.jjpm .. ' {white}per minute)')
   elseif math.inside(mx, my, unpack(self.hitboxes.population)) then
-    ctx.hud.tooltip:setTooltip('{white}{title}Population{normal}\nThe maximum number of minions you may summon at once.\n\n{green}' .. p.totalSummoned .. ' {white}minion' .. (p.totalSummoned == 1 and '' or 's') .. ' summoned.')
+    ctx.hud.tooltip:setTooltip('{white}{title}Population{normal}\n{whoCares}The maximum number of minions you may summon at once.\n\n{green}' .. p.totalSummoned .. ' {white}minion' .. (p.totalSummoned == 1 and '' or 's') .. ' summoned.')
   elseif math.inside(mx, my, unpack(self.hitboxes.timer)) then
-    ctx.hud.tooltip:setTooltip('{white}{title}Timer{normal}\nHow long you\'ve lasted.  Survive for a long time to unlock rewards!')
+    local str = ''
+    local benchmarks = config.biomes[ctx.biome].benchmarks
+    local time = ctx.timer * tickRate
+    str = str .. 'Bronze: ' .. (time >= benchmarks.bronze and '{green}' or '{red}') .. toTime(benchmarks.bronze) .. '{white}\n'
+    str = str .. 'Silver: ' .. (time >= benchmarks.silver and '{green}' or '{red}') .. toTime(benchmarks.silver) .. '{white}\n'
+    str = str .. 'Gold: ' .. (time >= benchmarks.gold and '{green}' or '{red}') .. toTime(benchmarks.gold) .. '{white}\n'
+    ctx.hud.tooltip:setTooltip('{white}{title}Timer{normal}\n{whoCares}How long you\'ve lasted.  Survive for a long time to unlock rewards!\n\n' .. str)
   end
 end
 
@@ -134,12 +140,7 @@ function HudStatus:draw()
   g.draw(image, xx, height / 2, 0, s, s, image:getWidth() / 2, image:getHeight() / 2)
 
   -- Timer Text
-  local total = ctx.timer * tickRate
-  local seconds = math.floor(total % 60)
-  local minutes = math.floor(total / 60)
-  if minutes < 10 then minutes = '0' .. minutes end
-  if seconds < 10 then seconds = '0' .. seconds end
-  local str = minutes .. ':' .. seconds
+  local str = toTime(ctx.timer * tickRate, true)
 
   g.setColor(255, 255, 255)
   g.print(str, xx + (.025 * v), (height * .5) - g.getFont():getHeight() / 2)
