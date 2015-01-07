@@ -130,10 +130,10 @@ function Game:distribute()
   elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
 
   local runeCount = 0
-  if bronze and love.math.random() < .75 then runeCount = runeCount + 1 end
+  if not bronze and love.math.random() < .3 then runeCount = runeCount + 1 end
+  if bronze and love.math.random() < .9 then runeCount = runeCount + 1 end
   if silver and love.math.random() < .50 then runeCount = runeCount + 1 end
   if gold and love.math.random() < .25 then runeCount = runeCount + 1 end
-  print('you got ' .. runeCount .. ' runes')
   for i = 1, runeCount do
     local rune = {}
     local runeLevel = 0
