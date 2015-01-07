@@ -72,6 +72,8 @@ function Unit:activate()
       self.animation:set('idle', {force = true})
     elseif self.casting then
       self.casting = false
+    elseif data.state.name == 'attack' then
+      self.ai.useAbilities(self)
     end
 
     if not data.state.loop then self.animation:set('idle', {force = true}) end
@@ -355,7 +357,6 @@ function Unit:attack(options)
   amount = target:hurt(amount, self, 'attack') or amount
   self:abilityCall('postattack', target, amount)
   self.buffs:postattack(target, amount)
-  self.ai.useAbilities(self)
   if not options.nosound then
     local sounds = data.media.sounds[self.class.code]
     local sound = sounds and sounds.attackHit

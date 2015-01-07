@@ -10,9 +10,9 @@ function Game:load(user, biome)
   end
   data.media.graphics.hud.minion:setMipmapFilter('linear', 1)
   data.media.graphics.hud.population:setMipmapFilter('linear', 1)
+  self.user = user
   
   self.id = 1
-  self.user = user
   self.biome = biome
 
 	self.paused = false
@@ -119,17 +119,16 @@ function Game:distribute()
   self.rewards = {runes = {}, biomes = {}, minions = {}}
 
   local time = math.floor(self.timer * tickRate)
-  if time > self.user.highscores[self.biome] then
-    self.user.highscores[self.biome] = time
-    self.rewards.highscore = true
-    saveUser(self.user)
-  end
 
   local bronze = time >= config.biomes[self.biome].benchmarks.bronze
   local silver = time >= config.biomes[self.biome].benchmarks.silver
   local gold = time >= config.biomes[self.biome].benchmarks.gold
 
   -- Distribute runes
+  if gold then runeLevel = love.math.random(.67 * maxLevel, maxLevel)
+  elseif silver then runeLevel = love.math.random(.33 * maxLevel, .67 * maxLevel)
+  elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
+
   local runeCount = 0
   if bronze and love.math.random() < .75 then runeCount = runeCount + 1 end
   if silver and love.math.random() < .50 then runeCount = runeCount + 1 end
@@ -139,10 +138,6 @@ function Game:distribute()
     local rune = {}
     local runeLevel = 0
     local maxLevel = config.biomes[ctx.biome].runes.maxLevel
-
-    if gold then runeLevel = love.math.random(.67 * maxLevel, maxLevel)
-    elseif silver then runeLevel = love.math.random(.33 * maxLevel, .67 * maxLevel)
-    elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
 
     local upgrade = love.math.random() < config.biomes[ctx.biome].runes.specialChance * (runeLevel / 100)
     if upgrade then
@@ -203,7 +198,7 @@ function Game:distribute()
   -- Distribute biomes
   if silver then
     local nextBiome = config.biomes[self.biome].rewards.silver
-    if nextBiome then
+    if nextBiome and not table.has(self.user.biomes, nextBiome) then
       table.insert(self.user.biomes, nextBiome)
       table.insert(self.rewards.biomes, nextBiome)
       saveUser(self.user)
@@ -211,12 +206,27 @@ function Game:distribute()
   end
 
   -- Distribute minions
-  if gold then
-    local nextMinion = config.biomes[self.biome].rewards.gold
-    if nextMinion and not table.has(self.user.minions, nextMinion) and not table.has(self.user.deck.minions, nextMinion) then
-      table.insert(self.user.deck, nextMinion)
-      table.insert(self.rewards.minions, nextMinion)
-      saveUser(self.user)
+  if gold and self.user.highscores[self.biome] < config.biomes[self.biome].benchmarks.gold then
+    local minions = table.copy(self.user.minions)
+    for i = 1, #self.user.deck.minions do table.insert(minions, self.user.deck.minions[i]) end
+    if #config.starters > #minions then
+      local idx = love.math.random(1, #config.starters)
+      for i = 1, 100 do
+        local minion = config.starters[idx]
+        if not table.has(minions, minion) then
+          table.insert(self.user.minions, minion)
+          table.insert(self.rewards.minions, minion)
+          saveUser(self.user)
+          break
+        end
+        idx = love.math.random(1, #config.starters)
+      end
     end
+  end
+
+  if time > self.user.highscores[self.biome] then
+    self.user.highscores[self.biome] = time
+    self.rewards.highscore = true
+    saveUser(self.user)
   end
 end

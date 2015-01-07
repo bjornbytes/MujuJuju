@@ -32,7 +32,7 @@ Duju.states.attack = {
 
 Duju.states.headbutt = {
   priority = 3,
-  speed = .6,
+  speed = .69,
 }
 
 Duju.states.charge = {

@@ -2,8 +2,7 @@ return {
 
   starters = {
     'bruju',
-    'thuju',
-    'kuju'
+    'thuju'
   },
 
   enemies = {
@@ -80,8 +79,8 @@ return {
         gold = 1800
       },
       rewards = {
-        silver = 'tundra',
-        gold = 'thuju'
+        silver = 'cavern',
+        gold = 'unit'
       },
       juju = {
         minimum = {
@@ -132,8 +131,7 @@ return {
         gold = 1800
       },
       rewards = {
-        silver = 'tundra',
-        gold = 'bruju'
+        silver = 'tundra'
       },
       juju = {
         minimum = {
