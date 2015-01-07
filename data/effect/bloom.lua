@@ -5,13 +5,13 @@ local g = love.graphics
 
 function Bloom:init()
   self:resize()
-	self.alpha = .1
+	self.alpha = 0
 end
 
 function Bloom:update()
   local p = ctx.players:get(ctx.id)
   local alphas = config.biomes[ctx.biome].effects.bloom.alpha
-  self.alpha = math.lerp(self.alpha, p.dead and alphas[2] or alphas[1], .6 * tickRate)
+  self.alpha = math.lerp(self.alpha, p.dead and alphas[2] or alphas[1], 3 * tickRate)
 end
 
 function Bloom:applyEffect(source, target)

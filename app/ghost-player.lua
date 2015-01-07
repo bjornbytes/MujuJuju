@@ -100,6 +100,10 @@ function GhostPlayer:update()
 	scale = .4 + scale * .4
 	self.radius = 40 * scale
   self.alpha = math.min(self.alpha + tickRate, 1)
+
+  ctx.particles:emit('ghosttrail', self.x, self.y, 1, {
+    linearAcceleration = {-self.vx * 1, -self.vy * 1, -self.vx * 1.5, -self.vy * 1.5}
+  })
 end
 
 function GhostPlayer:despawn()
