@@ -98,6 +98,7 @@ return {
       units = {
         minEnemyRate = 8,
         maxEnemyRate = 12,
+        maxEnemiesCoefficient = .2,
         levelScale = 1,
         upgradeCostIncrease = 1,
         maxElites = 1
@@ -108,8 +109,8 @@ return {
           maxTimer = 40
         },
         [2] = {
-          minTimer = 120,
-          maxTimer = 130
+          minTimer = 300,
+          maxTimer = 400
         }
       },
       runes = {
@@ -144,6 +145,7 @@ return {
       units = {
         minEnemyRate = 6,
         maxEnemyRate = 9,
+        maxEnemiesCoefficient = .4,
         levelScale = 1.25,
         upgradeCostIncrease = 2,
         maxElites = 1
@@ -189,6 +191,7 @@ return {
       units = {
         minEnemyRate = 6,
         maxEnemyRate = 9,
+        maxEnemiesCoefficient = .6,
         levelScale = 1.5,
         upgradeCostIncrease = 3,
         maxElites = 2
@@ -234,6 +237,7 @@ return {
       units = {
         minEnemyRate = 6,
         maxEnemyRate = 8,
+        maxEnemiesCoefficient = .8,
         levelScale = 2,
         upgradeCostIncrease = 4,
         maxElites = 3

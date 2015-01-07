@@ -20,7 +20,7 @@ function Fear:activate()
       local target = ctx.target:closest(self.unit, 'enemy', 'unit')
       if target and math.abs(self.unit.x - target.x) <= self.range then
         target.buffs:add('fear', {timer = self.duration, target = self.unit})
-        ctx.sound:play('fear', function(sound) sound:setVolume(.5) end)
+        ctx.sound:play(data.media.sounds.spuju.fear, function(sound) sound:setVolume(.5) end)
       end
     end
   end)

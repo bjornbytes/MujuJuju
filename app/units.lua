@@ -9,7 +9,7 @@ function Units:init()
 end
 
 function Units:createEnemy()
-  if self.enemyCount < 1 + self.level / 2 then
+  if self.enemyCount < 1 + self.level * config.biomes[ctx.biome].units.maxEnemiesCoefficient then
     local enemies = config.enemies
     local enemyType = enemies[love.math.random(1, #enemies)]
     local x = love.math.random() < .5 and Unit.width / 2 or ctx.map.width - Unit.width / 2
@@ -26,8 +26,8 @@ function Units:createEnemy()
       unit.buffs:add(buff, config.elites.buffs[buff])
     end
 
-    self.minEnemyRate = math.max(self.minEnemyRate - .055 * math.clamp(self.minEnemyRate / 5, .1, 1), 1.4)
-    self.maxEnemyRate = math.max(self.maxEnemyRate - .03 * math.clamp(self.maxEnemyRate / 4, .5, 1), 2.75)
+    self.minEnemyRate = math.max(self.minEnemyRate - .055 * math.clamp(self.minEnemyRate / 5, .1, .4), 1.4)
+    self.maxEnemyRate = math.max(self.maxEnemyRate - .03 * math.clamp(self.maxEnemyRate / 4, .1, .4), 2.75)
   end
 
   return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
