@@ -36,6 +36,8 @@ function Unit:activate()
         end
       end
     elseif event.data.name == 'deathjuju' then
+      self:abilityCall('die')
+
       if not self.player and not self.droppedJuju then
         local juju = config.biomes[ctx.biome].juju
         local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
@@ -413,7 +415,6 @@ function Unit:heal(amount, source)
 end
 
 function Unit:die()
-  self:abilityCall('die')
   self:abilityCall('deactivate')
 
   table.each(ctx.units.objects, function(u)

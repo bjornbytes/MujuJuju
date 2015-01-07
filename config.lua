@@ -120,6 +120,15 @@ return {
       runes = {
         maxLevel = 25,
         specialChance = .01
+      },
+      effects = {
+        vignette = {
+          blur = {.45, 1.15},
+          radius = {.85, .85}
+        },
+        bloom = {
+          alpha = {10, 70}
+        }
       }
     },
 
@@ -151,7 +160,12 @@ return {
         maxEnemiesCoefficient = .5,
         levelScale = 1.25,
         upgradeCostIncrease = 3,
-        maxElites = 1
+        maxElites = 1,
+        thresholds = {
+          spuju = 0,
+          duju = 300,
+          kuju = 300
+        }
       },
       shrujuPatches = {
         [1] = {
@@ -166,6 +180,15 @@ return {
       runes = {
         maxLevel = 25,
         specialChance = .01
+      },
+      effects = {
+        vignette = {
+          blur = {.6, 1.15},
+          radius = {.75, .75}
+        },
+        bloom = {
+          alpha = {5, 20}
+        }
       }
     },
 
@@ -197,7 +220,12 @@ return {
         maxEnemiesCoefficient = .6,
         levelScale = 1.5,
         upgradeCostIncrease = 4,
-        maxElites = 2
+        maxElites = 2,
+        thresholds = {
+          kuju = 0,
+          spuju = 600,
+          duju = 600
+        }
       },
       shrujuPatches = {
         [1] = {
@@ -212,6 +240,15 @@ return {
       runes = {
         maxLevel = 75,
         specialChance = .04
+      },
+      effects = {
+        vignette = {
+          blur = {.45, 1.15},
+          radius = {.85, .85}
+        },
+        bloom = {
+          alpha = {10, 20}
+        }
       }
     },
 
@@ -243,7 +280,12 @@ return {
         maxEnemiesCoefficient = .7,
         levelScale = 2,
         upgradeCostIncrease = 5,
-        maxElites = 3
+        maxElites = 3,
+        thresholds = {
+          kuju = 0,
+          spuju = 0,
+          duju = 0
+        }
       },
       shrujuPatches = {
         [1] = {
@@ -258,6 +300,15 @@ return {
       runes = {
         maxLevel = 100,
         specialChance = .08
+      },
+      effects = {
+        vignette = {
+          blur = {.45, 1.15},
+          radius = {.85, .85}
+        },
+        bloom = {
+          alpha = {10, 70}
+        }
       }
     }
   },

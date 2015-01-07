@@ -173,7 +173,7 @@ end
 
 function HudShrujuPatch:keypressed(key)
   if self.patch and (key == 'tab' or key == 'e') then
-    if self.patch.growing or self.patch.slot then
+    if self:playerNearby() and (self.patch.growing or self.patch.slot) then
       self.slotScale = 1.4
     else
       self.lastPress = tick

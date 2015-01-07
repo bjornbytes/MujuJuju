@@ -10,7 +10,8 @@ end
 
 function Bloom:update()
   local p = ctx.players:get(ctx.id)
-  self.alpha = math.lerp(self.alpha, p.dead and .9 or .1, .6 * tickRate)
+  local alphas = config.biomes[ctx.biome].effects.bloom.alpha
+  self.alpha = math.lerp(self.alpha, p.dead and alphas[2] or alphas[1], .6 * tickRate)
 end
 
 function Bloom:applyEffect(source, target)
@@ -37,14 +38,13 @@ function Bloom:applyEffect(source, target)
   g.setShader()
   g.setCanvas(target)
   g.draw(source)
-	local factor = p.dead and 1 or 1
-  love.graphics.setColor(255, 255, 255, self.alpha * 80 * factor)
+  love.graphics.setColor(255, 255, 255, self.alpha)
   g.setBlendMode('additive')
 	g.draw(self.canvas, 0, 0, 0, 4, 4)
 	local x = p.dead and math.clamp(p.ghost.x, 300, 500) or 400
 	local y = p.dead and math.clamp(p.ghost.y, 0, 600) or 300
 	for i = 6, 2, -1 do
-		g.draw(self.canvas, x, y, 0, 4 + i * 1.25 * factor, 4 + i * 1.25 * factor, self.canvas:getWidth() / 2, self.canvas:getHeight() / 2)
+		g.draw(self.canvas, x, y, 0, 4 + i * 1.25, 4 + i * 1.25, self.canvas:getWidth() / 2, self.canvas:getHeight() / 2)
 	end
   g.setBlendMode('alpha')
 
