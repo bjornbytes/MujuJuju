@@ -293,6 +293,9 @@ function Unit:inRange(target)
 end
 
 function Unit:moveIntoRange(target)
+  local feared = self.buffs:feared()
+  if feared then return self:runFrom(feared) end
+
   if self:inRange(target) then
     self.animation:set('idle')
     return
@@ -302,6 +305,9 @@ function Unit:moveIntoRange(target)
 end
 
 function Unit:moveTowards(target)
+  local feared = self.buffs:feared()
+  if feared then return self:runFrom(feared) end
+
   if math.abs(target.x - self.x) <= target.width / 2 + self.width / 2 then
     self.animation:set('idle')
     return
@@ -312,7 +318,16 @@ function Unit:moveTowards(target)
   self.animation.flipped = self.x > target.x
 end
 
+function Unit:runFrom(target)
+  self.x = self.x - self.speed * math.sign(target.x - self.x) * tickRate
+  self.animation:set('walk')
+  self.animation.flipped = self.x < target.x
+end
+
 function Unit:startAttacking(target)
+  local feared = self.buffs:feared()
+  if feared then return self:runFrom(feared) end
+
   if not self:inRange(target) or self.buffs:stunned() then
     self.target = nil
     self.animation:set('idle')

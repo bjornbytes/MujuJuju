@@ -31,6 +31,8 @@ function UnitBuffs:postupdate()
     speed = speed * (1 - slow.slow)
   end)
 
+  if self:feared() then speed = speed / 2 end
+
   self.unit.speed = speed
 
   -- Apply Roots and Stuns
@@ -189,4 +191,9 @@ end
 
 function UnitBuffs:ccImmune()
   return next(self:buffsWithTag('ccimmune'))
+end
+
+function UnitBuffs:feared()
+  local fear = next(self:buffsWithTag('fear'))
+  return fear and fear.target
 end
