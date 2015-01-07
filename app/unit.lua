@@ -36,31 +36,33 @@ function Unit:activate()
         end
       end
     elseif event.data.name == 'deathjuju' then
-      self:abilityCall('die')
+      if not self.died then
+        self:abilityCall('die')
 
-      if not self.player and not self.droppedJuju then
-        local juju = config.biomes[ctx.biome].juju
-        local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
-        local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
-        local amount = love.math.random(minAmount, maxAmount)
-        local jujus = love.math.random(1, 2)
+        if not self.player then
+          local juju = config.biomes[ctx.biome].juju
+          local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
+          local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
+          local amount = love.math.random(minAmount, maxAmount)
+          local jujus = love.math.random(1, 2)
 
-        if self.elite then
-          amount = amount * config.elites.jujuModifier
-          jujus = 1
+          if self.elite then
+            amount = amount * config.elites.jujuModifier
+            jujus = 1
+          end
+
+          for i = 1, jujus do
+            ctx.jujus:add({
+              x = self.x,
+              y = self.y,
+              amount = amount / jujus,
+              vx = love.math.random(-50, 50),
+              vy = love.math.random(-300, -100)
+            })
+          end
         end
 
-        for i = 1, jujus do
-          ctx.jujus:add({
-            x = self.x,
-            y = self.y,
-            amount = amount / jujus,
-            vx = love.math.random(-50, 50),
-            vy = love.math.random(-300, -100)
-          })
-        end
-
-        self.droppedJuju = true
+        self.died = true
       end
     elseif event.data.name == 'spawn' then
       ctx.sound:play(data.media.sounds[self.class.code].spawn, function(sound) sound:setVolume(.5) end)
@@ -111,6 +113,7 @@ function Unit:activate()
   self.maxHealth = self.health
   self.stance = 'aggressive'
   self.dying = false
+  self.died = false
   self.casting = false
   self.channeling = false
   self.spawning = true

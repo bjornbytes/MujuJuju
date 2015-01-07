@@ -40,7 +40,7 @@ function Tooltip:draw()
     local u, v = self:getUV()
     local mx = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate)
     local my = math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
-    local raw = self.tooltipText
+    local raw = self.tooltipText:gsub('{%a+}', '')
     local normalFont = self.richOptions.normal
     local titleFont = self.richOptions.title
     g.setFont(self.richOptions.normal)
@@ -57,16 +57,18 @@ function Tooltip:draw()
     g.setColor(10, 30, 50, 255)
     g.rectangle('line', xx + .5, yy + .5, textWidth + 14, textHeight + 9)
     self.tooltip:draw(xx + 8, yy + 4)
+  else
+    self.tooltipText = nil
   end
 end
 
 function Tooltip:setTooltip(str)
   local u, v = self:getUV()
   local raw = str:gsub('{%a+}', '')
-  if raw ~= self.tooltipText then
+  if str ~= self.tooltipText then
     g.setFont(self.richOptions.normal)
     self.tooltip = rich:new({str, u * self.maxWidth, self.richOptions}, {255, 255, 255})
-    self.tooltipText = raw
+    self.tooltipText = str
   end
 
   self.active = true

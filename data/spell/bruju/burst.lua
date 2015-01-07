@@ -43,15 +43,12 @@ end
 
 function Burst:draw()
   local unit = self:getUnit()
-  local color = unit.team == ctx.players:get(ctx.id).team and {40, 230, 40} or {230, 40, 40}
-  color[4] = self.health / self.maxHealth * 255
-	g.setColor(color)
+	g.setColor(130, 250, 100, self.health / self.maxHealth * 255)
 
   local scale = math.lerp(self.prevscale, self.scale, tickDelta / tickRate)
   scale = scale * ((self.range + 50) * 2 / self.image:getWidth())
 
 	g.draw(self.image, self.x, self.y, self.angle, scale, scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
-  g.circle('line', self.x, self.y, self.range * self.scale)
 end
 
 return Burst

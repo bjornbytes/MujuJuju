@@ -119,7 +119,7 @@ return {
       },
       runes = {
         maxLevel = 25,
-        specialChance = .01
+        specialChance = .1
       },
       effects = {
         vignette = {
@@ -179,7 +179,7 @@ return {
       },
       runes = {
         maxLevel = 25,
-        specialChance = .01
+        specialChance = .1
       },
       effects = {
         vignette = {
@@ -239,7 +239,7 @@ return {
       },
       runes = {
         maxLevel = 75,
-        specialChance = .04
+        specialChance = .1
       },
       effects = {
         vignette = {
@@ -299,7 +299,7 @@ return {
       },
       runes = {
         maxLevel = 100,
-        specialChance = .08
+        specialChance = .1
       },
       effects = {
         vignette = {
