@@ -204,6 +204,14 @@ function HudUnits:draw()
         local scale = math.min((w - (v * .02)) / image:getWidth(), (h - (v * .02)) / image:getHeight())
         g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
       end
+
+      if upgrade.level > 0 then
+        g.setFont('pixel', 8)
+        g.setColor(0, 0, 0, 255 * upgradeAlphaFactor)
+        g.print(upgrade.level, x + 6 + 1, y + 2 + 1)
+        g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
+        g.print(upgrade.level, x + 6, y + 2)
+      end
     end
   end
 end
