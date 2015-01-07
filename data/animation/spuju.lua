@@ -30,6 +30,11 @@ Spuju.states.attack = {
   speed = 1
 }
 
+Spuju.states.fear = {
+  priority = 3,
+  speed = .8
+}
+
 Spuju.states.death = {
   priority = 5,
   speed = .34

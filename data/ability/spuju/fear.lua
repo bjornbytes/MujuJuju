@@ -8,7 +8,7 @@ Fear.name = 'Fear'
 ----------------
 Fear.cooldown = 10
 Fear.range = 190
-Fear.duration = 1.5
+Fear.duration = 3
 
 
 ----------------
@@ -17,8 +17,8 @@ Fear.duration = 1.5
 function Fear:activate()
   self.unit.animation:on('event', function(event)
     if event.data.name == 'fear' then
-      local target = ctx.target:closest(self.unit, self.range, 'enemy', 'unit')
-      if target then
+      local target = ctx.target:closest(self.unit, 'enemy', 'unit')
+      if target and math.abs(self.unit.x - target.x) <= self.range then
         target.buffs:add('fear', {timer = self.duration, target = self.unit})
         ctx.sound:play('fear', function(sound) sound:setVolume(.5) end)
       end
