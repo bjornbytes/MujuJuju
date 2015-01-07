@@ -124,7 +124,7 @@ function GhostPlayer:draw()
 	scale = .4 + scale * .4
 	local alphaScale = math.min(self.owner.deathTimer * 6 / maxJuju, 1)
   local color = {128, 0, 255}
-  color = table.interpolate(color, {255, 255, 255}, .5)
+  color = table.interpolate(color, {255, 255, 255}, .8)
   color[4] = 200 * alpha * alphaScale
 	g.setColor(color)
 	g.draw(self.image, x, y, self.angle, .6 * scale, .6 * scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
