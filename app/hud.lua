@@ -35,6 +35,8 @@ end
 function Hud:update()
   local p = ctx.players:get(ctx.id)
 
+  local tooltipStr = self.tooltip.tooltipText
+
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
 	self.protectAlpha = math.max(self.protectAlpha - tickRate, 0)
@@ -46,6 +48,10 @@ function Hud:update()
   self.shruju:update()
   self.units:update()
   table.with(self.shrujuPatches, 'update')
+
+  if self.tooltip.active and tooltipStr ~= self.tooltip.tooltipText then
+    ctx.sound:play('menuHover', function(sound) sound:setVolume(2) end)
+  end
 
 	if ctx.ded then love.keyboard.setKeyRepeat(true) end
 end

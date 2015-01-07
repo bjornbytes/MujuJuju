@@ -41,7 +41,7 @@ function Unit:activate()
         local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
         local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
         local amount = love.math.random(minAmount, maxAmount)
-        local jujus = math.random(1, 2)
+        local jujus = love.math.random(1, 2)
 
         if self.elite then
           amount = amount * config.elites.jujuModifier
