@@ -15,7 +15,7 @@ function ImpenetrableHide:posthurt(amount, source, kind)
 
   local buff = self.unit.buffs:get('impenetrablehide')
   if buff then
-    buff.armor = (.02 + (.02 * upgradeLevel)) * buff.stacks
+    buff.armor = (.02 + (.03 * upgradeLevel)) * buff.stacks
   end
 end
 

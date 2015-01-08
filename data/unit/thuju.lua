@@ -6,7 +6,7 @@ Thuju.description = 'Yay Thuju.'
 ----------------
 -- Stats
 ----------------
-Thuju.health = 150
+Thuju.health = 160
 Thuju.damage = 15
 Thuju.range = 16
 Thuju.attackSpeed = 1.15
@@ -21,7 +21,7 @@ Thuju.cost = 12
 Thuju.upgrades = {
   wardofthorns = {
     level = 0,
-    costs = {35, 60, 100, 150, 250},
+    costs = {30, 50, 80, 120, 170},
     name = 'Ward of Thorns',
     description = 'Thuju protrudes splintering thorns from his hide, causing him to reflect a portion of melee damage dealt to him.',
     values = {
@@ -40,9 +40,9 @@ Thuju.upgrades = {
   },
   tenacity = {
     level = 0,
-    costs = {45, 75, 115, 165, 225},
+    costs = {30, 65, 105, 145, 185},
     name = 'Tenacity',
-    description = 'Thuju strengthens his resolve, allowing him to withstand more damage.',
+    description = 'Thuju strengthens his resolve, increasing his maximum health.',
     values = {
       [0] = '150 health',
       [1] = '200 health',
@@ -60,15 +60,15 @@ Thuju.upgrades = {
   },
   impenetrablehide = {
     level = 0,
-    costs = {50, 75, 110, 155, 210},
+    costs = {25, 75, 125, 175, 225},
     name = 'Impenetrable Hide',
-    description = 'Thuju hardens his body when he is struck.  He takes reduced damage from all sources for 3 seconds, stacking multiple times.',
+    description = 'Thuju hardens his body when he is struck.  He takes reduced damage from all sources for 3 seconds, stacking multiple times.  The bonus is doubled against ranged attacks.',
     values = {
       [1] = '5% damage reduction, stacking up to 3 times',
-      [2] = '6% damage reduction, stacking up to 4 times',
-      [3] = '7% damage reduction, stacking up to 5 times',
-      [4] = '8% damage reduction, stacking up to 6 times',
-      [5] = '10% damage reduction, stacking up to 7 times'
+      [2] = '8% damage reduction, stacking up to 4 times',
+      [3] = '11% damage reduction, stacking up to 5 times',
+      [4] = '14% damage reduction, stacking up to 5 times',
+      [5] = '17% damage reduction, stacking up to 5 times'
     },
     apply = function(self, unit)
       if self.level > 0 then
