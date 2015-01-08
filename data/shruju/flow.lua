@@ -5,7 +5,7 @@ Flow.name = 'Flow'
 Flow.description = 'The cooldown for minion summoning is reduced by .5s.'
 
 function Flow:apply()
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   p.flatCooldownReduction = p.flatCooldownReduction + .5
 
   if config.biomes[ctx.biome].player.baseCooldown - p.flatCooldownReduction <= config.biomes[ctx.biome].player.minCooldown then

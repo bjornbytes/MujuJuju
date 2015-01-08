@@ -48,7 +48,7 @@ end
 
 function Infusion:draw()
   local ability = self:getAbility()
-  g.setColor(self:getUnit().team == ctx.players:get(ctx.id).team and {0, 255, 0} or {255, 0 , 0})
+  g.setColor(self:getUnit().team == ctx.player.team and {0, 255, 0} or {255, 0 , 0})
   g.circle('line', self.x, self.y, ability.range)
 end
 

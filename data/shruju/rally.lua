@@ -5,7 +5,7 @@ Rally.name = 'Rally'
 Rally.description = 'On use, increases the maximum number of minions you can have summoned at a time by 1.'
 
 function Rally:apply()
- local p = ctx.players:get(ctx.id)
+ local p = ctx.player
  p.maxPopulation = p.maxPopulation + 1
  ctx.hud.status.populationScale = 2
 

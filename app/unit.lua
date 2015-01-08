@@ -24,7 +24,7 @@ function Unit:activate()
   if self.player then
     self.animation.flipped = not self.player.animation.flipped
   else
-    local _, shrine = next(ctx.shrines:filter(function(s) return s.team == ctx.players:get(ctx.id).team end))
+    local _, shrine = next(ctx.shrines:filter(function(s) return s.team == ctx.player.team end))
     self.animation.flipped = math.sign(self.x - shrine.x) > 0
   end
 

@@ -14,7 +14,7 @@ end
 
 function HudUpgrades:update()
   self.prevTime = self.time
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   if not p:atShrine() or p.dead then self.active = false end
   if self.active then self.time = math.min(self.time + tickRate, self.maxTime)
   else self.time = math.max(self.time - tickRate, 0) end
@@ -24,7 +24,7 @@ function HudUpgrades:keypressed(key)
   if key == 'tab' or key == 'e' then
     self.lastPress = tick
     self.active = not self.active
-    if not ctx.players:get(ctx.id):atShrine() then self.active = false end
+    if not ctx.player:atShrine() then self.active = false end
   end
 end
 

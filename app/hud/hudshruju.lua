@@ -10,7 +10,7 @@ function HudShruju:init()
   self.geometryFunctions = {
     shruju = function()
       local u, v = ctx.hud.u, ctx.hud.v
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       local size = .08 * v
       local inc = size + .02 * v
       local x = u * .5 - (inc * (#p.magicShruju - 1) / 2)
@@ -28,7 +28,7 @@ end
 function HudShruju:update()
   local shruju = self.geometry.shruju
   local mx, my = love.mouse.getPosition()
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   for i = 1, #shruju do
     local x, y, w, h = unpack(self.geometry.shruju[i])
     if math.inside(mx, my, x, y, w, h) then
@@ -46,7 +46,7 @@ function HudShruju:update()
 end
 
 function HudShruju:draw()
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   local shruju = self.geometry.shruju
   local u, v = ctx.hud.u, ctx.hud.v
   for i = 1, #shruju do

@@ -5,7 +5,7 @@ Upgrades.clear = function()
 	end
 
 	Upgrades.canBuy = function(who, what)
-    local p = ctx.players:get(ctx.id)
+    local p = ctx.player
 		local upgrade = data.unit[who].upgrades[what]
 		if not upgrade.costs[upgrade.level + 1] then return false end
 		if p.juju < upgrade.costs[upgrade.level + 1] then return false end

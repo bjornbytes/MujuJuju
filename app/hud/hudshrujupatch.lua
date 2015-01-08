@@ -54,7 +54,7 @@ end
 
 function HudShrujuPatch:update()
   if not self.patch then return end
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   local mx, my = love.mouse.getPosition()
 
   if self.patch and #self.patch.types ~= self.geometry.types then self.geometry.types = nil end
@@ -193,7 +193,7 @@ end
 function HudShrujuPatch:mousepressed(x, y, b)
   if not self.patch or self.patch.timer > 0 then return end
 
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
 
   if self.active and b == 'l' then
     local types = self.geometry.types

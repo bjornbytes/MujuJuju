@@ -10,7 +10,7 @@ function HudUnits:init()
   self.geometryFunctions = {
     upgrades = function()
       local u, v = ctx.hud.u, ctx.hud.v
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       local upgradeFactor, t = ctx.hud.upgrades:getFactor()
       local upgradeAlphaFactor = (t / ctx.hud.upgrades.maxTime) ^ 3
       local minionInc = (.2 * u) + (.075 * upgradeFactor * u)
@@ -47,7 +47,7 @@ function HudUnits:init()
 end
 
 function HudUnits:update()
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   local mx, my = love.mouse.getPosition()
 
   local upgrades = self.geometry.upgrades
@@ -101,7 +101,7 @@ end
 function HudUnits:draw()
   if ctx.ded then return end
 
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   if not p then return end
 
   local u, v = ctx.hud.u, ctx.hud.v
@@ -228,7 +228,7 @@ function HudUnits:mousereleased(mx, my, b)
   if ctx.ded then return end
   if b ~= 'l' then return end
 
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
 
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
@@ -250,7 +250,7 @@ function HudUnits:mousereleased(mx, my, b)
 end
 
 function HudUnits:ready()
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
 
   self.count = #p.deck
   self.selectFactor = {}

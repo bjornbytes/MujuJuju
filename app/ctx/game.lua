@@ -23,7 +23,7 @@ function Game:load(user, biome)
 	self.view = View()
   self.map = Map()
   self.players = Players()
-  ctx.players:add(1)
+  self.player = ctx.players:add(1)
   self.shrujuPatches = ShrujuPatches()
   self.hud = Hud()
   self.upgrades = Upgrades

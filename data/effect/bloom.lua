@@ -9,13 +9,13 @@ function Bloom:init()
 end
 
 function Bloom:update()
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   local alphas = config.biomes[ctx.biome].effects.bloom.alpha
   self.alpha = math.lerp(self.alpha, p.dead and alphas[2] or alphas[1], 3 * tickRate)
 end
 
 function Bloom:applyEffect(source, target)
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   g.setCanvas(self.canvas)
 	g.push()
 	g.scale(.25)

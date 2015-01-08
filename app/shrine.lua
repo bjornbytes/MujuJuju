@@ -28,7 +28,7 @@ function Shrine:update()
   self.hurtFactor = math.lerp(self.hurtFactor, (tick - self.lastHurt) * tickRate < 5 and 1 or 0, math.min(4 * tickRate, 1))
 
   if ctx.id then
-    local p = ctx.players:get(ctx.id)
+    local p = ctx.player
     self.color = table.interpolate(self.color, p.dead and {160, 100, 225} or {255, 255, 255}, math.min(.6 * tickRate, 1))
     self.highlight = math.lerp(self.highlight, p:atShrine() and 128 or 0, math.min(5 * tickRate, 1))
   end

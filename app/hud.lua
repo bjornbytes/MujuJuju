@@ -33,7 +33,7 @@ function Hud:init()
 end
 
 function Hud:update()
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
 
   local oldTitle = self.tooltip.tooltipText and self.tooltip.tooltipText:sub(1, self.tooltip.tooltipText:find('\n'))
 
@@ -81,7 +81,7 @@ end
 function Hud:gui()
 	local w, h = love.graphics.getDimensions()
   local u, v = self.u, self.v
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
 
 	if not ctx.ded then
 
@@ -183,7 +183,7 @@ function Hud:mousepressed(x, y, b)
 end
 
 function Hud:mousereleased(x, y, b)
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   if self.upgrades.active then
     self.units:mousereleased(x, y, b)
   end

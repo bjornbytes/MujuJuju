@@ -20,7 +20,7 @@ function Map:init()
     depth = 10,
     draw = function()
       local alpha = 255 * self.spiritAlpha
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .5)
 
       g.setColor(255, 255, 255)
@@ -58,7 +58,7 @@ function Map:init()
       g.setColor(200, 200, 200, 255)
       g.draw(image, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight(), shearx)
       local alpha = self.spiritAlpha * 255
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .5)
       g.setColor(200, 200, 200, alpha)
       g.draw(data.media.graphics.spiritGrass, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight(), shearx)
@@ -70,5 +70,5 @@ function Map:init()
 end
 
 function Map:update()
-  self.spiritAlpha = math.lerp(self.spiritAlpha, ctx.players:get(ctx.id).dead and 1 or 0, .6 * tickRate)
+  self.spiritAlpha = math.lerp(self.spiritAlpha, ctx.player.dead and 1 or 0, .6 * tickRate)
 end

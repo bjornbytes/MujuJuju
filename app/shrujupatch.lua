@@ -7,12 +7,12 @@ ShrujuEffects = {
     description = 'Doubles your passive juju income rate.',
 
     activate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.jujuRate = p.jujuRate / 2
     end,
 
     deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.jujuRate = p.jujuRate * 2
     end
   },
@@ -22,12 +22,12 @@ ShrujuEffects = {
     description = 'Muju moves faster.',
 
     activate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.walkSpeed = p.walkSpeed * 2
     end,
 
     deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.walkSpeed = p.walkSpeed / 2
     end
   },
@@ -37,7 +37,7 @@ ShrujuEffects = {
     description = 'Shrine heals health per second.',
 
     activate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
       if shrine then
         shrine.regen = shrine.regen + 20
@@ -45,7 +45,7 @@ ShrujuEffects = {
     end,
 
     deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
       if shrine then
         shrine.regen = shrine.regen - 20
@@ -58,12 +58,12 @@ ShrujuEffects = {
     description = 'Muju moves faster in the juju realm.',
 
     activate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.ghostSpeedMultiplier = p.ghostSpeedMultiplier * 2
     end,
 
     deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.ghostSpeedMultiplier = p.ghostSpeedMultiplier / 2
     end
   },
@@ -73,12 +73,12 @@ ShrujuEffects = {
     description = '+3 to maximum population.',
 
     activate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.maxPopulation = p.maxPopulation + 3
     end,
 
     deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.maxPopulation = p.maxPopulation - 3
     end
   },
@@ -88,7 +88,7 @@ ShrujuEffects = {
     description = 'Fast minions!',
 
     activate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.summonBuffs.marathon = 'marathon'
       ctx.units:each(function(unit)
         if unit.player == p then unit.buffs:add('marathon') end
@@ -96,7 +96,7 @@ ShrujuEffects = {
     end,
 
     deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.summonBuffs.marathon = nil
       ctx.units:each(function(unit)
         if unit.player == p then unit.buffs:remove('marathon') end
@@ -109,7 +109,7 @@ ShrujuEffects = {
     description = 'Makes your minions stronger.',
 
     activate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.summonBuffs.spinach = 'spinach'
       ctx.units:each(function(unit)
         if unit.player == p then unit.buffs:add('spinach') end
@@ -117,7 +117,7 @@ ShrujuEffects = {
     end,
 
     deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.summonBuffs.spinach = nil
       ctx.units:each(function(unit)
         if unit.player == p then unit.buffs:remove('spinach') end
@@ -130,7 +130,7 @@ ShrujuEffects = {
     description = 'Your minions attack twice as fast.',
 
     activate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.summonBuffs.frenzy = 'frenzy'
       ctx.units:each(function(unit)
         if unit.player == p then unit.buffs:add('frenzy') end
@@ -138,7 +138,7 @@ ShrujuEffects = {
     end,
 
     deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.summonBuffs.frenzy = nil
       ctx.units:each(function(unit)
         if unit.player == p then unit.buffs:remove('frenzy') end
@@ -151,12 +151,12 @@ ShrujuEffects = {
     description = 'Summon all day erry day.',
 
     activate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.flatCooldownReduction = p.flatCooldownReduction + 10
     end,
 
     deactivate = function(self)
-      local p = ctx.players:get(ctx.id)
+      local p = ctx.player
       p.flatCooldownReduction = p.flatCooldownReduction - 10
     end
   }
@@ -239,7 +239,7 @@ function ShrujuPatch:take()
 end
 
 function ShrujuPatch:playerNearby()
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   return not p.dead and math.abs(p.x - self.x) <= self.width / 2 + p.width / 2
 end
 

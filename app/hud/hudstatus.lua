@@ -26,7 +26,7 @@ function HudStatus:update()
     self.prev[k] = self[k]
   end
 
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   local maxPop = p:getPopulation() >= p.maxPopulation
 	self.jujuScale = math.lerp(self.jujuScale, 1, 10 * tickRate)
   self.populationScale = math.lerp(self.populationScale, 1, 10 * tickRate)
@@ -67,7 +67,7 @@ end
 
 function HudStatus:draw()
   local u, v = ctx.hud.u, ctx.hud.v
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   local mx, my = love.mouse.getPosition()
 
   local lerpd = {}

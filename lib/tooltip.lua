@@ -83,7 +83,7 @@ function Tooltip:setUnitTooltip(code)
 end
 
 function Tooltip:setUpgradeTooltip(who, what)
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   local pieces = {}
   local upgrade = data.unit[who].upgrades[what]
   table.insert(pieces, '{white}{title}' .. upgrade.name .. '{normal}')

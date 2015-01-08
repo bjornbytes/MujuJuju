@@ -21,7 +21,7 @@ function Juju:init(data)
 end
 
 function Juju:update()
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
 
 	self.prevx = self.x
 	self.prevy = self.y

@@ -159,7 +159,7 @@ end
 function HudHealth:draw()
   if ctx.ending then return end
 
-  local p = ctx.players:get(ctx.id)
+  local p = ctx.player
   local vx, vy = math.lerp(ctx.view.prevx, ctx.view.x, tickDelta / tickRate), math.lerp(ctx.view.prevy, ctx.view.y, tickDelta / tickRate)
 
   ctx.players:each(function(player)
