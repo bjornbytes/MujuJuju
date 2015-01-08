@@ -6,7 +6,7 @@ Fear.name = 'Fear'
 ----------------
 -- Stats
 ----------------
-Fear.cooldown = 10
+Fear.cooldown = 12
 Fear.range = 190
 Fear.duration = 3
 

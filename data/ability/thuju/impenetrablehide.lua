@@ -7,8 +7,7 @@ function ImpenetrableHide:posthurt(amount, source, kind)
   local buff = self.unit.buffs:get('impenetrablehide')
   local upgradeLevel = self.unit:upgradeLevel('impenetrablehide')
   if buff then
-    buff.maxStacks = 3
-    if upgradeLevel >= 4 then buff.maxStacks = upgradeLevel end
+    buff.maxStacks = math.min(2 + upgradeLevel, 5)
   end
 
   self.unit.buffs:add('impenetrablehide', {timer = 3})

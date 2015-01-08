@@ -146,6 +146,7 @@ function UnitBuffs:prehurt(amount, source, kind)
     local armor = 0
     table.each(armors, function(buff)
       armor = armor + (1 - armor) * math.clamp(buff.armor * (buff.armorRangedMultiplier or 1), 0, 1)
+      print(buff.code, armor)
     end)
 
     amount = amount * (1 - armor)
