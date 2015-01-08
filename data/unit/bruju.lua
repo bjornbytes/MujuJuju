@@ -83,8 +83,8 @@ Bruju.upgrades = {
     name = 'Siphon',
     description = 'Bruju siphon life from their enemies with every strike, granting them lifesteal.',
     values = {
-      [1] = '30% lifesteal',
-      [2] = '40% lifesteal',
+      [1] = '20% lifesteal',
+      [2] = '35% lifesteal',
       [3] = '50% lifesteal'
     },
     apply = function(self, unit)

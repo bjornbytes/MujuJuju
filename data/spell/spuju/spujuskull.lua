@@ -56,7 +56,7 @@ function SpujuSkull:update()
       local damage = self.unit.damage
       table.each(targets, function(target)
         self.unit:attack({target = target, damage = damage, nosound = true})
-        damage = math.max(damage * .5, self.unit.damage * .25)
+        damage = math.max(damage * .5, self.unit.damage * .5)
       end)
       if next(targets) then
         ctx.sound:play(data.media.sounds.spuju.attackHit, function(sound)

@@ -85,20 +85,20 @@ return {
       juju = {
         minimum = {
           base = 12,
-          exponent = .8,
+          exponent = .75,
           coefficient = .85
         },
         maximum = {
           base = 18,
-          exponent = .85,
+          exponent = .75,
           coefficient = 1.1
         }
       },
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        minEnemyRateDecay = .07,
-        maxEnemyRateDecay = .06,
+        minEnemyRateDecay = .09,
+        maxEnemyRateDecay = .08,
         maxEnemiesCoefficient = .4,
         levelScale = 1,
         upgradeCostIncrease = 2,
@@ -138,20 +138,20 @@ return {
       juju = {
         minimum = {
           base = 14,
-          exponent = .8,
+          exponent = .75,
           coefficient = .75
         },
         maximum = {
           base = 20,
-          exponent = .85,
+          exponent = .75,
           coefficient = 1
         }
       },
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        minEnemyRateDecay = .07,
-        maxEnemyRateDecay = .06,
+        minEnemyRateDecay = .09,
+        maxEnemyRateDecay = .07,
         maxEnemiesCoefficient = .5,
         levelScale = 1.1,
         upgradeCostIncrease = 3,
@@ -191,20 +191,20 @@ return {
       juju = {
         minimum = {
           base = 14,
-          exponent = .8,
+          exponent = .75,
           coefficient = .75
         },
         maximum = {
           base = 20,
-          exponent = .85,
+          exponent = .75,
           coefficient = 1
         }
       },
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        minEnemyRateDecay = .07,
-        maxEnemyRateDecay = .06,
+        minEnemyRateDecay = .09,
+        maxEnemyRateDecay = .07,
         maxEnemiesCoefficient = .6,
         levelScale = 1.2,
         upgradeCostIncrease = 4,
@@ -244,20 +244,20 @@ return {
       juju = {
         minimum = {
           base = 14,
-          exponent = .8,
+          exponent = .75,
           coefficient = .75
         },
         maximum = {
           base = 20,
-          exponent = .85,
+          exponent = .75,
           coefficient = 1
         }
       },
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        minEnemyRateDecay = .07,
-        maxEnemyRateDecay = .06,
+        minEnemyRateDecay = .09,
+        maxEnemyRateDecay = .07,
         maxEnemiesCoefficient = .7,
         levelScale = 1.3,
         upgradeCostIncrease = 5,
