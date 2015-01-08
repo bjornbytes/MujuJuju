@@ -52,16 +52,6 @@ return {
     }
   },
 
-  player = {
-    baseCooldown = 5,
-    minCooldown = .5,
-    globalCooldown = 3,
-    baseJuju = 30,
-    jujuRate = 1,
-    basePopulation = 3,
-    maxPopulation = 10
-  },
-
   shruju = {
     growTime = 60,
     minGrowTime = 15,
@@ -93,6 +83,15 @@ return {
           exponent = .75,
           coefficient = 1.1
         }
+      },
+      player = {
+        baseCooldown = 5,
+        minCooldown = .5,
+        globalCooldown = 3,
+        baseJuju = 30,
+        jujuRate = 1,
+        basePopulation = 3,
+        maxPopulation = 10
       },
       units = {
         minEnemyRate = 12,
@@ -147,6 +146,15 @@ return {
           coefficient = 1.1
         }
       },
+      player = {
+        baseCooldown = 5,
+        minCooldown = .5,
+        globalCooldown = 3,
+        baseJuju = 30,
+        jujuRate = 2,
+        basePopulation = 3,
+        maxPopulation = 10
+      },
       units = {
         minEnemyRate = 14,
         maxEnemyRate = 18,
@@ -200,6 +208,15 @@ return {
           coefficient = 1
         }
       },
+      player = {
+        baseCooldown = 5,
+        minCooldown = .5,
+        globalCooldown = 3,
+        baseJuju = 30,
+        jujuRate = 1,
+        basePopulation = 3,
+        maxPopulation = 10
+      },
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
@@ -252,6 +269,15 @@ return {
           exponent = .75,
           coefficient = 1
         }
+      },
+      player = {
+        baseCooldown = 5,
+        minCooldown = .5,
+        globalCooldown = 3,
+        baseJuju = 30,
+        jujuRate = 1,
+        basePopulation = 3,
+        maxPopulation = 10
       },
       units = {
         minEnemyRate = 12,

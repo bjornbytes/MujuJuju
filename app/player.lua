@@ -25,10 +25,10 @@ function Player:init()
   self.dead = false
   self.deathTimer = 0
 
-  self.juju = config.player.baseJuju
+  self.juju = config.biomes[ctx.biome].player.baseJuju
   self.totalJuju = 0
-  self.jujuTimer = config.player.jujuRate
-  self.jujuRate = config.player.jujuRate
+  self.jujuTimer = config.biomes[ctx.biome].player.jujuRate
+  self.jujuRate = config.biomes[ctx.biome].player.jujuRate
 
   self.magicShruju = {}
 
@@ -36,7 +36,7 @@ function Player:init()
 	self.prevy = self.y
 
 	self.selected = 1
-  self.maxPopulation = config.player.basePopulation
+  self.maxPopulation = config.biomes[ctx.biome].player.basePopulation
   self.totalSummoned = 0
 	self.recentSelect = 0
 	self.invincible = 0
@@ -220,10 +220,10 @@ function Player:summon()
 
     for i = 1, #self.deck do
       if i == self.selected then
-        self.deck[i].cooldown = math.max(config.player.baseCooldown - self.flatCooldownReduction, config.player.minCooldown)
+        self.deck[i].cooldown = math.max(config.biomes[ctx.biome].player.baseCooldown - self.flatCooldownReduction, config.biomes[ctx.biome].player.minCooldown)
         self.deck[i].maxCooldown = self.deck[i].cooldown
       else
-        local cd = math.max(config.player.globalCooldown - self.flatCooldownReduction, config.player.minCooldown)
+        local cd = math.max(config.biomes[ctx.biome].player.globalCooldown - self.flatCooldownReduction, config.biomes[ctx.biome].player.minCooldown)
         if cd > self.deck[i].cooldown then
           self.deck[i].cooldown = cd
           self.deck[i].maxCooldown = cd

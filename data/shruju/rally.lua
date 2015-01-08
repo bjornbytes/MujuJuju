@@ -9,7 +9,7 @@ function Rally:apply()
  p.maxPopulation = p.maxPopulation + 1
  ctx.hud.status.populationScale = 2
 
- if p.maxPopulation >= config.player.maxPopulation then
+ if p.maxPopulation >= config.biomes[ctx.biome].player.maxPopulation then
     table.each(ctx.shrujuPatches.objects, function(patch)
       patch:removeType('rally')
     end)
