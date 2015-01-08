@@ -44,8 +44,8 @@ end
 function HudHealth:init()
   self.bins = {}
   self.unitBins = {}
-  self.unitBarPrevY = {}
-  self.unitBarY = {}
+  self.unitBarPrevY = setmetatable({}, {__mode = 'k'})
+  self.unitBarY = setmetatable({}, {__mode = 'k'})
 end
 
 function HudHealth:update()
