@@ -152,11 +152,10 @@ function HudUnits:draw()
 
     -- Text
     local unit = data.unit[p.deck[i].code]
-    local font = g.setFont('mesmerize', .04 * scale * v)
+    local font = g.setFont('mesmerize', math.round(.04 * scale * v))
     g.setColor(255, 255, 255)
     g.printCenter(unit.name, math.round(xx), math.round(yy + (.05 * v * scale)))
 
-    g.setFont('mesmerize', .04 * scale * v)
     g.setColor(0, 100, 0, 200)
     g.printCenter(unit.cost, xx - (.19 * v * scale) + 1, yy + (.204 * v * scale) + 2)
     g.setColor(255, 255, 255)
