@@ -53,8 +53,8 @@ function Menu:load(selectedBiome)
       local u, v = love.graphics.getDimensions()
       local r = .04 * v
       local inc = (2 * r) + .01 * v
-      local x = inc
-      local y = inc
+      local x = inc / 2
+      local y = inc / 2
       local res = {}
       for i = 1, #ctx.user.runes do
         table.insert(res, {x, y, r})

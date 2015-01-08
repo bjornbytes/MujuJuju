@@ -84,14 +84,14 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
+          base = 12,
           exponent = .8,
-          coefficient = .75
+          coefficient = .85
         },
         maximum = {
-          base = 20,
+          base = 18,
           exponent = .85,
-          coefficient = 1
+          coefficient = 1.1
         }
       },
       units = {
