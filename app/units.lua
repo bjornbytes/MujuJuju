@@ -9,9 +9,10 @@ function Units:init()
 end
 
 function Units:createEnemy()
-  if self.enemyCount < 1 + self.level * config.biomes[ctx.biome].units.maxEnemiesCoefficient then
+  local conf = config.biomes[ctx.biome]
+  if self.enemyCount < 1 + self.level * conf.units.maxEnemiesCoefficient then
     local choices = {}
-    table.each(config.biomes[ctx.biome].units.thresholds, function(time, code)
+    table.each(conf.units.thresholds, function(time, code)
       if ctx.timer * tickRate >= time then table.insert(choices, code) end
     end)
     local enemyType = choices[love.math.random(1, #choices)]
@@ -20,7 +21,7 @@ function Units:createEnemy()
     local eliteCount = table.count(self:filter(function(u) return u.elite end))
     local isElite = love.math.random() < eliteChance
     isElite = isElite and self.level > config.elites.minimumLevel
-    isElite = isElite and eliteCount < config.biomes[ctx.biome].units.maxElites
+    isElite = isElite and eliteCount < conf.units.maxElites
     local unit = self:add(enemyType, {x = x, elite = isElite})
 
     if isElite then
@@ -29,8 +30,8 @@ function Units:createEnemy()
       unit.buffs:add(buff, config.elites.buffs[buff])
     end
 
-    self.minEnemyRate = math.max(self.minEnemyRate - .055 * math.clamp(self.minEnemyRate / 5, .1, .6), 1.4)
-    self.maxEnemyRate = math.max(self.maxEnemyRate - .03 * math.clamp(self.maxEnemyRate / 4, .2, .8), 2.75)
+    self.minEnemyRate = math.max(self.minEnemyRate - conf.units.minEnemyRateDecay * math.clamp((1.5 + self.minEnemyRate) / 10, .25, 1), 1.5)
+    self.maxEnemyRate = math.max(self.maxEnemyRate - conf.units.maxEnemyRateDecay * math.clamp((3.0 + self.maxEnemyRate) / 10, .25, 1), 3.0)
   end
 
   return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
@@ -40,8 +41,8 @@ function Units:update()
   self.enemyCount = table.count(self:filter(function(u) return u.team == 0 end))
   self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
-  if self.enemyCount == 0 and self.level > 1 then
-    self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, 1 * tickRate))
+  if self.enemyCount == 0 and self.level > 1 and self.nextEnemy > .5 then
+    self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, (.1 + love.math.random()) * tickRate))
   end
 
   self.level = self.level + (tickRate / (16 + self.level / 2)) * config.biomes[ctx.biome].units.levelScale

@@ -64,7 +64,7 @@ return {
 
   shruju = {
     growTime = 60,
-    minGrowTime = 10,
+    minGrowTime = 15,
     harvestCooldownReduction = 5,
     magicDuration = 90
   },
@@ -97,6 +97,8 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
+        minEnemyRateDecay = .06,
+        maxEnemyRateDecay = .04,
         maxEnemiesCoefficient = .4,
         levelScale = 1,
         upgradeCostIncrease = 2,
@@ -107,16 +109,7 @@ return {
           kuju = 600
         }
       },
-      shrujuPatches = {
-        [1] = {
-          minTimer = 60,
-          maxTimer = 60
-        },
-        [2] = {
-          minTimer = 300,
-          maxTimer = 300
-        }
-      },
+      shrujuPatches = {60, 300},
       runes = {
         maxLevel = 25,
         specialChance = .1
@@ -157,6 +150,8 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
+        minEnemyRateDecay = .05,
+        maxEnemyRateDecay = .03,
         maxEnemiesCoefficient = .5,
         levelScale = 1.1,
         upgradeCostIncrease = 3,
@@ -167,16 +162,7 @@ return {
           kuju = 300
         }
       },
-      shrujuPatches = {
-        [1] = {
-          minTimer = 60,
-          maxTimer = 60
-        },
-        [2] = {
-          minTimer = 300,
-          maxTimer = 300
-        }
-      },
+      shrujuPatches = {60, 300},
       runes = {
         maxLevel = 25,
         specialChance = .1
@@ -217,6 +203,8 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
+        minEnemyRateDecay = .05,
+        maxEnemyRateDecay = .03,
         maxEnemiesCoefficient = .6,
         levelScale = 1.2,
         upgradeCostIncrease = 4,
@@ -227,16 +215,7 @@ return {
           duju = 600
         }
       },
-      shrujuPatches = {
-        [1] = {
-          minTimer = 60,
-          maxTimer = 60
-        },
-        [2] = {
-          minTimer = 300,
-          maxTimer = 300
-        }
-      },
+      shrujuPatches = {60, 300},
       runes = {
         maxLevel = 75,
         specialChance = .1
@@ -277,6 +256,8 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
+        minEnemyRateDecay = .05,
+        maxEnemyRateDecay = .03,
         maxEnemiesCoefficient = .7,
         levelScale = 1.3,
         upgradeCostIncrease = 5,
@@ -287,16 +268,7 @@ return {
           duju = 0
         }
       },
-      shrujuPatches = {
-        [1] = {
-          minTimer = 60,
-          maxTimer = 60
-        },
-        [2] = {
-          minTimer = 300,
-          maxTimer = 300
-        }
-      },
+      shrujuPatches = {60, 300},
       runes = {
         maxLevel = 100,
         specialChance = .1

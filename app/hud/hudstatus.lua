@@ -149,4 +149,9 @@ function HudStatus:draw()
   self.hitboxes.timer[2] = 0
   self.hitboxes.timer[3] = hitboxWidth
   self.hitboxes.timer[4] = height
+
+  g.setFont('pixel', 8)
+  g.setColor(255, 255, 255)
+  local str = math.round(ctx.units.level / .1) * .1
+  g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)
 end

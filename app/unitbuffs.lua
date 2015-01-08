@@ -5,7 +5,8 @@ function UnitBuffs:init(unit)
   self.list = {}
 
   table.merge(table.only(self.unit.class, Unit.classStats), self.unit)
-  self:applyRunes()
+  self:applyRunes('health')
+  self:applyRunes('damage')
 end
 
 function UnitBuffs:preupdate()
@@ -16,8 +17,11 @@ function UnitBuffs:postupdate()
   table.with(self.list, 'rot')
   table.with(self.list, 'postupdate')
   table.with(self.list, 'update')
+
+  self.unit.speed = self.unit.class.speed
+  self:applyRunes('speed')
   
-  local speed = self.unit.class.speed
+  local speed = self.unit.speed
 
   -- Apply Hastes
   local hastes = self:buffsWithTag('haste')
@@ -118,13 +122,12 @@ function UnitBuffs:isCrowdControl(buff)
   return t('slow') or t('root') or t('stun') or t('silence') or t('knockback') or t('taunt')
 end
 
-function UnitBuffs:applyRunes()
+function UnitBuffs:applyRunes(stat)
   if not self.unit.player or not self.unit:hasRunes() then return end
 
   local runes = self.unit.player.deck[self.unit.class.code].runes
   table.each(runes, function(rune)
-    local stat = rune.stat
-    if stat then
+    if rune.stat == stat then
       if rune.amount then
         self.unit[stat] = self.unit[stat] + rune.amount
       elseif rune.scaling then

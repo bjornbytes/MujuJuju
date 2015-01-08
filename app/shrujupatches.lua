@@ -1,17 +1,18 @@
 ShrujuPatches = class()
 
 function ShrujuPatches:init()
+  self.index = 1
   self.objects = {}
-  self.timer = self:start()
   self.harvestLevel = 0
 end
 
 function ShrujuPatches:update()
   table.with(self.objects, 'update')
-  self.timer = timer.rot(self.timer, function()
+
+  local conf = config.biomes[ctx.biome]
+  if conf.shrujuPatches[self.index] and ctx.timer * tickRate > conf.shrujuPatches[self.index] then
     self:add()
-    return self:start()
-  end)
+  end
 end
 
 function ShrujuPatches:add()
@@ -22,12 +23,5 @@ function ShrujuPatches:add()
   patch:activate()
   table.insert(self.objects, patch)
   ctx.hud.shrujuPatches[patch.id].patch = patch
-end
-
-function ShrujuPatches:start()
-  self.index = self.index and (self.index + 1) or 1
-  local config = config.biomes[ctx.biome].shrujuPatches[self.index]
-  if config then
-    return love.math.random(config.minTimer, config.maxTimer)
-  end
+  self.index = self.index + 1
 end

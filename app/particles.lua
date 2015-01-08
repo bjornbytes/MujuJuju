@@ -37,6 +37,7 @@ function Particles:draw()
 end
 
 function Particles:gui()
+  if ctx.ded then return end
   g.setColor(255, 255, 255)
   table.each(self.modes.gui, function(system, code)
     g.setBlendMode(data.particle[code].blendMode or 'alpha')

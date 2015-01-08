@@ -186,7 +186,7 @@ function Game:distribute()
     end
 
     local colors = table.keys(config.runes.colors)
-    rune.color = config.runes.colors[colors[love.math.random(1, #colors)]]
+    rune.color = colors[love.math.random(1, #colors)]
     rune.image = love.math.random(1, config.runes.imageCount)
     rune.background = runeLevel < 30 and 'broken' or 'normal'
 
