@@ -246,16 +246,16 @@ function Unit:draw()
   g.setShader()
   
   g.setColor(255, 255, 255, 128 * self.alpha)
-  g.draw(self.backCanvas, x, y - lerpd.knockup, 0, 1, 1, 100, 100)
+  g.draw(self.backCanvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 100, 100)
   g.setColor(255, 255, 255)
-  self.animation:draw(x, y - lerpd.knockup, {noupdate = true})
+  self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
 
   if self.hurtGlow > .01 then
     table.each(self.animation.spine.skeleton.slots, function(slot)
       slot.a = self.hurtGlow
       slot.data.additiveBlending = true
     end)
-    self.animation:draw(x, y - lerpd.knockup, {noupdate = true})
+    self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
     table.each(self.animation.spine.skeleton.slots, function(slot)
       slot.a = 1
       slot.data.additiveBlending = false
