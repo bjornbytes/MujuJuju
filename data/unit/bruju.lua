@@ -10,7 +10,7 @@ Bruju.width = 48
 Bruju.health = 85
 Bruju.damage = 20
 Bruju.range = 12
-Bruju.attackSpeed = 1.15
+Bruju.attackSpeed = 1
 Bruju.speed = 45
 
 Bruju.cost = 12

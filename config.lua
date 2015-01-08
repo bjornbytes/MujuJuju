@@ -138,12 +138,12 @@ return {
         minimum = {
           base = 16,
           exponent = .75,
-          coefficient = .85
+          coefficient = 1
         },
         maximum = {
           base = 22,
           exponent = .75,
-          coefficient = 1.1
+          coefficient = 1.25
         }
       },
       player = {
