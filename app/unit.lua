@@ -15,7 +15,7 @@ Unit.depth = -3
 ----------------
 function Unit:activate()
   self.animation = data.animation[self.class.code]({
-    scale = data.animation[self.class.code] * (self.elite and config.elites.scale or 1)
+    scale = data.animation[self.class.code].scale * (self.elite and config.elites.scale or 1)
   })
 
   if self.player then
