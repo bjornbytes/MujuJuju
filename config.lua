@@ -290,12 +290,12 @@ return {
     health = {
       names = {'Rune of Fortitude', 'Rune of Vitality', 'Rune of Stamina', 'Rune of the Soul'},
       flatRange = {10, 250},
-      scalingRange = {2, 25}
+      scalingRange = {.5, 25}
     },
     damage = {
       names = {'Rune of Might', 'Rune of Force', 'Rune of Ruin', 'Rune of Power'},
       flatRange = {2, 70},
-      scalingRange = {1, 10}
+      scalingRange = {.1, 5}
     },
     speed = {
       names = {'Rune of Agility', 'Rune of Haste', 'Rune of Swiftness', 'Rune of the Wind'},
