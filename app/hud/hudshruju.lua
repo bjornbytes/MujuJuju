@@ -1,4 +1,3 @@
-local rich = require 'lib/deps/richtext/richtext'
 local g = love.graphics
 
 HudShruju = class()

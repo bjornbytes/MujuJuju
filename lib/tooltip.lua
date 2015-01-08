@@ -1,5 +1,5 @@
 require 'lib/typo'
-local rich = require 'lib/deps/richtext/richtext'
+local rich = require 'lib/deps/richtext'
 local g = love.graphics
 
 Tooltip = class()

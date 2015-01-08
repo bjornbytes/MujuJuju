@@ -1,5 +1,4 @@
 local tween = require 'lib/deps/tween/tween'
-local rich = require 'lib/deps/richtext/richtext'
 local g = love.graphics
 
 HudShrujuPatch = class()

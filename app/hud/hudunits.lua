@@ -1,5 +1,3 @@
-local rich = require 'lib/deps/richtext/richtext'
-
 HudUnits = class()
 
 local g = love.graphics

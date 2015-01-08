@@ -55,7 +55,7 @@ return {
   player = {
     baseCooldown = 5,
     minCooldown = .5,
-    globalCooldown = 2,
+    globalCooldown = 3,
     baseJuju = 30,
     jujuRate = 1,
     basePopulation = 3,
@@ -97,8 +97,8 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        minEnemyRateDecay = .08,
-        maxEnemyRateDecay = .07,
+        minEnemyRateDecay = .075,
+        maxEnemyRateDecay = .065,
         maxEnemiesCoefficient = .3,
         levelScale = 1,
         upgradeCostIncrease = 2,
@@ -137,14 +137,14 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
+          base = 16,
           exponent = .75,
-          coefficient = .75
+          coefficient = .85
         },
         maximum = {
-          base = 20,
+          base = 22,
           exponent = .75,
-          coefficient = 1
+          coefficient = 1.1
         }
       },
       units = {
