@@ -14,6 +14,9 @@ Unit.depth = -3
 -- Core
 ----------------
 function Unit:activate()
+  Unit.canvas = Unit.canvas or g.newCanvas(400, 400)
+  Unit.backCanvas = Unit.backCanvas or g.newCanvas(400, 400)
+
   self.animation = data.animation[self.class.code]({
     scale = data.animation[self.class.code].scale * (self.elite and config.elites.scale or 1)
   })
@@ -132,8 +135,6 @@ function Unit:activate()
 
   self.healthDisplay = self.health
   self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
-  self.backCanvas = g.newCanvas(200, 200)
-  self.canvas = g.newCanvas(200, 200)
   self.alpha = 0
   self.hurtGlow = 0
 
@@ -219,12 +220,12 @@ function Unit:draw()
   local shader = data.media.shaders.colorize
   self.canvas:renderTo(function()
     g.setShader(shader)
-    self.animation:draw(100, 100)
+    self.animation:draw(200, 200)
     g.setShader()
   end)
 
-  data.media.shaders.horizontalBlur:send('amount', .001)
-  data.media.shaders.verticalBlur:send('amount', .001)
+  data.media.shaders.horizontalBlur:send('amount', .0005)
+  data.media.shaders.verticalBlur:send('amount', .0005)
   g.setColor(255, 255, 255)
   for i = 1, 1 do
     g.setShader(data.media.shaders.horizontalBlur)
@@ -246,7 +247,7 @@ function Unit:draw()
   g.setShader()
   
   g.setColor(255, 255, 255, 128 * self.alpha)
-  g.draw(self.backCanvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 100, 100)
+  g.draw(self.backCanvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
   g.setColor(255, 255, 255)
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
 
