@@ -109,12 +109,12 @@ return {
       },
       shrujuPatches = {
         [1] = {
-          minTimer = 30,
-          maxTimer = 40
+          minTimer = 60,
+          maxTimer = 60
         },
         [2] = {
           minTimer = 300,
-          maxTimer = 400
+          maxTimer = 300
         }
       },
       runes = {
@@ -157,8 +157,8 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        maxEnemiesCoefficient = .45,
-        levelScale = 1.25,
+        maxEnemiesCoefficient = .5,
+        levelScale = 1.1,
         upgradeCostIncrease = 3,
         maxElites = 1,
         thresholds = {
@@ -169,12 +169,12 @@ return {
       },
       shrujuPatches = {
         [1] = {
-          minTimer = 30,
-          maxTimer = 40
+          minTimer = 60,
+          maxTimer = 60
         },
         [2] = {
-          minTimer = 120,
-          maxTimer = 130
+          minTimer = 300,
+          maxTimer = 300
         }
       },
       runes = {
@@ -215,10 +215,10 @@ return {
         }
       },
       units = {
-        minEnemyRate = 6,
-        maxEnemyRate = 9,
+        minEnemyRate = 12,
+        maxEnemyRate = 16,
         maxEnemiesCoefficient = .6,
-        levelScale = 1.5,
+        levelScale = 1.2,
         upgradeCostIncrease = 4,
         maxElites = 2,
         thresholds = {
@@ -229,12 +229,12 @@ return {
       },
       shrujuPatches = {
         [1] = {
-          minTimer = 30,
-          maxTimer = 40
+          minTimer = 60,
+          maxTimer = 60
         },
         [2] = {
-          minTimer = 120,
-          maxTimer = 130
+          minTimer = 300,
+          maxTimer = 300
         }
       },
       runes = {
@@ -275,10 +275,10 @@ return {
         }
       },
       units = {
-        minEnemyRate = 6,
-        maxEnemyRate = 8,
+        minEnemyRate = 12,
+        maxEnemyRate = 16,
         maxEnemiesCoefficient = .7,
-        levelScale = 2,
+        levelScale = 1.3,
         upgradeCostIncrease = 5,
         maxElites = 3,
         thresholds = {
@@ -289,12 +289,12 @@ return {
       },
       shrujuPatches = {
         [1] = {
-          minTimer = 30,
-          maxTimer = 40
+          minTimer = 60,
+          maxTimer = 60
         },
         [2] = {
-          minTimer = 120,
-          maxTimer = 130
+          minTimer = 300,
+          maxTimer = 300
         }
       },
       runes = {

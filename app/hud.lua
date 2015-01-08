@@ -221,3 +221,10 @@ function Hud:resize()
   self.u, self.v = love.graphics.getDimensions()
   self.tooltip:resize()
 end
+
+function Hud:menuActive()
+  local active = false
+  for _, patch in pairs(self.shrujuPatches) do if patch.active then active = true break end end
+  active = active or self.upgrades.active
+  return active
+end
