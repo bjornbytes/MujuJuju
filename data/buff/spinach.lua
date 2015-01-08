@@ -4,7 +4,7 @@ Spinach.name = 'Spinach'
 Spinach.tags = {}
 
 function Spinach:preattack(target, damage)
-  return damage * 2
+  return damage * 1.5
 end
 
 
