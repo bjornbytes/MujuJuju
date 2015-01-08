@@ -55,6 +55,7 @@ function Game:update()
 		if self.ded then self.effects:get('deathBlur'):update() end
     self.players:paused()
     self.units:paused()
+    self.spells:paused()
     self.particles:update()
 		return
 	end
@@ -87,7 +88,7 @@ end
 
 function Game:keypressed(key)
 	if not self.ded then
-		if key == 'p' and not self.hud.upgrading then self.paused = not self.paused
+		if key == 'p' or (key == 'escape' and not self.hud:menuActive()) then self.paused = not self.paused
 		elseif key == 'm' then self.sound:mute()
 		elseif key == 'f' then love.window.setFullscreen(not love.window.getFullscreen()) end
 	end
@@ -125,10 +126,6 @@ function Game:distribute()
   local gold = time >= config.biomes[self.biome].benchmarks.gold
 
   -- Distribute runes
-  if gold then runeLevel = love.math.random(.67 * maxLevel, maxLevel)
-  elseif silver then runeLevel = love.math.random(.33 * maxLevel, .67 * maxLevel)
-  elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
-
   local runeCount = 0
   if not bronze and love.math.random() < .3 then runeCount = runeCount + 1 end
   if bronze and love.math.random() < .9 then runeCount = runeCount + 1 end
@@ -138,6 +135,10 @@ function Game:distribute()
     local rune = {}
     local runeLevel = 0
     local maxLevel = config.biomes[ctx.biome].runes.maxLevel
+
+    if gold then runeLevel = love.math.random(.67 * maxLevel, maxLevel)
+    elseif silver then runeLevel = love.math.random(.33 * maxLevel, .67 * maxLevel)
+    elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
 
     local upgrade = love.math.random() < config.biomes[ctx.biome].runes.specialChance * (runeLevel / 100)
     if upgrade then

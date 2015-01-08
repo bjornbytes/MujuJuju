@@ -51,4 +51,9 @@ function Dirt:draw()
 	g.circle('fill', x, y, self.size)
 end
 
+function Dirt:paused()
+  self.prevx = self.x
+  self.prevy = self.y
+end
+
 return Dirt

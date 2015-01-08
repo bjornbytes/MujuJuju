@@ -69,11 +69,11 @@ function HudShruju:draw()
     insert(x + w / 2, y + h / 2)
     insert(x + w / 2, y)
     while true do
-      if cd > .125 then cd = cd - .125 insert(x, y) else insert(x + w / 2 + (w / 2 * (cd / .125)), y) break end
+      if cd > .125 then cd = cd - .125 insert(x, y) else insert(x + (w / 2 * (cd / .125)), y) break end
       if cd > .250 then cd = cd - .250 insert(x, y + h) else insert(x, y + (h * (cd / .250))) break end
       if cd > .250 then cd = cd - .250 insert(x + w, y + h) else insert(x + (w * (cd / .250)), y + h) break end
       if cd > .250 then cd = cd - .250 insert(x + w, y) else insert(x + w, y + h - (h * (cd / .250))) break end
-      if cd > .125 then cd = cd - .125 insert(x + w / 2, y) else insert(x + w / 2 - w / 2 * (cd / .125), y) break end
+      if cd > .125 then cd = cd - .125 insert(x + w / 2, y) else insert(x + w - w / 2 * (cd / .125), y) break end
     end
 
     g.setColor(0, 0, 0, 100)
