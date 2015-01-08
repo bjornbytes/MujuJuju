@@ -52,7 +52,7 @@ function Menu:load(selectedBiome)
     gutterRunes = function()
       local u, v = love.graphics.getDimensions()
       local r = .04 * v
-      local inc = r + .01 * v
+      local inc = (2 * r) + .01 * v
       local x = inc
       local y = inc
       local res = {}
