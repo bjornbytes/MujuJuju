@@ -25,15 +25,17 @@ function Map:init()
 
       g.setColor(255, 255, 255)
       local image = data.media.graphics.map[ctx.biome .. 'Background']
+      local image = data.media.graphics.map[ctx.biome]
       local scale = self.height / image:getHeight()
       g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
 
       g.setColor(255, 255, 255, alpha)
       local image = data.media.graphics.map[ctx.biome .. 'BackgroundSpirit']
+      local image = data.media.graphics.map[ctx.biome .. 'Spirit']
       local scale = self.height / image:getHeight()
       g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
 
-      g.setColor(255, 255, 255)
+      --[[g.setColor(255, 255, 255)
       local image = data.media.graphics.map[ctx.biome .. 'Midground']
       local scale = self.height / image:getHeight()
       g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
@@ -41,7 +43,7 @@ function Map:init()
       g.setColor(255, 255, 255, alpha)
       local image = data.media.graphics.map[ctx.biome .. 'MidgroundSpirit']
       local scale = self.height / image:getHeight()
-      g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
+      g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)]]
     end
   }
 
