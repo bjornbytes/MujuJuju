@@ -41,7 +41,7 @@ return {
         reflect = 1 
       },
       venomous = {
-        dotModifier = .75,
+        dotModifier = .35,
         dotTimer = 3
       },
       hulking = {
