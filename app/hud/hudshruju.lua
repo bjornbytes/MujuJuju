@@ -57,7 +57,7 @@ function HudShruju:draw()
     g.setColor(255, 255, 255, 220)
     g.draw(image, x, y, 0, scale, scale)
 
-    local image = data.media.graphics.shruju[p.magicShruju[i].code]
+    local image = data.media.graphics.hud.icons[p.magicShruju[i].effect.code] or data.media.graphics.shruju[p.magicShruju[i].code]
     local scale = (w - (.02 * v)) / (image:getHeight() - 8)
     g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
