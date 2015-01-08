@@ -97,7 +97,7 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        minEnemyRateDecay = .09,
+        minEnemyRateDecay = .08,
         maxEnemyRateDecay = .08,
         maxEnemiesCoefficient = .4,
         levelScale = 1,
@@ -150,8 +150,8 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        minEnemyRateDecay = .09,
-        maxEnemyRateDecay = .07,
+        minEnemyRateDecay = .08,
+        maxEnemyRateDecay = .08,
         maxEnemiesCoefficient = .5,
         levelScale = 1.1,
         upgradeCostIncrease = 3,
@@ -203,8 +203,8 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        minEnemyRateDecay = .09,
-        maxEnemyRateDecay = .07,
+        minEnemyRateDecay = .08,
+        maxEnemyRateDecay = .08,
         maxEnemiesCoefficient = .6,
         levelScale = 1.2,
         upgradeCostIncrease = 4,
@@ -256,8 +256,8 @@ return {
       units = {
         minEnemyRate = 12,
         maxEnemyRate = 16,
-        minEnemyRateDecay = .09,
-        maxEnemyRateDecay = .07,
+        minEnemyRateDecay = .08,
+        maxEnemyRateDecay = .08,
         maxEnemiesCoefficient = .7,
         levelScale = 1.3,
         upgradeCostIncrease = 5,
