@@ -251,7 +251,7 @@ function Unit:draw()
   g.setColor(255, 255, 255)
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
 
-  if self.hurtGlow > .01 then
+  if self.hurtGlow > .01 and not self.spawning and self.alpha > .99 then
     table.each(self.animation.spine.skeleton.slots, function(slot)
       slot.a = self.hurtGlow
       slot.data.additiveBlending = true
