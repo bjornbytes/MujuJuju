@@ -14,7 +14,7 @@ function Taunt:activate()
         ctx.sound:play(data.media.sounds.thuju.taunt)
       end)
 
-      self.unit.buffs:add('tauntdamage', {damage = 10 * table.count(targets), timer = 3})
+      self.unit.buffs:add('tauntdamage', {damage = 10 * table.count(targets), timer = 5})
     end
   end)
 end

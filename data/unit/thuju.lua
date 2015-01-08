@@ -81,7 +81,7 @@ Thuju.upgrades = {
     costs = {100, 200, 300},
     prerequisites = {wardofthorns = 1, tenacity = 1},
     name = 'Taunt',
-    description = 'Thuju beats his chest, forcing nearby enemies to attack him for 3 seconds.  Thuju gains damage during the taunt based on how many enemies are taunted.',
+    description = 'Thuju beats his chest, forcing nearby enemies to attack him for 3 seconds.  Thuju gains damage for 5 seconds based on how many enemies are taunted.',
     values = {
       [1] = '100 range, 12 second cooldown, 10 damage per enemy',
       [2] = '150 range, 10 second cooldown, 20 damage per enemy',
