@@ -212,6 +212,7 @@ function Player:summon()
 	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(cost) then
 		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
     self.totalSummoned = self.totalSummoned + 1
+    self.invincible = 0
 
     table.each(self.summonBuffs, function(code)
       unit.buffs:add(code)

@@ -8,10 +8,13 @@ function Taunt:activate()
   self.unit.animation:on('event', function(event)
     if event.data.name == 'taunt' then
       local range = 50 + 50 * self.unit:upgradeLevel('taunt')
-      table.each(ctx.target:inRange(self.unit, range, 'enemy', 'unit'), function(target)
+      local target = ctx.target:inRange(self.unit, range, 'enemy', 'unit')
+      table.each(targets, function(target)
         target.buffs:add('taunt', {timer = 3, target = self.unit})
         ctx.sound:play(data.media.sounds.thuju.taunt)
       end)
+
+      self.unit.buffs:add('tauntdamage', {damage = 10 * table.count(targets), timer = 3})
     end
   end)
 end
