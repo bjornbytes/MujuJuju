@@ -8,14 +8,15 @@ end
 
 function Wave:update()
   local p = ctx.players:get(ctx.id)
-	self.strength[1] = math.lerp(self.strength[1], p.dead and .005 or 0, .5 * tickRate)
-	self.strength[2] = math.lerp(self.strength[2], p.dead and .005 * 4 / 3 or 0, .5 * tickRate)
-	self.shader:send('time', tick)
+  local ratio = love.graphics.getWidth() / love.graphics.getHeight()
+	self.strength[1] = math.lerp(self.strength[1], p.dead and .005 or 0, 4 * tickRate)
+	self.strength[2] = math.lerp(self.strength[2], p.dead and (.005 * ratio) or 0, 4 * tickRate)
+	self.shader:send('time', tick * .08)
 	self.shader:send('strength', self.strength)
 end
 
 function Wave:resize()
-  self.shader = love.graphics.newShader('media/shaders/wave.shader')
+  self.shader = data.media.shaders.wave
 end
 
 return Wave

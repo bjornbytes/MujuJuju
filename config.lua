@@ -127,7 +127,7 @@ return {
           radius = {.85, .85}
         },
         bloom = {
-          alpha = {10, 70}
+          alpha = {10, 50}
         }
       }
     },
@@ -354,7 +354,8 @@ return {
       green = {100, 200, 100},
       blue = {100, 100, 200},
       red = {200, 100, 100}
-    }
+    },
+    imageCount = 9
   },
 
   units = {

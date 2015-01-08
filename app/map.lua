@@ -19,24 +19,26 @@ function Map:init()
   self.background = {
     depth = 10,
     draw = function()
-      local image = data.media.graphics.map[ctx.biome .. 'Background']
-      local scale = self.height / image:getHeight()
-      g.setColor(255, 255, 255)
-      g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
-
-      local image = data.media.graphics.map[ctx.biome .. 'Midground']
-      local scale = self.height / image:getHeight()
-      g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
-
       local alpha = 255 * self.spiritAlpha
       local p = ctx.players:get(ctx.id)
       alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .5)
-      g.setColor(255, 255, 255, alpha)
 
+      g.setColor(255, 255, 255)
+      local image = data.media.graphics.map[ctx.biome .. 'Background']
+      local scale = self.height / image:getHeight()
+      g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
+
+      g.setColor(255, 255, 255, alpha)
       local image = data.media.graphics.map[ctx.biome .. 'BackgroundSpirit']
       local scale = self.height / image:getHeight()
       g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
 
+      g.setColor(255, 255, 255)
+      local image = data.media.graphics.map[ctx.biome .. 'Midground']
+      local scale = self.height / image:getHeight()
+      g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
+
+      g.setColor(255, 255, 255, alpha)
       local image = data.media.graphics.map[ctx.biome .. 'MidgroundSpirit']
       local scale = self.height / image:getHeight()
       g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
