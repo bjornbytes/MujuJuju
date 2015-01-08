@@ -10,7 +10,7 @@ function Tremor:activate()
       local level = self.unit:upgradeLevel('tremor')
       local damages = {[0] = 0, 30, 60, 90}
       local damage = damages[level]
-      local stun = .5 * level
+      local stun = 1 + .5 * level
       local width = 175
 
       self:createSpell({damage = damage, width = width, stun = stun})

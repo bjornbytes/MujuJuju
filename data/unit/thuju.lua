@@ -100,9 +100,9 @@ Thuju.upgrades = {
     name = 'Tremor',
     description = 'Thuju slams the ground in the direction he is facing, causing the tectonic plates of the Earth to erupt in front of him.  Any units unfortunate enough to be caught in the area of impact take damage and are stunned.',
     values = {
-      [1] = '30 damage, .5s stun',
-      [2] = '60 damage, 1s stun',
-      [3] = '90 damage, 80 damage, 1.5s stun'
+      [1] = '30 damage, 1s stun',
+      [2] = '60 damage, 1.5s stun',
+      [3] = '90 damage, 2s stun'
     },
     apply = function(self, unit)
       if self.level > 0 then

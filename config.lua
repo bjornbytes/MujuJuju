@@ -294,8 +294,8 @@ return {
     },
     damage = {
       names = {'Rune of Might', 'Rune of Force', 'Rune of Ruin', 'Rune of Power'},
-      flatRange = {3, 80},
-      scalingRange = {1, 15}
+      flatRange = {2, 70},
+      scalingRange = {1, 10}
     },
     speed = {
       names = {'Rune of Agility', 'Rune of Haste', 'Rune of Swiftness', 'Rune of the Wind'},
