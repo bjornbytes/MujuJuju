@@ -314,6 +314,7 @@ return {
   },
 
   runes = {
+    stats = {'health', 'damage', 'speed'},
     health = {
       names = {'Rune of Fortitude', 'Rune of Vitality', 'Rune of Stamina', 'Rune of the Soul'},
       flatRange = {10, 250},

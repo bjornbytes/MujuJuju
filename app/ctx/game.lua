@@ -166,7 +166,7 @@ function Game:distribute()
       rune.upgrade = upgrades[love.math.random(1, #upgrades)]
       rune.name = 'Rune of ' .. upgrades[rune.upgrade]:capitalize()
     else
-      local stats = table.keys(config.runes)
+      local stats = config.runes.stats
       local stat = stats[love.math.random(1, #stats)]
       rune.stat = stat
       if love.math.random() < .5 then
