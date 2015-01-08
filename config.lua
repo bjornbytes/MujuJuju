@@ -23,7 +23,7 @@ return {
     levelModifier = .0015,
     jujuModifier = 2,
     minimumLevel = 20,
-    scale = 1.35,
+    scale = 1.25,
     healthModifier = 2,
     damageModifier = 1.5,
     buffs = {
