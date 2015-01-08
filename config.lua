@@ -151,7 +151,7 @@ return {
         minCooldown = .5,
         globalCooldown = 3,
         baseJuju = 30,
-        jujuRate = 2,
+        jujuRate = .5,
         basePopulation = 3,
         maxPopulation = 10
       },
