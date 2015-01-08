@@ -187,7 +187,7 @@ function HudUnits:draw()
       local scale = ((runeSize - .01175 * v) * 2) / image:getHeight()
       g.setColor(config.runes.colors[rune.color])
       g.draw(image, runex, runey, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-      g.setColor(255, 255, 255)
+      g.setColor(255, 255, 255, 255 * alpha)
 
       runex = runex + runeInc
     end

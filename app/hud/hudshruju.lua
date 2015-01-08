@@ -58,8 +58,8 @@ function HudShruju:draw()
     g.draw(image, x, y, 0, scale, scale)
 
     local image = data.media.graphics.hud.icons[p.magicShruju[i].effect.code] or data.media.graphics.shruju[p.magicShruju[i].code]
-    local scale = (w - (.02 * v)) / (image:getHeight() - 8)
-    g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    local scale = math.min((w - (.02 * v)) / (image:getHeight() - 8), (h - (.02 * v)) / (image:getWidth() - 8))
+    g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
     local cd = p.magicShruju[i].effect.timer / (p.magicShruju[i].effect.duration or config.shruju.magicDuration)
     local points = {}
