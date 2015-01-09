@@ -26,7 +26,6 @@ function HudShruju:init()
 end
 
 function HudShruju:update()
-  local shruju = self.geometry.shruju
   local mx, my = love.mouse.getPosition()
   local p = ctx.player
 
@@ -34,6 +33,7 @@ function HudShruju:update()
     self.geometry.shruju = nil
   end
 
+  local shruju = self.geometry.shruju
   for i = 1, #shruju do
     local x, y, w, h = unpack(self.geometry.shruju[i])
     if p.magicShruju[i] and math.inside(mx, my, x, y, w, h) then
