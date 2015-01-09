@@ -170,9 +170,9 @@ function Game:distribute()
       local stat = stats[love.math.random(1, #stats)]
       rune.stat = stat
       if love.math.random() < .5 then
-        rune.amount = math.lerp(config.runes[stat].flatRange[1], config.runes[stat].flatRange[2], runeLevel / 100)
+        rune.amount = math.lerp(config.runes[stat].flatRange[1], config.runes[stat].flatRange[2], (runeLevel / 100) ^ 1.5)
       else
-        rune.scaling = math.lerp(config.runes[stat].scalingRange[1], config.runes[stat].scalingRange[2], runeLevel / 100)
+        rune.scaling = math.lerp(config.runes[stat].scalingRange[1], config.runes[stat].scalingRange[2], (runeLevel / 100) ^ 1.5)
       end
 
       local names = config.runes[rune.stat].names
