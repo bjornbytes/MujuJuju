@@ -74,14 +74,14 @@ return {
       },
       juju = {
         minimum = {
-          base = 12,
-          exponent = .75,
-          coefficient = .85
+          base = 14,
+          exponent = .8,
+          coefficient = 1
         },
         maximum = {
-          base = 18,
-          exponent = .75,
-          coefficient = 1
+          base = 20,
+          exponent = .8,
+          coefficient = 1.2
         }
       },
       player = {
@@ -94,9 +94,9 @@ return {
         maxPopulation = 10
       },
       units = {
-        minEnemyRate = 10,
+        minEnemyRate = 12,
         maxEnemyRate = 15,
-        minEnemyRateDecay = .05,
+        minEnemyRateDecay = .065,
         maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .3,
         levelScale = 1,
@@ -136,14 +136,14 @@ return {
       },
       juju = {
         minimum = {
-          base = 12,
-          exponent = .75,
-          coefficient = .85
+          base = 14,
+          exponent = .8,
+          coefficient = 1
         },
         maximum = {
-          base = 18,
-          exponent = .75,
-          coefficient = 1
+          base = 20,
+          exponent = .8,
+          coefficient = 1.2
         }
       },
       player = {
@@ -156,13 +156,13 @@ return {
         maxPopulation = 10
       },
       units = {
-        minEnemyRate = 10,
+        minEnemyRate = 12,
         maxEnemyRate = 15,
-        minEnemyRateDecay = .05,
+        minEnemyRateDecay = .065,
         maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .4,
-        levelScale = 1.1,
-        upgradeCostIncrease = 2,
+        levelScale = 1.15,
+        upgradeCostIncrease = 1,
         maxElites = 1,
         thresholds = {
           spuju = 0,
@@ -199,13 +199,13 @@ return {
       juju = {
         minimum = {
           base = 14,
-          exponent = .75,
-          coefficient = .75
+          exponent = .8,
+          coefficient = 1
         },
         maximum = {
           base = 20,
-          exponent = .75,
-          coefficient = 1
+          exponent = .8,
+          coefficient = 1.2
         }
       },
       player = {
@@ -219,12 +219,12 @@ return {
       },
       units = {
         minEnemyRate = 12,
-        maxEnemyRate = 16,
-        minEnemyRateDecay = .08,
-        maxEnemyRateDecay = .07,
+        maxEnemyRate = 15,
+        minEnemyRateDecay = .065,
+        maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .5,
-        levelScale = 1.2,
-        upgradeCostIncrease = 4,
+        levelScale = 1.3,
+        upgradeCostIncrease = 1,
         maxElites = 2,
         thresholds = {
           kuju = 0,
@@ -261,13 +261,13 @@ return {
       juju = {
         minimum = {
           base = 14,
-          exponent = .75,
-          coefficient = .75
+          exponent = .8,
+          coefficient = 1
         },
         maximum = {
           base = 20,
-          exponent = .75,
-          coefficient = 1
+          exponent = .8,
+          coefficient = 1.2
         }
       },
       player = {
@@ -281,12 +281,12 @@ return {
       },
       units = {
         minEnemyRate = 12,
-        maxEnemyRate = 16,
-        minEnemyRateDecay = .08,
-        maxEnemyRateDecay = .07,
+        maxEnemyRate = 15,
+        minEnemyRateDecay = .065,
+        maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .6,
-        levelScale = 1.3,
-        upgradeCostIncrease = 5,
+        levelScale = 1.45,
+        upgradeCostIncrease = 1,
         maxElites = 3,
         thresholds = {
           kuju = 0,

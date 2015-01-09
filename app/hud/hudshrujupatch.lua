@@ -173,6 +173,12 @@ end
 function HudShrujuPatch:keypressed(key)
   if self.patch and (key == 'tab' or key == 'e') then
     if self:playerNearby() and (self.patch.growing or self.patch.slot) then
+      if self.patch.slot then
+        local shruju = self.patch:take()
+        shruju:eat()
+        ctx.sound:play('nomnom')
+        self.active = true
+      end
       self.slotScale = 1.4
     else
       self.lastPress = tick

@@ -321,7 +321,7 @@ function Menu:mousepressed(mx, my, b)
         if self.user.deck.minions[i] and math.insideCircle(mx, my, x, y, r) then
           local code = self.user.deck.minions[i]
           table.insert(self.user.minions, code)
-          while #self.user.deck.runes[i] > 0 do
+          while self.user.deck.runes[i] and #self.user.deck.runes[i] > 0 do
             table.insert(self.user.runes, self.user.deck.runes[i][1])
             table.remove(self.user.deck.runes[i], 1)
           end
