@@ -108,7 +108,7 @@ return {
           kuju = 600
         }
       },
-      shrujuPatches = {60, 300},
+      shrujuPatches = {60, 450},
       runes = {
         maxLevel = 25,
         specialChance = .1
@@ -170,7 +170,7 @@ return {
           kuju = 300
         }
       },
-      shrujuPatches = {60, 300},
+      shrujuPatches = {60, 450},
       runes = {
         maxLevel = 25,
         specialChance = .1
@@ -232,7 +232,7 @@ return {
           duju = 600
         }
       },
-      shrujuPatches = {60, 300},
+      shrujuPatches = {60, 450},
       runes = {
         maxLevel = 75,
         specialChance = .1
@@ -294,7 +294,7 @@ return {
           duju = 0
         }
       },
-      shrujuPatches = {60, 300},
+      shrujuPatches = {60, 450},
       runes = {
         maxLevel = 100,
         specialChance = .1

@@ -4,6 +4,7 @@ local setFont = love.graphics and love.graphics.setFont
 
 Typo.font = function(name, size)
   if not love.graphics then return nil end
+  size = math.round(size)
 
   if not name then
     Typo.fonts.default[size] = Typo.fonts.default[size] or love.graphics.newFont(size)
