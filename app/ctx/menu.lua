@@ -105,7 +105,8 @@ function Menu:load(selectedBiome)
       local res = {}
       for i = 1, #config.biomeOrder do
         local offset = (inc * (biomeDisplay - i))
-        table.insert(res, {x - width / 2 - offset, y - offset, width, height})
+        local yoffset = (inc * (biomeDisplay - i) ^ 5)
+        table.insert(res, {x - width / 2 - offset, y + yoffset, width, height})
       end
       return res
     end,
@@ -299,6 +300,28 @@ function Menu:draw()
     self.animations.muju.spine.skeleton:findSlot(slot).b = 1
   end
 
+  local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
+  local biomes = self.geometry.biomes
+  for i = 1, #biomes do
+    local biome = config.biomeOrder[i]
+    local x, y, w, h = unpack(biomes[i])
+    local alpha = 255 - (math.min(math.abs(biomeDisplay - i), 1.25) * (255 / 1.25))
+    if self.selectedBiome == i then g.setColor(255, 255, 255, alpha)
+    else g.setColor(255, 255, 255, alpha) end
+    g.rectangle('fill', x, y, w, h)
+    if table.has(self.user.biomes, biome) then g.setColor(0, 255, 0, alpha)
+    else g.setColor(255, 0, 0, alpha) end
+    g.rectangle('line', x + .5, y + .5, w, h)
+    g.setColor(0, 0, 0, alpha)
+    g.setFont('pixel', 8)
+    g.printCenter(config.biomes[biome].name, x + w / 2, y + h / 2)
+    g.setColor(255, 255, 255, alpha)
+    local minutes = math.floor((self.user.highscores[biome] or 0) / 60)
+    local seconds = self.user.highscores[biome] % 60
+    local time = string.format('%02d:%02d', minutes, seconds)
+    g.printCenter('highscore: ' .. time, x + w / 2, y + h + 16)
+  end
+
   g.setColor(0, 0, 0, 100)
   g.rectangle('fill', unpack(self.geometry.gutterRunesFrame))
 
@@ -331,28 +354,6 @@ function Menu:draw()
   g.setFont('mesmerize', v * .04)
   local x, y = unpack(self.geometry.gutterRunesLabel)
   g.print('Runes', x, y)
-
-  local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
-  local biomes = self.geometry.biomes
-  for i = 1, #biomes do
-    local biome = config.biomeOrder[i]
-    local x, y, w, h = unpack(biomes[i])
-    local alpha = 255 - (math.min(math.abs(biomeDisplay - i), 1.25) * (255 / 1.25))
-    if self.selectedBiome == i then g.setColor(255, 255, 255, alpha)
-    else g.setColor(255, 255, 255, alpha) end
-    g.rectangle('fill', x, y, w, h)
-    if table.has(self.user.biomes, biome) then g.setColor(0, 255, 0, alpha)
-    else g.setColor(255, 0, 0, alpha) end
-    g.rectangle('line', x + .5, y + .5, w, h)
-    g.setColor(0, 0, 0, alpha)
-    g.setFont('pixel', 8)
-    g.printCenter(config.biomes[biome].name, x + w / 2, y + h / 2)
-    g.setColor(255, 255, 255, alpha)
-    local minutes = math.floor((self.user.highscores[biome] or 0) / 60)
-    local seconds = self.user.highscores[biome] % 60
-    local time = string.format('%02d:%02d', minutes, seconds)
-    g.printCenter('highscore: ' .. time, x + w / 2, y + h + 16)
-  end
 
   g.setColor(0, 0, 0, 255)
   g.rectangle('fill', unpack(self.geometry.play))
