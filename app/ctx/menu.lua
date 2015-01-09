@@ -456,11 +456,11 @@ function Menu:keypressed(key)
     self.animations.muju:set('death')
   elseif key == 'left' then
     self.selectedBiome = self.selectedBiome - 1
-    if self.selectedBiome <= 0 then self.selectedBiome = #config.biomeOrder end
+    if self.selectedBiome <= 0 then self.selectedBiome = #ctx.user.biomes end
     self:refreshBackground()
   elseif key == 'right' then
     self.selectedBiome = self.selectedBiome + 1
-    if self.selectedBiome >= #config.biomeOrder + 1 then self.selectedBiome = 1 end
+    if self.selectedBiome >= #ctx.user.biomes + 1 then self.selectedBiome = 1 end
     self:refreshBackground()
   elseif key == 'x' and love.keyboard.isDown('lctrl') then
     love.filesystem.remove('save/user.json')
