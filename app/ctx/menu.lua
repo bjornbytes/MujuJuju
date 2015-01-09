@@ -83,9 +83,9 @@ function Menu:load(selectedBiome)
     gutterMinions = function()
       local u, v = love.graphics.getDimensions()
       local r = .04 * v
-      local inc = r + .01 * v
-      local x = inc
-      local y = inc * 3
+      local inc = (r * 2) + .01 * v
+      local x = u * .3
+      local y = .1 * v
       local res = {}
       for i = 1, #ctx.user.minions do
         table.insert(res, {x, y, r})
@@ -158,11 +158,15 @@ function Menu:load(selectedBiome)
   self.animations.thuju:on('complete', function() self.animations.thuju:set('idle', {force = true}) end)
   self.animations.bruju:on('complete', function() self.animations.bruju:set('idle', {force = true}) end)
 
+  self.animationTransforms = {thuju = {}, bruju = {}}
+  self.prevAnimationTransforms = {thuju = {}, bruju = {}}
+
   self.backgroundAlpha = 0
   self.prevBackgroundAlpha = self.backgroundAlpha
   self.background1 = g.newCanvas(self.u, self.v)
   self.background2 = g.newCanvas(self.u, self.v)
   self.workingCanvas = g.newCanvas(self.u, self.v)
+  self.unitCanvas = g.newCanvas(400, 400)
   self:refreshBackground()
 end
 
@@ -188,9 +192,20 @@ function Menu:update()
   else
     local deck = self.geometry.deck
     for i = 1, #deck do
+      local code = self.user.deck.minions[i]
       local x, y, r, runes = unpack(deck[i])
+
+      self.prevAnimationTransforms[code].scale = self.animationTransforms[code].scale
+      self.animationTransforms[code].scale = math.lerp(self.animationTransforms[code].scale or 1, 1, 10 * tickRate)
+
+      self.prevAnimationTransforms[code].x = self.animationTransforms[code].x
+      self.animationTransforms[code].x = math.lerp(self.animationTransforms[code].x or x, x, 10 * tickRate)
+
+      self.prevAnimationTransforms[code].y = self.animationTransforms[code].y
+      self.animationTransforms[code].y = math.lerp(self.animationTransforms[code].y or y, y, 10 * tickRate)
+
       if math.insideCircle(mx, my, x, y, r) then
-        self.tooltip:setUnitTooltip(self.user.deck.minions[i])
+        self.tooltip:setUnitTooltip(code)
         break
       else
         for j = 1, #runes do
@@ -212,8 +227,20 @@ function Menu:update()
 
     local gutterMinions = self.geometry.gutterMinions
     for i = 1, #gutterMinions do
-      if math.insideCircle(mx, my, unpack(gutterMinions[i])) then
-        self.tooltip:setUnitTooltip(self.user.minions[i])
+      local code = self.user.minions[i]
+      local x, y, r = unpack(gutterMinions[i])
+
+      self.prevAnimationTransforms[code].scale = self.animationTransforms[code].scale
+      self.animationTransforms[code].scale = math.lerp(self.animationTransforms[code].scale or .5, .5, 10 * tickRate)
+
+      self.prevAnimationTransforms[code].x = self.animationTransforms[code].x
+      self.animationTransforms[code].x = math.lerp(self.animationTransforms[code].x or x, x, 10 * tickRate)
+
+      self.prevAnimationTransforms[code].y = self.animationTransforms[code].y
+      self.animationTransforms[code].y = math.lerp(self.animationTransforms[code].y or y, y, 10 * tickRate)
+
+      if math.insideCircle(mx, my, x, y, r) then
+        self.tooltip:setUnitTooltip(code)
         break
       end
     end
@@ -371,15 +398,37 @@ function Menu:draw()
   local x, y = unpack(self.geometry.gutterRunesLabel)
   g.print('Runes', x, y)
 
+  local gutterMinions = self.geometry.gutterMinions
+  for i = 1, #gutterMinions do
+    local code = self.user.minions[i]
+    local x, y, r = unpack(gutterMinions[i])
+    local cw, ch = self.unitCanvas:getDimensions()
+    self.unitCanvas:clear(0, 0, 0, 0)
+    self.unitCanvas:renderTo(function()
+      self.animations[code]:draw(cw / 2, ch / 2)
+    end)
+    local lerpd = {}
+    for k, v in pairs(self.animationTransforms[code]) do
+      lerpd[k] = math.lerp(self.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+    end
+    g.draw(self.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
+  end
+
   local deck = self.geometry.deck
   g.setColor(255, 255, 255)
   for i = 1, #deck do
+    local code = self.user.deck.minions[i]
     local x, y, r, runes = unpack(deck[i])
-    local image = data.media.graphics.unit.portrait[self.user.deck.minions[i]]
-    local scale = (r * 2) / image:getWidth()
-    --g.circle('line', x, y, r)
-    self.animations[self.user.deck.minions[i]]:draw(x, y)
-    --g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    local cw, ch = self.unitCanvas:getDimensions()
+    self.unitCanvas:clear(0, 0, 0, 0)
+    self.unitCanvas:renderTo(function()
+      self.animations[code]:draw(cw / 2, ch / 2)
+    end)
+    local lerpd = {}
+    for k, v in pairs(self.animationTransforms[code]) do
+      lerpd[k] = math.lerp(self.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+    end
+    g.draw(self.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
 
     for j = 1, #runes do
       local x, y, r = unpack(runes[j])
