@@ -104,7 +104,7 @@ function Menu:load(selectedBiome)
       local y = .3 * v
       local res = {}
       for i = 1, #config.biomeOrder do
-        local offset = (inc * (biomeDisplay - i) ^ 3)
+        local offset = (inc * (biomeDisplay - i))
         local yoffset = (inc * (biomeDisplay - i) ^ 4)
         table.insert(res, {x - width / 2 - offset, y + yoffset, width, height})
       end
