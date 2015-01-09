@@ -51,16 +51,33 @@ function Menu:load(selectedBiome)
 
     gutterRunes = function()
       local u, v = love.graphics.getDimensions()
-      local r = .04 * v
-      local inc = (2 * r) + .01 * v
-      local x = inc / 2
-      local y = inc / 2
+      local size = .08 * v
+      local inc = size + .01 * v
+      local x = u * .19
+      local ox = x
+      local y = v * .675
       local res = {}
-      for i = 1, #ctx.user.runes do
-        table.insert(res, {x, y, r})
+      for i = 1, 21 do
+        table.insert(res, {x, y, size, size})
         x = x + inc
+        if i % 7 == 0 then y = y + inc x = ox end
       end
       return res
+    end,
+
+    gutterRunesLabel = function()
+      local u, v = ctx.u, ctx.v
+      return {u * .19, v * .675 - v * .015 - v * .04}
+    end,
+
+    gutterRunesFrame = function()
+      local u, v = ctx.u, ctx.v
+      local label = self.geometry.gutterRunesLabel
+      local x = label[1] - v * .02
+      local y = label[2] - v * .01
+      local w = u * .36 + v * .02
+      local h = v * .34
+      return {x, y, w, h}
     end,
 
     gutterMinions = function()
@@ -83,14 +100,22 @@ function Menu:load(selectedBiome)
       local width = .3 * v
       local height = width * .75
       local inc = width + .1 * v
-      local x = u * .5
+      local x = u * .8
       local y = .3 * v
       local res = {}
       for i = 1, #config.biomeOrder do
         local offset = (inc * (biomeDisplay - i))
-        table.insert(res, {x - width / 2 - offset, y, width, height})
+        table.insert(res, {x - width / 2 - offset, y - offset, width, height})
       end
       return res
+    end,
+
+    play = function()
+      local u, v = ctx.u, ctx.v
+      local frame = self.geometry.gutterRunesFrame
+      local w, h = .2 * u, .13 * v
+      local midx = (.6 + (.4 / 2)) * u
+      return {midx - w / 2, frame[2] + frame[4] - h, w, h}
     end
   }
 
@@ -112,12 +137,31 @@ function Menu:load(selectedBiome)
 
   self.u, self.v = love.graphics.getDimensions()
   self.tooltip = Tooltip()
+
+  self.animations = {}
+  self.animations.muju = data.animation.muju({scale = .8})
+  self.animations.muju.flipped = true
+  self.animations.muju:on('event', function(data)
+    if data.data.name == 'flor' then
+      self:startGame()
+    end
+  end)
+
+  self.backgroundAlpha = 0
+  self.prevBackgroundAlpha = self.backgroundAlpha
+  self.background1 = g.newCanvas(self.u, self.v)
+  self.background2 = g.newCanvas(self.u, self.v)
+  self.workingCanvas = g.newCanvas(self.u, self.v)
+  self:refreshBackground()
 end
 
 function Menu:update()
   self.prevBiomeDisplay = self.biomeDisplay
   self.biomeDisplay = math.lerp(self.biomeDisplay, self.selectedBiome, math.min(10 * tickRate, 1))
   if math.abs(self.biomeDisplay - self.selectedBiome) > .01 then self.geometry.biomes = nil end
+
+  self.prevBackgroundAlpha = self.backgroundAlpha
+  self.backgroundAlpha = math.lerp(self.backgroundAlpha, 1, math.min(8 * tickRate, 1))
 
   self.tooltip:update()
   
@@ -149,7 +193,7 @@ function Menu:update()
 
     local gutterRunes = self.geometry.gutterRunes
     for i = 1, #gutterRunes do
-      if math.insideCircle(mx, my, unpack(gutterRunes[i])) then
+      if self.user.runes[i] and math.inside(mx, my, unpack(gutterRunes[i])) then
         self.tooltip:setRuneTooltip(self.user.runes[i])
         break
       end
@@ -168,7 +212,7 @@ end
 function Menu:draw()
   local u, v = love.graphics.getDimensions()
   g.setColor(255, 255, 255)
-  if self.choosing then
+  --[=[if self.choosing then
     g.setFont('inglobalb', .08 * v)
     local str = 'Welcome to Muju Juju'
     g.print(str, .5 * u - g.getFont():getWidth(str) / 2, 2)
@@ -235,7 +279,83 @@ function Menu:draw()
       local scale = (r * 2) / image:getWidth()
       g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     end
+  end]=]
+
+  local backgroundAlpha = math.lerp(self.prevBackgroundAlpha, self.backgroundAlpha, tickDelta / tickRate)
+  g.setColor(255, 255, 255)
+  g.draw(self.background2, 0, 0)
+  g.setColor(255, 255, 255, backgroundAlpha * 255)
+  g.draw(self.background1, 0, 0)
+
+  g.setColor(0, 0, 0, 50)
+  g.rectangle('fill', 0, 0, u, v)
+
+  g.setColor(255, 255, 255)
+  --g.line(u * .6, 0, u * .6, v)
+  self.animations.muju:draw(u * .08, v * .75)
+  for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
+    self.animations.muju.spine.skeleton:findSlot(slot).r = .5
+    self.animations.muju.spine.skeleton:findSlot(slot).g = 0
+    self.animations.muju.spine.skeleton:findSlot(slot).b = 1
   end
+
+  g.setColor(0, 0, 0, 100)
+  g.rectangle('fill', unpack(self.geometry.gutterRunesFrame))
+
+  g.setColor(255, 255, 255)
+  local gutterRunes = self.geometry.gutterRunes
+  for i = 1, #gutterRunes do
+    local x, y, w, h = unpack(gutterRunes[i])
+    local rune = self.user.runes[i]
+    local image = data.media.graphics.hud.frame
+    local scale = w / image:getWidth()
+    g.setColor(255, 255, 255)
+    g.draw(image, x, y, 0, scale, scale)
+
+    if rune then
+      
+      -- Stone
+      local image = data.media.graphics.runes['bg' .. rune.background:capitalize()]
+      local scale = (h - v * .02) / image:getHeight()
+      g.setColor(255, 255, 255)
+      g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
+      -- Rune
+      local image = data.media.graphics.runes[rune.image]
+      local scale = ((h - v * .02) - .016 * v) / image:getHeight()
+      g.setColor(config.runes.colors[rune.color])
+      g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    end
+  end
+
+  g.setFont('mesmerize', v * .04)
+  local x, y = unpack(self.geometry.gutterRunesLabel)
+  g.print('Runes', x, y)
+
+  local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
+  local biomes = self.geometry.biomes
+  for i = 1, #biomes do
+    local biome = config.biomeOrder[i]
+    local x, y, w, h = unpack(biomes[i])
+    local alpha = 255 - (math.min(math.abs(biomeDisplay - i), 1.25) * (255 / 1.25))
+    if self.selectedBiome == i then g.setColor(255, 255, 255, alpha)
+    else g.setColor(255, 255, 255, alpha) end
+    g.rectangle('fill', x, y, w, h)
+    if table.has(self.user.biomes, biome) then g.setColor(0, 255, 0, alpha)
+    else g.setColor(255, 0, 0, alpha) end
+    g.rectangle('line', x + .5, y + .5, w, h)
+    g.setColor(0, 0, 0, alpha)
+    g.setFont('pixel', 8)
+    g.printCenter(config.biomes[biome].name, x + w / 2, y + h / 2)
+    g.setColor(255, 255, 255, alpha)
+    local minutes = math.floor((self.user.highscores[biome] or 0) / 60)
+    local seconds = self.user.highscores[biome] % 60
+    local time = string.format('%02d:%02d', minutes, seconds)
+    g.printCenter('highscore: ' .. time, x + w / 2, y + h + 16)
+  end
+
+  g.setColor(0, 0, 0, 255)
+  g.rectangle('fill', unpack(self.geometry.play))
 
   self.tooltip:draw()
 end
@@ -243,13 +363,15 @@ end
 function Menu:keypressed(key)
   if self.choosing then return end
 	if key == 'return' and table.has(self.user.biomes, config.biomeOrder[self.selectedBiome]) then
-    self:startGame()
+    self.animations.muju:set('death')
   elseif key == 'left' then
     self.selectedBiome = self.selectedBiome - 1
     if self.selectedBiome <= 0 then self.selectedBiome = #config.biomeOrder end
+    self:refreshBackground()
   elseif key == 'right' then
     self.selectedBiome = self.selectedBiome + 1
     if self.selectedBiome >= #config.biomeOrder + 1 then self.selectedBiome = 1 end
+    self:refreshBackground()
   elseif key == 'x' and love.keyboard.isDown('lctrl') then
     love.filesystem.remove('save/user.json')
     if self.menuSounds then self.menuSounds:stop() end
@@ -295,13 +417,9 @@ function Menu:mousepressed(mx, my, b)
     end
   else
     if b == 'l' then
-      local biomes = self.geometry.biomes
-      for i = 1, #biomes do
-        local x, y, w, h = unpack(biomes[i])
-        if math.inside(mx, my, x, y, w, h) and table.has(self.user.biomes, config.biomeOrder[i]) then
-          self.selectedBiome = i
-          self:startGame()
-        end
+      local play = self.geometry.play
+      if math.inside(mx, my, unpack(self.geometry.play)) then
+        self.animations.muju:set('death')
       end
 
       local gutterMinions = self.geometry.gutterMinions
@@ -362,4 +480,38 @@ function Menu:startGame()
   if self.menuSounds then self.menuSounds:stop() end
   Context:remove(ctx)
   Context:add(Game, self.user, config.biomeOrder[self.selectedBiome])
+end
+
+function Menu:refreshBackground()
+  local u, v = self.u, self.v
+
+  g.setColor(255, 255, 255)
+  self.background2:renderTo(function()
+    g.draw(self.background1)
+  end)
+
+  self.background1:clear(255, 255, 255, 0)
+  self.workingCanvas:clear(255, 255, 255, 0)
+
+  self.background1:renderTo(function()
+    local image = data.media.graphics.map[config.biomeOrder[self.selectedBiome]]
+    g.draw(image, 0, 0, 0, u / image:getWidth(), v / image:getHeight())
+  end)
+
+  data.media.shaders.horizontalBlur:send('amount', .0016)
+  data.media.shaders.verticalBlur:send('amount', .0016 * u / v)
+  for i = 1, 3 do
+    g.setShader(data.media.shaders.horizontalBlur)
+    self.workingCanvas:renderTo(function()
+      g.draw(self.background1)
+    end)
+    g.setShader(data.media.shaders.verticalBlur)
+    self.background1:renderTo(function()
+      g.draw(self.workingCanvas)
+    end)
+  end
+
+  g.setShader()
+
+  self.backgroundAlpha = 0
 end

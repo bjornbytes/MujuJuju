@@ -28,7 +28,7 @@ return {
     damageModifier = 1.5,
     buffs = {
       sinister = {
-        damageModifier = 2
+        damageModifier = 1.5
       },
       chilling = {
         exhaust = .3,
