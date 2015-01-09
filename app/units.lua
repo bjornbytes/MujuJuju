@@ -43,10 +43,6 @@ function Units:update()
   self.enemyCount = table.count(self:filter(function(u) return u.team == 0 end))
   self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
-  if self.enemyCount == 0 and self.level > 1 and self.nextEnemy > .5 then
-    self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, (.1 + love.math.random()) * tickRate))
-  end
-
   self.level = self.level + (tickRate / (16 + self.level / 2)) * config.biomes[ctx.biome].units.levelScale
 
   return Manager.update(self)
