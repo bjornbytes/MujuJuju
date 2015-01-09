@@ -29,19 +29,20 @@ function HudShruju:update()
   local shruju = self.geometry.shruju
   local mx, my = love.mouse.getPosition()
   local p = ctx.player
+
+  if #p.magicShruju ~= self.geometry.shruju then
+    self.geometry.shruju = nil
+  end
+
   for i = 1, #shruju do
     local x, y, w, h = unpack(self.geometry.shruju[i])
-    if math.inside(mx, my, x, y, w, h) then
+    if p.magicShruju[i] and math.inside(mx, my, x, y, w, h) then
       ctx.hud.tooltip:setMagicShrujuTooltip(p.magicShruju[i])
     end
 
     if love.math.random() < 4 * tickRate then
       ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
     end
-  end
-
-  if #p.magicShruju ~= self.geometry.shruju then
-    self.geometry.shruju = nil
   end
 end
 
