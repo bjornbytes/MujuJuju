@@ -12,6 +12,8 @@ function HudStatus:init()
   self.jjpm = 0
   self.jjpmTimer = 1
 
+  self.jujuDisplay = config.biomes[ctx.biome].player.baseJuju
+
   self.prev = {}
   for _, k in pairs({'jujuScale', 'populationScale', 'clockScale', 'populationr', 'populationg', 'populationb', 'jujuAngle', 'maxPopFactor'}) do
     self.prev[k] = self[k]
@@ -63,6 +65,9 @@ function HudStatus:update()
     str = str .. 'Gold: ' .. (time >= benchmarks.gold and '{green}' or '{red}') .. toTime(benchmarks.gold) .. '{white}\n'
     ctx.hud.tooltip:setTooltip('{white}{title}Timer{normal}\n{whoCares}How long you\'ve lasted.  Survive for a long time to unlock rewards!\n\n' .. str)
   end
+
+  self.jujuDisplay = math.lerp(self.jujuDisplay, p.juju, 10 * tickRate)
+  if math.abs(self.jujuDisplay - p.juju) < 1 then self.jujuDisplay = p.juju end
 end
 
 function HudStatus:draw()
@@ -93,7 +98,7 @@ function HudStatus:draw()
   -- Juju Text
   g.setFont('mesmerize', height * .4)
   g.setColor(255, 255, 255)
-  local str = math.floor(p.juju)
+  local str = math.floor(self.jujuDisplay)
   g.print(str, xx + (v * .03), (height * .5) - g.getFont():getHeight() / 2)
   local hitboxWidth = (xx + (v * .03) + g.getFont():getWidth(str)) - hitboxX
   self.hitboxes.juju[1] = hitboxX
