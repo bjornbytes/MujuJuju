@@ -293,6 +293,10 @@ function Player:hurt(amount, source)
   return amount
 end
 
+function Player:heal(amount, source)
+  self.health = math.min(self.health + amount, self.maxHealth)
+end
+
 
 ----------------
 -- Helper

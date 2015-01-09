@@ -94,10 +94,10 @@ return {
         maxPopulation = 10
       },
       units = {
-        minEnemyRate = 12,
-        maxEnemyRate = 16,
-        minEnemyRateDecay = .075,
-        maxEnemyRateDecay = .065,
+        minEnemyRate = 10,
+        maxEnemyRate = 15,
+        minEnemyRateDecay = .05,
+        maxEnemyRateDecay = .04,
         maxEnemiesCoefficient = .3,
         levelScale = 1,
         upgradeCostIncrease = 2,

@@ -6,8 +6,8 @@ Thuju.description = 'Yay Thuju.'
 ----------------
 -- Stats
 ----------------
-Thuju.health = 160
-Thuju.damage = 15
+Thuju.health = 150
+Thuju.damage = 12
 Thuju.range = 16
 Thuju.attackSpeed = 1.15
 Thuju.speed = 35
@@ -83,9 +83,9 @@ Thuju.upgrades = {
     name = 'Taunt',
     description = 'Thuju beats his chest, forcing nearby enemies to attack him for 3 seconds.  Thuju gains damage for 5 seconds based on how many enemies are taunted.',
     values = {
-      [1] = '100 range, 12 second cooldown, 10 damage per enemy',
-      [2] = '150 range, 10 second cooldown, 20 damage per enemy',
-      [3] = '200 range, 8 second cooldown, 30 damage per enemy'
+      [1] = '100 range, 10 second cooldown, 15 damage per enemy',
+      [2] = '150 range, 8 second cooldown, 30 damage per enemy',
+      [3] = '200 range, 6 second cooldown, 45 damage per enemy'
     },
     apply = function(self, unit)
       if self.level > 0 then

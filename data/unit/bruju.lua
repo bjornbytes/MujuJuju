@@ -64,11 +64,11 @@ Bruju.upgrades = {
     name = 'Burst',
     description = 'Bruju burst into a spirit flame on death, damaging nearby enemies.',
     values = {
-      [1] = '25 damage',
-      [2] = '50 damage',
-      [3] = '75 damage',
-      [4] = '100 damage',
-      [5] = '125 damage'
+      [1] = '10 damage + 60% attack damage',
+      [2] = '30 damage + 70% attack damage',
+      [3] = '50 damage + 80% attack damage',
+      [4] = '70 damage + 90% attack damage',
+      [5] = '90 damage + 100% attack damage'
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -98,11 +98,11 @@ Bruju.upgrades = {
     costs = {100, 200, 300},
     prerequisites = {fortify = 1, burst = 1},
     name = 'Sanctuary',
-    description = 'The spirit flame leaves behind an aura that slowly heals allies.',
+    description = 'The spirit flame also heals allies based on Burst\'s damage.',
     values = {
-      [1] = '15 hp/s for 3 seconds.',
-      [2] = '20 hp/s for 4 seconds.',
-      [3] = '25 hp/s for 5 seconds.'
+      [1] = '30 + 30% damage',
+      [2] = '50 + 50% damage',
+      [3] = '70 + 70% damage'
     }
   }
 }

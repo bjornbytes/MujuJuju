@@ -17,6 +17,10 @@ function Burst:activate()
     target:hurt(self.damage, unit)
   end)
 
+  table.each(ctx.target:inRange(self, self.range, 'ally', 'unit', 'player'), function(target)
+    target:heal(self.heal, unit)
+  end)
+
   self.scale = 0
   self.prevscale = self.scale
 
