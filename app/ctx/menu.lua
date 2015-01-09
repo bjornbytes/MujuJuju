@@ -33,9 +33,9 @@ function Menu:load(selectedBiome)
       local inc = size + .2 * v
       local runeSize = .04 * v
       local runeInc = runeSize + .06 * v
-      local x = u * .5 - inc * ((#self.user.deck.minions - 1) / 2)
-      local y = .7 * v
-      local runey = y + .15 * v
+      local x = u * .3 - inc * ((#self.user.deck.minions - 1) / 2)
+      local y = .45 * v
+      local runey = y - .15 * v
       local res = {}
       for i = 1, #self.user.deck.minions do
         table.insert(res, {x, y, size / 2, {}})
@@ -148,6 +148,12 @@ function Menu:load(selectedBiome)
     end
   end)
 
+  self.animations.thuju = data.animation.thuju({scale = .35})
+  self.animations.bruju = data.animation.bruju({scale = .8})
+
+  self.animations.thuju:on('complete', function() self.animations.thuju:set('idle', {force = true}) end)
+  self.animations.bruju:on('complete', function() self.animations.bruju:set('idle', {force = true}) end)
+
   self.backgroundAlpha = 0
   self.prevBackgroundAlpha = self.backgroundAlpha
   self.background1 = g.newCanvas(self.u, self.v)
@@ -213,6 +219,12 @@ end
 function Menu:draw()
   local u, v = love.graphics.getDimensions()
   g.setColor(255, 255, 255)
+
+  if not self.firstFrame then
+    delta = 0
+    self.firstFrame = true
+  end
+
   --[=[if self.choosing then
     g.setFont('inglobalb', .08 * v)
     local str = 'Welcome to Muju Juju'
@@ -355,6 +367,27 @@ function Menu:draw()
   local x, y = unpack(self.geometry.gutterRunesLabel)
   g.print('Runes', x, y)
 
+  local deck = self.geometry.deck
+  g.setColor(255, 255, 255)
+  for i = 1, #deck do
+    local x, y, r, runes = unpack(deck[i])
+    local image = data.media.graphics.unit.portrait[self.user.deck.minions[i]]
+    local scale = (r * 2) / image:getWidth()
+    --g.circle('line', x, y, r)
+    self.animations[self.user.deck.minions[i]]:draw(x, y)
+    --g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
+    for j = 1, #runes do
+      local x, y, r = unpack(runes[j])
+      if self.user.deck.runes[i] and self.user.deck.runes[i][j] then
+        g.setColor(100, 100, 100)
+      g.circle('fill', x, y, r)
+      end
+      g.setColor(255, 255, 255)
+      g.circle('line', x, y, r)
+    end
+  end
+
   g.setColor(0, 0, 0, 255)
   g.rectangle('fill', unpack(self.geometry.play))
 
@@ -456,6 +489,7 @@ function Menu:mousepressed(mx, my, b)
               table.remove(self.user.deck.runes[i], j)
               table.clear(self.geometry)
               saveUser(self.user)
+              break
             end
           end
         end
@@ -467,6 +501,7 @@ function Menu:mousepressed(mx, my, b)
           table.remove(self.user.runes, i)
           table.clear(self.geometry)
           saveUser(self.user)
+          break
         end
       end
     end
