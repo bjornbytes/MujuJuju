@@ -341,6 +341,15 @@ function Menu:mousepressed(mx, my, b)
           end
         end
       end
+
+      local runes = self.geometry.gutterRunes
+      for i = 1, #runes do
+        if math.insideCircle(mx, my, unpack(runes[i])) then
+          table.remove(self.user.runes, i)
+          table.clear(self.geometry)
+          saveUser(self.user)
+        end
+      end
     end
   end
 end
