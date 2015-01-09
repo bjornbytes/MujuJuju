@@ -315,18 +315,18 @@ return {
     stats = {'health', 'damage', 'speed'},
     health = {
       names = {'Rune of Fortitude', 'Rune of Vitality', 'Rune of Stamina', 'Rune of the Soul'},
-      flatRange = {10, 250},
+      flatRange = {15, 250},
       scalingRange = {1, 25}
     },
     damage = {
       names = {'Rune of Might', 'Rune of Force', 'Rune of Ruin', 'Rune of Power'},
-      flatRange = {2, 70},
-      scalingRange = {1, 6}
+      flatRange = {3, 70},
+      scalingRange = {1, 8}
     },
     speed = {
       names = {'Rune of Agility', 'Rune of Haste', 'Rune of Swiftness', 'Rune of the Wind'},
       flatRange = {5, 80},
-      scalingRange = {1, 6}
+      scalingRange = {1, 8}
     },
     prefixes = {
       'Broken',
