@@ -521,16 +521,18 @@ function Menu:mousepressed(mx, my, b)
         self.animations.muju:set('death')
       end
 
-      local gutterMinions = self.geometry.gutterMinions
-      for i = 1, #gutterMinions do
-        if #ctx.user.deck.minions < 3 and math.insideCircle(mx, my, unpack(gutterMinions[i])) then
-          self.animations[self.user.minions[i]]:set('spawn')
-          table.insert(ctx.user.deck.minions, self.user.minions[i])
-          table.remove(self.user.minions, i)
-          self.user.deck.runes[#ctx.user.deck.minions] = {}
-          self.popup.active = false
-          table.clear(self.geometry)
-          saveUser(self.user)
+      if self.popup.active then
+        local gutterMinions = self.geometry.gutterMinions
+        for i = 1, #gutterMinions do
+          if #ctx.user.deck.minions < 3 and math.insideCircle(mx, my, unpack(gutterMinions[i])) then
+            self.animations[self.user.minions[i]]:set('spawn')
+            table.insert(ctx.user.deck.minions, self.user.minions[i])
+            table.remove(self.user.minions, i)
+            self.user.deck.runes[#ctx.user.deck.minions] = {}
+            self.popup.active = false
+            table.clear(self.geometry)
+            saveUser(self.user)
+          end
         end
       end
     elseif b == 'r' then
