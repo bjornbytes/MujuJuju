@@ -11,13 +11,12 @@ FrozenOrb.description = 'Kuju sends out a frozen orb in the direction she is fac
 ----------------
 -- Data
 ----------------
-FrozenOrb.cooldown = 11
-FrozenOrb.damage = 8
-FrozenOrb.range = 200
+FrozenOrb.cooldown = 9
+FrozenOrb.range = 210
 FrozenOrb.radius = 15
 FrozenOrb.speed = 400
 FrozenOrb.duration = 2
-FrozenOrb.slow = .6
+FrozenOrb.slow = .5
 
 
 ----------------
@@ -28,7 +27,7 @@ function FrozenOrb:activate()
     if event.data.name == 'frozenorb' then
       ctx.sound:play(data.media.sounds.kuju.frozenorb)
       self:createSpell('frozenorb', {
-        damage = self.damage,
+        damage = self.unit.damage / 2,
         range = self.range,
         radius = self.radius,
         speed = self.speed,

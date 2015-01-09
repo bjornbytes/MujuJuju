@@ -100,9 +100,9 @@ Bruju.upgrades = {
     name = 'Sanctuary',
     description = 'The spirit flame also heals allies based on Burst\'s damage.',
     values = {
-      [1] = '30 + 30% damage',
-      [2] = '50 + 50% damage',
-      [3] = '70 + 70% damage'
+      [1] = '20 + 30% damage',
+      [2] = '30 + 50% damage',
+      [3] = '40 + 70% damage'
     }
   }
 }

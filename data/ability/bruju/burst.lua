@@ -8,7 +8,7 @@ function Burst:die()
   local sanctuary = self.unit:upgradeLevel('sanctuary')
   local heal = 0
   if sanctuary > 0 then
-    heal = (10 + 20 * sanctuary) + (.1 + (.2 * sanctuary) * damage)
+    heal = (10 + 10 * sanctuary) + (.1 + (.2 * sanctuary) * damage)
   end
 
   self:createSpell({
