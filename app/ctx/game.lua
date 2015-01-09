@@ -215,7 +215,7 @@ function Game:distribute()
       for i = 1, 100 do
         local minion = config.starters[idx]
         if not table.has(minions, minion) then
-          table.insert(self.user.minions, minion)
+          table.insert(self.user.deck.minions, minion)
           table.insert(self.rewards.minions, minion)
           saveUser(self.user)
           break

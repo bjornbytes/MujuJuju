@@ -69,7 +69,7 @@ function Juju:update()
 		end
 	end
 
-	if self.y < -50 then
+	if self.y < -self.scale * data.media.graphics.juju:getWidth() then
 		ctx.jujus:remove(self)
 	end
 

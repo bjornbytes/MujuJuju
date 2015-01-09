@@ -32,17 +32,17 @@ function Menu:load(selectedBiome)
       local u, v = love.graphics.getDimensions()
       local size = .2 * v
       local inc = size + .2 * v
-      local runeSize = .04 * v
-      local runeInc = runeSize + .06 * v
+      local runeSize = .08 * v
+      local runeInc = runeSize + .02 * v
       local x = u * .3 - inc * ((#self.user.deck.minions - 1) / 2)
-      local y = .45 * v
+      local y = .35 * v
       local runey = y - .15 * v
       local res = {}
       for i = 1, #self.user.deck.minions do
         table.insert(res, {x, y, size / 2, {}})
         local runex = x - (runeInc * (3 - 1) / 2)
         for i = 1, 3 do
-          table.insert(res[#res][4], {runex, runey, runeSize})
+          table.insert(res[#res][4], {runex - runeSize / 2, runey - runeSize / 2, runeSize, runeSize})
           runex = runex + runeInc
         end
         x = x + inc
@@ -83,9 +83,9 @@ function Menu:load(selectedBiome)
 
     gutterMinions = function()
       local u, v = love.graphics.getDimensions()
-      local r = .04 * v
-      local inc = (r * 2) + .01 * v
-      local x = self.popup.x
+      local r = .08 * v
+      local inc = (r * 2) + .02 * v
+      local x = self.popup.x - (inc * (#ctx.user.minions - 1 ) / 2)
       local y = self.popup.y
       local res = {}
       for i = 1, #ctx.user.minions do
@@ -160,8 +160,8 @@ function Menu:load(selectedBiome)
   self.animations.bruju:on('complete', function() self.animations.bruju:set('idle', {force = true}) end)
 
   self.popup = {
-    x = nil,
-    y = nil,
+    x = self.u * .5,
+    y = self.v * .5,
     active = false,
     time = 0,
     prevTime = 0,
@@ -181,20 +181,35 @@ function Menu:load(selectedBiome)
 end
 
 function Menu:update()
+  local mx, my = love.mouse.getPosition()
+
+  self.tooltip:update()
+
+  if self.popup.time > 0 or self.popup.active then
+    self.popup.prevTime = self.popup.time
+    if self.popup.active then self.popup.time = math.min(self.popup.time + tickRate, self.popup.maxTime)
+    else self.popup.time = math.max(self.popup.time - tickRate, 0) end
+
+    local gutterMinions = self.geometry.gutterMinions
+    for i = 1, #gutterMinions do
+      local code = self.user.minions[i]
+      local x, y, r = unpack(gutterMinions[i])
+
+      if math.insideCircle(mx, my, x, y, r) then
+        self.tooltip:setUnitTooltip(code)
+        break
+      end
+    end
+    return
+  end
+    
   self.prevBiomeDisplay = self.biomeDisplay
   self.biomeDisplay = math.lerp(self.biomeDisplay, self.selectedBiome, math.min(10 * tickRate, 1))
   if math.abs(self.biomeDisplay - self.selectedBiome) > .01 then self.geometry.biomes = nil end
 
   self.prevBackgroundAlpha = self.backgroundAlpha
   self.backgroundAlpha = math.lerp(self.backgroundAlpha, 1, math.min(8 * tickRate, 1))
-
-  self.popup.prevTime = self.popup.time
-  if self.popup.active then self.popup.time = math.min(self.popup.time + tickRate, self.popup.maxTime)
-  else self.popup.time = math.max(self.popup.time - tickRate, 0) end
-
-  self.tooltip:update()
   
-  local mx, my = love.mouse.getPosition()
   if self.choosing then
     local minions = self.geometry.starters
     for i = 1, #minions do
@@ -214,7 +229,7 @@ function Menu:update()
         break
       else
         for j = 1, #runes do
-          if self.user.deck.runes[i] and self.user.deck.runes[i][j] and math.insideCircle(mx, my, unpack(runes[j])) then
+          if self.user.deck.runes[i] and self.user.deck.runes[i][j] and math.inside(mx, my, unpack(runes[j])) then
             self.tooltip:setRuneTooltip(self.user.deck.runes[i][j])
             break
           end
@@ -229,97 +244,16 @@ function Menu:update()
         break
       end
     end
-
-    --[[local gutterMinions = self.geometry.gutterMinions
-    for i = 1, #gutterMinions do
-      local code = self.user.minions[i]
-      local x, y, r = unpack(gutterMinions[i])
-
-      if math.insideCircle(mx, my, x, y, r) then
-        self.tooltip:setUnitTooltip(code)
-        break
-      end
-    end]]
   end
 end
 
 function Menu:draw()
   local u, v = love.graphics.getDimensions()
-  g.setColor(255, 255, 255)
 
   if not self.firstFrame then
     delta = 0
     self.firstFrame = true
   end
-
-  --[=[if self.choosing then
-    g.setFont('inglobalb', .08 * v)
-    local str = 'Welcome to Muju Juju'
-    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, 2)
-    local str = 'Choose your minion'
-    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, .2 * v)
-
-    local minions = self.geometry.starters
-    for i = 1, #minions do
-      local x, y, r = unpack(minions[i])
-      local image = data.media.graphics.unit.portrait[config.starters[i]]
-      local scale = (r * 2) / image:getWidth()
-      g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-    end
-  else
-    local deck = self.geometry.deck
-    g.setColor(255, 255, 255)
-    for i = 1, #deck do
-      local x, y, r, runes = unpack(deck[i])
-      local image = data.media.graphics.unit.portrait[self.user.deck.minions[i]]
-      local scale = (r * 2) / image:getWidth()
-      g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-
-      for j = 1, #runes do
-        local x, y, r = unpack(runes[j])
-        if self.user.deck.runes[i] and self.user.deck.runes[i][j] then
-          g.setColor(100, 100, 100)
-        g.circle('fill', x, y, r)
-        end
-        g.setColor(255, 255, 255)
-        g.circle('line', x, y, r)
-      end
-    end
-
-    local biomes = self.geometry.biomes
-    for i = 1, #biomes do
-      local biome = config.biomeOrder[i]
-      local x, y, w, h = unpack(biomes[i])
-      if self.selectedBiome == i then g.setColor(255, 255, 255)
-      else g.setColor(255, 255, 255, 100) end
-      g.rectangle('fill', x, y, w, h)
-      if table.has(self.user.biomes, biome) then g.setColor(0, 255, 0)
-      else g.setColor(255, 0, 0) end
-      g.rectangle('line', x + .5, y + .5, w, h)
-      g.setColor(0, 0, 0)
-      g.setFont('pixel', 8)
-      g.printCenter(config.biomes[biome].name, x + w / 2, y + h / 2)
-      g.setColor(255, 255, 255)
-      local minutes = math.floor((self.user.highscores[biome] or 0) / 60)
-      local seconds = self.user.highscores[biome] % 60
-      local time = string.format('%02d:%02d', minutes, seconds)
-      g.printCenter('highscore: ' .. time, x + w / 2, y + h + 16)
-    end
-
-    g.setColor(255, 255, 255)
-    local gutterRunes = self.geometry.gutterRunes
-    for i = 1, #gutterRunes do
-      g.circle('line', unpack(gutterRunes[i]))
-    end
-
-    local gutterMinions = self.geometry.gutterMinions
-    for i = 1, #gutterMinions do
-      local x, y, r = unpack(gutterMinions[i])
-      local image = data.media.graphics.unit.portrait[self.user.minions[i]]
-      local scale = (r * 2) / image:getWidth()
-      g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-    end
-  end]=]
 
   local backgroundAlpha = math.lerp(self.prevBackgroundAlpha, self.backgroundAlpha, tickDelta / tickRate)
   g.setColor(255, 255, 255)
@@ -330,8 +264,30 @@ function Menu:draw()
   g.setColor(0, 0, 0, 50)
   g.rectangle('fill', 0, 0, u, v)
 
+  if self.choosing then
+    g.setColor(255, 255, 255)
+    g.setFont('inglobalb', .08 * v)
+    local str = 'Welcome to Muju Juju'
+    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, 2)
+    local str = 'Choose your minion'
+    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, .2 * v)
+
+    local minions = self.geometry.starters
+    for i = 1, #minions do
+      local code = config.starters[i]
+      local x, y, r = unpack(minions[i])
+      local cw, ch = self.unitCanvas:getDimensions()
+      self.unitCanvas:clear(0, 0, 0, 0)
+      self.unitCanvas:renderTo(function()
+        self.animations[code]:draw(cw / 2, ch / 2)
+      end)
+      g.draw(self.unitCanvas, x, y, 0, 1, 1, cw / 2, ch / 2)
+    end
+    
+    return
+  end
+
   g.setColor(255, 255, 255)
-  --g.line(u * .6, 0, u * .6, v)
   self.animations.muju:draw(u * .08, v * .75)
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
     self.animations.muju.spine.skeleton:findSlot(slot).r = .5
@@ -407,13 +363,28 @@ function Menu:draw()
     g.draw(self.unitCanvas, x, y, 0, 1, 1, cw / 2, ch / 2)
 
     for j = 1, #runes do
-      local x, y, r = unpack(runes[j])
-      if self.user.deck.runes[i] and self.user.deck.runes[i][j] then
-        g.setColor(100, 100, 100)
-      g.circle('fill', x, y, r)
-      end
+      local x, y, w, h = unpack(runes[j])
+      local rune = self.user.deck.runes[i] and self.user.deck.runes[i][j]
+      local image = data.media.graphics.hud.frame
+      local scale = w / image:getWidth()
       g.setColor(255, 255, 255)
-      g.circle('line', x, y, r)
+      g.draw(image, x, y, 0, scale, scale)
+
+      if self.user.deck.runes[i] and self.user.deck.runes[i][j] then
+        local rune = self.user.deck.runes[i][j]
+
+        -- Stone
+        local image = data.media.graphics.runes['bg' .. rune.background:capitalize()]
+        local scale = (h - v * .02) / image:getHeight()
+        g.setColor(255, 255, 255)
+        g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
+        -- Rune
+        local image = data.media.graphics.runes[rune.image]
+        local scale = ((h - v * .02) - .016 * v) / image:getHeight()
+        g.setColor(config.runes.colors[rune.color])
+        g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+      end
     end
   end
 
@@ -423,10 +394,12 @@ function Menu:draw()
   if self.popup.time > 0 then
     local factor, t = self:getPopupFactor()
     local popupAlpha = (t / self.popup.maxTime) ^ 3
-    g.setColor(0, 0, 0, 100 * popupAlpha)
+    g.setColor(0, 0, 0, 150 * popupAlpha)
     g.rectangle('fill', 0, 0, u, v)
     
-    local w, h = math.max(u * .4 * factor, 0), math.max(v * .25 * factor, 0)
+    local r = .08 * v
+    local inc = (r * 2) + .02 * v
+    local w, h = math.max((v * .1 + (#ctx.user.minions) * inc) * factor, 0), math.max(v * .25 * factor, 0)
     local x, y = self.popup.x - w / 2, self.popup.y - h / 2
     g.setColor(30, 50, 70, 240 * popupAlpha)
     g.rectangle('fill', x, y, w, h)
@@ -443,7 +416,7 @@ function Menu:draw()
         self.animations[code]:draw(cw / 2, ch / 2)
       end)
       g.setColor(255, 255, 255, 255 * popupAlpha)
-      g.draw(self.unitCanvas, x, y, 0, 1, 1, cw / 2, ch / 2)
+      g.draw(self.unitCanvas, x, y, 0, .8 * factor, .75 * factor, cw / 2, ch / 2)
     end
   end
 
@@ -462,7 +435,7 @@ function Menu:keypressed(key)
     self.selectedBiome = self.selectedBiome + 1
     if self.selectedBiome >= #ctx.user.biomes + 1 then self.selectedBiome = 1 end
     self:refreshBackground()
-  elseif key == 'x' and love.keyboard.isDown('lctrl') then
+  elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
     love.filesystem.remove('save/user.json')
     if self.menuSounds then self.menuSounds:stop() end
     Context:remove(ctx)
@@ -480,18 +453,10 @@ function Menu:keypressed(key)
             table.remove(self.user.runes, i)
             table.clear(self.geometry)
             saveUser(self.user)
+            break
           end
         end
       end
-    end
-  end
-
-  if key == 'p' then
-    self.popup.active = not self.popup.active
-    if self.popup.active then
-      self.popup.x = love.mouse.getX()
-      self.popup.y = love.mouse.getY()
-      self.geometry.gutterMinions = nil
     end
   end
 end
@@ -509,11 +474,13 @@ function Menu:mousepressed(mx, my, b)
         if math.distance(mx, my, x, y) < r then
           self.user.minions = self.user.minions or {}
           self.user.deck.minions = {config.starters[i]}
+          self.user.deck.runes[1] = {}
           saveUser(self.user)
           self.choosing = false
         end
       end
     end
+    return
   else
     if b == 'l' then
       local play = self.geometry.play
@@ -539,38 +506,26 @@ function Menu:mousepressed(mx, my, b)
       local deck = self.geometry.deck
       for i = 1, #deck do
         local x, y, r, runes = unpack(deck[i])
-        if self.user.deck.minions[i] and math.insideCircle(mx, my, x, y, r) then
-          local code = self.user.deck.minions[i]
-          table.insert(self.user.minions, code)
-          while self.user.deck.runes[i] and #self.user.deck.runes[i] > 0 do
-            table.insert(self.user.runes, self.user.deck.runes[i][1])
-            table.remove(self.user.deck.runes[i], 1)
-          end
-          self.user.deck.runes[i] = nil
-          table.remove(self.user.deck.minions, i)
-          table.clear(self.geometry)
-          saveUser(self.user)
-          break
-        else
-          for j = 1, #runes do
-            if self.user.deck.runes[i] and self.user.deck.runes[i][j] and math.insideCircle(mx, my, unpack(runes[j])) then
-              table.insert(self.user.runes, self.user.deck.runes[i][j])
-              table.remove(self.user.deck.runes[i], j)
-              table.clear(self.geometry)
-              saveUser(self.user)
-              break
-            end
+        for j = 1, #runes do
+          if self.user.deck.runes[i] and self.user.deck.runes[i][j] and math.inside(mx, my, unpack(runes[j])) then
+            table.insert(self.user.runes, self.user.deck.runes[i][j])
+            table.remove(self.user.deck.runes[i], j)
+            table.clear(self.geometry)
+            saveUser(self.user)
+            break
           end
         end
       end
 
-      local runes = self.geometry.gutterRunes
-      for i = 1, #runes do
-        if math.insideCircle(mx, my, unpack(runes[i])) then
-          table.remove(self.user.runes, i)
-          table.clear(self.geometry)
-          saveUser(self.user)
-          break
+      if love.keyboard.isDown('lshift') then
+        local runes = self.geometry.gutterRunes
+        for i = 1, #runes do
+          if math.insideCircle(mx, my, unpack(runes[i])) then
+            table.remove(self.user.runes, i)
+            table.clear(self.geometry)
+            saveUser(self.user)
+            break
+          end
         end
       end
     end
