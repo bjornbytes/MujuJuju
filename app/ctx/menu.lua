@@ -140,8 +140,12 @@ function Menu:load(selectedBiome)
   self.tooltip = Tooltip()
 
   self.animations = {}
-  self.animations.muju = data.animation.muju({scale = .8})
+  self.animations.muju = data.animation.muju({scale = .8, default = 'resurrect'})
   self.animations.muju.flipped = true
+  self.animations.muju:on('complete', function(data)
+    if data.state.name == 'resurrect' then self.animations.muju:set('idle', {force = true}) end
+  end)
+
   self.animations.muju:on('event', function(data)
     if data.data.name == 'flor' then
       self:startGame()
