@@ -10,7 +10,7 @@ end
 
 function Units:createEnemy()
   local conf = config.biomes[ctx.biome]
-  if self.enemyCount < 1 + self.level * conf.units.maxEnemiesCoefficient then
+  if self.enemyCount < 1 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
     local choices = {}
     table.each(conf.units.thresholds, function(time, code)
       if ctx.timer * tickRate >= time then table.insert(choices, code) end
@@ -30,8 +30,10 @@ function Units:createEnemy()
       unit.buffs:add(buff, config.elites.buffs[buff])
     end
 
-    self.minEnemyRate = math.max(self.minEnemyRate - conf.units.minEnemyRateDecay * math.clamp((1.5 + self.minEnemyRate) / 10, .2, 1), 1.5)
-    self.maxEnemyRate = math.max(self.maxEnemyRate - conf.units.maxEnemyRateDecay * math.clamp((3.0 + self.maxEnemyRate) / 10, .4, 1), 3.0)
+    self.minEnemyRate = math.max(self.minEnemyRate - conf.units.minEnemyRateDecay * math.clamp((1.5 + self.minEnemyRate) / 6, .2, 1), 1.5)
+    self.maxEnemyRate = math.max(self.maxEnemyRate - conf.units.maxEnemyRateDecay * math.clamp((3.0 + self.maxEnemyRate) / 6, .4, 1), 3.0)
+  else
+    return .5
   end
 
   return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)

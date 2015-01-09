@@ -39,10 +39,6 @@ function Burst:update()
   self.health = timer.rot(self.health, function() ctx.spells:remove(self) end)
   self.prevscale = self.scale
   self.scale = math.lerp(self.scale, 1, math.min(20 * tickRate, 1))
-
-  table.each(ctx.target:inRange(self, self.range, 'ally', 'unit'), function(target)
-    target:heal(self.heal * tickRate)
-  end)
 end
 
 function Burst:draw()

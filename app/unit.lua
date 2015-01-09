@@ -306,7 +306,7 @@ function Unit.stances:aggressive()
   elseif self.target then
     self:moveIntoRange(self.target)
   else
-    self.animation:set('idle')
+    self:moveTowards(ctx.shrine)
   end
 end
 

@@ -152,6 +152,6 @@ function HudStatus:draw()
 
   g.setFont('pixel', 8)
   g.setColor(255, 255, 255)
-  local str = math.round(ctx.units.level / .1) * .1
+  local str = math.round(ctx.units.level / .1) * .1 .. '\n' .. math.round(ctx.units.minEnemyRate / .1) * .1 .. ' - ' .. math.round(ctx.units.maxEnemyRate / .1) * .1 .. '\n' .. 1 + math.floor(ctx.units.level * config.biomes[ctx.biome].units.maxEnemiesCoefficient)
   g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)
 end

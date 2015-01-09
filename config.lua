@@ -81,7 +81,7 @@ return {
         maximum = {
           base = 18,
           exponent = .75,
-          coefficient = 1.1
+          coefficient = 1
         }
       },
       player = {
@@ -97,10 +97,10 @@ return {
         minEnemyRate = 10,
         maxEnemyRate = 15,
         minEnemyRateDecay = .05,
-        maxEnemyRateDecay = .04,
+        maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .3,
         levelScale = 1,
-        upgradeCostIncrease = 2,
+        upgradeCostIncrease = 1,
         maxElites = 1,
         thresholds = {
           duju = 0,
@@ -136,14 +136,14 @@ return {
       },
       juju = {
         minimum = {
-          base = 16,
+          base = 12,
           exponent = .75,
-          coefficient = 1
+          coefficient = .85
         },
         maximum = {
-          base = 22,
+          base = 18,
           exponent = .75,
-          coefficient = 1.25
+          coefficient = 1
         }
       },
       player = {
@@ -151,18 +151,18 @@ return {
         minCooldown = .5,
         globalCooldown = 3,
         baseJuju = 30,
-        jujuRate = .75,
+        jujuRate = 1,
         basePopulation = 3,
         maxPopulation = 10
       },
       units = {
-        minEnemyRate = 14,
-        maxEnemyRate = 18,
-        minEnemyRateDecay = .08,
-        maxEnemyRateDecay = .07,
+        minEnemyRate = 10,
+        maxEnemyRate = 15,
+        minEnemyRateDecay = .05,
+        maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .4,
         levelScale = 1.1,
-        upgradeCostIncrease = 3,
+        upgradeCostIncrease = 2,
         maxElites = 1,
         thresholds = {
           spuju = 0,
@@ -315,7 +315,7 @@ return {
     stats = {'health', 'damage', 'speed'},
     health = {
       names = {'Rune of Fortitude', 'Rune of Vitality', 'Rune of Stamina', 'Rune of the Soul'},
-      flatRange = {15, 250},
+      flatRange = {10, 250},
       scalingRange = {1, 25}
     },
     damage = {

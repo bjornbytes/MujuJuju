@@ -28,7 +28,7 @@ function Game:load(user, biome)
   self.hud = Hud()
   self.upgrades = Upgrades
   self.shrines = Manager()
-  self.shrines:add(Shrine, {x = ctx.map.width / 2, team = 1})
+  self.shrine = self.shrines:add(Shrine, {x = ctx.map.width / 2, team = 1})
   self.units = Units()
   self.spells = Spells()
   self.jujus = Jujus()
