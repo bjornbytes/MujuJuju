@@ -146,6 +146,11 @@ function Menu:load(selectedBiome)
   self.startingScale = 0
   self.startingTween = tween.new(.5, self, {startingScale = 1}, 'outBack')
   Menu.started = true
+  if not self.starting then
+    self.startingAlpha = 0
+    self.startingScale = 1
+  end
+
   if not self.user.deck or #self.user.deck.minions == 0 then
     self.choosing = true
   end
@@ -196,6 +201,9 @@ function Menu:load(selectedBiome)
   self.background2 = g.newCanvas(self.u, self.v)
   self.workingCanvas = g.newCanvas(self.u, self.v)
   self.unitCanvas = g.newCanvas(400, 400)
+  if not self.starting then
+    self:refreshBackground()
+  end
 end
 
 function Menu:update()
@@ -383,15 +391,16 @@ function Menu:draw()
       g.setColor(255, 255, 255, detailsAlpha)
       g.printCenter(config.biomes[biome].name, x + w / 2, .15 * v)
 
-      local medalSize = v * .04
+      local medalSize = v * .03
       local medalInc = (medalSize * 2 + (v * .02))
       local medalX = x + w / 2 - medalInc * (3 - 1) / 2
       local medalY = y + h + medalSize + (v * .05)
       for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
-        g.setColor(255, 255, 255, (self.user.highscores[biome] >= config.biomes[biome].benchmarks[benchmark] and 1 or .5) * detailsAlpha)
+        local achieved = self.user.highscores[biome] >= config.biomes[biome].benchmarks[benchmark]
+        g.setColor(255, 255, 255, (achieved and 1 or .4) * detailsAlpha)
         local image = data.media.graphics.menu[benchmark]
-        local scale = medalSize * 2 / image:getWidth()
-        g.draw(image, medalX, medalY, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+        local scale = medalSize * 2 / image:getWidth() * (achieved and 1 or .8)
+        g.draw(image, medalX, medalY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
         medalX = medalX + medalInc
       end
 
@@ -487,7 +496,7 @@ function Menu:draw()
     end
   end
 
-  g.setColor(0, 0, 0, 255)
+  g.setColor(255, 255, 255, 255)
   local x, y, w, h = unpack(self.geometry.play)
   local image = data.media.graphics.menu.play
   local scale = math.min(h / image:getHeight(), w / image:getWidth())
@@ -541,6 +550,7 @@ function Menu:keypressed(key)
     elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
       love.filesystem.remove('save/user.json')
       if self.menuSounds then self.menuSounds:stop() end
+      Menu.started = false
       Context:remove(ctx)
       Context:add(Menu)
     elseif key:match('%d') and not self.choosing then
