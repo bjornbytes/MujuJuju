@@ -145,7 +145,7 @@ ShrujuEffects = {
       end)
     end
   },
-  spiritblitz = {
+  spiritrush = {
     code = 'spiritrush',
     name = 'Spirit Rush',
     description = 'Summon all day erry day.',

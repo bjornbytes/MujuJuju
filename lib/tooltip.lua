@@ -6,10 +6,10 @@ Tooltip = class()
 Tooltip.maxWidth = .3
 Tooltip.richOptions = {
   title = g.setFont('mesmerize', 24),
-  bold = g.setFont('mesmerize', 14),
+  bold = g.setFont('mesmerizeb', 14),
   normal = g.setFont('mesmerize', 14),
   white = {255, 255, 255},
-  whoCares = {230, 230, 230},
+  whoCares = {225, 225, 225},
   red = {255, 100, 100},
   green = {100, 255, 100},
   purple = {147, 96, 200}
@@ -74,11 +74,20 @@ function Tooltip:setTooltip(str)
   self.active = true
 end
 
-function Tooltip:setUnitTooltip(code)
+function Tooltip:setUnitTooltip(code, upgrades)
   local unit = data.unit[code]
   local pieces = {}
   table.insert(pieces, '{white}{title}' .. unit.name .. '{normal}')
   table.insert(pieces, '{whoCares}' .. unit.description)
+  if upgrades then
+    table.insert(pieces, '')
+    for i = 1, #unit.upgradeOrder do
+      local upgrade = unit.upgrades[unit.upgradeOrder[i]]
+      local color = 'white'
+      if i == 4 or i == 5 then color = 'purple' end
+      table.insert(pieces, '{bold}{' .. color .. '}' .. upgrade.name .. '{normal}{whoCares}: ' .. upgrade.description)
+    end
+  end
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

@@ -1,7 +1,7 @@
 local Thuju = {}
 Thuju.code = 'thuju'
 Thuju.name = 'Thuju'
-Thuju.description = 'Yay Thuju.'
+Thuju.description = 'A bramble golem.  Exceptional at soaking up and reflecting damage as well as crowd control.'
 
 ----------------
 -- Stats
@@ -23,7 +23,7 @@ Thuju.upgrades = {
     level = 0,
     costs = {30, 50, 80, 120, 170},
     name = 'Ward of Thorns',
-    description = 'Thuju protrudes splintering thorns from his hide, causing him to reflect a portion of melee damage dealt to him.',
+    description = 'Thuju reflects a portion of melee damage dealt to him.',
     values = {
       [0] = '10% reflected',
       [1] = '25% reflected',
@@ -42,7 +42,7 @@ Thuju.upgrades = {
     level = 0,
     costs = {30, 65, 105, 145, 185},
     name = 'Tenacity',
-    description = 'Thuju strengthens his resolve, increasing his maximum health.',
+    description = 'Thuju\'s strengthens his carapace, increasing his maximum health.',
     values = {
       [0] = '150 health',
       [1] = '200 health',
@@ -62,7 +62,7 @@ Thuju.upgrades = {
     level = 0,
     costs = {25, 75, 125, 175, 225},
     name = 'Impenetrable Hide',
-    description = 'Thuju hardens his body when he is struck.  He takes reduced damage from all sources for 3 seconds, stacking multiple times.  The bonus is 150% effective against ranged attacks.',
+    description = 'Thuju gains armor for 3 seconds when struck, stacking multiple times.  The effect is increased by 150% against ranged attacks.',
     values = {
       [1] = '5% damage reduction, stacking up to 3 times',
       [2] = '8% damage reduction, stacking up to 4 times',
@@ -81,7 +81,7 @@ Thuju.upgrades = {
     costs = {100, 200, 300},
     prerequisites = {wardofthorns = 1, tenacity = 1},
     name = 'Taunt',
-    description = 'Thuju beats his chest, forcing nearby enemies to attack him for 3 seconds.  Thuju gains damage for 5 seconds based on how many enemies are taunted.',
+    description = 'Thuju forces nearby enemies to attack him for 3 seconds, and gains damage for 5 seconds based on how many enemies are taunted.',
     values = {
       [1] = '100 range, 10 second cooldown, 15 damage per enemy',
       [2] = '150 range, 8 second cooldown, 30 damage per enemy',
@@ -98,7 +98,7 @@ Thuju.upgrades = {
     costs = {100, 200, 300},
     prerequisites = {tenacity = 1, impenetrablehide = 1},
     name = 'Tremor',
-    description = 'Thuju slams the ground in the direction he is facing, causing the tectonic plates of the Earth to erupt in front of him.  Any units unfortunate enough to be caught in the area of impact take damage and are stunned.',
+    description = 'Thuju slams the ground, damaging and stunning units in front of him.',
     values = {
       [1] = '30 damage, 1s stun',
       [2] = '60 damage, 1.5s stun',

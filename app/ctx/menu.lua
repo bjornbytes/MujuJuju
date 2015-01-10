@@ -2,6 +2,7 @@ local tween = require 'lib/deps/tween/tween'
 local g = love.graphics
 
 Menu = class()
+Menu.started = false
 
 function Menu:load(selectedBiome)
 	self.sound = Sound()
@@ -102,7 +103,7 @@ function Menu:load(selectedBiome)
       local height = width * .75
       local inc = width + .1 * v
       local x = u * .8
-      local y = .3 * v
+      local y = .25 * v
       local res = {}
       for i = 1, #config.biomeOrder do
         local offset = (inc * (biomeDisplay - i))
@@ -112,12 +113,23 @@ function Menu:load(selectedBiome)
       return res
     end,
 
+    biomeArrows = function()
+      local u, v = love.graphics.getDimensions()
+      local image = data.media.graphics.menu.arrow
+      local scale = v * .04 / image:getWidth()
+      local w = .3 * v
+      local h = w * .75
+      local x = u * .8 - w / 2
+      local y = .25 * v
+      return {{x - v * .06, y + h / 2}, {x + w + v * .06, y + h / 2}}
+    end,
+
     play = function()
       local u, v = ctx.u, ctx.v
       local frame = self.geometry.gutterRunesFrame
       local w, h = .2 * u, .13 * v
       local midx = (.6 + (.4 / 2)) * u
-      return {midx - w / 2, frame[2] + frame[4] - h, w, h}
+      return {midx - w / 2, frame[2] + frame[4] - h - v * .05, w, h}
     end
   }
 
@@ -129,6 +141,9 @@ function Menu:load(selectedBiome)
   local str = love.filesystem.read('save/user.json')
   self.user = json.decode(str)
 
+  self.starting = not Menu.started
+  self.startingAlpha = 1
+  Menu.started = true
   if not self.user.deck or #self.user.deck.minions == 0 then
     self.choosing = true
   end
@@ -136,6 +151,8 @@ function Menu:load(selectedBiome)
   self.selectedBiome = selectedBiome or 1
   self.biomeDisplay = self.selectedBiome
   self.prevBiomeDisplay = self.biomeDisplay
+  self.biomeArrowScales = {}
+  self.prevBiomeArrowScales = {}
 
   self.u, self.v = love.graphics.getDimensions()
   self.tooltip = Tooltip()
@@ -177,10 +194,16 @@ function Menu:load(selectedBiome)
   self.background2 = g.newCanvas(self.u, self.v)
   self.workingCanvas = g.newCanvas(self.u, self.v)
   self.unitCanvas = g.newCanvas(400, 400)
-  self:refreshBackground()
 end
 
 function Menu:update()
+  if self.starting then
+
+    return
+  end
+
+  self.startingAlpha = math.max(self.startingAlpha - tickRate, 0)
+
   local mx, my = love.mouse.getPosition()
 
   self.tooltip:update()
@@ -205,7 +228,7 @@ function Menu:update()
     
   self.prevBiomeDisplay = self.biomeDisplay
   self.biomeDisplay = math.lerp(self.biomeDisplay, self.selectedBiome, math.min(10 * tickRate, 1))
-  if math.abs(self.biomeDisplay - self.selectedBiome) > .01 then self.geometry.biomes = nil end
+  if math.abs(self.biomeDisplay - self.selectedBiome) > .001 then self.geometry.biomes = nil end
 
   self.prevBackgroundAlpha = self.backgroundAlpha
   self.backgroundAlpha = math.lerp(self.backgroundAlpha, 1, math.min(8 * tickRate, 1))
@@ -225,7 +248,7 @@ function Menu:update()
       local x, y, r, runes = unpack(deck[i])
 
       if math.insideCircle(mx, my, x, y, r) then
-        self.tooltip:setUnitTooltip(code)
+        self.tooltip:setUnitTooltip(code, true)
         break
       else
         for j = 1, #runes do
@@ -244,6 +267,15 @@ function Menu:update()
         break
       end
     end
+
+    local image = data.media.graphics.menu.arrow
+    local w = self.v * .04
+    for i = 1, 2 do
+      self.prevBiomeArrowScales[i] = self.biomeArrowScales[i] or 1
+      local x, y = unpack(self.geometry.biomeArrows[i])
+      local hover = math.inside(mx, my, x - w / 2, y - w / 2, w, w)
+      self.biomeArrowScales[i] = math.lerp(self.biomeArrowScales[i] or 1, hover and 1.5 or 1, 10 * tickRate)
+    end
   end
 end
 
@@ -255,6 +287,15 @@ function Menu:draw()
     self.firstFrame = true
   end
 
+  if self.startingAlpha > 0 then
+    g.setColor(255, 255, 255, self.startingAlpha * 255)
+    --g.draw(background)
+
+    -- draw everything else
+
+    if self.starting then return end
+  end
+
   local backgroundAlpha = math.lerp(self.prevBackgroundAlpha, self.backgroundAlpha, tickDelta / tickRate)
   g.setColor(255, 255, 255)
   g.draw(self.background2, 0, 0)
@@ -264,13 +305,24 @@ function Menu:draw()
   g.setColor(0, 0, 0, 50)
   g.rectangle('fill', 0, 0, u, v)
 
+  g.setColor(255, 255, 255)
+  self.animations.muju:draw(u * .08, v * .75)
+  for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
+    self.animations.muju.spine.skeleton:findSlot(slot).r = .5
+    self.animations.muju.spine.skeleton:findSlot(slot).g = 0
+    self.animations.muju.spine.skeleton:findSlot(slot).b = 1
+  end
+
   if self.choosing then
-    g.setColor(255, 255, 255)
-    g.setFont('inglobalb', .08 * v)
-    local str = 'Welcome to Muju Juju'
-    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, 2)
+    g.setColor(0, 0, 0, 100)
+    g.rectangle('fill', u * .2, v * .33, u * .6, v * .42)
+
+    g.setFont('mesmerize', .08 * v)
     local str = 'Choose your minion'
-    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, .2 * v)
+    g.setColor(0, 0, 0)
+    g.print(str, .5 * u - g.getFont():getWidth(str) / 2 + 1, .35 * v + 1)
+    g.setColor(255, 255, 255)
+    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, .35 * v)
 
     local minions = self.geometry.starters
     for i = 1, #minions do
@@ -284,15 +336,7 @@ function Menu:draw()
       g.draw(self.unitCanvas, x, y, 0, 1, 1, cw / 2, ch / 2)
     end
     
-    return
-  end
-
-  g.setColor(255, 255, 255)
-  self.animations.muju:draw(u * .08, v * .75)
-  for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
-    self.animations.muju.spine.skeleton:findSlot(slot).r = .5
-    self.animations.muju.spine.skeleton:findSlot(slot).g = 0
-    self.animations.muju.spine.skeleton:findSlot(slot).b = 1
+    return self.tooltip:draw()
   end
 
   local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
@@ -300,21 +344,52 @@ function Menu:draw()
   for i = 1, #biomes do
     local biome = config.biomeOrder[i]
     local x, y, w, h = unpack(biomes[i])
-    local alpha = 255 - (math.min(math.abs(biomeDisplay - i), 1.25) * (255 / 1.25))
+    local alpha = 255 - (math.min(math.abs(biomeDisplay - i), 1.35) * (255 / 1.35))
     if self.selectedBiome == i then g.setColor(255, 255, 255, alpha)
     else g.setColor(255, 255, 255, alpha) end
-    g.rectangle('fill', x, y, w, h)
-    if table.has(self.user.biomes, biome) then g.setColor(0, 255, 0, alpha)
-    else g.setColor(255, 0, 0, alpha) end
-    g.rectangle('line', x + .5, y + .5, w, h)
-    g.setColor(0, 0, 0, alpha)
-    g.setFont('pixel', 8)
-    g.printCenter(config.biomes[biome].name, x + w / 2, y + h / 2)
-    g.setColor(255, 255, 255, alpha)
-    local minutes = math.floor((self.user.highscores[biome] or 0) / 60)
-    local seconds = self.user.highscores[biome] % 60
-    local time = string.format('%02d:%02d', minutes, seconds)
-    g.printCenter('highscore: ' .. time, x + w / 2, y + h + 16)
+    local image = data.media.graphics.menu[config.biomeOrder[i]]
+    local scale = w / image:getWidth()
+    g.draw(image, x, y, 0, scale, scale)
+
+    local detailsAlpha = 255 - (math.min(math.abs(biomeDisplay - i), 1) * (255 / 1))
+    if detailsAlpha > 1 then
+      g.setFont('mesmerize', .06 * v)
+      g.setColor(0, 0, 0, detailsAlpha)
+      g.printCenter(config.biomes[biome].name, x + w / 2 + 1, .15 * v + 1)
+      g.setColor(255, 255, 255, detailsAlpha)
+      g.printCenter(config.biomes[biome].name, x + w / 2, .15 * v)
+
+      local medalSize = v * .04
+      local medalInc = (medalSize * 2 + (v * .02))
+      local medalX = x + w / 2 - medalInc * (3 - 1) / 2
+      local medalY = y + h + medalSize + (v * .05)
+      for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
+        g.setColor(255, 255, 255, (self.user.highscores[biome] >= config.biomes[biome].benchmarks[benchmark] and 1 or .5) * detailsAlpha)
+        local image = data.media.graphics.menu[benchmark]
+        local scale = medalSize * 2 / image:getWidth()
+        g.draw(image, medalX, medalY, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+        medalX = medalX + medalInc
+      end
+
+      local minutes = math.floor((self.user.highscores[biome] or 0) / 60)
+      local seconds = self.user.highscores[biome] % 60
+      local time = string.format('%02d:%02d', minutes, seconds)
+      g.setFont('mesmerize', .04 * v)
+      g.setColor(0, 0, 0, detailsAlpha)
+      g.printf('Best Time ' .. time, x + w / 2 - 100 + 1, medalY + medalSize + v * .04 + 1, 200, 'center')
+      g.setColor(255, 255, 255, detailsAlpha)
+      g.printf('Best Time ' .. time, x + w / 2 - 100, medalY + medalSize + v * .04, 200, 'center')
+    end
+  end
+
+  local biomeArrows = self.geometry.biomeArrows
+  local image = data.media.graphics.menu.arrow
+  local scale = .04 * v / image:getWidth()
+  for i = 1, 2 do
+    local x, y = unpack(biomeArrows[i])
+    local factor = math.lerp(self.prevBiomeArrowScales[i], self.biomeArrowScales[i], tickDelta / tickRate)
+    g.setColor(255, 255, 255)
+    g.draw(image, x, y, 0, scale * (i == 2 and -1 or 1) * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
   end
 
   g.setColor(0, 0, 0, 100)
@@ -389,7 +464,10 @@ function Menu:draw()
   end
 
   g.setColor(0, 0, 0, 255)
-  g.rectangle('fill', unpack(self.geometry.play))
+  local x, y, w, h = unpack(self.geometry.play)
+  local image = data.media.graphics.menu.play
+  local scale = math.min(h / image:getHeight(), w / image:getWidth())
+  g.draw(image, x + w / 2, y + h, 0, scale, scale, image:getWidth() / 2, image:getHeight())
 
   if self.popup.time > 0 then
     local factor, t = self:getPopupFactor()
@@ -424,36 +502,38 @@ function Menu:draw()
 end
 
 function Menu:keypressed(key)
-  if self.choosing then return end
-	if key == 'return' and table.has(self.user.biomes, config.biomeOrder[self.selectedBiome]) then
-    self.animations.muju:set('death')
-  elseif key == 'left' then
-    self.selectedBiome = self.selectedBiome - 1
-    if self.selectedBiome <= 0 then self.selectedBiome = #ctx.user.biomes end
-    self:refreshBackground()
-  elseif key == 'right' then
-    self.selectedBiome = self.selectedBiome + 1
-    if self.selectedBiome >= #ctx.user.biomes + 1 then self.selectedBiome = 1 end
-    self:refreshBackground()
-  elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
-    love.filesystem.remove('save/user.json')
-    if self.menuSounds then self.menuSounds:stop() end
-    Context:remove(ctx)
-    Context:add(Menu)
-  elseif key:match('%d') and not self.choosing then
-    local index = tonumber(key)
-    if index >= 1 and index <= #self.user.deck.minions then
-      self.user.deck.runes[index] = self.user.deck.runes[index] or {}
-      if #self.user.deck.runes[index] < 3 then
-        local gutterRunes = self.geometry.gutterRunes
-        local mx, my = love.mouse.getPosition()
-        for i = 1, #gutterRunes do
-          if #ctx.user.deck.runes[index] < 3 and math.insideCircle(mx, my, unpack(gutterRunes[i])) then
-            table.insert(ctx.user.deck.runes[index], self.user.runes[i])
-            table.remove(self.user.runes, i)
-            table.clear(self.geometry)
-            saveUser(self.user)
-            break
+  if self.starting then
+    if key == 'return' then
+      self:start()
+    end
+    return
+  elseif self.choosing then
+    return
+  else
+    if key == 'return' and table.has(self.user.biomes, config.biomeOrder[self.selectedBiome]) then
+      self.animations.muju:set('death')
+    elseif key == 'left' then self:previousBiome()
+    elseif key == 'right' then self:nextBiome() 
+    elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
+      love.filesystem.remove('save/user.json')
+      if self.menuSounds then self.menuSounds:stop() end
+      Context:remove(ctx)
+      Context:add(Menu)
+    elseif key:match('%d') and not self.choosing then
+      local index = tonumber(key)
+      if index >= 1 and index <= #self.user.deck.minions then
+        self.user.deck.runes[index] = self.user.deck.runes[index] or {}
+        if #self.user.deck.runes[index] < 3 then
+          local gutterRunes = self.geometry.gutterRunes
+          local mx, my = love.mouse.getPosition()
+          for i = 1, #gutterRunes do
+            if #ctx.user.deck.runes[index] < 3 and math.insideCircle(mx, my, unpack(gutterRunes[i])) then
+              table.insert(ctx.user.deck.runes[index], self.user.runes[i])
+              table.remove(self.user.runes, i)
+              table.clear(self.geometry)
+              saveUser(self.user)
+              break
+            end
           end
         end
       end
@@ -461,12 +541,10 @@ function Menu:keypressed(key)
   end
 end
 
-function Menu:keyreleased(key)
-  
-end
-
 function Menu:mousepressed(mx, my, b)
-  if self.choosing then
+  if self.starting then
+    --
+  elseif self.choosing then
     if b == 'l' then
       local minions = self.geometry.starters
       for i = 1, #minions do
@@ -477,6 +555,8 @@ function Menu:mousepressed(mx, my, b)
           self.user.deck.runes[1] = {}
           saveUser(self.user)
           self.choosing = false
+          self.animations.muju:set('summon')
+          ctx.sound:play('summon2')
         end
       end
     end
@@ -486,6 +566,15 @@ function Menu:mousepressed(mx, my, b)
       local play = self.geometry.play
       if math.inside(mx, my, unpack(self.geometry.play)) then
         self.animations.muju:set('death')
+      end
+
+      for i = 1, 2 do
+        local width = self.v * .04
+        local x, y = unpack(self.geometry.biomeArrows[i])
+        if math.inside(mx, my, x - width / 2, y - width / 2, width, width) then
+          if i == 1 then self:previousBiome()
+          elseif i == 2 then self:nextBiome() end
+        end
       end
 
       if self.popup.active then
@@ -532,10 +621,6 @@ function Menu:mousepressed(mx, my, b)
   end
 end
 
-function Menu:mousereleased(x, y, b)
-  --
-end
-
 function Menu:startGame()
   if self.menuSounds then self.menuSounds:stop() end
   Context:remove(ctx)
@@ -580,4 +665,21 @@ function Menu:getPopupFactor()
   local t = math.lerp(self.popup.prevTime, self.popup.time, tickDelta / tickRate)
   self.popup.tween:set(t)
   return self.popup.factor.value, t
+end
+
+function Menu:previousBiome()
+  self.selectedBiome = self.selectedBiome - 1
+  if self.selectedBiome <= 0 then self.selectedBiome = #ctx.user.biomes end
+  self:refreshBackground()
+end
+
+function Menu:nextBiome()
+  self.selectedBiome = self.selectedBiome + 1
+  if self.selectedBiome >= #ctx.user.biomes + 1 then self.selectedBiome = 1 end
+  self:refreshBackground()
+end
+
+function Menu:start()
+  self:refreshBackground()
+  self.starting = false
 end

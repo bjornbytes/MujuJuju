@@ -1,7 +1,7 @@
 local Bruju = {}
 Bruju.code = 'bruju'
 Bruju.name = 'Bruju'
-Bruju.description = 'Yay Bruju.'
+Bruju.description = 'A treant with spiritual powers.  Specializes in dealing high damage and regenerating health.'
 
 ----------------
 -- Stats
@@ -98,7 +98,7 @@ Bruju.upgrades = {
     costs = {100, 200, 300},
     prerequisites = {fortify = 1, burst = 1},
     name = 'Sanctuary',
-    description = 'The spirit flame also heals allies based on Burst\'s damage.',
+    description = 'Burst also heals allies based on its damage.',
     values = {
       [1] = '20 + 30% damage',
       [2] = '30 + 50% damage',

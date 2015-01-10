@@ -62,7 +62,7 @@ return {
   biomes = {
 
     forest = {
-      name = 'The Forest',
+      name = 'The Overgrowth',
       benchmarks = {
         bronze = 300,
         silver = 900,
@@ -125,7 +125,7 @@ return {
     },
 
     cavern = {
-      name = 'The Cavern',
+      name = 'The Hollow',
       benchmarks = {
         bronze = 300,
         silver = 900,
@@ -187,7 +187,7 @@ return {
     },
 
     tundra = {
-      name = 'Tundra',
+      name = 'The Wild North',
       benchmarks = {
         bronze = 300,
         silver = 500,
@@ -249,7 +249,7 @@ return {
     },
 
     volcano = {
-      name = 'Volcano',
+      name = 'The Cinders',
       benchmarks = {
         bronze = 200,
         silver = 400,
