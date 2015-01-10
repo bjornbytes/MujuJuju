@@ -379,7 +379,8 @@ function Menu:draw()
       local lockImage = data.media.graphics.menu.lock
       local lockX = x + (w / 2) - (lockImage:getWidth() * scale) / 2
       local lockY = y + (h / 2) - (lockImage:getHeight() * scale) / 2
-      g.setColor(255, 255, 255, 255)
+      if self.selectedBiome == i then g.setColor(255, 255, 255, 255)
+      else g.setColor(255, 255, 255, alpha) end
       g.draw(data.media.graphics.menu.lock, lockX, lockY, 0, scale, scale)
     end
 
