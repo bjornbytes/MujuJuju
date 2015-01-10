@@ -5,7 +5,7 @@ function ShrujuPatches:init()
   self.objects = {}
   self.harvestLevel = 0
   self.flowLevel = 0
-  self.maxFlowLevel = (config.biomes[ctx.biome].player.baseCooldown / config.biomes[ctx.biome].player.minCooldown) / data.shruju.flow.cdr
+  self.maxFlowLevel = math.ceil((config.biomes[ctx.biome].player.baseCooldown - config.biomes[ctx.biome].player.minCooldown) / data.shruju.flow.cdr)
 end
 
 function ShrujuPatches:update()

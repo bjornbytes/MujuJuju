@@ -86,7 +86,7 @@ return {
       },
       player = {
         baseCooldown = 5,
-        minCooldown = .5,
+        minCooldown = .75,
         globalCooldown = 3,
         baseJuju = 30,
         jujuRate = 1,
@@ -148,7 +148,7 @@ return {
       },
       player = {
         baseCooldown = 5,
-        minCooldown = .5,
+        minCooldown = .75,
         globalCooldown = 3,
         baseJuju = 30,
         jujuRate = 1,
@@ -210,7 +210,7 @@ return {
       },
       player = {
         baseCooldown = 5,
-        minCooldown = .5,
+        minCooldown = .75,
         globalCooldown = 3,
         baseJuju = 30,
         jujuRate = 1,
@@ -272,7 +272,7 @@ return {
       },
       player = {
         baseCooldown = 5,
-        minCooldown = .5,
+        minCooldown = .75,
         globalCooldown = 3,
         baseJuju = 30,
         jujuRate = 1,
