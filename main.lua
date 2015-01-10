@@ -2,7 +2,7 @@ require 'require'
 
 function love.load()
   data.load()
-  config = dofile('config.lua')
+  config = love.filesystem.load('config.lua')()
 
   for stat in pairs({'damage', 'health'}) do
     local rune = {
