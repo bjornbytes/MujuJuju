@@ -146,6 +146,11 @@ function Menu:load(selectedBiome)
   self.startingScale = 0
   self.startingTween = tween.new(.5, self, {startingScale = 1}, 'outBack')
   Menu.started = true
+  if not self.starting then
+    self.startingAlpha = 0
+    self.startingScale = 1
+  end
+
   if not self.user.deck or #self.user.deck.minions == 0 then
     self.choosing = true
   end
@@ -196,6 +201,9 @@ function Menu:load(selectedBiome)
   self.background2 = g.newCanvas(self.u, self.v)
   self.workingCanvas = g.newCanvas(self.u, self.v)
   self.unitCanvas = g.newCanvas(400, 400)
+  if not self.starting then
+    self:refreshBackground()
+  end
 end
 
 function Menu:update()
@@ -478,7 +486,7 @@ function Menu:draw()
     end
   end
 
-  g.setColor(0, 0, 0, 255)
+  g.setColor(255, 255, 255, 255)
   local x, y, w, h = unpack(self.geometry.play)
   local image = data.media.graphics.menu.play
   local scale = math.min(h / image:getHeight(), w / image:getWidth())
@@ -532,6 +540,7 @@ function Menu:keypressed(key)
     elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
       love.filesystem.remove('save/user.json')
       if self.menuSounds then self.menuSounds:stop() end
+      Menu.started = false
       Context:remove(ctx)
       Context:add(Menu)
     elseif key:match('%d') and not self.choosing then
