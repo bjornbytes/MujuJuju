@@ -143,6 +143,8 @@ function Menu:load(selectedBiome)
 
   self.starting = not Menu.started
   self.startingAlpha = 1
+  self.startingScale = 0
+  self.startingTween = tween.new(.5, self, {startingScale = 1}, 'outBack')
   Menu.started = true
   if not self.user.deck or #self.user.deck.minions == 0 then
     self.choosing = true
@@ -282,16 +284,28 @@ end
 function Menu:draw()
   local u, v = love.graphics.getDimensions()
 
-  if not self.firstFrame then
+  self.frameIndex = self.frameIndex or 0
+  self.frameIndex = self.frameIndex + 1
+  if self.frameIndex < 3 then
     delta = 0
-    self.firstFrame = true
   end
 
   if self.startingAlpha > 0 then
-    g.setColor(255, 255, 255, self.startingAlpha * 255)
-    --g.draw(background)
+    self.startingTween:update(delta)
+    local factor = self.startingScale
 
-    -- draw everything else
+    g.setColor(255, 255, 255)
+    local image = data.media.graphics.menu.titlescreen
+    local scale = math.min(u / image:getWidth(), v / image:getHeight())
+    g.draw(image, 0, 0, 0, scale, scale)
+
+    local image = data.media.graphics.menu.title
+    local scale = v * .45 / image:getHeight()
+    g.draw(image, u * .5, v * .3, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
+
+    local image = data.media.graphics.menu.start
+    local scale = u * .25 / image:getWidth()
+    g.draw(image, u * .5, v * .7, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
     if self.starting then return end
   end
@@ -543,7 +557,14 @@ end
 
 function Menu:mousepressed(mx, my, b)
   if self.starting then
-    --
+    local u, v = ctx.u, ctx.v
+    local image = data.media.graphics.menu.start
+    local w = u * .25
+    local h = w * (image:getHeight() / image:getWidth())
+    if math.inside(mx, my, u * .5 - w / 2, v * .7 - h / 2, w, h) then
+      self:start()
+    end
+    return
   elseif self.choosing then
     if b == 'l' then
       local minions = self.geometry.starters
