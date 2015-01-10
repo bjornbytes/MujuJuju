@@ -75,12 +75,12 @@ return {
       juju = {
         minimum = {
           base = 14,
-          exponent = .8,
+          exponent = .785,
           coefficient = 1
         },
         maximum = {
           base = 20,
-          exponent = .8,
+          exponent = .785,
           coefficient = 1.2
         }
       },
@@ -137,12 +137,12 @@ return {
       juju = {
         minimum = {
           base = 14,
-          exponent = .8,
+          exponent = .785,
           coefficient = 1
         },
         maximum = {
           base = 20,
-          exponent = .8,
+          exponent = .785,
           coefficient = 1.2
         }
       },
@@ -199,12 +199,12 @@ return {
       juju = {
         minimum = {
           base = 14,
-          exponent = .8,
+          exponent = .785,
           coefficient = 1
         },
         maximum = {
           base = 20,
-          exponent = .8,
+          exponent = .785,
           coefficient = 1.2
         }
       },
@@ -261,12 +261,12 @@ return {
       juju = {
         minimum = {
           base = 14,
-          exponent = .8,
+          exponent = .785,
           coefficient = 1
         },
         maximum = {
           base = 20,
-          exponent = .8,
+          exponent = .785,
           coefficient = 1.2
         }
       },
