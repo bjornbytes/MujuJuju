@@ -7,8 +7,8 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
   screen_coords -= frame.xy;
   vec2 position = (screen_coords.xy / frame.zw) - vec2(0.5);
   float len = length(position);
-  float vignette = smoothstep(0, 1, len);
-  result.rgb *= 1 - vignette;
+  float vignette = smoothstep(radius, radius - blur, len);
+  result.rgb *= vignette;
 
   return result * color;
 }
