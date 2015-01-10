@@ -64,11 +64,11 @@ Bruju.upgrades = {
     name = 'Burst',
     description = 'Bruju burst into a spirit flame on death, damaging nearby enemies.',
     values = {
-      [1] = '10 damage + 60% attack damage',
-      [2] = '30 damage + 70% attack damage',
-      [3] = '50 damage + 80% attack damage',
-      [4] = '70 damage + 90% attack damage',
-      [5] = '90 damage + 100% attack damage'
+      [1] = '20 damage + 20% attack damage',
+      [2] = '35 damage + 30% attack damage',
+      [3] = '50 damage + 40% attack damage',
+      [4] = '65 damage + 50% attack damage',
+      [5] = '80 damage + 60% attack damage'
     },
     apply = function(self, unit)
       if self.level > 0 then
