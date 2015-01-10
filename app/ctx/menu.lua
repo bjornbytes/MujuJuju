@@ -373,15 +373,16 @@ function Menu:draw()
       g.setColor(255, 255, 255, detailsAlpha)
       g.printCenter(config.biomes[biome].name, x + w / 2, .15 * v)
 
-      local medalSize = v * .04
+      local medalSize = v * .03
       local medalInc = (medalSize * 2 + (v * .02))
       local medalX = x + w / 2 - medalInc * (3 - 1) / 2
       local medalY = y + h + medalSize + (v * .05)
       for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
-        g.setColor(255, 255, 255, (self.user.highscores[biome] >= config.biomes[biome].benchmarks[benchmark] and 1 or .5) * detailsAlpha)
+        local achieved = self.user.highscores[biome] >= config.biomes[biome].benchmarks[benchmark]
+        g.setColor(255, 255, 255, (achieved and 1 or .4) * detailsAlpha)
         local image = data.media.graphics.menu[benchmark]
-        local scale = medalSize * 2 / image:getWidth()
-        g.draw(image, medalX, medalY, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+        local scale = medalSize * 2 / image:getWidth() * (achieved and 1 or .8)
+        g.draw(image, medalX, medalY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
         medalX = medalX + medalInc
       end
 
