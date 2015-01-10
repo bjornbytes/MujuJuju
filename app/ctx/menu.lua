@@ -365,13 +365,24 @@ function Menu:draw()
   local biomes = self.geometry.biomes
   for i = 1, #biomes do
     local biome = config.biomeOrder[i]
+    local unlocked = table.has(ctx.user.biomes, config.biomeOrder[i])
     local x, y, w, h = unpack(biomes[i])
     local alpha = 255 - (math.min(math.abs(biomeDisplay - i), 1.35) * (255 / 1.35))
+    if not unlocked then alpha = alpha * .5 end
     if self.selectedBiome == i then g.setColor(255, 255, 255, alpha)
     else g.setColor(255, 255, 255, alpha) end
     local image = data.media.graphics.menu[config.biomeOrder[i]]
     local scale = w / image:getWidth()
     g.draw(image, x, y, 0, scale, scale)
+
+    if not unlocked then
+      local lockImage = data.media.graphics.menu.lock
+      local lockX = x + (w / 2) - (lockImage:getWidth() * scale) / 2
+      local lockY = y + (h / 2) - (lockImage:getHeight() * scale) / 2
+      if self.selectedBiome == i then g.setColor(255, 255, 255, 255)
+      else g.setColor(255, 255, 255, alpha) end
+      g.draw(data.media.graphics.menu.lock, lockX, lockY, 0, scale, scale)
+    end
 
     local detailsAlpha = 255 - (math.min(math.abs(biomeDisplay - i), 1) * (255 / 1))
     if detailsAlpha > 1 then
@@ -700,13 +711,13 @@ end
 
 function Menu:previousBiome()
   self.selectedBiome = self.selectedBiome - 1
-  if self.selectedBiome <= 0 then self.selectedBiome = #ctx.user.biomes end
+  if self.selectedBiome <= 0 then self.selectedBiome = #config.biomeOrder end
   self:refreshBackground()
 end
 
 function Menu:nextBiome()
   self.selectedBiome = self.selectedBiome + 1
-  if self.selectedBiome >= #ctx.user.biomes + 1 then self.selectedBiome = 1 end
+  if self.selectedBiome >= #config.biomeOrder + 1 then self.selectedBiome = 1 end
   self:refreshBackground()
 end
 
