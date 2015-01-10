@@ -97,11 +97,11 @@ function Tooltip:setUpgradeTooltip(who, what)
   local upgrade = data.unit[who].upgrades[what]
   table.insert(pieces, '{white}{title}' .. upgrade.name .. '{normal}')
   table.insert(pieces, '{whoCares}' .. upgrade.description .. '\n')
-  table.insert(pieces, '{white}{bold}Level ' .. upgrade.level .. (upgrade.values[upgrade.level] and ': ' .. upgrade.values[upgrade.level] or ''))
+  table.insert(pieces, '{white}{bold}Level ' .. upgrade.level .. (upgrade.values[upgrade.level] and '{normal}: ' .. upgrade.values[upgrade.level] or ''))
   if not upgrade.values[upgrade.level + 1] then
     table.insert(pieces, '{whoCares}{normal}Max Level')
   else
-    table.insert(pieces, '{white}{bold}Next Level: ' .. upgrade.values[upgrade.level + 1])
+    table.insert(pieces, '{white}{bold}Next Level{normal}: ' .. upgrade.values[upgrade.level + 1])
     local color = p.juju >= upgrade.costs[upgrade.level + 1] and '{green}' or '{red}'
     table.insert(pieces, color .. upgrade.costs[upgrade.level + 1] .. ' juju')
     if upgrade.prerequisites then
