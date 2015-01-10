@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "5fMQeDGSrdJOTmN3L9DCTE2vtGA", "spine": "2.1.07", "width": 350.24, "height": 328.89 },
+"skeleton": { "hash": "UZvBKTpGz9N2YZSH4/dJjgQff+c", "spine": "2.1.07", "width": 369, "height": 331.02 },
 "bones": [
 	{ "name": "root", "x": -0.01, "scaleX": 0.953, "scaleY": 0.953 },
 	{ "name": "waist", "parent": "root", "x": -7.52, "y": 131.97 },
@@ -875,8 +875,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 6 },
 					{ "slot": "rightlegupper", "offset": 2 },
-					{ "slot": "chest", "offset": -4 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -4 }
 				]
 			}
 		],
@@ -1438,9 +1437,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -1448,9 +1445,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -1458,9 +1453,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -1468,9 +1461,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -1478,9 +1469,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			}
 		],
@@ -2354,9 +2343,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -2364,9 +2351,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -2374,9 +2359,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -2384,9 +2367,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -2394,9 +2375,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -2404,9 +2383,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			}
 		],
@@ -2862,9 +2839,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 2 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			},
 			{
@@ -2872,9 +2847,7 @@
 				"offsets": [
 					{ "slot": "rightleglower", "offset": 1 },
 					{ "slot": "rightlegupper", "offset": 4 },
-					{ "slot": "leftarmlower", "offset": 1 },
-					{ "slot": "lefthand", "offset": -1 },
-					{ "slot": "rightarmlower", "offset": 1 }
+					{ "slot": "chest", "offset": -3 }
 				]
 			}
 		],
