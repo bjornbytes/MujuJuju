@@ -7,7 +7,7 @@ Thuju.description = 'A bramble golem.  Exceptional at soaking up and reflecting 
 -- Stats
 ----------------
 Thuju.health = 150
-Thuju.damage = 12
+Thuju.damage = 14
 Thuju.range = 16
 Thuju.attackSpeed = 1.15
 Thuju.speed = 35
@@ -62,7 +62,7 @@ Thuju.upgrades = {
     level = 0,
     costs = {25, 75, 125, 175, 225},
     name = 'Impenetrable Hide',
-    description = 'Thuju gains armor for 3 seconds when struck, stacking multiple times.  The effect is increased by 150% against ranged attacks.',
+    description = 'Thuju gains armor for 3 seconds when struck, stacking multiple times.  The effect is increased by 200% against ranged attacks.',
     values = {
       [1] = '5% damage reduction, stacking up to 3 times',
       [2] = '8% damage reduction, stacking up to 4 times',

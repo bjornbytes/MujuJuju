@@ -3,6 +3,6 @@ ImpenetrableHide.code = 'impenetrablehide'
 ImpenetrableHide.name = 'Impenetrable Hide'
 ImpenetrableHide.tags = {'armor'}
 ImpenetrableHide.stack = true
-ImpenetrableHide.armorRangedMultiplier = 1.5
+ImpenetrableHide.armorRangedMultiplier = 2
 
 return ImpenetrableHide

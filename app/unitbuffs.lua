@@ -145,7 +145,7 @@ function UnitBuffs:prehurt(amount, source, kind)
     local armors = self:buffsWithTag('armor')
     local armor = 0
     table.each(armors, function(buff)
-      armor = armor + (1 - armor) * math.clamp(buff.armor * (buff.armorRangedMultiplier or 1), 0, .85)
+      armor = armor + (1 - armor) * math.clamp(buff.armor * (buff.armorRangedMultiplier or 1), 0, .9)
     end)
 
     amount = amount * (1 - armor)
