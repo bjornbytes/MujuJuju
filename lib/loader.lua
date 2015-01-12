@@ -84,6 +84,11 @@ data.load = function()
       end
       data.media.sounds[unit.code].attackHit = love.audio.newSource(sounds)
     end
+
+    table.each(table.keys(unit.upgrades), function(upgrade, i)
+      unit.upgrades[i] = unit.upgrades[upgrade]
+      unit.upgrades[i].code = upgrade
+    end)
   end)
   load('data/spell', 'spell')
   load('data/animation', 'animation', function(animation)

@@ -258,7 +258,7 @@ function Menu:update()
       local x, y, r, runes = unpack(deck[i])
 
       if math.insideCircle(mx, my, x, y, r) then
-        self.tooltip:setUnitTooltip(code, true)
+        self.tooltip:setUnitTooltip(code)
         break
       else
         for j = 1, #runes do

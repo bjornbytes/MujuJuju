@@ -79,15 +79,6 @@ function Tooltip:setUnitTooltip(code, upgrades)
   local pieces = {}
   table.insert(pieces, '{white}{title}' .. unit.name .. '{normal}')
   table.insert(pieces, '{whoCares}' .. unit.description)
-  if upgrades then
-    table.insert(pieces, '')
-    for i = 1, #unit.upgradeOrder do
-      local upgrade = unit.upgrades[unit.upgradeOrder[i]]
-      local color = 'white'
-      if i == 4 or i == 5 then color = 'purple' end
-      table.insert(pieces, '{bold}{' .. color .. '}' .. upgrade.name .. '{normal}{whoCares}: ' .. upgrade.description)
-    end
-  end
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

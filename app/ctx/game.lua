@@ -140,50 +140,23 @@ function Game:distribute()
     elseif silver then runeLevel = love.math.random(.33 * maxLevel, .67 * maxLevel)
     elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
 
-    local upgrade = love.math.random() < config.biomes[ctx.biome].runes.specialChance * (runeLevel / 100)
-    if upgrade then
-      local upgrades = {}
-      local function halp(unit, upgrade)
-        local obj = unit.upgrades[upgrade]
-        table.insert(upgrades, upgrade)
-        upgrades[upgrade] = obj.name
-      end
-
-      -- Tier 2 check
-      if love.math.random() < .5 * (runeLevel / 100) then
-        table.each(config.starters, function(code)
-          halp(data.unit[code], data.unit[code].upgradeOrder[4])
-          halp(data.unit[code], data.unit[code].upgradeOrder[5])
-        end)
-      else
-        table.each(config.starters, function(code)
-          halp(data.unit[code], data.unit[code].upgradeOrder[1])
-          halp(data.unit[code], data.unit[code].upgradeOrder[2])
-          halp(data.unit[code], data.unit[code].upgradeOrder[3])
-        end)
-      end
-
-      rune.upgrade = upgrades[love.math.random(1, #upgrades)]
-      rune.name = 'Rune of ' .. upgrades[rune.upgrade]:capitalize()
+    local stats = config.runes.stats
+    local stat = stats[love.math.random(1, #stats)]
+    rune.stat = stat
+    if love.math.random() < .5 then
+      rune.amount = math.lerp(config.runes[stat].flatRange[1], config.runes[stat].flatRange[2], (runeLevel / 100) ^ 1.5)
     else
-      local stats = config.runes.stats
-      local stat = stats[love.math.random(1, #stats)]
-      rune.stat = stat
-      if love.math.random() < .5 then
-        rune.amount = math.lerp(config.runes[stat].flatRange[1], config.runes[stat].flatRange[2], (runeLevel / 100) ^ 1.5)
-      else
-        rune.scaling = math.lerp(config.runes[stat].scalingRange[1], config.runes[stat].scalingRange[2], (runeLevel / 100) ^ 1.5)
-      end
-
-      local names = config.runes[rune.stat].names
-      rune.name = names[love.math.random(1, #names)]
-
-      local prefixes = config.runes.prefixes
-      local prefixLevel = math.clamp(runeLevel + love.math.random(-3, 3), 0, 100)
-      local prefix = prefixes[1 + math.round((prefixLevel / 100) * (#prefixes - 1))]
-
-      rune.name = prefix .. ' ' .. rune.name
+      rune.scaling = math.lerp(config.runes[stat].scalingRange[1], config.runes[stat].scalingRange[2], (runeLevel / 100) ^ 1.5)
     end
+
+    local names = config.runes[rune.stat].names
+    rune.name = names[love.math.random(1, #names)]
+
+    local prefixes = config.runes.prefixes
+    local prefixLevel = math.clamp(runeLevel + love.math.random(-3, 3), 0, 100)
+    local prefix = prefixes[1 + math.round((prefixLevel / 100) * (#prefixes - 1))]
+
+    rune.name = prefix .. ' ' .. rune.name
 
     local colors = table.keys(config.runes.colors)
     rune.color = colors[love.math.random(1, #colors)]

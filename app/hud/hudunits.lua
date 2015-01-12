@@ -14,26 +14,17 @@ function HudUnits:init()
       local upgradeFactor, t = ctx.hud.upgrades:getFactor()
       local upgradeAlphaFactor = (t / ctx.hud.upgrades.maxTime) ^ 3
       local minionInc = (.2 * u) + (.075 * upgradeFactor * u)
-      local inc = .15 * upgradeFactor * v
+      local inc = .1 * upgradeFactor * v
       local xx = .5 * u - (minionInc * (self.count - 1) / 2)
-      local size = math.max(.1 * v * upgradeFactor, .01)
+      local yy = (.15 * upgradeFactor) * v + (.25 * v)
+      local size = math.max(.08 * v * upgradeFactor, .01)
       local res = {}
 
       for i = 1, self.count do
         res[i] = {}
 
-        local yy = (.15 * upgradeFactor) * v + (.25 * v)
-        local x = xx - (inc * (3 - 1) / 2)
-        for j = 1, 3 do
-          table.insert(res[i], {x - size / 2, yy - size / 2, size, size})
-          x = x + inc
-        end
-
-        local x = xx - (inc * (2 - 1) / 2)
-        yy = yy + .12 * v
-        for j = 1, 2 do
-          table.insert(res[i], {x - size / 2, yy - size / 2, size, size})
-          x = x + inc
+        for j, upgrade in ipairs(data.unit[p.deck[i].code].upgrades) do
+          table.insert(res[i], {xx + (inc * upgrade.x) - size / 2, yy + (.1 * v * upgrade.y) - size / 2, size, size})
         end
 
         xx = xx + minionInc
@@ -53,7 +44,7 @@ function HudUnits:update()
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
     for j = 1, #upgrades[i] do
-      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
+      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
       local x, y, w, h = unpack(upgrades[i][j])
       if math.inside(mx, my, x, y, w, h) then
         ctx.hud.tooltip:setUpgradeTooltip(who, what)
@@ -197,8 +188,8 @@ function HudUnits:draw()
 
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
-    for j = 1, 5 do
-      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
+    for j = 1, #upgrades[i] do
+      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
       local x, y, w, h = unpack(upgrades[i][j])
       local image = data.media.graphics.hud.frame
       local scale = w / image:getWidth()
@@ -233,7 +224,7 @@ function HudUnits:mousereleased(mx, my, b)
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
     for j = 1, #upgrades[i] do
-      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
+      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
       local x, y, w, h = unpack(upgrades[i][j])
       if math.inside(mx, my, x, y, w, h) then
         local upgrade = data.unit[who].upgrades[what]
