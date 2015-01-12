@@ -73,7 +73,7 @@ function UnitBuffs:postupdate()
 end
 
 function UnitBuffs:add(code, vars)
-  if self:isCrowdControl(code) and self:ccImmune() then return end
+  if self:isCrowdControl(code) and self:ccImmunity() == 1 then return end
   if self:get(code) then return self:reapply(code, vars) end
   local buff = data.buff[code]()
   buff.unit = self.unit
@@ -191,8 +191,12 @@ function UnitBuffs:silenced()
   return next(self:buffsWithTag('silence'))
 end
 
-function UnitBuffs:ccImmune()
-  return next(self:buffsWithTag('ccimmune'))
+function UnitBuffs:ccImmunity()
+  local vulnerability = 1
+  table.each(self:buffsWithTag('ccimmune'), function(buff)
+    vulnerability = vulnerability * (1 - buff.ccimmunity)
+  end)
+  return 1 - vulnerability
 end
 
 function UnitBuffs:feared()

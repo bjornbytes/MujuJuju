@@ -2,14 +2,17 @@ local Burst = extend(Ability)
 Burst.code = 'burst'
 
 function Burst:die()
-  local damage = 5 + (15 * self.unit:upgradeLevel('burst')) + (self.unit.damage * .5)
-  local range = 85 + (6 * self.unit:upgradeLevel('burst'))
-
+  local damages = {20, 40, 70, 110, 160}
+  local ranges = {[0] = 60, 80, 110, 150}
+  local burst = self.unit:upgradeLevel('burst')
+  local eruption = self.unit:upgradeLevel('eruption')
   local sanctuary = self.unit:upgradeLevel('sanctuary')
+
+  local damage = damages[burst]
+  local range = ranges[eruption]
   local heal = 0
-  if sanctuary > 0 then
-    heal = (10 + 10 * sanctuary) + (.1 + (.2 * sanctuary) * damage)
-  end
+
+  heal = sanctuary > 0 and damage * .5 or 0
 
   self:createSpell({
     damage = damage,

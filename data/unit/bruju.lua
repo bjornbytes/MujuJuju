@@ -67,11 +67,11 @@ Bruju.upgrades = {
     maxLevel = 1,
     costs = {250},
     name = 'Retaliation',
-    description = 'Bruju gains attack speed for 4 seconds when a nearby ally dies.',
+    description = 'Bruju gains attack speed while Muju is in the juju realm.',
     x = 1,
     y = 0,
     values = {
-      [1] = '50% attack speed'
+      [1] = '40% attack speed'
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -105,10 +105,7 @@ Bruju.upgrades = {
       [1] = '80 range',
       [2] = '110 range',
       [3] = '150 range'
-    },
-    apply = function(self, unit)
-      -- Increase health
-    end
+    }
   },
   rewind = {
     level = 0,
@@ -143,7 +140,11 @@ Bruju.upgrades = {
       [3] = '70% increase'
     },
     apply = function(self, unit)
-      -- Increase health
+      if self.level > 0 then
+        local modifiers = {1.3, 1.5, 1.7}
+        unit.maxHealth = unit.maxHealth * modifiers[self.level]
+        unit.health = unit.maxHealth
+      end
     end
   },
   impulse = {
@@ -170,7 +171,12 @@ Bruju.upgrades = {
     y = 3,
     values = {
       [1] = '65% reduction.',
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit.buffs:add('clarity')
+      end
+    end
   },
   sanctuary = {
     level = 0,
@@ -195,7 +201,12 @@ Bruju.upgrades = {
     y = 4,
     values = {
       [1] = '25% maximum health converted to damage',
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit.damage = unit.damage + (unit.maxHealth * .25)
+      end
+    end
   },
   conduction = {
     level = 0,
