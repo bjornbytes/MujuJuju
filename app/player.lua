@@ -46,6 +46,7 @@ function Player:init()
   self.experience = 0
   self.level = 1
   self.skillPoints = 0
+  self:addJuju(150)
 
   self.magicShruju = {}
 
