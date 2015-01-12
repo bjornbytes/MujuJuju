@@ -155,8 +155,15 @@ function HudStatus:draw()
   self.hitboxes.timer[3] = hitboxWidth
   self.hitboxes.timer[4] = height
 
-  g.setFont('pixel', 8)
+  -- Enemy spawn debug text
+  --[[g.setFont('pixel', 8)
   g.setColor(255, 255, 255)
   local str = math.round(ctx.units.level / .1) * .1 .. '\n' .. math.round(ctx.units.minEnemyRate / .1) * .1 .. ' - ' .. math.round(ctx.units.maxEnemyRate / .1) * .1 .. '\n' .. 1 + math.floor(ctx.units.level * config.biomes[ctx.biome].units.maxEnemiesCoefficient)
+  g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)]]
+
+  -- Level debug text
+  g.setFont('pixel', 8)
+  g.setColor(255, 255, 255)
+  local str = 'Level ' .. p.level .. '\n' .. p.experience .. ' / ' .. p.nextLevels[p.level]
   g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)
 end
