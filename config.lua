@@ -69,9 +69,13 @@ return {
     maxPopulation = 10,
     colors = {
       purple = {.5, 0, 1},
-      red = {1, 0, 0}
+      red = {1, 0, 0},
+      blue = {0, 0, 1},
+      green = {0, 1, 0},
+      black = {0, 0, 0},
+      white = {1, 1, 1}
     },
-    colorOrder = {'purple', 'red'}
+    colorOrder = {'purple', 'red', 'blue', 'green', 'black', 'white'}
   },
 
   biomes = {
