@@ -572,6 +572,8 @@ function Menu:keypressed(key)
           end
         end
       end
+    elseif key == 'p' then
+      self.popup.active = not self.popup.active
     end
   end
 end
@@ -637,6 +639,13 @@ function Menu:mousepressed(mx, my, b)
       local deck = self.geometry.deck
       for i = 1, #deck do
         local x, y, r, runes = unpack(deck[i])
+        if math.insideCircle(mx, my, x, y, r) then
+          table.insert(self.user.minions, self.user.deck.minions[i])
+          table.remove(self.user.deck.minions, i)
+          saveUser(self.user)
+          table.clear(self.geometry)
+          break
+        end
         for j = 1, #runes do
           if self.user.deck.runes[i] and self.user.deck.runes[i][j] and math.inside(mx, my, unpack(runes[j])) then
             table.insert(self.user.runes, self.user.deck.runes[i][j])

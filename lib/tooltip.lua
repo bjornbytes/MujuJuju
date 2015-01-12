@@ -74,7 +74,8 @@ function Tooltip:setTooltip(str)
   self.active = true
 end
 
-function Tooltip:setUnitTooltip(code, upgrades)
+function Tooltip:setUnitTooltip(code)
+  if not code then return end
   local unit = data.unit[code]
   local pieces = {}
   table.insert(pieces, '{white}{title}' .. unit.name .. '{normal}')
