@@ -140,13 +140,6 @@ function Tooltip:setRuneTooltip(rune)
     local amountRound = rune.scaling and .1 or 1
     local amount = math.round((rune.amount or rune.scaling) / amountRound) * amountRound
     table.insert(pieces, '+' .. amount .. ' ' .. rune.stat:capitalize() .. (rune.scaling and ' every minute' .. (ctx.timer and '({green}' .. math.round(rune.scaling * math.floor(ctx.timer * tickRate / 60) / .1) * .1 .. '{white})' or '') or ''))
-  elseif rune.upgrade then
-    local name = nil
-    for i = 1, #data.unit do
-      local upgrade = data.unit[i].upgrades[rune.upgrade]
-      if upgrade then name = upgrade.name break end
-    end
-    table.insert(pieces, '+1 to ' .. name:capitalize())
   end
   return self:setTooltip(table.concat(pieces, '\n'))
 end
