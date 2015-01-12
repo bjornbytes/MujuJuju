@@ -18,7 +18,7 @@ function Unit:activate()
   Unit.backCanvas = Unit.backCanvas or g.newCanvas(400, 400)
 
   self.animation = data.animation[self.class.code]({
-    scale = data.animation[self.class.code].scale * (self.elite and config.elites.scale or 1)
+    scale = data.animation[self.class.code].scale * (self.elite and config.elites.scale or (self.boss and 2 or 1))
   })
 
   if self.player then
@@ -66,6 +66,17 @@ function Unit:activate()
         end
 
         self.died = true
+        
+        if self.boss then
+          local biomeIndex
+          for i = 1, #config.biomeOrder do if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end end
+          if not config.biomeOrder[biomeIndex + 1] then
+            Context:remove(ctx)
+            Context:add(Menu, biomeIndex)
+            return
+          end
+          ctx.biome = config.biomeOrder[biomeIndex + 1]
+        end
       end
     elseif event.data.name == 'spawn' then
       ctx.sound:play(data.media.sounds[self.class.code].spawn, function(sound) sound:setVolume(.5) end)
@@ -92,6 +103,9 @@ function Unit:activate()
   if self.elite then
     self.health = self.health * config.elites.healthModifier
     self.damage = self.damage * config.elites.damageModifier
+  elseif self.boss then
+    self.health = self.health * 20
+    self.damage = self.damage * 3
   end
 
   self.abilities = {}
