@@ -312,7 +312,8 @@ function HudUnits:mousereleased(mx, my, b)
         local upgrade = data.unit[who].upgrades[what]
         local nextLevel = upgrade.level + 1
         local cost = upgrade.costs[nextLevel]
-        if ctx.upgrades.canBuy(who, what) and p:spend(cost) then
+        if ctx.upgrades.canBuy(who, what) and p.skillPoints > 0 then
+          p.skillPoints = p.skillPoints - 1
           ctx.upgrades.unlock(who, what)
         else
           ctx.sound:play('misclick')
