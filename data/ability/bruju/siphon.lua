@@ -3,7 +3,7 @@ Siphon.code = 'siphon'
 
 function Siphon:postattack(target, amount)
   if amount then
-    local lifesteal = amount * (.1 + self.unit:upgradeLevel('siphon'))
+    local lifesteal = amount * (.1 * self.unit:upgradeLevel('siphon'))
 
     if self.unit:upgradeLevel('equilibrium') > 0 and self.unit.health < self.unit.maxHealth * .4 then
       lifesteal = lifesteal * 2
