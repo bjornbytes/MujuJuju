@@ -71,7 +71,7 @@ Bruju.upgrades = {
     x = 1,
     y = 0,
     values = {
-      [1] = '40% attack speed'
+      [1] = '30% attack speed'
     },
     apply = function(self, unit)
       if self.level > 0 then

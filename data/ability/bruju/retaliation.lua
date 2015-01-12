@@ -3,9 +3,9 @@ Retaliation.code = 'retaliation'
 
 function Retaliation:update()
   if self.unit.player and self.unit.player.dead then
-    self.buffs:add('retaliation')
+    self.unit.buffs:add('retaliation')
   else
-    self.buffs:remove('retaliation')
+    self.unit.buffs:remove('retaliation')
   end
 end
 
