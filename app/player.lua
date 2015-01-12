@@ -209,7 +209,7 @@ function Player:summon()
 	local cooldown = self.deck[self.selected].cooldown
   local population = self:getPopulation()
 	local cost = data.unit[minion].cost
-	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(cost) then
+	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(0) then
 		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
     self.totalSummoned = self.totalSummoned + 1
     self.invincible = 0
