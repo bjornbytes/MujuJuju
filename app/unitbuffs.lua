@@ -203,3 +203,11 @@ function UnitBuffs:feared()
   local fear = next(self:buffsWithTag('fear'))
   return fear and fear.target
 end
+
+function UnitBuffs:potency()
+  local ratio = 1
+  table.each(self:buffsWithTag('potency'), function(potency)
+    ratio = ratio * potency
+  end)
+  return ratio
+end

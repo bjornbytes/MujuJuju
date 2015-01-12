@@ -218,7 +218,12 @@ Bruju.upgrades = {
     y = 4,
     values = {
       [1] = '15% increased healing from all sources.',
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit.buffs:add('conduction')
+      end
+    end
   }
 }
 

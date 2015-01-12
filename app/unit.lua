@@ -455,7 +455,7 @@ end
 function Unit:heal(amount, source)
   if self.dying then return end
 
-  self.health = math.min(self.health + amount, self.maxHealth)
+  self.health = math.min(self.health + amount * self.buffs:potency(), self.maxHealth)
 end
 
 function Unit:die()
