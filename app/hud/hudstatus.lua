@@ -162,6 +162,6 @@ function HudStatus:draw()
 
   g.setFont('pixel', 8)
   g.setColor(255, 255, 255)
-  local str = 'Level ' .. p.level .. '\n' .. math.floor(p.experience) .. ' / ' .. p.nextLevels[p.level] .. '\n' .. p.skillPoints .. ' skill points'
+  local str = 'Level ' .. p.level .. '\n' .. math.floor(p.experience) .. ' / ' .. config.player.nextLevels[p.level] .. '\n' .. p.skillPoints .. ' skill points'
   g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)
 end

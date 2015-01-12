@@ -75,7 +75,8 @@ return {
       black = {0, 0, 0},
       white = {1, 1, 1}
     },
-    colorOrder = {'purple', 'red', 'blue', 'green', 'black', 'white'}
+    colorOrder = {'purple', 'red', 'blue', 'green', 'black', 'white'},
+    nextLevels = {100, 300, 600, 1000, 1500, 2100, 2800, 3600, 4500, 5500}
   },
 
   biomes = {

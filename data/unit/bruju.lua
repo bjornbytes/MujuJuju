@@ -86,9 +86,41 @@ Bruju.upgrades = {
         unit:addAbility('siphon')
       end
     end
+  },
+  burst = {
+    level = 0,
+    reqLevel = 4,
+    name = 'Burst',
+    description = 'Deal 40 damage to nearby enemies on death.',
+    values = {
+      [1] = '20 + 30% damage',
+      [2] = '30 + 50% damage',
+      [3] = '40 + 70% damage'
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('burst')
+      end
+    end
+  },
+  rewind = {
+    level = 0,
+    reqLevel = 4,
+    name = 'Rewind',
+    description = 'Grants a 30% chance to quickly heal any damage taken.',
+    values = {
+      [1] = '20% lifesteal',
+      [2] = '35% lifesteal',
+      [3] = '50% lifesteal'
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('rewind')
+      end
+    end
   }
 }
 
-Bruju.upgradeOrder = {'empower', 'fortify', 'sanctuary', 'siphon'}
+Bruju.upgradeOrder = {'empower', 'fortify', 'sanctuary', 'siphon', 'burst', 'rewind'}
 
 return Bruju

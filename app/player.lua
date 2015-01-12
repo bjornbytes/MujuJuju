@@ -5,19 +5,6 @@ Player.height = 90
 Player.depth = 0
 Player.walkSpeed = 65
 
-Player.nextLevels = {
-  100,
-  300,
-  600,
-  1000,
-  1500,
-  2100,
-  2800,
-  3600,
-  4500,
-  5500
-}
-
 
 ----------------
 -- Core
@@ -46,7 +33,6 @@ function Player:init()
   self.experience = 0
   self.level = 1
   self.skillPoints = 0
-  self:addJuju(150)
 
   self.magicShruju = {}
 
@@ -277,7 +263,7 @@ end
 
 function Player:addJuju(amount)
   self.experience = self.experience + amount
-  while self.experience >= self.nextLevels[self.level] do
+  while self.experience >= config.player.nextLevels[self.level] do
     self.level = self.level + 1
     self.skillPoints = self.skillPoints + 1
   end
