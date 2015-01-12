@@ -59,6 +59,21 @@ return {
     magicDuration = 90
   },
 
+  player = {
+    baseCooldown = 5,
+    minCooldown = .75,
+    globalCooldown = 3,
+    baseJuju = 30,
+    jujuRate = 1,
+    basePopulation = 3,
+    maxPopulation = 10,
+    colors = {
+      purple = {.5, 0, 1},
+      red = {1, 0, 0}
+    },
+    colorOrder = {'purple', 'red'}
+  },
+
   biomes = {
 
     forest = {
@@ -83,15 +98,6 @@ return {
           exponent = .785,
           coefficient = 1.2
         }
-      },
-      player = {
-        baseCooldown = 5,
-        minCooldown = .75,
-        globalCooldown = 3,
-        baseJuju = 30,
-        jujuRate = 1,
-        basePopulation = 3,
-        maxPopulation = 10
       },
       units = {
         minEnemyRate = 14,
@@ -146,15 +152,6 @@ return {
           coefficient = 1.2
         }
       },
-      player = {
-        baseCooldown = 5,
-        minCooldown = .75,
-        globalCooldown = 3,
-        baseJuju = 30,
-        jujuRate = 1,
-        basePopulation = 3,
-        maxPopulation = 10
-      },
       units = {
         minEnemyRate = 14,
         maxEnemyRate = 16,
@@ -208,15 +205,6 @@ return {
           coefficient = 1.2
         }
       },
-      player = {
-        baseCooldown = 5,
-        minCooldown = .75,
-        globalCooldown = 3,
-        baseJuju = 30,
-        jujuRate = 1,
-        basePopulation = 3,
-        maxPopulation = 10
-      },
       units = {
         minEnemyRate = 14,
         maxEnemyRate = 15,
@@ -269,15 +257,6 @@ return {
           exponent = .785,
           coefficient = 1.2
         }
-      },
-      player = {
-        baseCooldown = 5,
-        minCooldown = .75,
-        globalCooldown = 3,
-        baseJuju = 30,
-        jujuRate = 1,
-        basePopulation = 3,
-        maxPopulation = 10
       },
       units = {
         minEnemyRate = 14,
@@ -374,6 +353,8 @@ return {
     runes = {},
     deck = {minions = {}, runes = {}},
     biomes = {'forest'},
-    highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0}
+    highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0},
+    name = 'Muju',
+    color = 'purple'
   }
 }

@@ -20,7 +20,7 @@ function Menu:load(selectedBiome)
       local size = .2 * v
       local inc = (size * 2) + .1 * v
       local x = u * .5 - inc * ((#minions - 1) / 2)
-      local y = .6 * v
+      local y = .65 * v
       local res = {}
       for i = 1, #minions do
         table.insert(res, {x, y, size / 2})
@@ -130,6 +130,20 @@ function Menu:load(selectedBiome)
       local w, h = .2 * u, .13 * v
       local midx = (.6 + (.4 / 2)) * u
       return {midx - w / 2, frame[2] + frame[4] - h - v * .05, w, h}
+    end,
+    
+    colors = function()
+      local u, v = ctx.u, ctx.v
+      local ct = #config.player.colorOrder
+      local width = .08 * v * 1.3
+      local inc = width + .02 * v
+      local x = u * .5 - (inc * (ct - 1) / 2)
+      local res = {}
+      for name, color in pairs(config.player.colors) do
+        table.insert(res, {x - width / 2, v * .26, width, .08 * v})
+        x = x + inc
+      end
+      return res
     end
   }
 
@@ -204,6 +218,8 @@ function Menu:load(selectedBiome)
   if not self.starting then
     self:refreshBackground()
   end
+  
+  love.keyboard.setKeyRepeat(true)
 end
 
 function Menu:update()
@@ -330,21 +346,43 @@ function Menu:draw()
   g.setColor(255, 255, 255)
   self.animations.muju:draw(u * .08, v * .75)
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
-    self.animations.muju.spine.skeleton:findSlot(slot).r = .5
-    self.animations.muju.spine.skeleton:findSlot(slot).g = 0
-    self.animations.muju.spine.skeleton:findSlot(slot).b = 1
+    local slot = self.animations.muju.spine.skeleton:findSlot(slot)
+    slot.r, slot.g, slot.b = unpack(config.player.colors[self.user.color])
   end
 
   if self.choosing then
+    g.setColor(255, 255, 255)
+    g.setFont('mesmerize', .04 * v)
+    g.printCenter('Enter your name', u * .5, v * .06)
+    g.printCenter(self.user.name, u * .5, v * .12)
+
+    local fontHeight = g.getFont():getHeight()
+    local lineX = u * .5 + g.getFont():getWidth(self.user.name) / 2 + 1
+    g.line(lineX, v * .12 - fontHeight / 2, lineX, v * .12 + fontHeight / 2)
+
+    g.printCenter('Pick your color', u * .5, v * .21)
+
+    local colors = self.geometry.colors
+    for i = 1, #colors do
+      local name = config.player.colorOrder[i]
+      local color = config.player.colors[name]
+      g.setColor(color[1] * 255, color[2] * 255, color[3] * 255)
+      g.rectangle('fill', unpack(colors[i]))
+      if self.user.color == name then
+        g.setColor(255, 255, 255)
+        g.rectangle('line', unpack(colors[i]))
+      end
+    end
+
     g.setColor(0, 0, 0, 100)
-    g.rectangle('fill', u * .2, v * .33, u * .6, v * .42)
+    g.rectangle('fill', u * .2, v * .38, u * .6, v * .42)
 
     g.setFont('mesmerize', .08 * v)
     local str = 'Choose your minion'
     g.setColor(0, 0, 0)
-    g.print(str, .5 * u - g.getFont():getWidth(str) / 2 + 1, .35 * v + 1)
+    g.print(str, .5 * u - g.getFont():getWidth(str) / 2 + 1, .4 * v + 1)
     g.setColor(255, 255, 255)
-    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, .35 * v)
+    g.print(str, .5 * u - g.getFont():getWidth(str) / 2, .4 * v)
 
     local minions = self.geometry.starters
     for i = 1, #minions do
@@ -542,6 +580,7 @@ function Menu:keypressed(key)
     end
     return
   elseif self.choosing then
+    if key == 'backspace' then self.user.name = self.user.name:sub(1, -2) end
     return
   else
     if key == 'return' and table.has(self.user.biomes, config.biomeOrder[self.selectedBiome]) then
@@ -599,6 +638,13 @@ function Menu:mousepressed(mx, my, b)
           self.choosing = false
           self.animations.muju:set('summon')
           ctx.sound:play('summon2')
+        end
+      end
+
+      local colors = self.geometry.colors
+      for i = 1, #colors do
+        if math.inside(mx, my, unpack(colors[i])) then
+          self.user.color = config.player.colorOrder[i]
         end
       end
     end
@@ -660,6 +706,12 @@ function Menu:mousepressed(mx, my, b)
         end
       end
     end
+  end
+end
+
+function Menu:textinput(char)
+  if self.choosing and #self.user.name < 16 and char:match('%a*%d*') then
+    self.user.name = self.user.name .. char
   end
 end
 

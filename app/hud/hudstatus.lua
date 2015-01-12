@@ -12,7 +12,7 @@ function HudStatus:init()
   self.jjpm = 0
   self.jjpmTimer = 1
 
-  self.jujuDisplay = config.biomes[ctx.biome].player.baseJuju
+  self.jujuDisplay = config.player.baseJuju
 
   self.prev = {}
   for _, k in pairs({'jujuScale', 'populationScale', 'clockScale', 'populationr', 'populationg', 'populationb', 'jujuAngle', 'maxPopFactor'}) do
