@@ -22,16 +22,18 @@ function HudUnits:init()
       for i = 1, self.count do
         res[i] = {}
 
-        local x = xx - (inc * (2 - 1) / 2)
-        local startx = x
         local yy = (.15 * upgradeFactor) * v + (.25 * v)
-        for j = 1, #data.unit[p.deck[i].code].upgradeOrder do
+        local x = xx - (inc * (3 - 1) / 2)
+        for j = 1, 3 do
           table.insert(res[i], {x - size / 2, yy - size / 2, size, size})
           x = x + inc
-          if j % 2 == 0 then
-            x = startx
-            yy = yy + .12 * v
-          end
+        end
+
+        local x = xx - (inc * (2 - 1) / 2)
+        yy = yy + .12 * v
+        for j = 1, 2 do
+          table.insert(res[i], {x - size / 2, yy - size / 2, size, size})
+          x = x + inc
         end
 
         xx = xx + minionInc
@@ -195,7 +197,7 @@ function HudUnits:draw()
 
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
-    for j = 1, #self.geometry.upgrades[i] do
+    for j = 1, 5 do
       local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgradeOrder[j]
       local x, y, w, h = unpack(upgrades[i][j])
       local image = data.media.graphics.hud.frame
@@ -236,9 +238,8 @@ function HudUnits:mousereleased(mx, my, b)
       if math.inside(mx, my, x, y, w, h) then
         local upgrade = data.unit[who].upgrades[what]
         local nextLevel = upgrade.level + 1
-        --local cost = upgrade.costs[nextLevel]
-        if ctx.upgrades.canBuy(who, what) and p.skillPoints > 0 then
-          p.skillPoints = p.skillPoints - 1
+        local cost = upgrade.costs[nextLevel]
+        if ctx.upgrades.canBuy(who, what) and p:spend(cost) then
           ctx.upgrades.unlock(who, what)
         else
           ctx.sound:play('misclick')

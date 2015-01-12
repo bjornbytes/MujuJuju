@@ -22,9 +22,9 @@ Bruju.cost = 12
 Bruju.upgrades = {
   empower = {
     level = 0,
-    reqLevel = 2,
+    costs = {45, 65, 95, 135, 185},
     name = 'Empower',
-    description = '+10 damage',
+    description = 'Bruju strike with increased force.',
     values = {
       [0] = '20 damage',
       [1] = '26 damage',
@@ -34,14 +34,15 @@ Bruju.upgrades = {
       [5] = '70 damage'
     },
     apply = function(self, unit)
-      unit.damage = unit.damage + 10
+      local damageIncreases = {[0] = 0, 6, 14, 24, 36, 50}
+      unit.damage = unit.damage + damageIncreases[self.level]
     end
   },
   fortify = {
     level = 0,
-    reqLevel = 2,
+    costs = {35, 60, 100, 150, 250},
     name = 'Fortify',
-    description = '+40 health',
+    description = 'Bruju is empowered with spiritual energy, increasing his maximum health.',
     values = {
       [0] = '85 health',
       [1] = '130 health',
@@ -51,19 +52,23 @@ Bruju.upgrades = {
       [5] = '400 health'
     },
     apply = function(self, unit)
-      unit.health = unit.health + 40
-      unit.maxHealth = unit.maxHealth + 40
+      local healthIncreases = {[0] = 0, 45, 95, 145, 215, 315}
+      local increase = healthIncreases[self.level]
+      unit.health = unit.health + increase
+      unit.maxHealth = unit.maxHealth + increase
     end
   },
-  sanctuary = {
+  burst = {
     level = 0,
-    reqLevel = 3,
-    name = 'Sanctuary',
-    description = 'Heal nearby allies for 30 health on death.',
+    costs = {30, 60, 90, 120, 150},
+    name = 'Burst',
+    description = 'Bruju burst into a spirit flame on death, damaging nearby enemies.',
     values = {
-      [1] = '20 + 30% damage',
-      [2] = '30 + 50% damage',
-      [3] = '40 + 70% damage'
+      [1] = '20 damage + 20% attack damage',
+      [2] = '35 damage + 30% attack damage',
+      [3] = '50 damage + 40% attack damage',
+      [4] = '65 damage + 50% attack damage',
+      [5] = '80 damage + 60% attack damage'
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -73,9 +78,10 @@ Bruju.upgrades = {
   },
   siphon = {
     level = 0,
-    reqLevel = 3,
+    costs = {100, 200, 300},
+    prerequisites = {empower = 1, fortify = 1},
     name = 'Siphon',
-    description = 'Gain 20% lifesteal.',
+    description = 'Bruju siphon life from their enemies with every strike, granting them lifesteal.',
     values = {
       [1] = '20% lifesteal',
       [2] = '35% lifesteal',
@@ -87,40 +93,20 @@ Bruju.upgrades = {
       end
     end
   },
-  burst = {
+  sanctuary = {
     level = 0,
-    reqLevel = 4,
-    name = 'Burst',
-    description = 'Deal 40 damage to nearby enemies on death.',
+    costs = {100, 200, 300},
+    prerequisites = {fortify = 1, burst = 1},
+    name = 'Sanctuary',
+    description = 'Burst also heals allies based on its damage.',
     values = {
       [1] = '20 + 30% damage',
       [2] = '30 + 50% damage',
       [3] = '40 + 70% damage'
-    },
-    apply = function(self, unit)
-      if self.level > 0 then
-        unit:addAbility('burst')
-      end
-    end
-  },
-  rewind = {
-    level = 0,
-    reqLevel = 4,
-    name = 'Rewind',
-    description = 'Grants a 30% chance to quickly heal any damage taken.',
-    values = {
-      [1] = '20% lifesteal',
-      [2] = '35% lifesteal',
-      [3] = '50% lifesteal'
-    },
-    apply = function(self, unit)
-      if self.level > 0 then
-        unit:addAbility('rewind')
-      end
-    end
+    }
   }
 }
 
-Bruju.upgradeOrder = {'empower', 'fortify', 'sanctuary', 'siphon', 'burst', 'rewind'}
+Bruju.upgradeOrder = {'empower', 'fortify', 'burst', 'siphon', 'sanctuary'}
 
 return Bruju

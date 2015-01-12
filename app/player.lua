@@ -25,14 +25,10 @@ function Player:init()
   self.dead = false
   self.deathTimer = 0
 
-  self.juju = config.player.baseJuju
+  self.juju = config.biomes[ctx.biome].player.baseJuju
   self.totalJuju = 0
-  self.jujuTimer = config.player.jujuRate and 0
-  self.jujuRate = config.player.jujuRate and 0
-
-  self.experience = 0
-  self.level = 1
-  self.skillPoints = 0
+  self.jujuTimer = config.biomes[ctx.biome].player.jujuRate
+  self.jujuRate = config.biomes[ctx.biome].player.jujuRate
 
   self.magicShruju = {}
 
@@ -40,7 +36,7 @@ function Player:init()
 	self.prevy = self.y
 
 	self.selected = 1
-  self.maxPopulation = config.player.basePopulation
+  self.maxPopulation = config.biomes[ctx.biome].player.basePopulation
   self.totalSummoned = 0
 	self.recentSelect = 0
 	self.invincible = 0
@@ -64,8 +60,9 @@ function Player:activate()
   end)
 
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
-    local slot = self.animation.spine.skeleton:findSlot(slot)
-    slot.r, slot.g, slot.b = unpack(config.player.colors[ctx.user.color])
+    self.animation.spine.skeleton:findSlot(slot).r = .5
+    self.animation.spine.skeleton:findSlot(slot).g = 0
+    self.animation.spine.skeleton:findSlot(slot).b = 1
   end
 
   self:initDeck()
@@ -212,7 +209,7 @@ function Player:summon()
 	local cooldown = self.deck[self.selected].cooldown
   local population = self:getPopulation()
 	local cost = data.unit[minion].cost
-	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(0) then
+	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(cost) then
 		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
     self.totalSummoned = self.totalSummoned + 1
     self.invincible = 0
@@ -223,10 +220,10 @@ function Player:summon()
 
     for i = 1, #self.deck do
       if i == self.selected then
-        self.deck[i].cooldown = math.max(config.player.baseCooldown - self.flatCooldownReduction, config.player.minCooldown)
+        self.deck[i].cooldown = math.max(config.biomes[ctx.biome].player.baseCooldown - self.flatCooldownReduction, config.biomes[ctx.biome].player.minCooldown)
         self.deck[i].maxCooldown = self.deck[i].cooldown
       else
-        local cd = math.max(config.player.globalCooldown - self.flatCooldownReduction, config.player.minCooldown)
+        local cd = math.max(config.biomes[ctx.biome].player.globalCooldown - self.flatCooldownReduction, config.biomes[ctx.biome].player.minCooldown)
         if cd > self.deck[i].cooldown then
           self.deck[i].cooldown = cd
           self.deck[i].maxCooldown = cd
@@ -262,11 +259,7 @@ function Player:spend(amount)
 end
 
 function Player:addJuju(amount)
-  self.experience = self.experience + amount
-  while self.experience >= config.player.nextLevels[self.level] do
-    self.level = self.level + 1
-    self.skillPoints = self.skillPoints + 1
-  end
+  self.juju = self.juju + amount
   self.totalJuju = self.totalJuju + amount
 end
 
