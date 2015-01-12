@@ -135,6 +135,14 @@ function Tooltip:setRuneTooltip(rune)
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 
+function Tooltip:setAttributeTooltip(code)
+  local attribute = config.attributes[code]
+  local pieces = {}
+  table.insert(pieces, '{white}{title}' .. code:capitalize() .. '{normal}')
+  table.insert(pieces, '{whoCares}' .. attribute.description)
+  return self:setTooltip(table.concat(pieces, '\n'))
+end
+
 function Tooltip:resize()
   local u, v = self:getUV()
   self.richOptions = {}

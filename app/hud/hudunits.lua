@@ -12,7 +12,30 @@ function HudUnits:init()
       local u, v = ctx.hud.u, ctx.hud.v
       local p = ctx.player
       local upgradeFactor, t = ctx.hud.upgrades:getFactor()
-      local upgradeAlphaFactor = (t / ctx.hud.upgrades.maxTime) ^ 3
+      local minionInc = (.2 * u) + (.075 * upgradeFactor * u)
+      local inc = .1 * upgradeFactor * v
+      local xx = .5 * u - (minionInc * (self.count - 1) / 2)
+      local yy = (.15 * upgradeFactor) * v + (.35 * v)
+      local size = math.max(.08 * v * upgradeFactor, .01)
+      local res = {}
+
+      for i = 1, self.count do
+        res[i] = {}
+
+        for j, upgrade in ipairs(data.unit[p.deck[i].code].upgrades) do
+          table.insert(res[i], {xx + (inc * upgrade.x) - size / 2, yy + (.1 * v * upgrade.y) - size / 2, size, size})
+        end
+
+        xx = xx + minionInc
+      end
+
+      return res
+    end,
+
+    attributes = function()
+      local u, v = ctx.hud.u, ctx.hud.v
+      local p = ctx.player
+      local upgradeFactor, t = ctx.hud.upgrades:getFactor()
       local minionInc = (.2 * u) + (.075 * upgradeFactor * u)
       local inc = .1 * upgradeFactor * v
       local xx = .5 * u - (minionInc * (self.count - 1) / 2)
@@ -23,8 +46,10 @@ function HudUnits:init()
       for i = 1, self.count do
         res[i] = {}
 
-        for j, upgrade in ipairs(data.unit[p.deck[i].code].upgrades) do
-          table.insert(res[i], {xx + (inc * upgrade.x) - size / 2, yy + (.1 * v * upgrade.y) - size / 2, size, size})
+        local x = xx - (inc * (4 - 1) / 2)
+        for j = 1, 4 do
+          table.insert(res[i], {x - size / 2, yy - size / 2, size, size})
+          x = x + inc
         end
 
         xx = xx + minionInc
@@ -40,6 +65,17 @@ end
 function HudUnits:update()
   local p = ctx.player
   local mx, my = love.mouse.getPosition()
+
+  local attributes = self.geometry.attributes
+  for i = 1, #attributes do
+    for j = 1, #attributes[i] do
+      local attribute = config.attributeOrder[j]
+      local x, y, w, h = unpack(attributes[i][j])
+      if math.inside(mx, my, x, y, w, h) then
+        ctx.hud.tooltip:setAttributeTooltip(attribute)
+      end
+    end
+  end
 
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
@@ -186,6 +222,19 @@ function HudUnits:draw()
     xx = xx + inc
   end
 
+  -- Attributes
+  local attributes = self.geometry.attributes
+  for i = 1, #attributes do
+    for j = 1, #attributes[i] do
+      local x, y, w, h = unpack(attributes[i][j])
+      local image = data.media.graphics.hud.frame
+      local scale = w / image:getWidth()
+      g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
+      g.draw(image, x, y, 0, scale, scale)
+    end
+  end
+
+  -- Upgrades
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
     for j = 1, #upgrades[i] do
@@ -232,6 +281,22 @@ function HudUnits:mousereleased(mx, my, b)
         local cost = upgrade.costs[nextLevel]
         if ctx.upgrades.canBuy(who, what) and p:spend(cost) then
           ctx.upgrades.unlock(who, what)
+        else
+          ctx.sound:play('misclick')
+        end
+      end
+    end
+  end
+
+  local attributes = self.geometry.attributes
+  for i = 1, #attributes do
+    for j = 1, #attributes[i] do
+      local attribute = config.attributeOrder[j]
+      local x, y, w, h = unpack(attributes[i][j])
+      if math.inside(mx, my, x, y, w, h) then
+        local cost = math.huge
+        if p:spend(cost) then
+          -- Upgrade the attribute
         else
           ctx.sound:play('misclick')
         end
