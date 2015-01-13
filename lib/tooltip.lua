@@ -140,9 +140,10 @@ function Tooltip:setAttributeTooltip(attribute, unit)
   table.insert(pieces, '{white}{title}' .. attribute:capitalize() .. '{normal}')
   if unit then
     if type(unit) == 'string' then unit = data.unit[unit] end
-    table.insert(pieces, '+' .. unit.attributes[attribute].amount .. ' ' .. unit.attributes[attribute].stat .. ' per level')
+    local attribute = unit.attributes[attribute]
+    table.insert(pieces, '+' .. attribute.amount .. ' ' .. attribute.stat .. ' per level {green}(' .. (attribute.amount * attribute.level) .. '){white}')
 
-    local cost = ctx.upgrades.attributeCostBase + (ctx.upgrades.attributeCostIncrease * unit.attributes[attribute].level)
+    local cost = ctx.upgrades.attributeCostBase + (ctx.upgrades.attributeCostIncrease * attribute.level)
     local color = p.juju >= cost and '{green}' or '{red}'
     table.insert(pieces, color .. cost .. ' juju\n')
   end
