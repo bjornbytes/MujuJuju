@@ -49,10 +49,11 @@ data.load = function()
         elseif file:match('%.lua$') and not file:match('^%.') then
           local obj = love.filesystem.load(path)()
           assert(obj, path .. ' did not return a value')
-          obj = f.exe(fn, obj) or obj
+          obj.code = obj.code or file:gsub('%.lua', '')
           obj.id = id
           data[type][id] = obj
           dst[obj.code] = obj
+          obj = f.exe(fn, obj) or obj
           id = id + 1
         end
       end
