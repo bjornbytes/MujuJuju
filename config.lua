@@ -297,7 +297,7 @@ return {
           kuju = 0,
           spuju = 0,
           duju = 0
-        }
+        },
         bosses = {{'duju', 3600}, {'spuju', 3600}, {'kuju', 3600}}
       },
       shrujuPatches = {60, 450},
