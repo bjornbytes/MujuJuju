@@ -171,7 +171,8 @@ return {
           spuju = 0,
           duju = 150,
           kuju = 300
-        }
+        },
+        bosses = {{'spuju', 1800}}
       },
       shrujuPatches = {60, 450},
       runes = {
@@ -233,7 +234,8 @@ return {
           kuju = 0,
           spuju = 600,
           duju = 600
-        }
+        },
+        bosses = {{'kuju', 2700}}
       },
       shrujuPatches = {60, 450},
       runes = {
@@ -296,6 +298,7 @@ return {
           spuju = 0,
           duju = 0
         }
+        bosses = {{'duju', 3600}, {'spuju', 3600}, {'kuju', 3600}}
       },
       shrujuPatches = {60, 450},
       runes = {
