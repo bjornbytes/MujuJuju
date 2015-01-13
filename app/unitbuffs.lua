@@ -98,7 +98,7 @@ function UnitBuffs:get(code)
 end
 
 function UnitBuffs:reapply(code, vars)
-  if self:isCrowdControl(code) and self:ccImmune() then return end
+  if self:isCrowdControl(code) and self:ccImmunity() == 1 then return end
   local buff = self:get(code)
   if buff then
     table.merge(vars, buff, true)
