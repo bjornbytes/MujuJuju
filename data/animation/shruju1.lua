@@ -1,5 +1,4 @@
 local Shruju = extend(Animation)
-Shruju.code = 'shruju1'
 
 Shruju.scale = 1
 Shruju.default = 'spawn'

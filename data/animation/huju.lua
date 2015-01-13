@@ -1,5 +1,4 @@
 local Huju = extend(Animation)
-Huju.code = 'huju'
 
 Huju.scale = .5
 Huju.offsety = 64

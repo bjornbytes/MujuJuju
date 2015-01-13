@@ -1,5 +1,4 @@
 local SpiritBomb = class()
-SpiritBomb.code = 'spiritbomb'
 
 SpiritBomb.gravity = 700
 SpiritBomb.scale = 1

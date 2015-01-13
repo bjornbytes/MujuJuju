@@ -1,5 +1,4 @@
 return {
-  code = 'signup',
   { id = 'background',
     kind = 'Element',
     properties = {

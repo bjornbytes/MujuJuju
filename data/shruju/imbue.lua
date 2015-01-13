@@ -1,6 +1,5 @@
 local Imbue = extend(Shruju)
 
-Imbue.code = 'imbue'
 Imbue.name = 'Imbue'
 Imbue.description = 'The shrine heals 20 health per second for 90 seconds.'
 Imbue.duration = 90

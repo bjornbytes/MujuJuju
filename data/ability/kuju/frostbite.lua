@@ -1,5 +1,4 @@
 local Frostbite = extend(Ability)
-Frostbite.code = 'frostbite'
 
 ----------------
 -- Meta

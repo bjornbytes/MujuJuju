@@ -1,5 +1,4 @@
 local Infusion = extend(Spell)
-Infusion.code = 'infusion'
 
 local g = love.graphics
 

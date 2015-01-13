@@ -1,6 +1,4 @@
 local Venomous = extend(Buff)
-Venomous.code = 'venomous'
-Venomous.name = 'Venomous'
 Venomous.tags = {'elite'}
 
 function Venomous:preattack(target, damage)

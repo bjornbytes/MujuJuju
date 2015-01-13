@@ -1,5 +1,4 @@
 local Vignette = {}
-Vignette.code = 'vignette'
 
 function Vignette:init()
   self:resize()

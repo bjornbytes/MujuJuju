@@ -1,5 +1,4 @@
 local Bruju = extend(Animation)
-Bruju.code = 'bruju'
 
 Bruju.scale = .5
 Bruju.offsety = 48

@@ -1,5 +1,4 @@
 local Rewind = extend(Ability)
-Rewind.code = 'rewind'
 
 function Rewind:activate()
   self.amount = 0

@@ -1,5 +1,4 @@
 local Bruju = {}
-Bruju.code = 'bruju'
 Bruju.name = 'Bruju'
 Bruju.description = 'A treant with spiritual powers.  Specializes in dealing high damage and regenerating health.'
 
@@ -33,8 +32,8 @@ Bruju.upgrades = {
       [1] = '10% lifesteal',
       [2] = '20% lifesteal',
       [3] = '30% lifesteal',
-      [3] = '40% lifesteal',
-      [3] = '50% lifesteal',
+      [4] = '40% lifesteal',
+      [5] = '50% lifesteal',
     },
     apply = function(self, unit)
       if self.level > 0 then

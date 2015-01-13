@@ -1,5 +1,4 @@
 local Charge = extend(Spell)
-Charge.code = 'charge'
 
 function Charge:activate()
   self.unit = self:getUnit()

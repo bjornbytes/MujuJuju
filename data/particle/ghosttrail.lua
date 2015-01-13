@@ -1,5 +1,4 @@
 local GhostTrail = class()
-GhostTrail.code = 'ghosttrail'
 GhostTrail.image = data.media.graphics.particles.smoke
 GhostTrail.max = 256
 GhostTrail.blendMode = 'additive'

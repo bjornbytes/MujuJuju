@@ -1,5 +1,4 @@
 local Kuju = extend(Animation)
-Kuju.code = 'kuju'
 
 Kuju.scale = .35
 Kuju.offsety = 64

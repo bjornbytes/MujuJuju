@@ -1,5 +1,4 @@
 local Trinket = extend(Ability)
-Trinket.code = 'trinket'
 
 ----------------
 -- Meta

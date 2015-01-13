@@ -1,5 +1,4 @@
 local Infusion = extend(Ability)
-Infusion.code = 'infusion'
 
 ----------------
 -- Meta

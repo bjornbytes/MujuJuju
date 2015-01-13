@@ -1,5 +1,4 @@
 local ImpenetrableHide = extend(Ability)
-ImpenetrableHide.code = 'impenetrablehide'
 
 function ImpenetrableHide:posthurt(amount, source, kind)
   if not source then return end

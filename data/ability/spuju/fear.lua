@@ -1,7 +1,4 @@
 local Fear = extend(Ability)
-Fear.code = 'fear'
-Fear.name = 'Fear'
-
 
 ----------------
 -- Stats

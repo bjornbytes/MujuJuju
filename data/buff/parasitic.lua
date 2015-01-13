@@ -1,6 +1,4 @@
 local Parasitic = extend(Buff)
-Parasitic.code = 'parasitic'
-Parasitic.name = 'Parasitic'
 Parasitic.tags = {'elite'}
 
 function Parasitic:postattack(target, amount)

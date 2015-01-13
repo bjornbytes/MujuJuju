@@ -1,6 +1,4 @@
 local Spined = extend(Buff)
-Spined.code = 'spined'
-Spined.name = 'Spined'
 Spined.tags = {'elite'}
 
 function Spined:prehurt(amount, source, kind)

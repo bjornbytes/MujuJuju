@@ -1,7 +1,6 @@
 local g = love.graphics
 
 local ArcadeText = extend(Spell)
-ArcadeText.code = 'arcadetext'
 
 function ArcadeText:activate()
   self.vx = 0

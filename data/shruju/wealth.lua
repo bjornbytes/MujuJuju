@@ -1,6 +1,5 @@
 local Wealth = extend(Shruju)
 
-Wealth.code = 'wealth'
 Wealth.name = 'Wealth'
 Wealth.description = 'Doubles your passive juju income for 90 seconds.'
 Wealth.duration = 90

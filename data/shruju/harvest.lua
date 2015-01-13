@@ -1,6 +1,5 @@
 local Harvest = extend(Shruju)
 
-Harvest.code = 'harvest'
 Harvest.name = 'Harvest'
 Harvest.description = 'Permanently causes all shruju to grow 5 seconds faster.'
 Harvest.rarity = 3

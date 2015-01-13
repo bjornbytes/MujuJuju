@@ -6,7 +6,7 @@ function Effects:init()
 	self:add('vignette')
 	self:add('bloom')
 	self:add('wave')
-	self:add('deathBlur')
+	self:add('deathblur')
 end
 
 function Effects:update()

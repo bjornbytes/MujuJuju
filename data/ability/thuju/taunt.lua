@@ -1,5 +1,4 @@
 local Taunt = extend(Ability)
-Taunt.code = 'taunt'
 
 ----------------
 -- Behavior

@@ -1,5 +1,4 @@
 local Frostbite = extend(Spell)
-Frostbite.code = 'frostbite'
 
 local g = love.graphics
 

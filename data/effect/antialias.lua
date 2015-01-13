@@ -1,5 +1,4 @@
 local Antialias = {}
-Antialias.code = 'antialias'
 
 function Antialias:init()
   self:resize()

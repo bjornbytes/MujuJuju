@@ -1,5 +1,4 @@
 local Bloom = {}
-Bloom.code = 'bloom'
 
 local g = love.graphics
 

@@ -1,6 +1,5 @@
 local Renew = extend(Shruju)
 
-Renew.code = 'renew'
 Renew.name = 'Renew'
 Renew.description = 'On use, heals your shrine for 10% of its maximum health'
 Renew.rarity = 4

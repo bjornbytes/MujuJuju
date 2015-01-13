@@ -1,5 +1,4 @@
 local Duju = extend(Animation)
-Duju.code = 'duju'
 
 Duju.scale = 1
 Duju.offsety = 10

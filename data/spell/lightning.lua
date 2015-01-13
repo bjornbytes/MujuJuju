@@ -1,5 +1,4 @@
 local Lightning = class()
-Lightning.code = 'lightning'
 
 Lightning.maxHealth = .2
 

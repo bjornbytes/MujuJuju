@@ -1,5 +1,4 @@
 local BrujuAttack = class()
-BrujuAttack.code = 'brujuattack'
 BrujuAttack.image = data.media.graphics.particles.smoke
 BrujuAttack.max = 256
 BrujuAttack.blendMode = 'additive'

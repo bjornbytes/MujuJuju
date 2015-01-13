@@ -1,5 +1,4 @@
 local Thuju = extend(Animation)
-Thuju.code = 'thuju'
 
 Thuju.scale = .35
 Thuju.offsety = 64

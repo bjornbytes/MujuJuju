@@ -1,5 +1,4 @@
 local Charge = extend(Ability)
-Charge.code = 'charge'
 
 ----------------
 -- Meta

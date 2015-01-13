@@ -1,5 +1,4 @@
 local MagicShruju = class()
-MagicShruju.code = 'magicshruju'
 MagicShruju.image = data.media.graphics.particles.star
 MagicShruju.max = 1024
 MagicShruju.blendMode = 'additive'

@@ -1,5 +1,4 @@
 local SpujuSkull = extend(Spell)
-SpujuSkull.code = 'spujuskull'
 
 SpujuSkull.gravity = 700
 SpujuSkull.scale = 1

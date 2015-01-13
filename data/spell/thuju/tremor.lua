@@ -1,5 +1,4 @@
 local Tremor = extend(Spell)
-Tremor.code = 'tremor'
 
 local g = love.graphics
 

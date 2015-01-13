@@ -1,5 +1,4 @@
 local Burst = extend(Ability)
-Burst.code = 'burst'
 
 function Burst:die()
   local damages = {20, 40, 70, 110, 160}

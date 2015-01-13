@@ -1,5 +1,4 @@
 return {
-	code = 'main',
 	{ id = 'background',
 		kind = 'Element',
 		properties = {

@@ -1,5 +1,4 @@
 local Spuju = extend(Animation)
-Spuju.code = 'spuju'
 
 Spuju.scale = .75
 Spuju.offsety = 32

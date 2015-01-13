@@ -1,5 +1,4 @@
 local Wave = class()
-Wave.code = 'wave'
 
 function Wave:init()
   self:resize()

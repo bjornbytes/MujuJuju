@@ -1,5 +1,4 @@
 local FrozenOrb = extend(Ability)
-FrozenOrb.code = 'frozenorb'
 
 ----------------
 -- Meta

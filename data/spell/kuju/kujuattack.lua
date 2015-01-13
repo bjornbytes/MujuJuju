@@ -1,5 +1,4 @@
 local KujuAttack = extend(Spell)
-KujuAttack.code = 'kujuattack'
 
 function KujuAttack:activate()
   self.direction = math.sign(self.target.x - self.unit.x)

@@ -1,5 +1,4 @@
 local Thuju = {}
-Thuju.code = 'thuju'
 Thuju.name = 'Thuju'
 Thuju.description = 'A bramble golem.  Exceptional at soaking up and reflecting damage as well as crowd control.'
 
@@ -20,18 +19,35 @@ Thuju.cost = 5
 -- Upgrades
 ----------------
 Thuju.upgrades = {
+  inspire = {
+    level = 0,
+    maxLevel = 3,
+    costs = {100, 200, 300},
+    name = 'Inspire',
+    description = 'Thuju beats his chest, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
+    values = {
+      [1] = '+50 speed',
+      [2] = '+50 speed, +50% armor',
+      [3] = '+50 speed, +50% armor, +50% attack speed',
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('inspire')
+      end
+    end
+  },
   wardofthorns = {
     level = 0,
-    costs = {30, 50, 80, 120, 170},
+    maxLevel = 5,
+    costs = {100, 150, 200, 250, 300},
     name = 'Ward of Thorns',
     description = 'Thuju reflects a portion of melee damage dealt to him.',
     values = {
-      [0] = '10% reflected',
-      [1] = '25% reflected',
-      [2] = '45% reflected',
-      [3] = '70% reflected',
-      [4] = '100% reflected',
-      [5] = '150% reflected'
+      [1] = '10% reflected',
+      [2] = '25% reflected',
+      [3] = '45% reflected',
+      [4] = '70% reflected',
+      [5] = '100% reflected'
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -39,78 +55,126 @@ Thuju.upgrades = {
       end
     end
   },
-  tenacity = {
-    level = 0,
-    costs = {30, 65, 105, 145, 185},
-    name = 'Tenacity',
-    description = 'Thuju\'s strengthens his carapace, increasing his maximum health.',
-    values = {
-      [0] = '150 health',
-      [1] = '200 health',
-      [2] = '250 health',
-      [3] = '300 health',
-      [4] = '400 health',
-      [5] = '500 health'
-    },
-    apply = function(self, unit)
-      local healthIncreases = {[0] = 0, 50, 100, 150, 250, 350}
-      local increase = healthIncreases[self.level]
-      unit.health = unit.health + increase
-      unit.maxHealth = unit.maxHealth + increase
-    end
-  },
-  impenetrablehide = {
-    level = 0,
-    costs = {25, 75, 125, 175, 225},
-    name = 'Impenetrable Hide',
-    description = 'Thuju gains armor for 3 seconds when struck, stacking multiple times.  The effect is increased by 200% against ranged attacks.',
-    values = {
-      [1] = '5% damage reduction, stacking up to 3 times',
-      [2] = '8% damage reduction, stacking up to 4 times',
-      [3] = '11% damage reduction, stacking up to 5 times',
-      [4] = '14% damage reduction, stacking up to 5 times',
-      [5] = '17% damage reduction, stacking up to 5 times'
-    },
-    apply = function(self, unit)
-      if self.level > 0 then
-        unit:addAbility('impenetrablehide')
-      end
-    end
-  },
-  taunt = {
-    level = 0,
-    costs = {100, 200, 300},
-    prerequisites = {wardofthorns = 1, tenacity = 1},
-    name = 'Taunt',
-    description = 'Thuju forces nearby enemies to attack him for 3 seconds, and gains damage for 5 seconds based on how many enemies are taunted.',
-    values = {
-      [1] = '100 range, 10 second cooldown, 15 damage per enemy',
-      [2] = '150 range, 8 second cooldown, 30 damage per enemy',
-      [3] = '200 range, 6 second cooldown, 45 damage per enemy'
-    },
-    apply = function(self, unit)
-      if self.level > 0 then
-        unit:addAbility('taunt')
-      end
-    end
-  },
   tremor = {
     level = 0,
-    costs = {100, 200, 300},
-    prerequisites = {tenacity = 1, impenetrablehide = 1},
+    maxLevel = 3,
+    costs = {200, 300, 400},
     name = 'Tremor',
     description = 'Thuju slams the ground, damaging and stunning units in front of him.',
     values = {
       [1] = '30 damage, 1s stun',
-      [2] = '60 damage, 1.5s stun',
-      [3] = '90 damage, 2s stun'
+      [2] = '60 damage, 2s stun',
+      [3] = '90 damage, 3s stun'
     },
     apply = function(self, unit)
       if self.level > 0 then
         unit:addAbility('tremor')
       end
     end
-  }
+  },
+  briarlance = {
+    level = 0,
+    maxLevel = 1,
+    costs = {500},
+    prerequisites = {wardofthorns = 1},
+    name = 'Briar Lance',
+    description = 'Ward of Thorns also reflects half the amount for ranged attacks.',
+    values = {
+      [1] = 'Reflect ranged attacks',
+    }
+  },
+  vigor = {
+    level = 0,
+    maxLevel = 3,
+    costs = {300, 300, 300},
+    prerequisites = {wardofthorns = 1},
+    name = 'Vigor',
+    description = 'Each time Ward of Thorns is triggered, Thuju gains increased damage for 5 seconds.  This can stack multiple times.',
+    values = {
+      [1] = '+10 damage, up to 2 stacks.',
+      [2] = '+15 damage, up to 3 stacks.',
+      [3] = '+20 damage, up to 4 stacks.',
+    }
+  },
+  fissure = {
+    level = 0,
+    maxLevel = 3,
+    costs = {100, 200, 300},
+    prerequisites = {tremor = 1},
+    name = 'Fissure',
+    description = 'The range of Tremor is increased.',
+    values = {
+      [0] = '180 range',
+      [1] = '240 range',
+      [2] = '300 range',
+      [3] = '360 range',
+    }
+  },
+  unbreakable = {
+    level = 0,
+    maxLevel = 1,
+    costs = {500},
+    prerequisites = {impenetrablehide = 1, briarlance = 1},
+    name = 'Unbreakable',
+    description = 'The defensive bonus from Impenetrable Hide is doubled against ranged attacks.',
+    values = {
+      [1] = '1.50x armor against ranged attacks',
+    }
+  },
+  impenetrablehide = {
+    level = 0,
+    maxLevel = 3,
+    costs = {500, 500, 500},
+    prerequisites = {vigor = 1},
+    name = 'Impenetrable Hide',
+    description = 'Each stack of vigor also reduces the damage Thuju takes from attacks.',
+    values = {
+      [1] = '10% armor per stack',
+      [2] = '15% armor per stack',
+      [3] = '20% armor per stack',
+    }
+  },
+  alacrity = {
+    level = 0,
+    maxLevel = 1,
+    costs = {1000},
+    name = 'Alacrity',
+    description = 'Each time Thuju is damaged by a spell or attack, the cooldown of Tremor and Inspire is reduced by 1 second.',
+    values = {
+      [1] = '1s per attack',
+    }
+  },
+  infusedcarapace = {
+    level = 0,
+    maxLevel = 1,
+    costs = {1500},
+    name = 'Infused Carapace',
+    description = 'Thuju takes 35% reduced damage from spells.',
+    values = {
+      [1] = '35% spell damage reduction',
+    }
+  },
+  taunt = {
+    level = 0,
+    maxLevel = 1,
+    costs = {1500},
+    name = 'Taunt',
+    description = 'Any enemies Thuju damage will immediately attack Thuju.',
+    values = {
+      [1] = 'Taunt enemies',
+    }
+  },
+  staggeringentry = {
+    level = 0,
+    maxLevel = 1,
+    costs = {1000},
+    prerequisites = {alacrity = 1},
+    name = 'Staggering Entry',
+    description = 'When Thuju is summoned, he casts all of his abilities (cooldowns are not triggered).',
+    values = {
+      [1] = '100% awesomeness',
+    }
+  },
 }
 
 Thuju.upgradeOrder = {'wardofthorns', 'tenacity', 'impenetrablehide', 'taunt', 'tremor'}

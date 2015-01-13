@@ -1,5 +1,4 @@
 local Dirt = extend(Spell)
-Dirt.code = 'dirt'
 
 function Dirt:activate()
   self.prevx = self.x

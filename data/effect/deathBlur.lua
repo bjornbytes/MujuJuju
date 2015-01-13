@@ -1,5 +1,4 @@
 local DeathBlur = {}
-DeathBlur.code = 'deathBlur'
 
 function DeathBlur:init()
   self:resize()

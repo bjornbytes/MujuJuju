@@ -1,5 +1,4 @@
 local Muju = extend(Animation)
-Muju.code = 'muju'
 
 Muju.scale = .65
 Muju.offsety = Player.height + 16

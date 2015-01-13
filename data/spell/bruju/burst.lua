@@ -1,5 +1,4 @@
 local Burst = extend(Spell)
-Burst.code = 'burst'
 
 local g = love.graphics
 

@@ -1,5 +1,4 @@
 local WardOfThorns = extend(Ability)
-WardOfThorns.code = 'wardofthorns'
 
 ----------------
 -- Behavior

@@ -1,5 +1,4 @@
 local FrozenOrb = extend(Spell)
-FrozenOrb.code = 'frozenorb'
 FrozenOrb.depth = -10
 
 function FrozenOrb:activate()

@@ -1,6 +1,5 @@
 local Huju = {}
 Huju.name = 'Huju'
-Huju.code = 'huju'
 
 ----------------
 -- Stats

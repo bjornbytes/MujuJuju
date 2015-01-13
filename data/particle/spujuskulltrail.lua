@@ -1,5 +1,4 @@
 local SpujuSkullTrail = class()
-SpujuSkullTrail.code = 'spujuskulltrail'
 SpujuSkullTrail.image = data.media.graphics.particles.smoke
 SpujuSkullTrail.max = 256
 SpujuSkullTrail.blendMode = 'additive'

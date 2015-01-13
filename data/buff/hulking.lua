@@ -1,6 +1,4 @@
 local Hulking = extend(Buff)
-Hulking.code = 'hulking'
-Hulking.name = 'Hulking'
 Hulking.tags = {'slow', 'elite'}
 
 function Hulking:activate()

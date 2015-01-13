@@ -1,6 +1,4 @@
 local Headbutt = extend(Buff)
-Headbutt.code = 'headbutt'
-Headbutt.name = 'Headbutt'
 Headbutt.tags = {'knockback', 'knockup'}
 
 function Headbutt:activate()

@@ -1,5 +1,4 @@
 return {
-  code = 'login',
   { id = 'background',
     kind = 'Element',
     properties = {

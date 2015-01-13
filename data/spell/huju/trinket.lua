@@ -1,5 +1,4 @@
 local Trinket = extend(Spell)
-Trinket.code = 'trinket'
 
 local g = love.graphics
 

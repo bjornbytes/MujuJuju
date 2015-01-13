@@ -1,5 +1,4 @@
 local Smash = class()
-Smash.code = 'smash'
 
 Smash.maxHealth = 1
 

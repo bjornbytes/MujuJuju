@@ -1,5 +1,4 @@
 local Headbutt = extend(Ability)
-Headbutt.code = 'headbutt'
 
 
 ----------------

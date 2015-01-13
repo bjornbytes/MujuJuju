@@ -1,6 +1,5 @@
 local Civilization = extend(Shruju)
 
-Civilization.code = 'civilization'
 Civilization.name = 'Civilization'
 Civilization.description = 'Increases the maximum number of minions you may summon at once by 3.'
 Civilization.duration = 90

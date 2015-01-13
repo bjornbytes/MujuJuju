@@ -1,5 +1,4 @@
 local JujuSex = class()
-JujuSex.code = 'jujusex'
 JujuSex.image = data.media.graphics.particles.softCircle
 JujuSex.max = 1024
 JujuSex.blendMode = 'additive'
