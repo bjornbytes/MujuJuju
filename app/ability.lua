@@ -18,9 +18,10 @@ function Ability:canUse()
 end
 
 function Ability:rot()
-  self.timer = timer.rot(self.timer, function()
+  self.timer = self.timer - tickRate * self.unit.flow
+  if self.timer <= 0 then
     f.exe(self.ready, self)
-  end)
+  end
 end
 
 function Ability:used()
