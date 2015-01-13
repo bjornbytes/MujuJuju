@@ -305,6 +305,11 @@ function HudUnits:mousereleased(mx, my, b)
         local cost = ctx.upgrades.attributeCostBase + (ctx.upgrades.attributeCostIncrease * attribute.level)
         if p:spend(cost) then
           attribute.level = attribute.level + 1
+          table.each(ctx.units, function(unit)
+            if unit.class.code == p.deck[i].code then
+              unit[attribute.stat] = unit[attribute.stat] + attribute.level * attribute.amount
+            end
+          end)
         else
           ctx.sound:play('misclick')
         end
