@@ -4,7 +4,7 @@ Renew.code = 'renew'
 Renew.name = 'Renew'
 Renew.description = 'On use, heals your shrine for 10% of its maximum health'
 
-function Renew:apply()
+function Renew:activate()
   local p = ctx.player
   local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
   if shrine then

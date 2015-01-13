@@ -4,7 +4,7 @@ Juju.code = 'juju'
 Juju.name = 'Juju'
 Juju.description = 'On use, gives 25 juju (+5 per minute).'
 
-function Juju:apply()
+function Juju:activate()
   local p = ctx.player
   local amount = 25 + 5 * math.floor(ctx.timer * tickRate / 60)
   p.juju = p.juju + amount

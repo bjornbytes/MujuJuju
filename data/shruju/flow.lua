@@ -5,7 +5,7 @@ Flow.name = 'Flow'
 Flow.description = 'The cooldown for minion summoning is reduced by .5s.'
 Flow.cdr = .5
 
-function Flow:apply()
+function Flow:activate()
   local p = ctx.player
   p.flatCooldownReduction = p.flatCooldownReduction + self.cdr
 

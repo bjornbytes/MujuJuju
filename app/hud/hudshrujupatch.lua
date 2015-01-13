@@ -22,9 +22,9 @@ function HudShrujuPatch:init(patch)
   end})
 
   self.geometryFunctions = {
-    types = function()
+    slots = function()
       local u, v = ctx.hud.u, ctx.hud.v
-      local ct = #self.patch.types
+      local ct = #self.patch.slots
       local factor, t = self:getFactor()
       local length = (.1 + (.2 * factor)) * v
       local angleIncrement = .35
@@ -57,7 +57,7 @@ function HudShrujuPatch:update()
   local p = ctx.player
   local mx, my = love.mouse.getPosition()
 
-  if self.patch and #self.patch.types ~= self.geometry.types then self.geometry.types = nil end
+  if self.patch and #self.patch.slots ~= self.geometry.slots then self.geometry.slots = nil end
 
   if not self:playerNearby() then
     self.active = false
@@ -66,10 +66,10 @@ function HudShrujuPatch:update()
   end
 
   if self.active then
-    local types = self.geometry.types
-    for i = 1, #types do
-      local shruju = data.shruju[self.patch.types[i]]
-      local x, y, w, h = unpack(types[i])
+    local slots = self.geometry.slots
+    for i = 1, #slots do
+      local shruju = data.shruju[self.patch.slots[i]]
+      local x, y, w, h = unpack(slots[i])
       if math.inside(mx, my, x, y, w, h) then
         ctx.hud.tooltip:setShrujuTooltip(shruju)
       end
@@ -115,18 +115,18 @@ function HudShrujuPatch:draw()
     if t < 1 or (self.growingFactor > .01 and self.growingFactor < .99) then table.clear(self.geometry)
     elseif t == 0 then return end
 
-    local types = self.geometry.types
+    local slots = self.geometry.slots
 
-    for i = 1, #types do
-      local shruju = data.shruju[self.patch.types[i]]
-      local x, y, w, h = unpack(types[i])
+    for i = 1, #slots do
+      local shruju = data.shruju[self.patch.slots[i]]
+      local x, y, w, h = unpack(slots[i])
 
       g.setColor(255, 255, 255, alphaFactor * 200)
       local image = data.media.graphics.hud.frame
       local scale = w / 125
       g.draw(image, x, y, 0, scale, scale)
 
-      local image = data.media.graphics.shruju[self.patch.types[i]]
+      local image = data.media.graphics.shruju[self.patch.slots[i]] or data.media.graphics.shruju.juju
       local scale = (h - .02 * v) / image:getHeight()
       g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
@@ -157,7 +157,7 @@ function HudShrujuPatch:draw()
       g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
       if code then
-        local image = data.media.graphics.shruju[code]
+        local image = data.media.graphics.shruju[code] or data.media.graphics.shruju.juju
         local scale = (h - .02 * v) / image:getHeight() * slotScale
         g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
@@ -186,8 +186,10 @@ function HudShrujuPatch:keypressed(key)
         shruju:eat()
         ctx.sound:play('nomnom')
         self.active = true
+      else
+        self.lastPress = tick
+        self.active = not self.active
       end
-      self.slotScale = 1.4
     else
       self.lastPress = tick
       self.active = not self.active
@@ -195,9 +197,9 @@ function HudShrujuPatch:keypressed(key)
     if not self:playerNearby() then self.active = false end
   elseif self.patch and self.active and key:match('%d') then
     local i = tonumber(key)
-    if i and i >= 1 and i <= #self.geometry.types then
+    if i and i >= 1 and i <= #self.geometry.slots then
       local p = ctx.player
-      self.patch:grow(self.patch.types[i])
+      self.patch:grow(i)
       self.active = false
     end
   end
@@ -217,10 +219,10 @@ function HudShrujuPatch:mousepressed(x, y, b)
   local p = ctx.player
 
   if self.active and b == 'l' then
-    local types = self.geometry.types
-    for i = 1, #types do
-      if math.inside(x, y, unpack(types[i])) then
-        self.patch:grow(self.patch.types[i])
+    local slots = self.geometry.slots
+    for i = 1, #slots do
+      if math.inside(x, y, unpack(slots[i])) then
+        self.patch:grow(i)
         self.active = false
       end
     end

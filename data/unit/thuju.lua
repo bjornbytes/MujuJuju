@@ -13,7 +13,7 @@ Thuju.attackSpeed = 1.15
 Thuju.speed = 35
 Thuju.flow = 1
 
-Thuju.cost = 12
+Thuju.cost = 5
 
 
 ----------------

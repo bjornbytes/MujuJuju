@@ -176,6 +176,11 @@ function ShrujuPatch:activate()
     table.insert(self.types, data.shruju[i].code)
   end
 
+  self.slots = {}
+  for i = 1, 3 do
+    table.insert(self.slots, self.types[love.math.random(1, #self.types)])
+  end
+
   self.timer = 0
   self.slot = nil
   self.highlight = 0
@@ -226,10 +231,12 @@ function ShrujuPatch:draw()
   if self.shrujuAnimation then self.shrujuAnimation:draw(self.x, self.y) end
 end
 
-function ShrujuPatch:grow(what)
-  if not self:playerNearby() or not table.has(self.types, what) or self.growing or self.slot then return end
-  self.timer = self:getGrowTime(what)
-  self.growing = what
+function ShrujuPatch:grow(index)
+  if not self:playerNearby() or self.growing or self.slot or not self.slots[index] then return end
+  local code = self.slots[index]
+  self.timer = self:getGrowTime(code)
+  self.growing = code
+  self.slots[index] = self.types[love.math.random(1, #self.types)]
 end
 
 function ShrujuPatch:take()
@@ -248,12 +255,6 @@ end
 function ShrujuPatch:makeShruju()
   if self.growing and not self.slot then
     local shruju = data.shruju[self.growing]()
-
-    -- Randomly give it a random magical effect
-    if love.math.random() < .25 then
-      local effects = table.keys(ShrujuEffects)
-      shruju.effect = setmetatable({timer = config.shruju.magicDuration}, {__index = ShrujuEffects[effects[love.math.random(1, #effects)]]})
-    end
 
     self.slot = shruju
     self.growing = nil

@@ -1,10 +1,10 @@
 Shruju = class()
 
 function Shruju:eat()
-  self:apply()
-  if self.effect then
+  self:activate()
+  if self.duration then
+    self.timer = self.duration
     local p = ctx.player
-    table.insert(p.magicShruju, self)
-    self.effect:activate()
+    table.insert(p.shruju, self)
   end
 end

@@ -121,6 +121,7 @@ function Unit:activate()
 
   self.health = self.health + config.units.baseHealthScaling * (ctx.timer * tickRate / 60)
   self.damage = self.damage + config.units.baseDamageScaling * (ctx.timer * tickRate / 60)
+  self.flow = 1
 
   table.each(self.class.attributes, function(attribute)
     self[attribute.stat] = self[attribute.stat] + attribute.amount * attribute.level

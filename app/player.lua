@@ -30,7 +30,7 @@ function Player:init()
   self.jujuTimer = config.biomes[ctx.biome].player.jujuRate
   self.jujuRate = config.biomes[ctx.biome].player.jujuRate
 
-  self.magicShruju = {}
+  self.shruju = {}
 
 	self.prevx = self.x
 	self.prevy = self.y
@@ -112,10 +112,10 @@ function Player:update()
     end)
   end
 
-  table.each(self.magicShruju, function(shruju, i)
-    shruju.effect.timer = timer.rot(shruju.effect.timer, function()
-      shruju.effect:deactivate()
-      table.remove(self.magicShruju, i)
+  table.each(self.shruju, function(shruju, i)
+    shruju.timer = timer.rot(shruju.timer, function()
+      shruju:deactivate()
+      table.remove(self.shruju, i)
     end)
   end)
 
