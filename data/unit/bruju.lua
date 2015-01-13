@@ -239,7 +239,7 @@ Bruju.attributes = {
     amount = 6,
     stat = 'damage',
   },
-  alacrity = {
+  agility = {
     level = 0,
     amount = 6,
     stat = 'speed'

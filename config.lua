@@ -18,7 +18,7 @@ return {
     'volcano'
   },
 
-  attributes = {'vitality', 'strength', 'alacrity', 'flow'},
+  attributes = {'vitality', 'strength', 'agility', 'flow'},
 
   elites = {
     baseModifier = .005,

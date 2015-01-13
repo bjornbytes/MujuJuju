@@ -123,8 +123,8 @@ function UnitBuffs:getBaseSpeed()
   local speed = self.unit.class.speed
   if not self.unit.player then return speed end
 
-  local alacrity = self.unit.class.attributes.alacrity
-  speed = speed + alacrity.level * alacrity.amount 
+  local agility = self.unit.class.attributes.agility
+  speed = speed + agility.level * alacrity.amount 
 
   return speed
 end
