@@ -333,6 +333,13 @@ function Player:initDeck()
       }
 
       self.deck[i] = self.deck[code]
+
+      table.each(self.deck[i].runes, function(rune)
+        table.each(rune.attributes, function(amount, attribute)
+          local class = data.unit[code]
+          class.attributes[attribute].level = class.attributes[attribute].level + amount
+        end)
+      end)
     end
   end
 end

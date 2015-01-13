@@ -5,8 +5,6 @@ function UnitBuffs:init(unit)
   self.list = {}
 
   table.merge(table.only(self.unit.class, Unit.classStats), self.unit)
-  self:applyRunes('health')
-  self:applyRunes('damage')
 end
 
 function UnitBuffs:preupdate()
@@ -121,44 +119,15 @@ function UnitBuffs:isCrowdControl(buff)
   return t('slow') or t('root') or t('stun') or t('silence') or t('knockback') or t('taunt')
 end
 
-function UnitBuffs:applyRunes(stat)
-  if not self.unit.player or not self.unit:hasRunes() then return end
-
-  local runes = self.unit.player.deck[self.unit.class.code].runes
-  table.each(runes, function(rune)
-    if rune.stat == stat then
-      if rune.amount then
-        self.unit[stat] = self.unit[stat] + rune.amount
-      elseif rune.scaling then
-        local minutes = math.floor(ctx.timer * tickRate / 60)
-        self.unit[stat] = self.unit[stat] + (rune.scaling * minutes)
-      end
-    end
-  end)
-end
-
 function UnitBuffs:getBaseSpeed()
   local speed = self.unit.class.speed
   if not self.unit.player then return speed end
-
-  local runes = self.unit.player.deck[self.unit.class.code].runes
-  table.each(runes, function(rune)
-    if rune.stat == 'speed' then
-      if rune.amount then
-        speed = speed + rune.amount
-      elseif rune.scaling then
-        local minutes = math.floor(ctx.timer * tickRate / 60)
-        speed = speed + (rune.scaling * minutes)
-      end
-    end
-  end)
 
   local alacrity = self.unit.class.attributes.alacrity
   speed = speed + alacrity.level * alacrity.amount 
 
   return speed
 end
-
 
 function UnitBuffs:prehurt(amount, source, kind)
   table.with(self.list, 'prehurt', amount, source, kind)

@@ -128,11 +128,9 @@ end
 function Tooltip:setRuneTooltip(rune)
   local pieces = {}
   table.insert(pieces, '{white}{title}' .. rune.name .. '{normal}')
-  if rune.stat then
-    local amountRound = rune.scaling and .1 or 1
-    local amount = math.round((rune.amount or rune.scaling) / amountRound) * amountRound
-    table.insert(pieces, '+' .. amount .. ' ' .. rune.stat:capitalize() .. (rune.scaling and ' every minute' .. (ctx.timer and '({green}' .. math.round(rune.scaling * math.floor(ctx.timer * tickRate / 60) / .1) * .1 .. '{white})' or '') or ''))
-  end
+  table.each(rune.attributes, function(amount, attribute)
+    table.insert(pieces, '+' .. amount .. ' to ' .. attribute:capitalize())
+  end)
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

@@ -59,7 +59,9 @@ function Game:update()
     self.particles:update()
 		return
 	end
-  self.timer = self.timer + 1
+
+  if not self.won then self.timer = self.timer + 1 end
+
 	self.players:update()
 	self.units:update()
 	self.shrines:update()
@@ -121,36 +123,33 @@ function Game:distribute()
 
   local time = math.floor(self.timer * tickRate)
 
-  local bronze = time >= config.biomes[self.biome].benchmarks.bronze
-  local silver = time >= config.biomes[self.biome].benchmarks.silver
-  local gold = time >= config.biomes[self.biome].benchmarks.gold
-
   -- Distribute runes
   local runeCount = 0
-  if not bronze and love.math.random() < .3 then runeCount = runeCount + 1 end
-  if bronze and love.math.random() < .9 then runeCount = runeCount + 1 end
-  if silver and love.math.random() < .50 then runeCount = runeCount + 1 end
-  if gold and love.math.random() < .25 then runeCount = runeCount + 1 end
+  if self.biome == 'forest' and love.math.random() < .5 then runeCount = 1
+  elseif self.biome == 'cavern' then runeCount = 1 + math.round(love.math.random())
+  elseif self.biome == 'tundra' then runeCount = 1 + math.round(2 * love.math.random())
+  elseif self.biome == 'volcano' then runeCount = 1 + math.round(2 * love.math.random()) end
+
   for i = 1, runeCount do
     local rune = {}
-    local runeLevel = 0
     local maxLevel = config.biomes[ctx.biome].runes.maxLevel
+    local runeLevel = love.math.random(1, maxLevel)
 
-    if gold then runeLevel = love.math.random(.67 * maxLevel, maxLevel)
-    elseif silver then runeLevel = love.math.random(.33 * maxLevel, .67 * maxLevel)
-    elseif bronze then runeLevel = love.math.random(0, .33 * maxLevel) end
-
-    local stats = config.runes.stats
-    local stat = stats[love.math.random(1, #stats)]
-    rune.stat = stat
-    if love.math.random() < .5 then
-      rune.amount = math.lerp(config.runes[stat].flatRange[1], config.runes[stat].flatRange[2], (runeLevel / 100) ^ 1.5)
-    else
-      rune.scaling = math.lerp(config.runes[stat].scalingRange[1], config.runes[stat].scalingRange[2], (runeLevel / 100) ^ 1.5)
+    rune.attributes = {}
+    local attributes = config.attributes
+    local attribute = attributes[love.math.random(1, #attributes)]
+    local attributeLevels = 1 + math.round(runeLevel / 10)
+    local attributesDistributed = 0
+    while attributesDistributed < attributeLevels do
+      local amount = love.math.random(1, attributeLevels - attributesDistributed)
+      rune.attributes[attribute] = (rune.attributes[attribute] or 0) + amount
+      attributesDistributed = attributesDistributed + amount
+      if love.math.random() < .2 then
+        attribute = attributes[love.math.random(1, #attributes)]
+      end
     end
 
-    local names = config.runes[rune.stat].names
-    rune.name = names[love.math.random(1, #names)]
+    rune.name = 'Rune'
 
     local prefixes = config.runes.prefixes
     local prefixLevel = math.clamp(runeLevel + love.math.random(-3, 3), 0, 100)
@@ -169,18 +168,8 @@ function Game:distribute()
 
   saveUser(self.user)
 
-  -- Distribute biomes
-  if silver then
-    local nextBiome = config.biomes[self.biome].rewards.silver
-    if nextBiome and not table.has(self.user.biomes, nextBiome) then
-      table.insert(self.user.biomes, nextBiome)
-      table.insert(self.rewards.biomes, nextBiome)
-      saveUser(self.user)
-    end
-  end
-
   -- Distribute minions
-  if gold and self.user.highscores[self.biome] < config.biomes[self.biome].benchmarks.gold then
+  --[[if self.user.highscores[self.biome] < config.biomes[self.biome].benchmarks.gold then
     local minions = table.copy(self.user.minions)
     for i = 1, #self.user.deck.minions do table.insert(minions, self.user.deck.minions[i]) end
     if #config.starters > #minions then
@@ -196,13 +185,13 @@ function Game:distribute()
         idx = love.math.random(1, #config.starters)
       end
     end
-  end
+  end]]
 
-  if time > self.user.highscores[self.biome] then
+  --[[if time > self.user.highscores[self.biome] then
     self.user.highscores[self.biome] = time
     self.rewards.highscore = true
     saveUser(self.user)
-  end
+  end]]
 end
 
 function Game:nextBiome()

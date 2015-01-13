@@ -2,7 +2,7 @@ local g = love.graphics
 
 Unit = class()
 
-Unit.classStats = {'width', 'health', 'damage', 'range', 'attackSpeed', 'speed'}
+Unit.classStats = {'width', 'health', 'damage', 'range', 'attackSpeed', 'speed', 'flow'}
 Unit.stanceList = {'defensive', 'aggressive', 'follow'}
 table.each(Unit.stanceList, function(stance, i) Unit.stanceList[stance] = i end)
 
@@ -121,7 +121,6 @@ function Unit:activate()
 
   self.health = self.health + config.units.baseHealthScaling * (ctx.timer * tickRate / 60)
   self.damage = self.damage + config.units.baseDamageScaling * (ctx.timer * tickRate / 60)
-  self.flow = 1
 
   table.each(self.class.attributes, function(attribute)
     self[attribute.stat] = self[attribute.stat] + attribute.amount * attribute.level

@@ -77,12 +77,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .75,
+          exponent = .785,
           coefficient = 1
         },
         maximum = {
           base = 25,
-          exponent = .75,
+          exponent = .785,
           coefficient = 1.2
         }
       },
@@ -98,8 +98,8 @@ return {
       units = {
         minEnemyRate = 14,
         maxEnemyRate = 17,
-        minEnemyRateDecay = .11,
-        maxEnemyRateDecay = .11,
+        minEnemyRateDecay = .1,
+        maxEnemyRateDecay = .1,
         maxEnemiesCoefficient = .2,
         levelScale = 1,
         upgradeCostIncrease = 1,
@@ -140,12 +140,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .75,
+          exponent = .785,
           coefficient = 1
         },
         maximum = {
           base = 25,
-          exponent = .75,
+          exponent = .785,
           coefficient = 1.2
         }
       },
@@ -202,12 +202,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .75,
+          exponent = .785,
           coefficient = 1
         },
         maximum = {
           base = 25,
-          exponent = .75,
+          exponent = .785,
           coefficient = 1.2
         }
       },
@@ -264,12 +264,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .75,
+          exponent = .785,
           coefficient = 1
         },
         maximum = {
           base = 25,
-          exponent = .75,
+          exponent = .785,
           coefficient = 1.2
         }
       },

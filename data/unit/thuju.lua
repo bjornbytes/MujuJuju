@@ -11,6 +11,7 @@ Thuju.damage = 14
 Thuju.range = 16
 Thuju.attackSpeed = 1.15
 Thuju.speed = 35
+Thuju.flow = 1
 
 Thuju.cost = 12
 
