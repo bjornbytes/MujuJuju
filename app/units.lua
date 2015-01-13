@@ -3,7 +3,7 @@ Units.manages = 'unit'
 
 function Units:init()
   Manager.init(self)
-  self.level = 0
+  self.level = self.level or 0
   self.nextEnemy = 5
   self.bossIndex = 1
   self.enemyCount = 0

@@ -76,13 +76,13 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
-          exponent = .785,
+          base = 20,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
-          base = 20,
-          exponent = .785,
+          base = 25,
+          exponent = .75,
           coefficient = 1.2
         }
       },
@@ -139,13 +139,13 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
-          exponent = .785,
+          base = 20,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
-          base = 20,
-          exponent = .785,
+          base = 25,
+          exponent = .75,
           coefficient = 1.2
         }
       },
@@ -159,8 +159,8 @@ return {
         maxPopulation = 10
       },
       units = {
-        minEnemyRate = 14,
-        maxEnemyRate = 16,
+        minEnemyRate = 10,
+        maxEnemyRate = 12,
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
@@ -201,13 +201,13 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
-          exponent = .785,
+          base = 20,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
-          base = 20,
-          exponent = .785,
+          base = 25,
+          exponent = .75,
           coefficient = 1.2
         }
       },
@@ -221,8 +221,8 @@ return {
         maxPopulation = 10
       },
       units = {
-        minEnemyRate = 14,
-        maxEnemyRate = 15,
+        minEnemyRate = 8,
+        maxEnemyRate = 10,
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
@@ -263,13 +263,13 @@ return {
       },
       juju = {
         minimum = {
-          base = 14,
-          exponent = .785,
+          base = 20,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
-          base = 20,
-          exponent = .785,
+          base = 25,
+          exponent = .75,
           coefficient = 1.2
         }
       },
@@ -283,8 +283,8 @@ return {
         maxPopulation = 10
       },
       units = {
-        minEnemyRate = 14,
-        maxEnemyRate = 14,
+        minEnemyRate = 6,
+        maxEnemyRate = 8,
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
