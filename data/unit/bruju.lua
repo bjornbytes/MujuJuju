@@ -8,7 +8,7 @@ Bruju.description = 'A treant with spiritual powers.  Specializes in dealing hig
 ----------------
 Bruju.width = 48
 Bruju.health = 85
-Bruju.damage = 20
+Bruju.damage = 18
 Bruju.range = 12
 Bruju.attackSpeed = 1
 Bruju.speed = 45
@@ -224,6 +224,29 @@ Bruju.upgrades = {
         unit.buffs:add('conduction')
       end
     end
+  }
+}
+
+Bruju.attributes = {
+  vitality = {
+    level = 0,
+    amount = 20,
+    stat = 'health',
+  },
+  strength = {
+    level = 0,
+    amount = 6,
+    stat = 'damage',
+  },
+  alacrity = {
+    level = 0,
+    amount = 6,
+    stat = 'speed'
+  },
+  flow = {
+    level = 0,
+    amount = .1,
+    stat = 'flow'
   }
 }
 

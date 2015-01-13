@@ -449,7 +449,7 @@ function Menu:draw()
 
       -- Rune
       local image = data.media.graphics.runes[rune.image]
-      local scale = ((h - v * .02) - .016 * v) / image:getHeight()
+      local scale = ((h - v * .02) - .02 * v) / image:getHeight()
       g.setColor(config.runes.colors[rune.color])
       g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     end
@@ -490,7 +490,7 @@ function Menu:draw()
 
         -- Rune
         local image = data.media.graphics.runes[rune.image]
-        local scale = ((h - v * .02) - .016 * v) / image:getHeight()
+        local scale = ((h - v * .02) - .02 * v) / image:getHeight()
         g.setColor(config.runes.colors[rune.color])
         g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
       end

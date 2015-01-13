@@ -237,7 +237,9 @@ function Player:summon()
     for i = 1, 15 do
       ctx.spells:add('dirt', {x = self.x, y = self.y + self.height})
     end
-	end
+  else
+    ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
+  end
 end
 
 function Player:animate()

@@ -18,22 +18,7 @@ return {
     'volcano'
   },
 
-  attributes = {
-    vitality = {
-      description = 'Increases the health and durability of the minion.'
-    },
-    strength = {
-      description = 'Increases the force the minion is able to strike with.'
-    },
-    alacrity = {
-      description = 'Increases the speed and dexterity of the minion.'
-    },
-    flow = {
-      description = 'Increases the power and recharge rate of abilities and spells.'
-    },
-  },
-
-  attributeOrder = {'vitality', 'strength', 'alacrity', 'flow'},
+  attributes = {'vitality', 'strength', 'alacrity', 'flow'},
 
   elites = {
     baseModifier = .005,

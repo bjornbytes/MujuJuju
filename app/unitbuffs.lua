@@ -18,8 +18,7 @@ function UnitBuffs:postupdate()
   table.with(self.list, 'postupdate')
   table.with(self.list, 'update')
 
-  self.unit.speed = self.unit.class.speed
-  self:applyRunes('speed')
+  self.unit.speed = self:getBaseSpeed()
   
   local speed = self.unit.speed
 
@@ -137,6 +136,29 @@ function UnitBuffs:applyRunes(stat)
     end
   end)
 end
+
+function UnitBuffs:getBaseSpeed()
+  local speed = self.unit.class.speed
+  if not self.unit.player then return speed end
+
+  local runes = self.unit.player.deck[self.unit.class.code].runes
+  table.each(runes, function(rune)
+    if rune.stat == 'speed' then
+      if rune.amount then
+        speed = speed + rune.amount
+      elseif rune.scaling then
+        local minutes = math.floor(ctx.timer * tickRate / 60)
+        speed = speed + (rune.scaling * minutes)
+      end
+    end
+  end)
+
+  local alacrity = self.unit.class.attributes.alacrity
+  speed = speed + alacrity.level * alacrity.amount 
+
+  return speed
+end
+
 
 function UnitBuffs:prehurt(amount, source, kind)
   table.with(self.list, 'prehurt', amount, source, kind)

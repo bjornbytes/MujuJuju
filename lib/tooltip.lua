@@ -136,11 +136,19 @@ function Tooltip:setRuneTooltip(rune)
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 
-function Tooltip:setAttributeTooltip(code)
-  local attribute = config.attributes[code]
+function Tooltip:setAttributeTooltip(attribute, unit)
+  local p = ctx.player
   local pieces = {}
-  table.insert(pieces, '{white}{title}' .. code:capitalize() .. '{normal}')
-  table.insert(pieces, '{whoCares}' .. attribute.description)
+  table.insert(pieces, '{white}{title}' .. attribute:capitalize() .. '{normal}')
+  if unit then
+    if type(unit) == 'string' then unit = data.unit[unit] end
+    table.insert(pieces, '+' .. unit.attributes[attribute].amount .. ' ' .. unit.attributes[attribute].stat .. ' per level')
+
+    local cost = ctx.upgrades.attributeCostBase + (ctx.upgrades.attributeCostIncrease * unit.attributes[attribute].level)
+    local color = p.juju >= cost and '{green}' or '{red}'
+    table.insert(pieces, color .. cost .. ' juju\n')
+  end
+
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

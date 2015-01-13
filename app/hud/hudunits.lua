@@ -69,10 +69,10 @@ function HudUnits:update()
   local attributes = self.geometry.attributes
   for i = 1, #attributes do
     for j = 1, #attributes[i] do
-      local attribute = config.attributeOrder[j]
+      local attribute = config.attributes[j]
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
-        ctx.hud.tooltip:setAttributeTooltip(attribute)
+        ctx.hud.tooltip:setAttributeTooltip(attribute, p.deck[i].code)
       end
     end
   end
@@ -231,6 +231,13 @@ function HudUnits:draw()
       local scale = w / image:getWidth()
       g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
       g.draw(image, x, y, 0, scale, scale)
+
+      local attribute = data.unit[p.deck[i].code].attributes[config.attributes[j]]
+      g.setFont('pixel', 8)
+      g.setColor(0, 0, 0, 255 * upgradeAlphaFactor)
+      g.print(attribute.level, x + 6 + 1, y + 2 + 1)
+      g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
+      g.print(attribute.level, x + 6, y + 2)
     end
   end
 
@@ -291,12 +298,13 @@ function HudUnits:mousereleased(mx, my, b)
   local attributes = self.geometry.attributes
   for i = 1, #attributes do
     for j = 1, #attributes[i] do
-      local attribute = config.attributeOrder[j]
+      local attribute = config.attributes[j]
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
-        local cost = math.huge
+        local attribute = data.unit[p.deck[i].code].attributes[config.attributes[j]]
+        local cost = ctx.upgrades.attributeCostBase + (ctx.upgrades.attributeCostIncrease * attribute.level)
         if p:spend(cost) then
-          -- Upgrade the attribute
+          attribute.level = attribute.level + 1
         else
           ctx.sound:play('misclick')
         end
