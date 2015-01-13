@@ -101,7 +101,7 @@ function Unit:activate()
     self.health = self.health * config.elites.healthModifier
     self.damage = self.damage * config.elites.damageModifier
   elseif self.boss then
-    self.health = self.health / 50
+    self.health = self.health * 50
     self.damage = self.damage * 3
   end
 
