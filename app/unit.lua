@@ -52,6 +52,9 @@ function Unit:activate()
           if self.elite then
             amount = amount * config.elites.jujuModifier
             jujus = 1
+          elseif self.boss then
+            amount = amount * 4
+            jujus = 1
           end
 
           for i = 1, jujus do
@@ -60,22 +63,16 @@ function Unit:activate()
               y = self.y,
               amount = amount / jujus,
               vx = love.math.random(-50, 50),
-              vy = love.math.random(-300, -100)
+              vy = love.math.random(-300, -100),
+              dead = self.boss
             })
           end
         end
 
         self.died = true
         
-        if self.boss then
-          local biomeIndex
-          for i = 1, #config.biomeOrder do if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end end
-          if not config.biomeOrder[biomeIndex + 1] then
-            Context:remove(ctx)
-            Context:add(Menu, biomeIndex)
-            return
-          end
-          ctx.biome = config.biomeOrder[biomeIndex + 1]
+        if self.boss and not ctx.ded then
+          ctx.won = true
         end
       end
     elseif event.data.name == 'spawn' then
@@ -104,7 +101,7 @@ function Unit:activate()
     self.health = self.health * config.elites.healthModifier
     self.damage = self.damage * config.elites.damageModifier
   elseif self.boss then
-    self.health = self.health * 50
+    self.health = self.health / 50
     self.damage = self.damage * 3
   end
 

@@ -13,7 +13,7 @@ end
 
 function Units:createEnemy()
   local conf = config.biomes[ctx.biome]
-  if self.bossCount == 0 and self.enemyCount < 1 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
+  if self.bossCount == 0 and not ctx.won and self.enemyCount < 1 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
     local choices = {}
     table.each(conf.units.thresholds, function(time, code)
       if ctx.timer * tickRate >= time then table.insert(choices, code) end
@@ -72,4 +72,11 @@ function Units:remove(unit)
   f.exe(unit.deactivate, unit)
   self.objects[unit] = nil
   unit = nil
+end
+
+function Units:clear()
+  table.each(self.objects, function(unit)
+    self:remove(unit)
+  end)
+  self:init()
 end

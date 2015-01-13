@@ -26,6 +26,7 @@ function Hud:init()
   self.shrujuPatches = {HudShrujuPatch(), HudShrujuPatch()}
   self.shruju = HudShruju()
   self.status = HudStatus()
+  self.won = HudWon()
   self.tooltip = Tooltip()
   
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
@@ -47,6 +48,7 @@ function Hud:update()
   self.upgrades:update()
   self.shruju:update()
   self.units:update()
+  self.won:update()
   table.with(self.shrujuPatches, 'update')
 
   local newTitle = self.tooltip.tooltipText and self.tooltip.tooltipText:sub(1, self.tooltip.tooltipText:find('\n'))
@@ -111,6 +113,7 @@ function Hud:gui()
 	end
 
   self.units:draw()
+  self.won:draw()
 
 	-- Death Screen
 	if ctx.ded then
@@ -180,6 +183,7 @@ end
 
 function Hud:mousepressed(x, y, b)
   table.with(self.shrujuPatches, 'mousepressed', x, y, b)
+  self.won:mousepressed(x, y, b)
 end
 
 function Hud:mousereleased(x, y, b)

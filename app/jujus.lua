@@ -23,3 +23,9 @@ function Jujus:remove(juju)
 	ctx.view:unregister(juju)
 	self.jujus[juju] = nil
 end
+
+function Jujus:clear()
+  table.each(self.jujus, function(juju)
+    self:remove(juju)
+  end)
+end

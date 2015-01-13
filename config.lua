@@ -109,7 +109,7 @@ return {
           spuju = 180,
           kuju = 600
         },
-        bosses = {{'duju', 750}}
+        bosses = {{'duju', 900}}
       },
       shrujuPatches = {60, 450},
       runes = {

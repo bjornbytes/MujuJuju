@@ -38,6 +38,14 @@ function Effects:remove(code)
   end
 end
 
+function Effects:clear()
+  while #self.effects > 0 do
+    self:remove(self.effects[1].code)
+  end
+
+  self:init()
+end
+
 function Effects:get(code)
   return self.effects[code]
 end

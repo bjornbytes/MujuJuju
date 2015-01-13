@@ -1,7 +1,6 @@
 Game = class()
 
 function Game:load(user, biome)
-  data.load()
   data.media.graphics.juju:setMipmapFilter('linear', 1)
   data.media.graphics.map.forest:setMipmapFilter('linear', 1)
   data.media.graphics.map.forestSpirit:setMipmapFilter('linear', 1)
@@ -17,6 +16,7 @@ function Game:load(user, biome)
 
 	self.paused = false
 	self.ded = false
+  self.won = false
   self.timer = 0
 
   self.event = Event()
@@ -203,4 +203,20 @@ function Game:distribute()
     self.rewards.highscore = true
     saveUser(self.user)
   end
+end
+
+function Game:nextBiome()
+  local biomeIndex
+  for i = 1, #config.biomeOrder do if config.biomeOrder[i] == self.biome then biomeIndex = i break end end
+  if not config.biomeOrder[biomeIndex + 1] then
+    Context:remove(ctx)
+    Context:add(Menu, biomeIndex)
+  end
+  self.biome = config.biomeOrder[biomeIndex + 1]
+
+  self.units:clear()
+  self.spells:clear()
+  self.jujus:clear()
+	self.effects:clear()
+  self.won = false
 end
