@@ -205,6 +205,7 @@ function Hud:mousereleased(x, y, b)
       end
       Context:add(Menu, biomeIndex)
     elseif math.inside(x, y, w * .6 - img2:getWidth() / 2, h * .825, img2:getDimensions()) then
+      data.load()
       Context:remove(ctx)
       Context:add(Game, ctx.user, ctx.biome)
     end
