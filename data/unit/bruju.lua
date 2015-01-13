@@ -97,7 +97,7 @@ Bruju.upgrades = {
     maxLevel = 3,
     prerequisites = {burst = 1},
     costs = {100, 200, 300},
-    name = 'Fortify',
+    name = 'Eruption',
     description = 'The range of burst is increased',
     x = 0,
     y = 1,

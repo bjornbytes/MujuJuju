@@ -42,7 +42,6 @@ function Player:init()
 	self.invincible = 0
   self.flatCooldownReduction = 0
   self.ghostSpeedMultiplier = 1
-  self.summonBuffs = {}
 
 	local joysticks = love.joystick.getJoysticks()
 	for _, joystick in ipairs(joysticks) do
@@ -213,10 +212,6 @@ function Player:summon()
 		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
     self.totalSummoned = self.totalSummoned + 1
     self.invincible = 0
-
-    table.each(self.summonBuffs, function(code)
-      unit.buffs:add(code)
-    end)
 
     for i = 1, #self.deck do
       if i == self.selected then

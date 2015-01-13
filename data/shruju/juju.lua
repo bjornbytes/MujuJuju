@@ -3,6 +3,7 @@ local Juju = extend(Shruju)
 Juju.code = 'juju'
 Juju.name = 'Juju'
 Juju.description = 'On use, gives 25 juju (+5 per minute).'
+Juju.rarity = 6
 
 function Juju:activate()
   local p = ctx.player

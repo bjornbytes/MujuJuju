@@ -4,6 +4,7 @@ Flow.code = 'flow'
 Flow.name = 'Flow'
 Flow.description = 'The cooldown for minion summoning is reduced by .5s.'
 Flow.cdr = .5
+Flow.rarity = 5
 
 function Flow:activate()
   local p = ctx.player

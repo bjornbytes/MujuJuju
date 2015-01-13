@@ -1,167 +1,5 @@
 local g = love.graphics
 
-ShrujuEffects = {
-  wealth = {
-    code = 'wealth',
-    name = 'Wealth',
-    description = 'Doubles your passive juju income rate.',
-
-    activate = function(self)
-      local p = ctx.player
-      p.jujuRate = p.jujuRate / 2
-    end,
-
-    deactivate = function(self)
-      local p = ctx.player
-      p.jujuRate = p.jujuRate * 2
-    end
-  },
-  sugarrush = {
-    code = 'sugarrush',
-    name = 'Sugar Rush',
-    description = 'Muju moves faster.',
-
-    activate = function(self)
-      local p = ctx.player
-      p.walkSpeed = p.walkSpeed * 2
-    end,
-
-    deactivate = function(self)
-      local p = ctx.player
-      p.walkSpeed = p.walkSpeed / 2
-    end
-  },
-  imbue = {
-    code = 'imbue',
-    name = 'Imbue',
-    description = 'Shrine heals health per second.',
-
-    activate = function(self)
-      local p = ctx.player
-      local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
-      if shrine then
-        shrine.regen = shrine.regen + 20
-      end
-    end,
-
-    deactivate = function(self)
-      local p = ctx.player
-      local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
-      if shrine then
-        shrine.regen = shrine.regen - 20
-      end
-    end
-  },
-  zeal = {
-    code = 'zeal',
-    name = 'Zeal',
-    description = 'Muju moves faster in the juju realm.',
-
-    activate = function(self)
-      local p = ctx.player
-      p.ghostSpeedMultiplier = p.ghostSpeedMultiplier * 2
-    end,
-
-    deactivate = function(self)
-      local p = ctx.player
-      p.ghostSpeedMultiplier = p.ghostSpeedMultiplier / 2
-    end
-  },
-  civilization = {
-    code = 'civilization',
-    name = 'Civilization',
-    description = '+3 to maximum population.',
-
-    activate = function(self)
-      local p = ctx.player
-      p.maxPopulation = p.maxPopulation + 3
-    end,
-
-    deactivate = function(self)
-      local p = ctx.player
-      p.maxPopulation = p.maxPopulation - 3
-    end
-  },
-  marathon = {
-    code = 'marathon',
-    name = 'Marathon',
-    description = 'Fast minions!',
-
-    activate = function(self)
-      local p = ctx.player
-      p.summonBuffs.marathon = 'marathon'
-      ctx.units:each(function(unit)
-        if unit.player == p then unit.buffs:add('marathon') end
-      end)
-    end,
-
-    deactivate = function(self)
-      local p = ctx.player
-      p.summonBuffs.marathon = nil
-      ctx.units:each(function(unit)
-        if unit.player == p then unit.buffs:remove('marathon') end
-      end)
-    end
-  },
-  spinach = {
-    code = 'spinach',
-    name = 'Spinach',
-    description = 'Makes your minions stronger.',
-
-    activate = function(self)
-      local p = ctx.player
-      p.summonBuffs.spinach = 'spinach'
-      ctx.units:each(function(unit)
-        if unit.player == p then unit.buffs:add('spinach') end
-      end)
-    end,
-
-    deactivate = function(self)
-      local p = ctx.player
-      p.summonBuffs.spinach = nil
-      ctx.units:each(function(unit)
-        if unit.player == p then unit.buffs:remove('spinach') end
-      end)
-    end
-  },
-  frenzy = {
-    code = 'frenzy',
-    name = 'Frenzy',
-    description = 'Your minions attack twice as fast.',
-
-    activate = function(self)
-      local p = ctx.player
-      p.summonBuffs.frenzy = 'frenzy'
-      ctx.units:each(function(unit)
-        if unit.player == p then unit.buffs:add('frenzy') end
-      end)
-    end,
-
-    deactivate = function(self)
-      local p = ctx.player
-      p.summonBuffs.frenzy = nil
-      ctx.units:each(function(unit)
-        if unit.player == p then unit.buffs:remove('frenzy') end
-      end)
-    end
-  },
-  spiritrush = {
-    code = 'spiritrush',
-    name = 'Spirit Rush',
-    description = 'Summon all day erry day.',
-
-    activate = function(self)
-      local p = ctx.player
-      p.flatCooldownReduction = p.flatCooldownReduction + 10
-    end,
-
-    deactivate = function(self)
-      local p = ctx.player
-      p.flatCooldownReduction = p.flatCooldownReduction - 10
-    end
-  }
-}
-
 ShrujuPatch = class()
 
 ShrujuPatch.width = 80
@@ -176,9 +14,14 @@ function ShrujuPatch:activate()
     table.insert(self.types, data.shruju[i].code)
   end
 
+  self.weightSum = 0
+  table.each(self.types, function(code)
+    self.weightSum = self.weightSum + (data.shruju[code].rarity or 5)
+  end)
+
   self.slots = {}
   for i = 1, 3 do
-    table.insert(self.slots, self.types[love.math.random(1, #self.types)])
+    self:randomizeSlot(i)
   end
 
   self.timer = 0
@@ -236,7 +79,8 @@ function ShrujuPatch:grow(index)
   local code = self.slots[index]
   self.timer = self:getGrowTime(code)
   self.growing = code
-  self.slots[index] = self.types[love.math.random(1, #self.types)]
+
+  self:randomizeSlot(index)
 end
 
 function ShrujuPatch:take()
@@ -276,4 +120,19 @@ function ShrujuPatch:removeType(code)
   for i = 1, #self.types do
     if self.types[i] == code then table.remove(self.types, i) return end
   end
+end
+
+function ShrujuPatch:randomizeSlot(index)
+  local random = love.math.random() * self.weightSum
+  local code = nil
+  for i = 1, #self.types do
+    local rarity = data.shruju[self.types[i]].rarity
+    if random < rarity then
+      code = self.types[i]
+      break
+    end
+    random = random - rarity
+  end
+
+  self.slots[index] = code
 end

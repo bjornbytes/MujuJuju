@@ -1,8 +1,8 @@
 Upgrades = {}
 
 Upgrades.clear = function()
-  Upgrades.attributeCostBase = 30
-  Upgrades.attributeCostIncrease = 10
+  Upgrades.attributeCostBase = 50
+  Upgrades.attributeCostIncrease = 5
 
 	Upgrades.makeTooltip = function(who, what)
 	end
