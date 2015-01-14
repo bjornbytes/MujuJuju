@@ -13,7 +13,7 @@ function Burst:activate()
   self.team = unit.team
 
   table.each(ctx.target:inRange(self, self.range, 'enemy', 'unit', 'player'), function(target)
-    target:hurt(self.damage, unit)
+    target:hurt(self.damage, unit, {'spell'})
   end)
 
   table.each(ctx.target:inRange(self, self.range, 'ally', 'unit', 'player'), function(target)

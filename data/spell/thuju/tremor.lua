@@ -23,12 +23,12 @@ function Tremor:activate()
 
   self.spikeTargetY = ctx.map.height - ctx.map.groundHeight + 16
   self.spikes = {}
-  for i = 1, 3 do
+  for i = 1, self.spikeCount do
     local height = 90 - (10 * i)
     local y = self.spikeTargetY + height
     self.spikes[i] = {
       height = height,
-      x = unit.x + (unit.width / 2 + (self.width * .8) * (i / 3)) * self.direction,
+      x = unit.x + (unit.width / 2 + (self.width * .8) * (i / self.spikeCount)) * self.direction,
       starty = y,
       y = y,
       alpha = 0
@@ -58,7 +58,7 @@ function Tremor:update()
     spike.alpha = 1 - ((spike.y - self.spikeTargetY) / (spike.starty - self.spikeTargetY))
     if spike.y == self.spikeTargetY then
       self.activeSpike = self.activeSpike + 1
-      if self.activeSpike > #self.spikes then self.activeSpike = nil
+      if self.activeSpike > self.spikeCount then self.activeSpike = nil
       else
         for i = 1, 25 do
           ctx.spells:add('dirt', {x = self.spikes[self.activeSpike].x, y = self.spikeTargetY})
@@ -70,7 +70,7 @@ end
 
 function Tremor:draw()
   local image = data.media.graphics.spell.tremor
-  for i = 1, #self.spikes do
+  for i = 1, self.spikeCount do
     local spike = self.spikes[i]
     local scale = spike.height / image:getHeight()
     g.setColor(255, 255, 255, (spike.alpha * math.clamp(self.timer, 0, .2) / .2) * 255)

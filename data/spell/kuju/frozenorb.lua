@@ -53,7 +53,7 @@ function FrozenOrb:update()
           timer = self.duration
         })
       end
-      target:hurt(self.damage, unit)
+      target:hurt(self.damage, unit, {'spell'})
       self.damaged[target.viewId] = true
     end
   end)

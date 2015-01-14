@@ -12,9 +12,7 @@ Bruju.range = 12
 Bruju.attackSpeed = 1
 Bruju.speed = 45
 Bruju.flow = 1
-
 Bruju.cost = 5
-
 
 ----------------
 -- Upgrades
@@ -227,10 +225,13 @@ Bruju.upgrades = {
   }
 }
 
+----------------
+-- Attributes
+----------------
 Bruju.attributes = {
   vitality = {
     level = 0,
-    amount = 20,
+    amount = 16,
     stat = 'health',
   },
   strength = {

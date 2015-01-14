@@ -398,7 +398,7 @@ function Unit:attack(options)
   local amount = options.damage or self.damage
   amount = self:abilityCall('preattack', target, amount) or amount
   amount = self.buffs:preattack(target, amount) or amount
-  amount = target:hurt(amount, self, 'attack') or amount
+  amount = target:hurt(amount, self, {'attack'}) or amount
   self:abilityCall('postattack', target, amount)
   self.buffs:postattack(target, amount)
 

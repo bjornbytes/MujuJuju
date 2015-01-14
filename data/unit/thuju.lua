@@ -11,9 +11,7 @@ Thuju.range = 16
 Thuju.attackSpeed = 1.15
 Thuju.speed = 35
 Thuju.flow = 1
-
 Thuju.cost = 5
-
 
 ----------------
 -- Upgrades
@@ -26,9 +24,9 @@ Thuju.upgrades = {
     name = 'Inspire',
     description = 'Thuju beats his chest, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
     values = {
-      [1] = '+50 speed',
-      [2] = '+50 speed, +50% armor',
-      [3] = '+50 speed, +50% armor, +50% attack speed',
+      [1] = '+50% speed',
+      [2] = '+50% speed, +50% armor',
+      [3] = '+50% speed, +50% armor, +50% attack speed',
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -116,7 +114,7 @@ Thuju.upgrades = {
     costs = {500},
     prerequisites = {impenetrablehide = 1, briarlance = 1},
     name = 'Unbreakable',
-    description = 'The defensive bonus from Impenetrable Hide is doubled against ranged attacks.',
+    description = 'The defensive bonus from Impenetrable Hide is increased against ranged attacks.',
     values = {
       [1] = '1.50x armor against ranged attacks',
     }
@@ -142,7 +140,12 @@ Thuju.upgrades = {
     description = 'Each time Thuju is damaged by a spell or attack, the cooldown of Tremor and Inspire is reduced by 1 second.',
     values = {
       [1] = '1s per attack',
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('alacrity')
+      end
+    end
   },
   infusedcarapace = {
     level = 0,
@@ -152,7 +155,12 @@ Thuju.upgrades = {
     description = 'Thuju takes 35% reduced damage from spells.',
     values = {
       [1] = '35% spell damage reduction',
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('infusedcarapace')
+      end
+    end
   },
   taunt = {
     level = 0,
@@ -162,7 +170,12 @@ Thuju.upgrades = {
     description = 'Any enemies Thuju damage will immediately attack Thuju.',
     values = {
       [1] = 'Taunt enemies',
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('taunt')
+      end
+    end
   },
   staggeringentry = {
     level = 0,
@@ -177,6 +190,30 @@ Thuju.upgrades = {
   },
 }
 
-Thuju.upgradeOrder = {'wardofthorns', 'tenacity', 'impenetrablehide', 'taunt', 'tremor'}
+----------------
+-- Attributes
+----------------
+Thuju.attributes = {
+  vitality = {
+    level = 0,
+    amount = 20,
+    stat = 'health',
+  },
+  strength = {
+    level = 0,
+    amount = 4,
+    stat = 'damage',
+  },
+  agility = {
+    level = 0,
+    amount = 5,
+    stat = 'speed'
+  },
+  flow = {
+    level = 0,
+    amount = .1,
+    stat = 'flow'
+  }
+}
 
 return Thuju
