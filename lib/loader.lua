@@ -51,9 +51,9 @@ data.load = function()
           assert(obj, path .. ' did not return a value')
           obj.code = obj.code or file:gsub('%.lua', '')
           obj.id = id
+          obj = f.exe(fn, obj) or obj
           data[type][id] = obj
           dst[obj.code] = obj
-          obj = f.exe(fn, obj) or obj
           id = id + 1
         end
       end
