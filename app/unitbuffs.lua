@@ -103,8 +103,9 @@ function UnitBuffs:reapply(code, vars)
     if buff.stacks then
       buff.stacks = math.min((buff.stacks or 1) + 1, buff.maxStacks or 1)
     end
+    return buff
   else
-    self:add(code, vars)
+    return self:add(code, vars)
   end
 end
 

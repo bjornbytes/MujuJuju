@@ -24,7 +24,7 @@ function Tremor:activate()
   self.spikeTargetY = ctx.map.height - ctx.map.groundHeight + 16
   self.spikes = {}
   for i = 1, self.spikeCount do
-    local height = 90 - (10 * i)
+    local height = 90 - (10 * math.min(i, 3))
     local y = self.spikeTargetY + height
     self.spikes[i] = {
       height = height,

@@ -5,7 +5,7 @@ Vigor.stack = true
 
 function Vigor:preattack(target, amount)
   local perStack = 5 + (5 * self.stacks)
-  return damage + (self.stacks * perStack)
+  return amount + (self.stacks * perStack)
 end
 
 return Vigor

@@ -1,8 +1,9 @@
 local WardOfThorns = extend(Ability)
 
 function WardOfThorns:prehurt(amount, source, kind)
+  if not source or not kind then return end
   local melee = source.range < 100
-  if kind and table.has(kind, 'attack') then
+  if table.has(kind, 'attack') then
     local reflects = {.10, .25, .45, .70, 1.00}
     local reflect = reflects[self.unit:upgradeLevel('wardofthorns')]
 

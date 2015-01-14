@@ -23,6 +23,8 @@ Thuju.upgrades = {
     costs = {100, 200, 300},
     name = 'Inspire',
     description = 'Thuju beats his chest, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
+    x = -1,
+    y = 0,
     values = {
       [1] = '+50% speed',
       [2] = '+50% speed, +50% armor',
@@ -40,6 +42,8 @@ Thuju.upgrades = {
     costs = {100, 150, 200, 250, 300},
     name = 'Ward of Thorns',
     description = 'Thuju reflects a portion of melee damage dealt to him.',
+    x = 0,
+    y = 0,
     values = {
       [1] = '10% reflected',
       [2] = '25% reflected',
@@ -59,6 +63,8 @@ Thuju.upgrades = {
     costs = {200, 300, 400},
     name = 'Tremor',
     description = 'Thuju slams the ground, damaging and stunning units in front of him.',
+    x = 1,
+    y = 0,
     values = {
       [1] = '30 damage, 1s stun',
       [2] = '60 damage, 2s stun',
@@ -77,6 +83,8 @@ Thuju.upgrades = {
     prerequisites = {wardofthorns = 1},
     name = 'Briar Lance',
     description = 'Ward of Thorns also reflects half the amount for ranged attacks.',
+    x = -1,
+    y = 1,
     values = {
       [1] = 'Reflect ranged attacks',
     }
@@ -88,6 +96,8 @@ Thuju.upgrades = {
     prerequisites = {wardofthorns = 1},
     name = 'Vigor',
     description = 'Each time Ward of Thorns is triggered, Thuju gains increased damage for 5 seconds.  This can stack multiple times.',
+    x = 0,
+    y = 1,
     values = {
       [1] = '+10 damage, up to 2 stacks.',
       [2] = '+15 damage, up to 3 stacks.',
@@ -101,6 +111,8 @@ Thuju.upgrades = {
     prerequisites = {tremor = 1},
     name = 'Fissure',
     description = 'The range of Tremor is increased.',
+    x = 1,
+    y = 1,
     values = {
       [0] = '180 range',
       [1] = '240 range',
@@ -115,6 +127,8 @@ Thuju.upgrades = {
     prerequisites = {impenetrablehide = 1, briarlance = 1},
     name = 'Unbreakable',
     description = 'The defensive bonus from Impenetrable Hide is increased against ranged attacks.',
+    x = -1,
+    y = 2,
     values = {
       [1] = '1.50x armor against ranged attacks',
     }
@@ -126,6 +140,8 @@ Thuju.upgrades = {
     prerequisites = {vigor = 1},
     name = 'Impenetrable Hide',
     description = 'Each stack of vigor also reduces the damage Thuju takes from attacks.',
+    x = 0,
+    y = 2,
     values = {
       [1] = '10% armor per stack',
       [2] = '15% armor per stack',
@@ -138,6 +154,8 @@ Thuju.upgrades = {
     costs = {1000},
     name = 'Alacrity',
     description = 'Each time Thuju is damaged by a spell or attack, the cooldown of Tremor and Inspire is reduced by 1 second.',
+    x = 1,
+    y = 2,
     values = {
       [1] = '1s per attack',
     },
@@ -153,6 +171,8 @@ Thuju.upgrades = {
     costs = {1500},
     name = 'Infused Carapace',
     description = 'Thuju takes 35% reduced damage from spells.',
+    x = -1,
+    y = 3,
     values = {
       [1] = '35% spell damage reduction',
     },
@@ -167,7 +187,9 @@ Thuju.upgrades = {
     maxLevel = 1,
     costs = {1500},
     name = 'Taunt',
-    description = 'Any enemies Thuju damage will immediately attack Thuju.',
+    description = 'Thuju taunts any enemies he attacks, forcing them to attack him.',
+    x = 0,
+    y = 3,
     values = {
       [1] = 'Taunt enemies',
     },
@@ -184,9 +206,16 @@ Thuju.upgrades = {
     prerequisites = {alacrity = 1},
     name = 'Staggering Entry',
     description = 'When Thuju is summoned, he casts all of his abilities (cooldowns are not triggered).',
+    x = 1,
+    y = 3,
     values = {
       [1] = '100% awesomeness',
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('staggeringentry')
+      end
+    end
   },
 }
 

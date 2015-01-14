@@ -77,6 +77,7 @@ function Unit:activate()
       end
     elseif event.data.name == 'spawn' then
       ctx.sound:play(data.media.sounds[self.class.code].spawn, function(sound) sound:setVolume(.5) end)
+      self:abilityCall('spawn')
     end
   end)
 
