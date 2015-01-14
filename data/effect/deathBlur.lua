@@ -1,3 +1,4 @@
+local g = love.graphics
 local DeathBlur = {}
 
 function DeathBlur:init()
@@ -13,7 +14,6 @@ end
 
 function DeathBlur:applyEffect(source, target)
 	if ctx.ded then
-		local g = love.graphics
 		self.hblur:send('amount', self.amount * .0008)
 		self.vblur:send('amount', self.amount * .0008 * (g.getWidth() / g.getHeight()))
 		g.setColor(255, 255, 255)
@@ -33,9 +33,11 @@ function DeathBlur:applyEffect(source, target)
 			g.setColor(0, 0, 0, math.min(self.amount * 120, 120))
 			g.rectangle('fill', 0, 0, source:getDimensions())
 		end)
-	end
-
-	source, target = target, source
+  else
+    g.setCanvas(target)
+    g.draw(source)
+    g.setCanvas()
+  end
 end
 
 function DeathBlur:resize()

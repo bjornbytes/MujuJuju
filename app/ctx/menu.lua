@@ -180,6 +180,7 @@ function Menu:load(selectedBiome)
 
   self.animations.thuju = data.animation.thuju({scale = .35})
   self.animations.bruju = data.animation.bruju({scale = .8})
+  self.animations.buju = data.animation.buju({scale = .8})
 
   self.animations.thuju:on('complete', function() self.animations.thuju:set('idle', {force = true}) end)
   self.animations.bruju:on('complete', function() self.animations.bruju:set('idle', {force = true}) end)
