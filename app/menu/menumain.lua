@@ -386,7 +386,7 @@ function MenuMain:draw()
 
   g.setColor(255, 255, 255)
   local x, y, w, h = unpack(self.geometry.play)
-  ctx:drawButton('Play', x, y, w, h)
+  ctx.button:draw('Play', x, y, w, h)
 
   if self.popup.time > 0 then
     local factor, t = self:getPopupFactor()

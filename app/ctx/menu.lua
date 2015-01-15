@@ -22,6 +22,7 @@ function Menu:load(selectedBiome)
 
   self.u, self.v = love.graphics.getDimensions()
   self.tooltip = Tooltip()
+  self.button = Button()
 
   self:initAnimations()
 
@@ -31,13 +32,6 @@ function Menu:load(selectedBiome)
   self.background2 = g.newCanvas(self.u, self.v)
   self.workingCanvas = g.newCanvas(self.u, self.v)
   self.unitCanvas = g.newCanvas(400, 400)
-
-  self.buttonHoverActive = false
-  self.buttonHoverFactor = 0
-  self.prevButtonHoverFactor = 0
-  self.buttonHoverX = nil
-  self.buttonHoverY = nil
-  self.buttonHoverDistance = 0
 
   self.page = Menu.started and ((not self.user or (#ctx.user.deck.minions == 0 and #ctx.user.minions == 0)) and 'choose' or 'main') or 'start'
 
@@ -54,22 +48,16 @@ end
 
 function Menu:update()
   self.tooltip:update()
+  self.button:update()
 
   self.prevBackgroundAlpha = self.backgroundAlpha
   self.backgroundAlpha = math.lerp(self.backgroundAlpha, 1, math.min(8 * tickRate, 1))
-
-  self.prevButtonHoverFactor = self.buttonHoverFactor
-  if self.buttonHoverActive then
-    self.buttonHoverFactor = math.lerp(self.buttonHoverFactor, 1, math.min(8 * tickRate, 1))
-  else
-    self.buttonHoverFactor = 0
-  end
 
   self.start:update()
   self.choose:update()
   self.main:update()
 
-  love.mouse.setCursor((self.buttonHoverFactor > 0 or self.tooltip.active) and self.cursorHover or self.cursor)
+  love.mouse.setCursor((self.button.hoverFactor > 0 or self.tooltip.active) and self.cursorHover or self.cursor)
 end
 
 function Menu:draw()
@@ -200,60 +188,4 @@ function Menu:initAnimations()
     self.animationTransforms[code] = {}
     self.prevAnimationTransforms[code] = {}
   end
-end
-
-function Menu:drawButton(text, x, y, w, h)
-
-  -- Button
-  local mx, my = love.mouse.getPosition()
-  local hover = math.inside(mx, my, x, y, w, h)
-  local active = hover and love.mouse.isDown('l')
-  local button = data.media.graphics.menu.button
-  local buttonActive = data.media.graphics.menu.buttonActive
-  local diff = (button:getHeight() - buttonActive:getHeight())
-  local image = active and buttonActive or button
-  local bgy = y + h
-  local yscale = h / button:getHeight()
-  g.draw(image, x, bgy, 0, w, yscale, 0, image:getHeight())
-
-  if hover then
-    if not self.buttonHoverActive then
-      self.buttonHoverX = mx
-      self.buttonHoverY = my
-      local d = math.distance
-      self.buttonHoverDistance = math.max(d(mx, my, x, y), d(mx, my, x + w, y), d(mx, my, x, y + h), d(mx, my, x + w, y + h))
-    end
-
-    g.setColor(255, 255, 255)
-    g.setStencil(function()
-      local y = active and y + diff * yscale or y
-      local h = active and h - diff * yscale or h - diff * yscale
-      g.rectangle('fill', x, y, w, h)
-    end)
-
-    local factor = math.lerp(self.prevButtonHoverFactor, self.buttonHoverFactor, tickDelta / tickRate)
-    g.setColor(255, 255, 255, 20)
-    g.setBlendMode('additive')
-    g.circle('fill', self.buttonHoverX, self.buttonHoverY, factor * self.buttonHoverDistance)
-    g.setBlendMode('alpha')
-
-    g.setColor(255, 255, 255, 10)
-    g.setBlendMode('subtractive')
-    g.circle('fill', self.buttonHoverX, self.buttonHoverY, (factor ^ 2) * self.buttonHoverDistance)
-    g.setBlendMode('alpha')
-
-    g.setStencil()
-
-    self.buttonHoverActive = true
-  else
-    self.buttonHoverActive = false
-  end
-
-  -- Text
-  if active then y = y + diff * yscale end
-  g.setFont('mesmerize', h * .55)
-  g.setColor(0, 0, 0, 100)
-  g.printCenter(text, x + w / 2 + 1, y + (h - diff * yscale) / 2 + 1)
-  g.setColor(255, 255, 255)
-  g.printCenter(text, x + w / 2, y + (h - diff * yscale) / 2)
 end

@@ -55,7 +55,7 @@ function MenuStart:draw()
     g.draw(image, u * .5, v * .3, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
 
     local x, y, w, h = unpack(self.geometry.start)
-    ctx:drawButton('Start', x, y, w, h)
+    ctx.button:draw('Start', x, y, w, h)
   end
 end
 
