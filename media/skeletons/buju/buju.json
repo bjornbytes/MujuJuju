@@ -1,8 +1,8 @@
 {
-"skeleton": { "hash": "eeX2cMYdFBKOLaSddioP4nCh9Ds", "spine": "2.0.23", "width": 295.06, "height": 355.21 },
+"skeleton": { "hash": "dK8VUbUXJDt5clDKTpMy/0iQ6Do", "spine": "2.1.08", "width": 280.99, "height": 359.01 },
 "bones": [
 	{ "name": "root" },
-	{ "name": "bone", "parent": "root", "x": 79.38, "y": 150.79 },
+	{ "name": "bone", "parent": "root", "x": 0.58, "y": 150.79 },
 	{ "name": "bone2", "parent": "bone", "length": 157.73, "x": -1.86, "rotation": -115.09 },
 	{ "name": "bone3", "parent": "bone", "length": 137.44, "x": 10.27, "y": -7.93, "rotation": -81.49 },
 	{ "name": "bone4", "parent": "bone", "length": 123.78, "x": -0.46, "y": -0.93, "rotation": 89.09 },
@@ -60,8 +60,14 @@
 		}
 	}
 },
+"events": {
+	"attack": {},
+	"deathjuju": {},
+	"stepone": {},
+	"steptwo": {}
+},
 "animations": {
-	"Attack": {
+	"attack": {
 		"bones": {
 			"bone": {
 				"rotate": [
@@ -363,9 +369,12 @@
 					{ "slot": "right arm lower2", "offset": 1 }
 				]
 			}
+		],
+		"events": [
+			{ "time": 0.5, "name": "attack" }
 		]
 	},
-	"Dash": {
+	"dash": {
 		"bones": {
 			"bone": {
 				"rotate": [
@@ -605,7 +614,69 @@
 			}
 		]
 	},
-	"Death": {
+	"death": {
+		"slots": {
+			"chest2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			},
+			"head2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			},
+			"left arm lower2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			},
+			"left arm upper2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			},
+			"left leg2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			},
+			"leftblade2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			},
+			"right arm lower2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			},
+			"right arm upper2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			},
+			"right leg2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			},
+			"rightblade2": {
+				"color": [
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.2333, "color": "ffffff00" }
+				]
+			}
+		},
 		"bones": {
 			"bone": {
 				"rotate": [
@@ -969,9 +1040,12 @@
 					{ "slot": "right arm lower2", "offset": 1 }
 				]
 			}
+		],
+		"events": [
+			{ "time": 1.0666, "name": "deathjuju" }
 		]
 	},
-	"Idle": {
+	"idle": {
 		"bones": {
 			"bone": {
 				"rotate": [
@@ -1188,7 +1262,8 @@
 			}
 		]
 	},
-	"Walk": {
+	"spawn": {},
+	"walk": {
 		"bones": {
 			"bone": {
 				"rotate": [
@@ -1428,6 +1503,10 @@
 					{ "slot": "right arm lower2", "offset": 1 }
 				]
 			}
+		],
+		"events": [
+			{ "time": 0, "name": "stepone" },
+			{ "time": 0.5, "name": "steptwo" }
 		]
 	}
 }
