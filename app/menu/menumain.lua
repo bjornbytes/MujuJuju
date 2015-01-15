@@ -7,7 +7,6 @@ local function lerpAnimation(code, key, val)
   ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * tickRate, 1))
 end
 
-
 function MenuMain:init()
   self.geometry = setmetatable({}, {__index = function(t, k)
     return rawset(t, k, self.geometryFunctions[k]())[k]
@@ -16,13 +15,13 @@ function MenuMain:init()
   self.geometryFunctions = {
     deck = function()
       local u, v = love.graphics.getDimensions()
-      local size = .3 * v
+      local size = .25 * v
       local inc = size + .2 * v
       local runeSize = .08 * v
       local runeInc = runeSize + .02 * v
       local x = u * .5 - inc * ((#ctx.user.deck.minions - 1) / 2)
-      local y = .4 * v
-      local runey = y - .25 * v
+      local y = .35 * v
+      local runey = y - .2 * v
       local res = {}
       for i = 1, #ctx.user.deck.minions do
         table.insert(res, {x, y, size / 2, {}})
@@ -69,14 +68,14 @@ function MenuMain:init()
 
     gutterMinions = function()
       local u, v = love.graphics.getDimensions()
-      local r = .08 * v
-      local inc = (r * 2) + .01 * v
-      local x = u * .3
-      local y = v * .1
+      local r = .06 * v
+      local inc = (r * 2) + .02 * v
+      local x = u * .09
+      local y = inc
       local res = {}
       for i = 1, #ctx.user.minions do
         table.insert(res, {x, y, r})
-        x = x + inc
+        y = y + inc
       end
       return res
     end,
@@ -114,7 +113,7 @@ function MenuMain:init()
       local frame = self.geometry.gutterRunesFrame
       local w, h = .2 * u, .13 * v
       local midx = (.6 + (.4 / 2)) * u
-      return {midx - w / 2, frame[2] + frame[4] - h - v * .05, w, h}
+      return {midx - w / 2, frame[2] + frame[4] / 2 - h / 2, w, h}
     end
   }
 
@@ -319,6 +318,22 @@ function MenuMain:draw()
   local x, y = unpack(self.geometry.gutterRunesLabel)
   g.print('Runes', x, y)
 
+  local gutterMinions = self.geometry.gutterMinions
+  for i = 1, #gutterMinions do
+    local code = ctx.user.minions[i]
+    local x, y, r = unpack(gutterMinions[i])
+    local cw, ch = ctx.unitCanvas:getDimensions()
+    ctx.unitCanvas:clear(0, 0, 0, 0)
+    ctx.unitCanvas:renderTo(function()
+      ctx.animations[code]:draw(cw / 2, ch / 2)
+    end)
+    local lerpd = {}
+    for k, v in pairs(ctx.animationTransforms[code]) do
+      lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+    end
+    g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
+  end
+
   local deck = self.geometry.deck
   g.setColor(255, 255, 255)
   for i = 1, #deck do
@@ -329,7 +344,19 @@ function MenuMain:draw()
     ctx.unitCanvas:renderTo(function()
       ctx.animations[code]:draw(cw / 2, ch / 2)
     end)
-    g.draw(ctx.unitCanvas, x, y, 0, 1, 1, cw / 2, ch / 2)
+    local lerpd = {}
+    for k, v in pairs(ctx.animationTransforms[code]) do
+      lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+    end
+
+    -- Stage
+    g.setColor(0, 0, 0, 100)
+    local xoff = .02 * v
+    local height = .04 * v
+    g.polygon('fill', lerpd.x - r - xoff, lerpd.y + r - height, lerpd.x + r + xoff, lerpd.y + r - height, lerpd.x + r, lerpd.y + r, lerpd.x - r, lerpd.y + r)
+
+    g.setColor(255, 255, 255)
+    g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
 
     for j = 1, #runes do
       local x, y, w, h = unpack(runes[j])
@@ -357,7 +384,7 @@ function MenuMain:draw()
     end
   end
 
-  g.setColor(255, 255, 255, 255)
+  g.setColor(255, 255, 255)
   local x, y, w, h = unpack(self.geometry.play)
   ctx:drawButton('Play', x, y, w, h)
 
@@ -448,18 +475,16 @@ function MenuMain:mousereleased(mx, my, b)
       end
     end
 
-    if self.popup.active then
-      local gutterMinions = self.geometry.gutterMinions
-      for i = 1, #gutterMinions do
-        if #ctx.user.deck.minions < 3 and math.insideCircle(mx, my, unpack(gutterMinions[i])) then
-          ctx.animations[ctx.user.minions[i]]:set('spawn')
-          table.insert(ctx.user.deck.minions, ctx.user.minions[i])
-          table.remove(ctx.user.minions, i)
-          ctx.user.deck.runes[#ctx.user.deck.minions] = {}
-          self.popup.active = false
-          table.clear(self.geometry)
-          saveUser(ctx.user)
-        end
+    local gutterMinions = self.geometry.gutterMinions
+    for i = 1, #gutterMinions do
+      if #ctx.user.deck.minions < 3 and math.insideCircle(mx, my, unpack(gutterMinions[i])) then
+        ctx.animations[ctx.user.minions[i]]:set('spawn')
+        table.insert(ctx.user.deck.minions, ctx.user.minions[i])
+        table.remove(ctx.user.minions, i)
+        ctx.user.deck.runes[#ctx.user.deck.minions] = {}
+        self.popup.active = false
+        table.clear(self.geometry)
+        saveUser(ctx.user)
       end
     end
   elseif b == 'r' then

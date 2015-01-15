@@ -110,6 +110,7 @@ function Menu:textinput(char)
 end
 
 function Menu:startGame()
+  if #self.user.deck.minions == 0 then return end
   if self.menuSounds then self.menuSounds:stop() end
   Context:remove(ctx)
   Context:add(Game, self.user, config.biomeOrder[self.main.selectedBiome])
@@ -185,9 +186,9 @@ function Menu:initAnimations()
   end)
 
   local scales = {
-    thuju = .5,
-    bruju = 1.1,
-    buju = .5
+    thuju = .4,
+    bruju = 1,
+    buju = .4
   }
 
   self.animationTransforms = {}
