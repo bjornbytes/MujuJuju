@@ -6,8 +6,8 @@ Menu.started = false
 
 function Menu:load(selectedBiome)
   data.load()
-	self.sound = Sound()
-	self.menuSounds = self.sound:loop('riteOfPassage')
+  self.sound = Sound()
+  self.menuSounds = self.sound:loop('riteOfPassage')
   self.cursor = love.mouse.newCursor('media/graphics/cursor.png')
   self.cursorHover = love.mouse.newCursor('media/graphics/cursorHover.png', 3, 2)
   love.mouse.setCursor(self.cursor)
