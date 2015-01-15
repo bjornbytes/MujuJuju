@@ -10,13 +10,13 @@ function MenuMain:init()
   self.geometryFunctions = {
     deck = function()
       local u, v = love.graphics.getDimensions()
-      local size = .2 * v
+      local size = .3 * v
       local inc = size + .2 * v
       local runeSize = .08 * v
       local runeInc = runeSize + .02 * v
-      local x = u * .3 - inc * ((#ctx.user.deck.minions - 1) / 2)
-      local y = .35 * v
-      local runey = y - .15 * v
+      local x = u * .5 - inc * ((#ctx.user.deck.minions - 1) / 2)
+      local y = .4 * v
+      local runey = y - .25 * v
       local res = {}
       for i = 1, #ctx.user.deck.minions do
         table.insert(res, {x, y, size / 2, {}})
@@ -201,7 +201,7 @@ function MenuMain:draw()
   if not self.active then return end
 
   local u, v = ctx.u, ctx.v
-  local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
+  --[=[local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
   local biomes = self.geometry.biomes
   for i = 1, #biomes do
     local biome = config.biomeOrder[i]
@@ -264,7 +264,7 @@ function MenuMain:draw()
     local factor = math.lerp(self.prevBiomeArrowScales[i], self.biomeArrowScales[i], tickDelta / tickRate)
     g.setColor(255, 255, 255)
     g.draw(image, x, y, 0, scale * (i == 2 and -1 or 1) * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
-  end
+  end]=]
 
   g.setColor(0, 0, 0, 100)
   g.rectangle('fill', unpack(self.geometry.gutterRunesFrame))

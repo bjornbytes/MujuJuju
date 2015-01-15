@@ -181,9 +181,9 @@ function Menu:initAnimations()
   end)
 
   -- TODO use a loop ya broad
-  self.animations.thuju = data.animation.thuju({scale = .35})
-  self.animations.bruju = data.animation.bruju({scale = .8})
-  self.animations.buju = data.animation.buju({scale = .8})
+  self.animations.thuju = data.animation.thuju({scale = .5})
+  self.animations.bruju = data.animation.bruju({scale = 1.1})
+  self.animations.buju = data.animation.buju({scale = 1})
 
   self.animations.thuju:on('complete', function() self.animations.thuju:set('idle', {force = true}) end)
   self.animations.bruju:on('complete', function() self.animations.bruju:set('idle', {force = true}) end)
