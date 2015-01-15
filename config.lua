@@ -97,12 +97,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .785,
+          exponent = .7,
           coefficient = 1
         },
         maximum = {
           base = 25,
-          exponent = .785,
+          exponent = .7,
           coefficient = 1.2
         }
       },
@@ -151,18 +151,18 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .785,
+          exponent = .7,
           coefficient = 1
         },
         maximum = {
           base = 25,
-          exponent = .785,
+          exponent = .7,
           coefficient = 1.2
         }
       },
       units = {
-        minEnemyRate = 12,
-        maxEnemyRate = 14,
+        minEnemyRate = 11,
+        maxEnemyRate = 13,
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
@@ -171,8 +171,8 @@ return {
         maxElites = 1,
         thresholds = {
           spuju = 0,
-          duju = 1200,
-          kuju = 1500
+          duju = 1100,
+          kuju = 1300
         },
         bosses = {{'spuju', 1800}}
       },
@@ -205,18 +205,18 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .785,
+          exponent = .7,
           coefficient = 1
         },
         maximum = {
           base = 25,
-          exponent = .785,
+          exponent = .7,
           coefficient = 1.2
         }
       },
       units = {
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
+        minEnemyRate = 9,
+        maxEnemyRate = 11,
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
@@ -259,18 +259,18 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .785,
+          exponent = .7,
           coefficient = 1
         },
         maximum = {
           base = 25,
-          exponent = .785,
+          exponent = .7,
           coefficient = 1.2
         }
       },
       units = {
-        minEnemyRate = 8,
-        maxEnemyRate = 10,
+        minEnemyRate = 7,
+        maxEnemyRate = 9,
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,

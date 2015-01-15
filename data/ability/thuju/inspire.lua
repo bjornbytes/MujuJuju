@@ -14,7 +14,7 @@ function Inspire:fire()
       timer = 3,
       haste = .5,
       armor = level >= 2 and .5 or 0,
-      frenzy = level >= 3 and .5 or 0
+      frenzy = level >= 3 and .3 or 0
     })
   end)
 

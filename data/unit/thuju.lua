@@ -20,7 +20,7 @@ Thuju.upgrades = {
   inspire = {
     level = 0,
     maxLevel = 3,
-    costs = {100, 200, 300},
+    costs = {200, 400, 600},
     name = 'Inspire',
     description = 'Thuju inspires allies when he is brought into battle, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
     x = -1,
@@ -28,7 +28,7 @@ Thuju.upgrades = {
     values = {
       [1] = '+50% speed',
       [2] = '+50% speed, +50% armor',
-      [3] = '+50% speed, +50% armor, +50% attack speed',
+      [3] = '+50% speed, +50% armor, +30% attack speed',
     },
     apply = function(self, unit)
       if self.level > 0 then

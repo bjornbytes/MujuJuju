@@ -492,10 +492,16 @@ function MenuMain:mousereleased(mx, my, b)
     for i = 1, #deck do
       local x, y, r, runes = unpack(deck[i])
       if math.insideCircle(mx, my, x, y, r) then
-        table.insert(ctx.user.minions, ctx.user.deck.minions[i])
+        local code = ctx.user.deck.minions[i]
+        table.insert(ctx.user.minions, code)
+        while ctx.user.deck.runes[i] and #ctx.user.deck.runes[i] > 0 do
+          table.insert(ctx.user.runes, ctx.user.deck.runes[i][1])
+          table.remove(ctx.user.deck.runes[i], 1)
+        end
+        ctx.user.deck.runes[i] = nil
         table.remove(ctx.user.deck.minions, i)
-        saveUser(ctx.user)
         table.clear(self.geometry)
+        saveUser(ctx.user)
         break
       end
       for j = 1, #runes do

@@ -203,7 +203,7 @@ function Game:nextBiome()
   end
   self.biome = config.biomeOrder[biomeIndex + 1]
 
-  self.units.level = self.units.level + 30
+  self.units.level = self.units.level + 75
 
   self.units:clear()
   self.spells:clear()
