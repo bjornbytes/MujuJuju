@@ -339,9 +339,10 @@ function MenuMain:draw()
 
   g.setColor(255, 255, 255, 255)
   local x, y, w, h = unpack(self.geometry.play)
-  local image = data.media.graphics.menu.play
+  --[[local image = data.media.graphics.menu.play
   local scale = math.min(h / image:getHeight(), w / image:getWidth())
-  g.draw(image, x + w / 2, y + h, 0, scale, scale, image:getWidth() / 2, image:getHeight())
+  g.draw(image, x + w / 2, y + h, 0, scale, scale, image:getWidth() / 2, image:getHeight())]]
+  ctx:drawButton('Play', x, y, w, h)
 
   if self.popup.time > 0 then
     local factor, t = self:getPopupFactor()
@@ -409,10 +410,15 @@ function MenuMain:keypressed(key)
 end
 
 function MenuMain:mousepressed(mx, my, b)
+  --
+end
+
+function MenuMain:mousereleased(mx, my, b)
   if not self.active then return end
   if b == 'l' then
     local play = self.geometry.play
     if math.inside(mx, my, unpack(self.geometry.play)) then
+      ctx.sound:play('menuClick')
       ctx.animations.muju:set('death')
     end
 
@@ -473,10 +479,6 @@ function MenuMain:mousepressed(mx, my, b)
       end
     end
   end
-end
-
-function MenuMain:mousereleased(mx, my, b)
-
 end
 
 function MenuMain:previousBiome()

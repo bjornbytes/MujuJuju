@@ -173,3 +173,26 @@ function Menu:initAnimations()
   self.animations.bruju:on('complete', function() self.animations.bruju:set('idle', {force = true}) end)
   self.animations.buju:on('complete', function() self.animations.buju:set('idle', {force = true}) end)
 end
+
+function Menu:drawButton(text, x, y, w, h)
+
+  -- Button
+  local mx, my = love.mouse.getPosition()
+  local hover = math.inside(mx, my, x, y, w, h)
+  local active = hover and love.mouse.isDown('l')
+  local button = data.media.graphics.menu.button
+  local buttonActive = data.media.graphics.menu.buttonActive
+  local image = active and buttonActive or button
+  local bgy = y + h
+  local yscale = h / button:getHeight()
+  g.draw(image, x, bgy, 0, w, yscale, 0, image:getHeight())
+
+  -- Text
+  local diff = (button:getHeight() - buttonActive:getHeight())
+  if active then y = y + diff * yscale end
+  g.setFont('mesmerize', h * .55)
+  g.setColor(0, 0, 0, 100)
+  g.printCenter(text, x + w / 2 + 1, y + (h - diff * yscale) / 2 + 1)
+  g.setColor(255, 255, 255)
+  g.printCenter(text, x + w / 2, y + (h - diff * yscale) / 2)
+end

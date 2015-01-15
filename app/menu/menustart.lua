@@ -55,9 +55,10 @@ function MenuStart:draw()
     g.draw(image, u * .5, v * .3, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
 
     local x, y, w, h = unpack(self.geometry.start)
-    local image = data.media.graphics.menu.start
+    --[[local image = data.media.graphics.menu.start
     local scale = w / image:getWidth()
-    g.draw(image, x, y, 0, scale, scale)
+    g.draw(image, x, y, 0, scale, scale)]]
+    ctx:drawButton('Start', x, y, w, h)
   end
 end
 
@@ -69,11 +70,13 @@ function MenuStart:keypressed(key)
 end
 
 function MenuStart:mousepressed(mx, my, b)
+  --
 end
 
 function MenuStart:mousereleased(mx, my, b)
   if not self.active then return end
   if math.inside(mx, my, unpack(self.geometry.start)) then
+    ctx.sound:play('menuClick')
     self:start()
   end
 end
