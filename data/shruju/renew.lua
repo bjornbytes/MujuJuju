@@ -1,14 +1,14 @@
 local Renew = extend(Shruju)
 
 Renew.name = 'Renew'
-Renew.description = 'On use, heals your shrine for 10% of its maximum health'
-Renew.rarity = 4
+Renew.description = 'On use, heals your shrine for 20% of its maximum health'
+Renew.rarity = 2
 
 function Renew:activate()
   local p = ctx.player
   local _, shrine = next(ctx.shrines:filter(function(s) return s.team == p.team end))
   if shrine then
-    shrine.health = math.min(shrine.health + shrine.maxHealth * .1, shrine.maxHealth)
+    shrine.health = math.min(shrine.health + shrine.maxHealth * .2, shrine.maxHealth)
   end
 
   ctx.spells:add('arcadetext', {
