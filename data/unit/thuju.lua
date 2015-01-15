@@ -22,7 +22,7 @@ Thuju.upgrades = {
     maxLevel = 3,
     costs = {100, 200, 300},
     name = 'Inspire',
-    description = 'Thuju beats his chest, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
+    description = 'Thuju inspires allies when he is brought into battle, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
     x = -1,
     y = 0,
     values = {
@@ -205,7 +205,7 @@ Thuju.upgrades = {
     costs = {1000},
     prerequisites = {alacrity = 1},
     name = 'Staggering Entry',
-    description = 'When Thuju is summoned, he casts all of his abilities (cooldowns are not triggered).',
+    description = 'When Thuju is summoned, he casts Tremor (cooldowns are not triggered).',
     x = 1,
     y = 3,
     values = {

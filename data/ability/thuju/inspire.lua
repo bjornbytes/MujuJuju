@@ -1,17 +1,8 @@
 local Inspire = extend(Ability)
 
-function Inspire:activate()
-  self.unit.animation:on('event', function(event)
-    if event.data.name == 'taunt' then
-      self:fire()
-    end
-  end)
-end
-
-function Inspire:use()
-  self.unit.animation:set('taunt')
-  self.unit.casting = true
-  self.timer = 12
+function Inspire:spawn()
+  self:fire()
+  self.timer = 1000
 end
 
 function Inspire:fire()

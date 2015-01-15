@@ -161,22 +161,22 @@ return {
         }
       },
       units = {
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
+        minEnemyRate = 12,
+        maxEnemyRate = 14,
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
-        levelScale = 1.25,
+        levelScale = 1.1,
         upgradeCostIncrease = 1,
         maxElites = 1,
         thresholds = {
           spuju = 0,
-          duju = 150,
-          kuju = 300
+          duju = 1200,
+          kuju = 1500
         },
         bosses = {{'spuju', 1800}}
       },
-      shrujuPatches = {60, 450},
+      shrujuPatches = {},
       runes = {
         maxLevel = 25,
         specialChance = .1
@@ -215,22 +215,22 @@ return {
         }
       },
       units = {
-        minEnemyRate = 8,
-        maxEnemyRate = 10,
+        minEnemyRate = 10,
+        maxEnemyRate = 12,
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
-        levelScale = 1.5,
+        levelScale = 1.25,
         upgradeCostIncrease = 1,
         maxElites = 2,
         thresholds = {
           kuju = 0,
-          spuju = 600,
-          duju = 600
+          spuju = 2100,
+          duju = 2400
         },
         bosses = {{'kuju', 2700}}
       },
-      shrujuPatches = {60, 450},
+      shrujuPatches = {},
       runes = {
         maxLevel = 75,
         specialChance = .1
@@ -269,12 +269,12 @@ return {
         }
       },
       units = {
-        minEnemyRate = 6,
-        maxEnemyRate = 8,
+        minEnemyRate = 8,
+        maxEnemyRate = 10,
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
-        levelScale = 1.75,
+        levelScale = 1.5,
         upgradeCostIncrease = 1,
         maxElites = 3,
         thresholds = {
@@ -284,7 +284,7 @@ return {
         },
         bosses = {{'duju', 3600}, {'spuju', 3600}, {'kuju', 3600}}
       },
-      shrujuPatches = {60, 450},
+      shrujuPatches = {},
       runes = {
         maxLevel = 100,
         specialChance = .1
