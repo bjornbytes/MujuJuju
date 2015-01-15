@@ -13,7 +13,7 @@ Buju.states.spawn = {
 Buju.states.idle = {
   priority = 1,
   loop = true,
-  speed = .21
+  speed = 1
 }
 
 Buju.states.walk = {
