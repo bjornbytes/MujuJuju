@@ -339,9 +339,6 @@ function MenuMain:draw()
 
   g.setColor(255, 255, 255, 255)
   local x, y, w, h = unpack(self.geometry.play)
-  --[[local image = data.media.graphics.menu.play
-  local scale = math.min(h / image:getHeight(), w / image:getWidth())
-  g.draw(image, x + w / 2, y + h, 0, scale, scale, image:getWidth() / 2, image:getHeight())]]
   ctx:drawButton('Play', x, y, w, h)
 
   if self.popup.time > 0 then
