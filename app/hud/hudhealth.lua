@@ -247,7 +247,7 @@ function HudHealth:draw()
         if next(elitebuffs) then
           local string = ''
           table.each(elitebuffs, function(buff)
-            string = string .. buff.name .. ' '
+            string = string .. buff.code:capitalize() .. ' '
           end)
           g.setFont('pixel', 8)
           local texty = y + data.media.graphics.healthbarBar:getHeight() * scale / 2 - g.getFont():getHeight() / 2
