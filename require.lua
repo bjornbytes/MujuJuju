@@ -18,6 +18,7 @@ load 'lib/deps/slam'
 load 'lib'
 
 load 'app/hud'
+load 'app/menu'
 
 load 'app/enemies'
 load 'app/minions'

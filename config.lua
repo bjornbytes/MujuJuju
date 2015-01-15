@@ -54,6 +54,25 @@ return {
     }
   },
 
+  player = {
+    baseCooldown = 5,
+    minCooldown = .75,
+    globalCooldown = 3,
+    baseJuju = 30,
+    jujuRate = 1,
+    basePopulation = 3,
+    maxPopulation = 10,
+    colors = {
+      purple = {.5, 0, 1},
+      red = {1, 0, 0},
+      blue = {0, 0, 1},
+      green = {0, 1, 0},
+      black = {0, 0, 0},
+      white = {1, 1, 1}
+    },
+    colorOrder = {'purple', 'red', 'blue', 'green', 'black', 'white'}
+  },
+
   shruju = {
     growTime = 60,
     minGrowTime = 20,
@@ -85,15 +104,6 @@ return {
           exponent = .785,
           coefficient = 1.2
         }
-      },
-      player = {
-        baseCooldown = 5,
-        minCooldown = .75,
-        globalCooldown = 3,
-        baseJuju = 30,
-        jujuRate = 1,
-        basePopulation = 3,
-        maxPopulation = 10
       },
       units = {
         minEnemyRate = 14,
@@ -149,15 +159,6 @@ return {
           coefficient = 1.2
         }
       },
-      player = {
-        baseCooldown = 5,
-        minCooldown = .75,
-        globalCooldown = 3,
-        baseJuju = 30,
-        jujuRate = 1,
-        basePopulation = 3,
-        maxPopulation = 10
-      },
       units = {
         minEnemyRate = 10,
         maxEnemyRate = 12,
@@ -212,15 +213,6 @@ return {
           coefficient = 1.2
         }
       },
-      player = {
-        baseCooldown = 5,
-        minCooldown = .75,
-        globalCooldown = 3,
-        baseJuju = 30,
-        jujuRate = 1,
-        basePopulation = 3,
-        maxPopulation = 10
-      },
       units = {
         minEnemyRate = 8,
         maxEnemyRate = 10,
@@ -274,15 +266,6 @@ return {
           exponent = .785,
           coefficient = 1.2
         }
-      },
-      player = {
-        baseCooldown = 5,
-        minCooldown = .75,
-        globalCooldown = 3,
-        baseJuju = 30,
-        jujuRate = 1,
-        basePopulation = 3,
-        maxPopulation = 10
       },
       units = {
         minEnemyRate = 6,
@@ -380,6 +363,8 @@ return {
     runes = {},
     deck = {minions = {}, runes = {}},
     biomes = {'forest'},
-    highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0}
+    highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0},
+    name = 'Muju',
+    color = 'purple'
   }
 }

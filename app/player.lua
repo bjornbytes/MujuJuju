@@ -25,10 +25,10 @@ function Player:init()
   self.dead = false
   self.deathTimer = 0
 
-  self.juju = config.biomes[ctx.biome].player.baseJuju
+  self.juju = config.player.baseJuju
   self.totalJuju = 0
-  self.jujuTimer = config.biomes[ctx.biome].player.jujuRate
-  self.jujuRate = config.biomes[ctx.biome].player.jujuRate
+  self.jujuTimer = config.player.jujuRate
+  self.jujuRate = config.player.jujuRate
 
   self.shruju = {}
 
@@ -36,7 +36,7 @@ function Player:init()
 	self.prevy = self.y
 
 	self.selected = 1
-  self.maxPopulation = config.biomes[ctx.biome].player.basePopulation
+  self.maxPopulation = config.player.basePopulation
   self.totalSummoned = 0
 	self.recentSelect = 0
 	self.invincible = 0
@@ -59,9 +59,8 @@ function Player:activate()
   end)
 
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
-    self.animation.spine.skeleton:findSlot(slot).r = .5
-    self.animation.spine.skeleton:findSlot(slot).g = 0
-    self.animation.spine.skeleton:findSlot(slot).b = 1
+    local slot = self.animation.spine.skeleton:findSlot(slot)
+    slot.r, slot.g, slot.b = unpack(config.player.colors[ctx.user.color])
   end
 
   self:initDeck()
@@ -215,10 +214,10 @@ function Player:summon()
 
     for i = 1, #self.deck do
       if i == self.selected then
-        self.deck[i].cooldown = math.max(config.biomes[ctx.biome].player.baseCooldown - self.flatCooldownReduction, config.biomes[ctx.biome].player.minCooldown)
+        self.deck[i].cooldown = math.max(config.player.baseCooldown - self.flatCooldownReduction, config.player.minCooldown)
         self.deck[i].maxCooldown = self.deck[i].cooldown
       else
-        local cd = math.max(config.biomes[ctx.biome].player.globalCooldown - self.flatCooldownReduction, config.biomes[ctx.biome].player.minCooldown)
+        local cd = math.max(config.player.globalCooldown - self.flatCooldownReduction, config.player.minCooldown)
         if cd > self.deck[i].cooldown then
           self.deck[i].cooldown = cd
           self.deck[i].maxCooldown = cd
