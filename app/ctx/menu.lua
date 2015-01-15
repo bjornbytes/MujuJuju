@@ -7,7 +7,7 @@ Menu.started = false
 function Menu:load(selectedBiome)
   data.load()
 	self.sound = Sound()
-	self.menuSounds = self.sound:loop('menu')
+	self.menuSounds = self.sound:loop('riteOfPassage')
 	love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor.png'))
 
   if not love.filesystem.exists('save/user.json') then
@@ -37,13 +37,15 @@ function Menu:load(selectedBiome)
   self.buttonHoverY = nil
   self.buttonHoverDistance = 0
 
+  self.page = Menu.started and ((not self.user or (#ctx.user.deck.minions == 0 and #ctx.user.minions == 0)) and 'choose' or 'main') or 'start'
+
   self.start = MenuStart()
   self.choose = MenuChoose()
   self.main = MenuMain()
 
-  self.main.selectedBiome = selectedBiome or self.main.selectedBiome
+  if self.page ~= 'start' then self:refreshBackground() end
 
-  self.page = 'start'
+  self.main.selectedBiome = selectedBiome or self.main.selectedBiome
 
   love.keyboard.setKeyRepeat(true)
 end
