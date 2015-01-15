@@ -1,6 +1,7 @@
 require 'require'
 
 function love.load()
+  data.load()
   config = love.filesystem.load('config.lua')()
 
   function saveUser(user)
