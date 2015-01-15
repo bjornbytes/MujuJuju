@@ -11,9 +11,9 @@ function HudWon:init()
     continue = function()
       local u, v = ctx.hud.u, ctx.hud.v
       local x = .5 * u
-      local y = .5 * v
-      local w = .3 * v
-      local h = w / 1.6
+      local y = .4 * v
+      local w = .35 * v
+      local h = .1 * v
 
       return {x - w / 2, y - h / 2, w, h}
     end
@@ -30,12 +30,8 @@ function HudWon:draw()
   local u, v = ctx.hud.u, ctx.hud.v
 
   local x, y, w, h = unpack(self.geometry.continue)
-  g.setColor(0, 0, 0, 100)
-  g.rectangle('fill', x, y, w, h)
-
-  g.setFont('mesmerize', .06 * v)
   g.setColor(255, 255, 255)
-  g.printCenter('Continue', x + w / 2, y + h / 2)
+  ctx.hud.button:draw('Continue', x, y, w, h)
 end
 
 function HudWon:mousepressed(mx, my, b)
