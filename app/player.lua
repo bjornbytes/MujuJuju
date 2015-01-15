@@ -94,8 +94,8 @@ function Player:update()
 
 	self:hurt(self.maxHealth * .033 * tickRate)
 
-  self.maxHealth = self.maxHealth + (.25 * tickRate)
-  self.health = self.health + (.25 * tickRate)
+  self.maxHealth = self.maxHealth + (.35 * tickRate)
+  self.health = self.health + (.35 * tickRate)
 
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
