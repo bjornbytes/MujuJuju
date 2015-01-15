@@ -99,10 +99,12 @@ function Player:update()
 
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
-	self.jujuTimer = timer.rot(self.jujuTimer, function()
-    self:addJuju(1)
-		return self.jujuRate
-	end)
+  if not ctx.won then
+    self.jujuTimer = timer.rot(self.jujuTimer, function()
+      self:addJuju(1)
+      return self.jujuRate
+    end)
+  end
 
   for i = 1, #self.deck do
     self.deck[i].cooldown = timer.rot(self.deck[i].cooldown, function()
