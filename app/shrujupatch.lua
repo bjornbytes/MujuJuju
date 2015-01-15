@@ -123,15 +123,19 @@ function ShrujuPatch:removeType(code)
 end
 
 function ShrujuPatch:randomizeSlot(index)
-  local random = love.math.random() * self.weightSum
   local code = nil
-  for i = 1, #self.types do
-    local rarity = data.shruju[self.types[i]].rarity
-    if random < rarity then
-      code = self.types[i]
-      break
+  self.slots[index] = nil
+
+  while not code do
+    local random = love.math.random() * self.weightSum
+    for i = 1, #self.types do
+      local rarity = data.shruju[self.types[i]].rarity
+      if random < rarity then
+        if not table.has(self.slots, code) or love.math.random() < .5 then code = self.types[i] end
+        break
+      end
+      random = random - rarity
     end
-    random = random - rarity
   end
 
   self.slots[index] = code
