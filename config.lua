@@ -117,8 +117,8 @@ return {
         maxElites = 1,
         thresholds = {
           duju = 0,
-          spuju = 180,
-          kuju = 600
+          spuju = 360,
+          kuju = 720
         },
         bosses = {{'duju', 900}}
       },
