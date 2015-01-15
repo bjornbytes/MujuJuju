@@ -32,14 +32,10 @@ data.load = function()
 		return halp
 	end
 
-  local function loadSound(path)
-    return love.audio.newSource(path, love.filesystem.getSize(path) > 1e5 and 'stream' or 'static')
-  end
-
   data.media = {}
 	data.media.graphics = setmetatable({_path = 'media/graphics'}, {__index = lookup({'.png', '.dds'}, love.graphics and love.graphics.newImage or f.empty)})
 	data.media.shaders = setmetatable({_path = 'media/shaders'}, {__index = lookup('.shader', love.graphics and love.graphics.newShader or f.empty)})
-	data.media.sounds = setmetatable({_path = 'media/sounds'}, {__index = lookup('.ogg', love.audio and loadSound or f.empty)})
+	data.media.sounds = setmetatable({_path = 'media/sounds'}, {__index = lookup('.ogg', love.audio and love.audio.newSource or f.empty)})
 
   -- Data
   local function load(dir, type, fn)
