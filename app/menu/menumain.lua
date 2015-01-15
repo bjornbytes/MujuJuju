@@ -2,6 +2,12 @@ local g = love.graphics
 local tween = require 'lib/deps/tween/tween'
 MenuMain = class()
 
+local function lerpAnimation(code, key, val)
+  ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
+  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * tickRate, 1))
+end
+
+
 function MenuMain:init()
   self.geometry = setmetatable({}, {__index = function(t, k)
     return rawset(t, k, self.geometryFunctions[k]())[k]
@@ -64,9 +70,9 @@ function MenuMain:init()
     gutterMinions = function()
       local u, v = love.graphics.getDimensions()
       local r = .08 * v
-      local inc = (r * 2) + .02 * v
-      local x = self.popup.x - (inc * (#ctx.user.minions - 1 ) / 2)
-      local y = self.popup.y
+      local inc = (r * 2) + .01 * v
+      local x = u * .3
+      local y = v * .1
       local res = {}
       for i = 1, #ctx.user.minions do
         table.insert(res, {x, y, r})
@@ -166,6 +172,10 @@ function MenuMain:update()
     local code = ctx.user.deck.minions[i]
     local x, y, r, runes = unpack(deck[i])
 
+    lerpAnimation(code, 'scale', 1)
+    lerpAnimation(code, 'x', x)
+    lerpAnimation(code, 'y', y)
+
     if math.insideCircle(mx, my, x, y, r) then
       ctx.tooltip:setUnitTooltip(code)
       break
@@ -177,6 +187,16 @@ function MenuMain:update()
         end
       end
     end
+  end
+
+  local gutterMinions = self.geometry.gutterMinions
+  for i = 1, #gutterMinions do
+    local code = ctx.user.minions[i]
+    local x, y, r = unpack(gutterMinions[i])
+
+    lerpAnimation(code, 'scale', .5)
+    lerpAnimation(code, 'x', x)
+    lerpAnimation(code, 'y', y)
   end
 
   local gutterRunes = self.geometry.gutterRunes

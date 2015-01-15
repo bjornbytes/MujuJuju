@@ -184,14 +184,21 @@ function Menu:initAnimations()
     end
   end)
 
-  -- TODO use a loop ya broad
-  self.animations.thuju = data.animation.thuju({scale = .5})
-  self.animations.bruju = data.animation.bruju({scale = 1.1})
-  self.animations.buju = data.animation.buju({scale = 1})
+  local scales = {
+    thuju = .5,
+    bruju = 1.1,
+    buju = .5
+  }
 
-  self.animations.thuju:on('complete', function() self.animations.thuju:set('idle', {force = true}) end)
-  self.animations.bruju:on('complete', function() self.animations.bruju:set('idle', {force = true}) end)
-  self.animations.buju:on('complete', function() self.animations.buju:set('idle', {force = true}) end)
+  self.animationTransforms = {}
+  self.prevAnimationTransforms = {}
+
+  for _, code in pairs(config.starters) do
+    self.animations[code] = data.animation[code]({scale = scales[code]})
+    self.animations[code]:on('complete', function() self.animations[code]:set('idle', {force = true}) end)
+    self.animationTransforms[code] = {}
+    self.prevAnimationTransforms[code] = {}
+  end
 end
 
 function Menu:drawButton(text, x, y, w, h)

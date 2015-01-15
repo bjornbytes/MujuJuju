@@ -2,7 +2,8 @@ return {
 
   starters = {
     'bruju',
-    'thuju'
+    'thuju',
+    'buju'
   },
 
   enemies = {
