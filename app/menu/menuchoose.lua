@@ -11,13 +11,13 @@ function MenuChoose:init()
     minions = function()
       local u, v = ctx.u, ctx.v
       local minions = config.starters
-      local size = .2 * v
+      local size = .1 * v
       local inc = (size * 2) + .1 * v
       local x = u * .5 - inc * ((#minions - 1) / 2)
       local y = .65 * v
       local res = {}
       for i = 1, #minions do
-        table.insert(res, {x, y, size / 2})
+        table.insert(res, {x, y, size})
         x = x + inc
       end
       return res
@@ -122,7 +122,9 @@ function MenuChoose:mousepressed(mx, my, b)
     for i = 1, #minions do
       local x, y, r = unpack(minions[i])
       if math.distance(mx, my, x, y) < r then
-        ctx.user.minions = ctx.user.minions or {}
+        for j = 1, #ctx.user.minions do
+          if ctx.user.minions[j] == config.starters[i] then table.remove(ctx.user.minions, j) break end
+        end
         ctx.user.deck.minions = {config.starters[i]}
         ctx.user.deck.runes[1] = {}
         saveUser(ctx.user)

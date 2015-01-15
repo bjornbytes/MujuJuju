@@ -15,6 +15,7 @@ function Menu:load(selectedBiome)
   if not love.filesystem.exists('save/user.json') then
     love.filesystem.createDirectory('save')
     love.filesystem.write('save/user.json', json.encode(config.defaultUser))
+    self.page = 'choose'
   end
 
   local str = love.filesystem.read('save/user.json')
@@ -33,7 +34,7 @@ function Menu:load(selectedBiome)
   self.workingCanvas = g.newCanvas(self.u, self.v)
   self.unitCanvas = g.newCanvas(400, 400)
 
-  self.page = Menu.started and ((not self.user or (#ctx.user.deck.minions == 0 and #ctx.user.minions == 0)) and 'choose' or 'main') or 'start'
+  self.page = self.page or (Menu.started and 'main' or 'start')
 
   self.start = MenuStart()
   self.choose = MenuChoose()
@@ -164,7 +165,7 @@ function Menu:initAnimations()
   self.animations.muju = data.animation.muju({scale = .8, default = 'resurrect'})
   self.animations.muju.flipped = true
   self.animations.muju:on('complete', function(data)
-    if data.state.name == 'resurrect' then self.animations.muju:set('idle', {force = true}) end
+    self.animations.muju:set('idle', {force = true})
   end)
 
   self.animations.muju:on('event', function(data)

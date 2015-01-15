@@ -334,6 +334,11 @@ function MenuMain:draw()
     g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
   end
 
+  if #ctx.user.deck.minions >= ctx.user.deckSlots then g.setColor(255, 100, 100)
+  else g.setColor(255, 255, 255) end
+  g.setFont('mesmerize', .02 * v)
+  g.printCenter(#ctx.user.deck.minions .. ' / ' .. ctx.user.deckSlots, u * .5, .04 * v)
+
   local deck = self.geometry.deck
   g.setColor(255, 255, 255)
   for i = 1, #deck do
@@ -477,7 +482,7 @@ function MenuMain:mousereleased(mx, my, b)
 
     local gutterMinions = self.geometry.gutterMinions
     for i = 1, #gutterMinions do
-      if #ctx.user.deck.minions < 3 and math.insideCircle(mx, my, unpack(gutterMinions[i])) then
+      if #ctx.user.deck.minions < ctx.user.deckSlots and math.insideCircle(mx, my, unpack(gutterMinions[i])) then
         ctx.animations[ctx.user.minions[i]]:set('spawn')
         table.insert(ctx.user.deck.minions, ctx.user.minions[i])
         table.remove(ctx.user.minions, i)

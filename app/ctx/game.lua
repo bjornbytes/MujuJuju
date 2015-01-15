@@ -167,34 +167,15 @@ function Game:distribute()
   end
 
   saveUser(self.user)
-
-  -- Distribute minions
-  --[[if self.user.highscores[self.biome] < config.biomes[self.biome].benchmarks.gold then
-    local minions = table.copy(self.user.minions)
-    for i = 1, #self.user.deck.minions do table.insert(minions, self.user.deck.minions[i]) end
-    if #config.starters > #minions then
-      local idx = love.math.random(1, #config.starters)
-      for i = 1, 100 do
-        local minion = config.starters[idx]
-        if not table.has(minions, minion) then
-          table.insert(self.user.deck.minions, minion)
-          table.insert(self.rewards.minions, minion)
-          saveUser(self.user)
-          break
-        end
-        idx = love.math.random(1, #config.starters)
-      end
-    end
-  end]]
-
-  --[[if time > self.user.highscores[self.biome] then
-    self.user.highscores[self.biome] = time
-    self.rewards.highscore = true
-    saveUser(self.user)
-  end]]
 end
 
 function Game:nextBiome()
+  if not self.user.completed[self.biome] then
+    self.user.deckSlots = math.min(self.user.deckSlots + 1, 3)
+    self.user.completed[self.biome] = true
+    saveUser(self.user)
+  end
+
   local biomeIndex
   for i = 1, #config.biomeOrder do if config.biomeOrder[i] == self.biome then biomeIndex = i break end end
   if not config.biomeOrder[biomeIndex + 1] then
