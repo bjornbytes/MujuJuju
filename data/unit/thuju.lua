@@ -82,11 +82,11 @@ Thuju.upgrades = {
     costs = {500},
     prerequisites = {wardofthorns = 1},
     name = 'Briar Lance',
-    description = 'Ward of Thorns also reflects half the amount for ranged attacks.',
+    description = 'Ward of Thorns also reflects a reduced amount for ranged attacks.',
     x = -1,
     y = 1,
     values = {
-      [1] = 'Reflect ranged attacks',
+      [1] = 'Reflect ranged attacks (75% normal reflect)',
     }
   },
   vigor = {

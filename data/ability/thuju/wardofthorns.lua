@@ -26,7 +26,7 @@ function WardOfThorns:prehurt(amount, source, kind)
       source:hurt(amount * reflect, self.unit)
       applyVigor()
     elseif self.unit:upgradeLevel('briarlance') > 0 then
-      source:hurt(amount * reflect * .5, self.unit)
+      source:hurt(amount * reflect * .75, self.unit)
       applyVigor()
     end
   end
