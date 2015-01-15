@@ -16,7 +16,7 @@ function Player:init()
   self.speed = 0
   self.walkSpeed = Player.walkSpeed
 
-  self.maxHealth = 100
+  self.maxHealth = 250
   self.health = self.maxHealth
   self.healthDisplay = self.health
   self.prevHealthDisplay = self.healthDisplay

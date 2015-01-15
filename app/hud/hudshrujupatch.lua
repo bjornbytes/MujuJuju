@@ -26,7 +26,7 @@ function HudShrujuPatch:init(patch)
       local u, v = ctx.hud.u, ctx.hud.v
       local ct = #self.patch.slots
       local factor, t = self:getFactor()
-      local length = (.1 + (.2 * factor)) * v
+      local length = (.1 + (.3 * factor)) * v
       local angleIncrement = .35
       local angle = (-math.pi / 2) - (angleIncrement * (ct - 1) / 2)
 
@@ -58,6 +58,8 @@ function HudShrujuPatch:update()
   local mx, my = love.mouse.getPosition()
 
   if self.patch and #self.patch.slots ~= self.geometry.slots then self.geometry.slots = nil end
+
+  self.active = true
 
   if not self:playerNearby() then
     self.active = false
@@ -131,7 +133,7 @@ function HudShrujuPatch:draw()
       g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
       local image = data.media.graphics.hud.title
-      local scale = (w + 5) / 125
+      local scale = (w + 20) / 125
       g.draw(image, x + (w / 2), y + (120 * scale), 0, scale, scale, image:getWidth() / 2)
 
       g.setFont('pixel', 8)
@@ -162,7 +164,7 @@ function HudShrujuPatch:draw()
         g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
         local image = data.media.graphics.hud.title
-        local scale = (w + 5) / data.media.graphics.hud.frame:getWidth()
+        local scale = (w + 20) / data.media.graphics.hud.frame:getWidth()
         g.setColor(255, 255, 255, (self.patch.growing and 80 or 255) * growingFactor)
         g.draw(image, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
 

@@ -307,7 +307,10 @@ function HudUnits:mousereleased(mx, my, b)
           attribute.level = attribute.level + 1
           table.each(ctx.units.objects, function(unit)
             if unit.class.code == p.deck[i].code then
-              unit[attribute.stat] = unit[attribute.stat] + attribute.level * attribute.amount
+              unit[attribute.stat] = unit[attribute.stat] + attribute.amount
+              if attribute.stat == 'health' then
+                unit.maxHealth = unit.maxHealth + attribute.amount
+              end
             end
           end)
         else
