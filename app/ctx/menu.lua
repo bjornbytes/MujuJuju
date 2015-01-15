@@ -225,6 +225,11 @@ function Menu:drawButton(text, x, y, w, h)
     g.circle('fill', self.buttonHoverX, self.buttonHoverY, factor * self.buttonHoverDistance)
     g.setBlendMode('alpha')
 
+    g.setColor(255, 255, 255, 10)
+    g.setBlendMode('subtractive')
+    g.circle('fill', self.buttonHoverX, self.buttonHoverY, (factor ^ 2) * self.buttonHoverDistance)
+    g.setBlendMode('alpha')
+
     g.setStencil()
 
     self.buttonHoverActive = true
