@@ -45,11 +45,11 @@ Thuju.upgrades = {
     x = 0,
     y = 0,
     values = {
-      [1] = '10% reflected',
-      [2] = '25% reflected',
-      [3] = '45% reflected',
-      [4] = '70% reflected',
-      [5] = '100% reflected'
+      [1] = '25% reflected',
+      [2] = '45% reflected',
+      [3] = '70% reflected',
+      [4] = '100% reflected',
+      [5] = '150% reflected'
     },
     apply = function(self, unit)
       if self.level > 0 then
