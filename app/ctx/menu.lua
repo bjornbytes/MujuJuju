@@ -227,7 +227,7 @@ function Menu:drawButton(text, x, y, w, h)
     g.setColor(255, 255, 255)
     g.setStencil(function()
       local y = active and y + diff * yscale or y
-      local h = active and h - diff * yscale or h
+      local h = active and h - diff * yscale or h - diff * yscale
       g.rectangle('fill', x, y, w, h)
     end)
 
