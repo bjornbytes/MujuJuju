@@ -60,9 +60,13 @@ function MenuChoose:draw()
   if not self.active then return end
 
   local u, v = ctx.u, ctx.v
-  g.setColor(255, 255, 255)
   g.setFont('mesmerize', .04 * v)
+
+  if #ctx.user.name == 0 then g.setColor(255, 0, 0)
+  else g.setColor(255, 255, 255) end
   g.printCenter('Enter your name', u * .5, v * .06)
+
+  g.setColor(255, 255, 255)
   g.printCenter(ctx.user.name, u * .5, v * .12)
 
   local fontHeight = g.getFont():getHeight()
@@ -113,7 +117,7 @@ end
 
 function MenuChoose:mousepressed(mx, my, b)
   if not self.active then return end
-  if b == 'l' then
+  if b == 'l' and #ctx.user.name > 0 then
     local minions = self.geometry.minions
     for i = 1, #minions do
       local x, y, r = unpack(minions[i])
