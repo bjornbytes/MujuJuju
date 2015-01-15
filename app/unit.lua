@@ -208,8 +208,6 @@ function Unit:update()
   else
     self.animation.speed = 1
   end
-
-  if self.player then self:hurt(self.maxHealth * .015 * tickRate) end
 end
 
 function Unit:draw()
