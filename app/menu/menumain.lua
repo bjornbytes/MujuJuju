@@ -134,6 +134,8 @@ function MenuMain:init()
   }
 
   self.popup.tween = tween.new(.25, self.popup.factor, {value = 1}, 'inOutBack')
+
+  self.drag = MenuDrag()
 end
 
 function MenuMain:update()
@@ -168,21 +170,23 @@ function MenuMain:update()
 
   local deck = self.geometry.deck
   for i = 1, #deck do
-    local code = ctx.user.deck.minions[i]
-    local x, y, r, runes = unpack(deck[i])
+    if not self.drag:isDragging('minion', i) then
+      local code = ctx.user.deck.minions[i]
+      local x, y, r, runes = unpack(deck[i])
 
-    lerpAnimation(code, 'scale', 1)
-    lerpAnimation(code, 'x', x)
-    lerpAnimation(code, 'y', y)
+      lerpAnimation(code, 'scale', 1)
+      lerpAnimation(code, 'x', x)
+      lerpAnimation(code, 'y', y)
 
-    if math.insideCircle(mx, my, x, y, r) then
-      ctx.tooltip:setUnitTooltip(code)
-      break
-    else
-      for j = 1, #runes do
-        if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and math.inside(mx, my, unpack(runes[j])) then
-          ctx.tooltip:setRuneTooltip(ctx.user.deck.runes[i][j])
-          break
+      if math.insideCircle(mx, my, x, y, r) then
+        ctx.tooltip:setUnitTooltip(code)
+        break
+      else
+        for j = 1, #runes do
+          if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and math.inside(mx, my, unpack(runes[j])) then
+            ctx.tooltip:setRuneTooltip(ctx.user.deck.runes[i][j])
+            break
+          end
         end
       end
     end
@@ -190,12 +194,14 @@ function MenuMain:update()
 
   local gutterMinions = self.geometry.gutterMinions
   for i = 1, #gutterMinions do
-    local code = ctx.user.minions[i]
-    local x, y, r = unpack(gutterMinions[i])
+    if not self.drag:isDragging('gutterMinion', i) then
+      local code = ctx.user.minions[i]
+      local x, y, r = unpack(gutterMinions[i])
 
-    lerpAnimation(code, 'scale', .5)
-    lerpAnimation(code, 'x', x)
-    lerpAnimation(code, 'y', y)
+      lerpAnimation(code, 'scale', .5)
+      lerpAnimation(code, 'x', x)
+      lerpAnimation(code, 'y', y)
+    end
   end
 
   local gutterRunes = self.geometry.gutterRunes
@@ -214,6 +220,8 @@ function MenuMain:update()
     local hover = math.inside(mx, my, x - w / 2, y - w / 2, w, w)
     self.biomeArrowScales[i] = math.lerp(self.biomeArrowScales[i] or 1, hover and 1.5 or 1, 10 * tickRate)
   end
+
+  self.drag:update()
 end
 
 function MenuMain:draw()
@@ -322,16 +330,19 @@ function MenuMain:draw()
   for i = 1, #gutterMinions do
     local code = ctx.user.minions[i]
     local x, y, r = unpack(gutterMinions[i])
-    local cw, ch = ctx.unitCanvas:getDimensions()
-    ctx.unitCanvas:clear(0, 0, 0, 0)
-    ctx.unitCanvas:renderTo(function()
-      ctx.animations[code]:draw(cw / 2, ch / 2)
-    end)
-    local lerpd = {}
-    for k, v in pairs(ctx.animationTransforms[code]) do
-      lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+
+    if not self.drag:isDragging('gutterMinion', i) then
+      local cw, ch = ctx.unitCanvas:getDimensions()
+      ctx.unitCanvas:clear(0, 0, 0, 0)
+      ctx.unitCanvas:renderTo(function()
+        ctx.animations[code]:draw(cw / 2, ch / 2)
+      end)
+      local lerpd = {}
+      for k, v in pairs(ctx.animationTransforms[code]) do
+        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+      end
+      g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
     end
-    g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
   end
 
   if #ctx.user.deck.minions >= ctx.user.deckSlots then g.setColor(255, 100, 100)
@@ -344,24 +355,27 @@ function MenuMain:draw()
   for i = 1, #deck do
     local code = ctx.user.deck.minions[i]
     local x, y, r, runes = unpack(deck[i])
-    local cw, ch = ctx.unitCanvas:getDimensions()
-    ctx.unitCanvas:clear(0, 0, 0, 0)
-    ctx.unitCanvas:renderTo(function()
-      ctx.animations[code]:draw(cw / 2, ch / 2)
-    end)
-    local lerpd = {}
-    for k, v in pairs(ctx.animationTransforms[code]) do
-      lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
-    end
 
     -- Stage
     g.setColor(0, 0, 0, 100)
     local xoff = .02 * v
     local height = .04 * v
-    g.polygon('fill', lerpd.x - r - xoff, lerpd.y + r - height, lerpd.x + r + xoff, lerpd.y + r - height, lerpd.x + r, lerpd.y + r, lerpd.x - r, lerpd.y + r)
+    g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
 
-    g.setColor(255, 255, 255)
-    g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
+    if not self.drag:isDragging('minion', i) then
+      local cw, ch = ctx.unitCanvas:getDimensions()
+      ctx.unitCanvas:clear(0, 0, 0, 0)
+      ctx.unitCanvas:renderTo(function()
+        ctx.animations[code]:draw(cw / 2, ch / 2)
+      end)
+      local lerpd = {}
+      for k, v in pairs(ctx.animationTransforms[code]) do
+        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+      end
+
+      g.setColor(255, 255, 255)
+      g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
+    end
 
     for j = 1, #runes do
       local x, y, w, h = unpack(runes[j])
@@ -421,6 +435,8 @@ function MenuMain:draw()
       g.draw(ctx.unitCanvas, x, y, 0, .8 * factor, .75 * factor, cw / 2, ch / 2)
     end
   end
+
+  self.drag:draw()
 end
 
 function MenuMain:keypressed(key)
@@ -459,7 +475,7 @@ function MenuMain:keypressed(key)
 end
 
 function MenuMain:mousepressed(mx, my, b)
-  --
+  self.drag:mousepressed(mx, my, b)
 end
 
 function MenuMain:mousereleased(mx, my, b)
@@ -470,45 +486,10 @@ function MenuMain:mousereleased(mx, my, b)
       ctx.sound:play('menuClick')
       ctx.animations.muju:set('death')
     end
-
-    for i = 1, 2 do
-      local width = ctx.v * .04
-      local x, y = unpack(self.geometry.biomeArrows[i])
-      if math.inside(mx, my, x - width / 2, y - width / 2, width, width) then
-        if i == 1 then self:previousBiome()
-        elseif i == 2 then self:nextBiome() end
-      end
-    end
-
-    local gutterMinions = self.geometry.gutterMinions
-    for i = 1, #gutterMinions do
-      if #ctx.user.deck.minions < ctx.user.deckSlots and math.insideCircle(mx, my, unpack(gutterMinions[i])) then
-        ctx.animations[ctx.user.minions[i]]:set('spawn')
-        table.insert(ctx.user.deck.minions, ctx.user.minions[i])
-        table.remove(ctx.user.minions, i)
-        ctx.user.deck.runes[#ctx.user.deck.minions] = {}
-        self.popup.active = false
-        table.clear(self.geometry)
-        saveUser(ctx.user)
-      end
-    end
   elseif b == 'r' then
     local deck = self.geometry.deck
     for i = 1, #deck do
       local x, y, r, runes = unpack(deck[i])
-      if math.insideCircle(mx, my, x, y, r) then
-        local code = ctx.user.deck.minions[i]
-        table.insert(ctx.user.minions, code)
-        while ctx.user.deck.runes[i] and #ctx.user.deck.runes[i] > 0 do
-          table.insert(ctx.user.runes, ctx.user.deck.runes[i][1])
-          table.remove(ctx.user.deck.runes[i], 1)
-        end
-        ctx.user.deck.runes[i] = nil
-        table.remove(ctx.user.deck.minions, i)
-        table.clear(self.geometry)
-        saveUser(ctx.user)
-        break
-      end
       for j = 1, #runes do
         if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and math.inside(mx, my, unpack(runes[j])) then
           table.insert(ctx.user.runes, ctx.user.deck.runes[i][j])
@@ -532,6 +513,8 @@ function MenuMain:mousereleased(mx, my, b)
       end
     end
   end
+
+  self.drag:mousereleased(mx, my, b)
 end
 
 function MenuMain:previousBiome()
