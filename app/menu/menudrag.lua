@@ -53,7 +53,7 @@ function MenuDrag:mousepressed(mx, my, b)
     local gutterRunes = ctx.main.geometry.gutterRunes
     for i = 1, #gutterRunes do
       local x, y, w, h = unpack(gutterRunes[i])
-      if math.inside(mx, my, x, y, w, h) then
+      if ctx.user.runes[i] and math.inside(mx, my, x, y, w, h) then
         self.active = true
         self.dragging = 'gutterRune'
         self.draggingIndex = i

@@ -215,19 +215,7 @@ function HudUnits:draw()
     g.setColor(255, 255, 255, 255 * alpha)
     for j = 1, runeCount do
       local rune = p.deck[i].runes and p.deck[i].runes[j]
-      
-      -- Stone
-      local image = data.media.graphics.runes['bg' .. rune.background:capitalize()]
-      local scale = (runeSize * 2) / image:getHeight()
-      g.draw(image, runex, runey, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-
-      -- Rune
-      local image = data.media.graphics.runes[rune.image]
-      local scale = ((runeSize - .01175 * v) * 2) / image:getHeight()
-      g.setColor(config.runes.colors[rune.color])
-      g.draw(image, runex, runey, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-      g.setColor(255, 255, 255, 255 * alpha)
-
+      g.drawRune(rune, runex, runey, runeSize * 2, (runeSize - .01175 * v) * 2)
       runex = runex + runeInc
     end
     

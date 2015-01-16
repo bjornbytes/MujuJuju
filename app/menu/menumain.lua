@@ -123,18 +123,6 @@ function MenuMain:init()
   self.biomeArrowScales = {}
   self.prevBiomeArrowScales = {}
 
-  self.popup = {
-    x = ctx.u * .5,
-    y = ctx.v * .5,
-    active = false,
-    time = 0,
-    prevTime = 0,
-    maxTime = .25,
-    factor = {value = 0},
-  }
-
-  self.popup.tween = tween.new(.25, self.popup.factor, {value = 1}, 'inOutBack')
-
   self.drag = MenuDrag()
 end
 
@@ -146,24 +134,6 @@ function MenuMain:update()
   local mx, my = love.mouse.getPosition()
   local u, v = ctx.u, ctx.v
 
-  if self.popup.time > 0 or self.popup.active then
-    self.popup.prevTime = self.popup.time
-    if self.popup.active then self.popup.time = math.min(self.popup.time + tickRate, self.popup.maxTime)
-    else self.popup.time = math.max(self.popup.time - tickRate, 0) end
-
-    local gutterMinions = self.geometry.gutterMinions
-    for i = 1, #gutterMinions do
-      local code = ctx.user.minions[i]
-      local x, y, r = unpack(gutterMinions[i])
-
-      if math.insideCircle(mx, my, x, y, r) then
-        ctx.tooltip:setUnitTooltip(code)
-        break
-      end
-    end
-    return
-  end
-    
   self.prevBiomeDisplay = self.biomeDisplay
   self.biomeDisplay = math.lerp(self.biomeDisplay, self.selectedBiome, math.min(10 * tickRate, 1))
   if math.abs(self.biomeDisplay - self.selectedBiome) > .001 then self.geometry.biomes = nil end
@@ -307,18 +277,7 @@ function MenuMain:draw()
     g.draw(image, x, y, 0, scale, scale)
 
     if rune then
-      
-      -- Stone
-      local image = data.media.graphics.runes['bg' .. rune.background:capitalize()]
-      local scale = (h - v * .02) / image:getHeight()
-      g.setColor(255, 255, 255)
-      g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-
-      -- Rune
-      local image = data.media.graphics.runes[rune.image]
-      local scale = ((h - v * .02) - .02 * v) / image:getHeight()
-      g.setColor(config.runes.colors[rune.color])
-      g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+      g.drawRune(rune, x + w / 2, y + h / 2, h - .02 * v, h - .04 * v)
     end
   end
 
@@ -387,18 +346,7 @@ function MenuMain:draw()
 
       if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] then
         local rune = ctx.user.deck.runes[i][j]
-
-        -- Stone
-        local image = data.media.graphics.runes['bg' .. rune.background:capitalize()]
-        local scale = (h - v * .02) / image:getHeight()
-        g.setColor(255, 255, 255)
-        g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-
-        -- Rune
-        local image = data.media.graphics.runes[rune.image]
-        local scale = ((h - v * .02) - .02 * v) / image:getHeight()
-        g.setColor(config.runes.colors[rune.color])
-        g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+        g.drawRune(rune, x + w / 2, y + h / 2, h - .02 * v, h - .04 * v)
       end
     end
   end
@@ -406,35 +354,6 @@ function MenuMain:draw()
   g.setColor(255, 255, 255)
   local x, y, w, h = unpack(self.geometry.play)
   ctx.button:draw('Play', x, y, w, h)
-
-  if self.popup.time > 0 then
-    local factor, t = self:getPopupFactor()
-    local popupAlpha = (t / self.popup.maxTime) ^ 3
-    g.setColor(0, 0, 0, 150 * popupAlpha)
-    g.rectangle('fill', 0, 0, u, v)
-    
-    local r = .08 * v
-    local inc = (r * 2) + .02 * v
-    local w, h = math.max((v * .1 + (#ctx.user.minions) * inc) * factor, 0), math.max(v * .25 * factor, 0)
-    local x, y = self.popup.x - w / 2, self.popup.y - h / 2
-    g.setColor(30, 50, 70, 240 * popupAlpha)
-    g.rectangle('fill', x, y, w, h)
-    g.setColor(10, 30, 50, 255 * popupAlpha)
-    g.rectangle('line', x, y, w, h)
-
-    local gutterMinions = self.geometry.gutterMinions
-    for i = 1, #gutterMinions do
-      local code = ctx.user.minions[i]
-      local x, y, r = unpack(gutterMinions[i])
-      local cw, ch = ctx.unitCanvas:getDimensions()
-      ctx.unitCanvas:clear(0, 0, 0, 0)
-      ctx.unitCanvas:renderTo(function()
-        ctx.animations[code]:draw(cw / 2, ch / 2)
-      end)
-      g.setColor(255, 255, 255, 255 * popupAlpha)
-      g.draw(ctx.unitCanvas, x, y, 0, .8 * factor, .75 * factor, cw / 2, ch / 2)
-    end
-  end
 
   self.drag:draw()
 end
@@ -451,66 +370,22 @@ function MenuMain:keypressed(key)
     Menu.started = false
     Context:remove(ctx)
     Context:add(Menu)
-  elseif key:match('%d') then
-    local index = tonumber(key)
-    if index >= 1 and index <= #ctx.user.deck.minions then
-      ctx.user.deck.runes[index] = ctx.user.deck.runes[index] or {}
-      if #ctx.user.deck.runes[index] < 3 then
-        local gutterRunes = self.geometry.gutterRunes
-        local mx, my = love.mouse.getPosition()
-        for i = 1, #gutterRunes do
-          if #ctx.user.deck.runes[index] < 3 and math.insideCircle(mx, my, unpack(gutterRunes[i])) then
-            table.insert(ctx.user.deck.runes[index], ctx.user.runes[i])
-            table.remove(ctx.user.runes, i)
-            table.clear(self.geometry)
-            saveUser(ctx.user)
-            break
-          end
-        end
-      end
-    end
-  elseif key == 'p' then
-    self.popup.active = not self.popup.active
   end
 end
 
 function MenuMain:mousepressed(mx, my, b)
+  if not self.active then return end
   self.drag:mousepressed(mx, my, b)
 end
 
 function MenuMain:mousereleased(mx, my, b)
   if not self.active then return end
+
   if b == 'l' then
     local play = self.geometry.play
     if math.inside(mx, my, unpack(self.geometry.play)) then
       ctx.sound:play('menuClick')
       ctx.animations.muju:set('death')
-    end
-  elseif b == 'r' then
-    local deck = self.geometry.deck
-    for i = 1, #deck do
-      local x, y, r, runes = unpack(deck[i])
-      for j = 1, #runes do
-        if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and math.inside(mx, my, unpack(runes[j])) then
-          table.insert(ctx.user.runes, ctx.user.deck.runes[i][j])
-          table.remove(ctx.user.deck.runes[i], j)
-          table.clear(self.geometry)
-          saveUser(ctx.user)
-          break
-        end
-      end
-    end
-
-    if love.keyboard.isDown('lshift') then
-      local runes = self.geometry.gutterRunes
-      for i = 1, #runes do
-        if math.insideCircle(mx, my, unpack(runes[i])) then
-          table.remove(ctx.user.runes, i)
-          table.clear(self.geometry)
-          saveUser(ctx.user)
-          break
-        end
-      end
     end
   end
 
@@ -528,10 +403,3 @@ function MenuMain:nextBiome()
   if self.selectedBiome >= #config.biomeOrder + 1 then self.selectedBiome = 1 end
   ctx:refreshBackground()
 end
-
-function MenuMain:getPopupFactor()
-  local t = math.lerp(self.popup.prevTime, self.popup.time, tickDelta / tickRate)
-  self.popup.tween:set(t)
-  return self.popup.factor.value, t
-end
-

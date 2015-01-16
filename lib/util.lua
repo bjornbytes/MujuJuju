@@ -44,4 +44,20 @@ if love.graphics then
     g.setColor(color)
     f(what, x, y)
   end
+
+  function g.drawRune(rune, x, y, stoneSize, runeSize)
+    if not rune then return end
+
+    -- Stone
+    local image = data.media.graphics.runes['bg' .. rune.background:capitalize()]
+    local scale = stoneSize / image:getHeight()
+    g.setColor(255, 255, 255)
+    g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
+    -- Rune
+    local image = data.media.graphics.runes[rune.image]
+    local scale = runeSize / image:getHeight()
+    g.setColor(config.runes.colors[rune.color])
+    g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+  end
 end
