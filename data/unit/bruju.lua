@@ -81,10 +81,12 @@ Bruju.upgrades = {
     level = 0,
     maxLevel = 1,
     costs = {500},
+    prerequisites = {siphon = 3},
     name = 'Equilibrium',
     description = 'Bruju gains double lifesteal from Siphon when below 40% health.',
     x = -1,
     y = 1,
+    connectedTo = 'siphon',
     values = {
       [1] = '2.00x lifesteal'
     }
@@ -98,6 +100,7 @@ Bruju.upgrades = {
     description = 'The range of burst is increased',
     x = 0,
     y = 1,
+    connectedTo = 'burst',
     values = {
       [0] = '60 range',
       [1] = '80 range',
@@ -154,6 +157,7 @@ Bruju.upgrades = {
     description = 'Rewind also triggers Burst.',
     x = 1,
     y = 2,
+    connectedTo = 'rewind',
     values = {
       [1] = 'So much burst.',
     }
@@ -167,6 +171,7 @@ Bruju.upgrades = {
     description = 'Reduces the duration of crowd control effects.',
     x = -1,
     y = 3,
+    connectedTo = 'fortify',
     values = {
       [1] = '65% reduction.',
     },
@@ -185,6 +190,7 @@ Bruju.upgrades = {
     description = 'Burst also heals allies for half the damage dealt.',
     x = 0,
     y = 3,
+    connectedTo = 'eruption',
     values = {
       [1] = '50% of the damage heals.',
     }

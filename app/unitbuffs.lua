@@ -52,7 +52,7 @@ function UnitBuffs:postupdate()
     attackSpeed = attackSpeed + attackSpeed * (1 - exhaust.exhaust)
   end)
 
-  self.unit.attackSpeed = attackSpeed
+  self.unit.attackSpeed = math.max(attackSpeed, .4)
 
   -- Apply DoTs
   local dots = self:buffsWithTag('dot')

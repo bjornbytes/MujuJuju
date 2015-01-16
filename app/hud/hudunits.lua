@@ -23,7 +23,12 @@ function HudUnits:init()
         res[i] = {}
 
         for j, upgrade in ipairs(data.unit[p.deck[i].code].upgrades) do
-          table.insert(res[i], {xx + (inc * upgrade.x) - size / 2, yy + (.1 * v * upgrade.y) - size / 2, size, size})
+          local line
+          if upgrade.connectedTo then
+            local connection = data.unit[p.deck[i].code].upgrades[upgrade.connectedTo]
+            line = {xx + (inc * upgrade.x), yy + (.1 * v * upgrade.y), xx + (inc * connection.x), yy + (.1 * v * connection.y)}
+          end
+          table.insert(res[i], {xx + (inc * upgrade.x) - size / 2, yy + (.1 * v * upgrade.y) - size / 2, size, size, line})
         end
 
         xx = xx + minionInc
@@ -245,6 +250,28 @@ function HudUnits:draw()
       g.print(attribute.level, x + 6, y + 2)
     end
   end
+
+  -- Upgrade Connectors
+  local upgrades = self.geometry.upgrades
+  g.setLineWidth(2)
+  for i = 1, #upgrades do
+    for j = 1, #upgrades[i] do
+      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
+      local _, _, _, _, line = unpack(upgrades[i][j])
+      local upgrade = data.unit[who].upgrades[what]
+
+      if line then
+        local other = data.unit[p.deck[i].code].upgrades[upgrade.connectedTo]
+        if other.level >= upgrade.prerequisites[other.code] then
+          g.setColor(0, 200, 0, 200 * upgradeAlphaFactor)
+        else
+          g.setColor(200, 0, 0, 200 * upgradeAlphaFactor)
+        end
+        g.line(unpack(line))
+      end
+    end
+  end
+  g.setLineWidth(1)
 
   -- Upgrades
   local upgrades = self.geometry.upgrades
