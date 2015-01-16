@@ -91,11 +91,9 @@ function MenuChoose:draw()
   g.rectangle('fill', u * .2, v * .38, u * .6, v * .42)
 
   g.setFont('mesmerize', .08 * v)
-  local str = 'Choose your minion'
-  g.setColor(0, 0, 0)
-  g.print(str, .5 * u - g.getFont():getWidth(str) / 2 + 1, .4 * v + 1)
   g.setColor(255, 255, 255)
-  g.print(str, .5 * u - g.getFont():getWidth(str) / 2, .4 * v)
+  local str = 'Choose your minion'
+  g.printShadow('Choose your minion', .5 * u - g.getFont():getWidth(str) / 2, .4 * v)
 
   local minions = self.geometry.minions
   for i = 1, #minions do

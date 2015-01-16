@@ -138,10 +138,8 @@ function HudShrujuPatch:draw()
       g.draw(image, x + (w / 2), y + (120 * scale), 0, scale, scale, image:getWidth() / 2)
 
       g.setFont('pixel', 8)
-      g.setColor(0, 0, 0, alphaFactor * 200)
-      g.print(i, x + 6 + 1, y + 2 + 1)
       g.setColor(255, 255, 255, alphaFactor * 200)
-      g.print(i, x + 6, y + 2)
+      g.printShadow(i, x + 6, y + 2)
 
       g.setFont('mesmerize', image:getHeight() * scale - 7)
       g.printCenter(shruju.name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)

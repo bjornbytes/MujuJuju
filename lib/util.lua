@@ -35,4 +35,13 @@ if love.graphics then
     local font = g.getFont()
     g.print(what, x, y, 0, 1, 1, math.round(font:getWidth(what) / 2), math.round(font:getHeight(what) / 2))
   end
+
+  function g.printShadow(what, x, y, center)
+    local f = center and g.printCenter or g.print
+    local color = {g.getColor()}
+    g.setColor(0, 0, 0, color[4])
+    f(what, x + 1, y + 1)
+    g.setColor(color)
+    f(what, x, y)
+  end
 end

@@ -246,10 +246,8 @@ function HudUnits:draw()
 
       local attribute = data.unit[p.deck[i].code].attributes[config.attributes[j]]
       g.setFont('pixel', 8)
-      g.setColor(0, 0, 0, 255 * upgradeAlphaFactor)
-      g.print(attribute.level, x + 6 + 1, y + 2 + 1)
       g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-      g.print(attribute.level, x + 6, y + 2)
+      g.printShadow(attribute.level, x + 6, y + 2)
     end
   end
 
@@ -296,20 +294,16 @@ function HudUnits:draw()
         g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
       end
 
-      g.setFont('pixel', 8)
-      g.setColor(0, 0, 0, 200 * upgradeAlphaFactor)
       local str = upgrade.level .. '/' .. upgrade.maxLevel
-      g.print(str, x + 6 + 1, y + 2 + 1)
+      g.setFont('pixel', 8)
       g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-      g.print(str, x + 6, y + 2)
+      g.printShadow(str, x + 6, y + 2)
       local cost = upgrade.costs[upgrade.level + 1]
       if cost then
         local y = y + 2 + g.getFont():getHeight()
-        g.setColor(0, 0, 0, 200 * upgradeAlphaFactor)
-        g.print(cost, x + 6 + 1, y + 1)
         if p.juju >= cost then g.setColor(100, 255, 100, 200 * upgradeAlphaFactor)
         else g.setColor(255, 100, 100, 200 * upgradeAlphaFactor) end
-        g.print(cost, x + 6, y)
+        g.printShadow(cost, x + 6, y)
       end
     end
   end

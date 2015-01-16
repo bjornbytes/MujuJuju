@@ -61,27 +61,6 @@ function Hud:update()
 	if ctx.ded then love.keyboard.setKeyRepeat(true) end
 end
 
-function Hud:health(x, y, percent, color, width, thickness)
-	local g = love.graphics
-	thickness = thickness or 2
-
-	g.setColor(0, 0, 0, 160)
-	g.rectangle('fill', x, y, width + 1, thickness + 1)
-	g.setColor(color)
-	g.rectangle('fill', x, y, percent * width, thickness)
-end
-
-function Hud:stackingTable(stackingTable, x, range, delta)
-	local limit = x + range
-	for i = x - range, limit, 1 do
-		if not stackingTable[i] then
-			stackingTable[i] = 1 
-		else 
-			stackingTable[i] = stackingTable[i] + delta
-		end
-	end
-end
-
 function Hud:gui()
 	local w, h = love.graphics.getDimensions()
   local u, v = self.u, self.v

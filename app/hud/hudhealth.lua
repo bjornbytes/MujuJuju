@@ -249,12 +249,11 @@ function HudHealth:draw()
           table.each(elitebuffs, function(buff)
             string = string .. buff.code:capitalize() .. ' '
           end)
+
           g.setFont('pixel', 8)
           local texty = y + data.media.graphics.healthbarBar:getHeight() * scale / 2 - g.getFont():getHeight() / 2
-          g.setColor(0, 0, 0)
-          g.printCenter(string, x + 1, texty + 1)
           g.setColor(255, 255, 255)
-          g.printCenter(string, x, texty)
+          g.printShadow(string, x, texty, true)
         end
       end
 

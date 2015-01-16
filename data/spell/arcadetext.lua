@@ -29,10 +29,8 @@ function ArcadeText:draw()
   local alpha = math.clamp(self.alpha, 0, 1) * 255
   local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
   g.setFont('pixel', 8)
-  g.setColor(0, 0, 0, alpha)
-  g.printCenter(self.text, x + 1, y + 1)
   g.setColor(255, 255, 255, alpha)
-  g.printCenter(self.text, x, y)
+  g.printShadow(self.text, x, y, true)
 end
 
 return ArcadeText
