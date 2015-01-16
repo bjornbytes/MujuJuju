@@ -17,7 +17,7 @@ function DeathBlur:applyEffect(source, target)
 		self.hblur:send('amount', self.amount * .0008)
 		self.vblur:send('amount', self.amount * .0008 * (g.getWidth() / g.getHeight()))
 		g.setColor(255, 255, 255)
-		for i = 1, 4 do
+		for i = 1, 3 do
 			g.setShader(self.hblur)
 			target:renderTo(function()
 				g.draw(source)

@@ -57,8 +57,6 @@ function Hud:update()
   if self.tooltip.active and oldTitle ~= newTitle then
     ctx.sound:play('menuHover', function(sound) sound:setVolume(2) end)
   end
-
-	if ctx.ded then love.keyboard.setKeyRepeat(true) end
 end
 
 function Hud:gui()
@@ -91,47 +89,18 @@ function Hud:gui()
 			g.setColor(255, 255, 255, 255 * self.pauseAlpha)
 			g.draw(self.pauseScreen, w * .5, h * .5, 0, 1, 1, self.pauseScreen:getWidth() / 2, self.pauseScreen:getHeight() / 2)
 		end
-	end
 
-  self.units:draw()
-  self.won:draw()
+    self.units:draw()
+    self.won:draw()
+  else
+    g.setColor(244, 188, 80, 255 * self.deadAlpha)
 
-	-- Death Screen
-	if ctx.ded then
-    g.setFont(deadFontSmall)
-    str = 'Your Score:'
-    g.printf(str, 0, h * .225, w, 'center')
+    g.setFont('mesmerize', .08 * v)
+    str = 'Your shrine has been destroyed!'
+    g.printCenter(str:upper(), u * .5, v * .5)
 
-    g.setColor(240, 240, 240, 255 * self.deadAlpha)
-    str = tostring(math.floor(ctx.timer * tickRate))
-    local benchmark
-    local timer = math.floor(ctx.timer * tickRate)
-    if timer >= config.biomes[ctx.biome].benchmarks.gold then benchmark = 'Gold'
-    elseif timer >= config.biomes[ctx.biome].benchmarks.silver then benchmark = 'Silver'
-    elseif timer >= config.biomes[ctx.biome].benchmarks.bronze then benchmark = 'Bronze' end
-
-    if benchmark then str = str .. ' (' .. benchmark .. ')' end
-    g.printf(str, 0, h * .31, w, 'center')
-
-    local rewards = 'Cool Stuff:'
-    if ctx.rewards.highscore then rewards = rewards .. '\nNew highscore!' end
-    if #ctx.rewards.runes > 0 then 
-      local names = table.map(ctx.rewards.runes, function(rune) return rune.name end)
-      rewards = rewards .. '\n' .. table.concat(names, ', ')
-    end
-
-    if #ctx.rewards.biomes > 0 then
-      rewards = rewards .. '\n' .. table.concat(ctx.rewards.biomes, ', ')
-    end
-
-    if #ctx.rewards.minions > 0 then
-      rewards = rewards .. '\n' .. table.concat(ctx.rewards.minions, ', ')
-    end
-
-    g.printf(rewards, 0, h * .4, w, 'center')
-
-    g.draw(self.deadReplay, w * .4, h * .825, 0, 1, 1, self.deadReplay:getWidth() / 2)
-    g.draw(self.deadQuit, w * .6, h * .825, 0, 1, 1, self.deadQuit:getWidth() / 2)
+    g.setColor(255, 255, 255)
+    ctx.hud.button:draw('Continue', u * .375, v * .7, u * .25, v * .12)
 	end
 
   self.tooltip:draw()
@@ -174,21 +143,14 @@ function Hud:mousereleased(x, y, b)
   end
 
 	if b == 'l' and ctx.ded then
-    local img1 = self.deadReplay
-    local img2 = self.deadQuit
-    local w = g.getWidth()
-    local h = g.getHeight()
-    if math.inside(x, y, w * .4 - img1:getWidth() / 2, h * .825, img1:getDimensions()) then
-      Context:remove(ctx)
+    local u, v = ctx.hud.u, ctx.hud.v
+    if math.inside(x, y, u * .375, v * .7, u * .25, v * .12) then
       local biomeIndex = nil
       for i = 1, #config.biomeOrder do
         if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end
       end
       Context:add(Menu, biomeIndex)
-    elseif math.inside(x, y, w * .6 - img2:getWidth() / 2, h * .825, img2:getDimensions()) then
-      data.load()
       Context:remove(ctx)
-      Context:add(Game, ctx.user, ctx.biome)
     end
 	end
 
