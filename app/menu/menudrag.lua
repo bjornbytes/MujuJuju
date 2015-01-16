@@ -7,6 +7,11 @@ local function lerpAnimation(code, key, val)
   ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * tickRate, 1))
 end
 
+local function lerpRune(rune, key, val)
+  ctx.prevRuneTransforms[rune][key] = ctx.runeTransforms[rune][key]
+  ctx.runeTransforms[rune][key] = math.lerp(ctx.runeTransforms[rune][key] or val, val, math.min(10 * tickRate, 1))
+end
+
 function MenuDrag:init()
   self.active = false
   self.dragging = nil
@@ -20,6 +25,10 @@ function MenuDrag:update()
       lerpAnimation(code, 'scale', love.mouse.getX() < self.gutterThreshold * ctx.u and .75 or 1.2)
       lerpAnimation(code, 'x', love.mouse.getX())
       lerpAnimation(code, 'y', love.mouse.getY())
+    elseif self.dragging == 'rune' or self.dragging == 'gutterRune' then
+      local rune = self.dragging == 'rune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
+      lerpRune(rune, 'x', love.mouse.getX())
+      lerpRune(rune, 'y', love.mouse.getY())
     end
   end
 end
@@ -27,8 +36,18 @@ end
 function MenuDrag:draw()
   if self.active then
     if self.dragging == 'gutterRune' or self.dragging == 'rune' then
-      g.setColor(255, 255, 255)
-      g.circle('line', love.mouse.getX(), love.mouse.getY(), 20)
+      local x, y, w, h
+      if self.dragging == 'rune' then
+        x, y, w, h = unpack(ctx.main.geometry.deck[self.draggingIndex[1]][4][self.draggingIndex[2]])
+      else
+        x, y, w, h = unpack(ctx.main.geometry.gutterRunes[self.draggingIndex])
+      end
+      local rune = self.dragging == 'rune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
+      local lerpd = {}
+      for k, v in pairs(ctx.runeTransforms[rune]) do
+        lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, tickDelta / tickRate)
+      end
+      g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .04 * ctx.v)
     elseif self.dragging == 'minion' or self.dragging == 'gutterMinion' then
       local index = self.draggingIndex
       local code = self.dragging == 'minion' and ctx.user.deck.minions[index] or ctx.user.minions[index]

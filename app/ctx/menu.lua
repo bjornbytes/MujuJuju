@@ -27,6 +27,19 @@ function Menu:load(selectedBiome)
 
   self:initAnimations()
 
+  self.runeTransforms = {}
+  self.prevRuneTransforms = {}
+  table.each(self.user.runes, function(rune)
+    self.runeTransforms[rune] = {}
+    self.prevRuneTransforms[rune] = {}
+  end)
+  table.each(self.user.deck.runes, function(runes)
+    table.each(runes, function(rune)
+      self.runeTransforms[rune] = {}
+      self.prevRuneTransforms[rune] = {}
+    end)
+  end)
+
   self.backgroundAlpha = 0
   self.prevBackgroundAlpha = self.backgroundAlpha
   self.background1 = g.newCanvas(self.u, self.v)

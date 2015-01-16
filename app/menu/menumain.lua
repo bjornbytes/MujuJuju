@@ -7,6 +7,11 @@ local function lerpAnimation(code, key, val)
   ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * tickRate, 1))
 end
 
+local function lerpRune(rune, key, val)
+  ctx.prevRuneTransforms[rune][key] = ctx.runeTransforms[rune][key]
+  ctx.runeTransforms[rune][key] = math.lerp(ctx.runeTransforms[rune][key] or val, val, math.min(10 * tickRate, 1))
+end
+
 function MenuMain:init()
   self.geometry = setmetatable({}, {__index = function(t, k)
     return rawset(t, k, self.geometryFunctions[k]())[k]
@@ -140,9 +145,10 @@ function MenuMain:update()
 
   local deck = self.geometry.deck
   for i = 1, #deck do
+    local x, y, r, runes = unpack(deck[i])
+
     if not self.drag:isDragging('minion', i) then
       local code = ctx.user.deck.minions[i]
-      local x, y, r, runes = unpack(deck[i])
 
       lerpAnimation(code, 'scale', 1)
       lerpAnimation(code, 'x', x)
@@ -150,13 +156,21 @@ function MenuMain:update()
 
       if math.insideCircle(mx, my, x, y, r) then
         ctx.tooltip:setUnitTooltip(code)
-        break
-      else
-        for j = 1, #runes do
-          if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and math.inside(mx, my, unpack(runes[j])) then
-            ctx.tooltip:setRuneTooltip(ctx.user.deck.runes[i][j])
-            break
-          end
+      end
+    end
+
+    for j = 1, #runes do
+      if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] then
+        local rune = ctx.user.deck.runes[i][j]
+        if not self.drag:isDragging('rune', i, j) then
+          local x, y, w, h = unpack(runes[j])
+          lerpRune(rune, 'x', x + w / 2)
+          lerpRune(rune, 'y', y + h / 2)
+        end
+
+        if math.inside(mx, my, unpack(runes[j])) then
+          ctx.tooltip:setRuneTooltip(ctx.user.deck.runes[i][j])
+          break
         end
       end
     end
@@ -176,9 +190,17 @@ function MenuMain:update()
 
   local gutterRunes = self.geometry.gutterRunes
   for i = 1, #gutterRunes do
-    if ctx.user.runes[i] and math.inside(mx, my, unpack(gutterRunes[i])) then
-      ctx.tooltip:setRuneTooltip(ctx.user.runes[i])
-      break
+    if ctx.user.runes[i] and not self.drag:isDragging('gutterRune', i) then
+      local rune = ctx.user.runes[i]
+      local x, y, w, h = unpack(gutterRunes[i])
+
+      lerpRune(rune, 'x', x + w / 2)
+      lerpRune(rune, 'y', y + h / 2)
+
+      if math.inside(mx, my, unpack(gutterRunes[i])) then
+        ctx.tooltip:setRuneTooltip(ctx.user.runes[i])
+        break
+      end
     end
   end
 
@@ -266,6 +288,7 @@ function MenuMain:draw()
   g.setColor(0, 0, 0, 100)
   g.rectangle('fill', unpack(self.geometry.gutterRunesFrame))
 
+  -- Gutter rune frames
   g.setColor(255, 255, 255)
   local gutterRunes = self.geometry.gutterRunes
   for i = 1, #gutterRunes do
@@ -275,12 +298,22 @@ function MenuMain:draw()
     local scale = w / image:getWidth()
     g.setColor(255, 255, 255)
     g.draw(image, x, y, 0, scale, scale)
+  end
 
-    if rune then
-      g.drawRune(rune, x + w / 2, y + h / 2, h - .02 * v, h - .04 * v)
+  -- Gutter runes
+  for i = 1, #gutterRunes do
+    local x, y, w, h = unpack(gutterRunes[i])
+    local rune = ctx.user.runes[i]
+    if rune and not self.drag:isDragging('gutterRune', i) then
+      local lerpd = {}
+      for k, v in pairs(ctx.runeTransforms[rune]) do
+        lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, tickDelta / tickRate)
+      end
+      g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .04 * v)
     end
   end
 
+  g.setColor(255, 255, 255)
   g.setFont('mesmerize', v * .04)
   local x, y = unpack(self.geometry.gutterRunesLabel)
   g.print('Runes', x, y)
@@ -344,9 +377,14 @@ function MenuMain:draw()
       g.setColor(255, 255, 255)
       g.draw(image, x, y, 0, scale, scale)
 
-      if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] then
+      if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and not self.drag:isDragging('rune', i, j) then
         local rune = ctx.user.deck.runes[i][j]
-        g.drawRune(rune, x + w / 2, y + h / 2, h - .02 * v, h - .04 * v)
+        local lerpd = {}
+        for k, v in pairs(ctx.runeTransforms[rune]) do
+          lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, tickDelta / tickRate)
+        end
+
+        g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .04 * v)
       end
     end
   end
