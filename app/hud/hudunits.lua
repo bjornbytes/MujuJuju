@@ -23,10 +23,12 @@ function HudUnits:init()
         res[i] = {}
 
         for j, upgrade in ipairs(data.unit[p.deck[i].code].upgrades) do
-          local line
+          local line = {}
           if upgrade.connectedTo then
-            local connection = data.unit[p.deck[i].code].upgrades[upgrade.connectedTo]
-            line = {xx + (inc * upgrade.x), yy + (.1 * v * upgrade.y), xx + (inc * connection.x), yy + (.1 * v * connection.y)}
+            table.each(upgrade.connectedTo, function(other, k)
+              local connection = data.unit[p.deck[i].code].upgrades[other]
+              line[k] = {xx + (inc * upgrade.x), yy + (.1 * v * upgrade.y), xx + (inc * connection.x), yy + (.1 * v * connection.y)}
+            end)
           end
           table.insert(res[i], {xx + (inc * upgrade.x) - size / 2, yy + (.1 * v * upgrade.y) - size / 2, size, size, line})
         end
@@ -260,14 +262,16 @@ function HudUnits:draw()
       local _, _, _, _, line = unpack(upgrades[i][j])
       local upgrade = data.unit[who].upgrades[what]
 
-      if line then
-        local other = data.unit[p.deck[i].code].upgrades[upgrade.connectedTo]
-        if other.level >= upgrade.prerequisites[other.code] then
-          g.setColor(0, 200, 0, 200 * upgradeAlphaFactor)
-        else
-          g.setColor(200, 0, 0, 200 * upgradeAlphaFactor)
-        end
-        g.line(unpack(line))
+      if line and #line > 0 then
+        table.each(line, function(points, k)
+          local other = data.unit[p.deck[i].code].upgrades[upgrade.connectedTo[k]]
+          if other.level >= upgrade.prerequisites[other.code] then
+            g.setColor(0, 200, 0, 200 * upgradeAlphaFactor)
+          else
+            g.setColor(200, 0, 0, 200 * upgradeAlphaFactor)
+          end
+          g.line(points)
+        end)
       end
     end
   end

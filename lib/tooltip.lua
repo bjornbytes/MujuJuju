@@ -100,7 +100,7 @@ function Tooltip:setUpgradeTooltip(who, what)
       for name, min in pairs(upgrade.prerequisites) do
         local color = data.unit[who].upgrades[name].level >= min and '{green}' or '{red}'
         local points = (min == 1) and 'point' or 'points'
-        table.insert(pieces, color .. min .. ' ' .. points .. ' in ' .. name:capitalize())
+        table.insert(pieces, color .. min .. ' ' .. points .. ' in ' .. data.unit[who].upgrades[name].name:capitalize())
       end
     end
   end
