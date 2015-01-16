@@ -106,6 +106,7 @@ end
 
 function HudShrujuPatch:draw()
   local u, v = ctx.hud.u, ctx.hud.v
+  local mx, my = love.mouse.getPosition()
 
   if self.patch then
     g.setFont('pixel', 8)
@@ -174,7 +175,11 @@ function HudShrujuPatch:draw()
         end
 
         g.setFont('mesmerize', image:getHeight() * scale - 7)
-        g.printCenter(data.shruju[code].name, x + (image:getWidth() * (w / frameWidth)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
+        local str = data.shruju[code].name
+        if math.inside(mx, my, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), image:getWidth() * scale, image:getHeight() * scale) then
+          str = string.format('%.2f', self.patch.timer)
+        end
+        g.printCenter(str, x + (image:getWidth() * (w / frameWidth)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
       end
     end
   end

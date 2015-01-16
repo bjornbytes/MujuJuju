@@ -132,6 +132,7 @@ function HudUnits:draw()
   if not p then return end
 
   local u, v = ctx.hud.u, ctx.hud.v
+  local mx, my = love.mouse.getPosition()
   local ct = self.count
 
   local upgradeFactor, t = ctx.hud.upgrades:getFactor()
@@ -180,8 +181,12 @@ function HudUnits:draw()
     -- Text
     local unit = data.unit[p.deck[i].code]
     local font = g.setFont('mesmerize', math.round(.04 * scale * v))
+    local str = unit.name
+    if math.inside(mx, my, titlex, yy + (10 * scale), title:getWidth() * scale, title:getHeight() * scale) then
+      str = string.format('%.2f', p.deck[i].cooldown)
+    end
     g.setColor(255, 255, 255)
-    g.printCenter(unit.name, math.round(xx), math.round(yy + (.05 * v * scale)))
+    g.printCenter(str, math.round(xx), math.round(yy + (.05 * v * scale)))
 
     g.setColor(0, 100, 0, 200)
     g.printCenter(unit.cost, xx - (.19 * v * scale) + 1, yy + (.204 * v * scale) + 2)
