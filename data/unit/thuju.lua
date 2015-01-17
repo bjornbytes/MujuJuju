@@ -5,7 +5,7 @@ Thuju.description = 'A bramble golem.  Exceptional at soaking up and reflecting 
 ----------------
 -- Stats
 ----------------
-Thuju.health = 150
+Thuju.health = 300
 Thuju.damage = 14
 Thuju.range = 16
 Thuju.attackSpeed = 1.15

@@ -159,6 +159,9 @@ function Unit:activate()
   self.y = self.y + r
   self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
 
+  self.moveTarget = self.x
+  self.attackTarget = nil
+
   ctx.event:emit('view.register', {object = self})
 end
 
@@ -197,6 +200,8 @@ function Unit:update()
   end
 
   self.buffs:postupdate()
+
+  f.exe(self.class.update, self)
 
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
@@ -314,14 +319,14 @@ function Unit.stances:defensive()
 end
 
 function Unit.stances:aggressive()
-  self:changeTarget(ctx.target:closest(self, 'enemy', 'shrine', 'player', 'unit'))
+  if not self.player then self:changeTarget(ctx.target:closest(self, 'enemy', 'shrine', 'player', 'unit')) end
 
-  if self.target and self:inRange(self.target) then
-    self:startAttacking(self.target)
-  elseif self.target then
-    self:moveIntoRange(self.target)
+  if self.attackTarget and self:inRange(self.attackTarget) then
+    self:startAttacking(self.attackTarget)
+  elseif self.attackTarget then
+    self:moveIntoRange(self.attackTarget)
   else
-    self:moveTowards(ctx.shrine)
+    self:moveTowards(self.moveTarget)
   end
 end
 
@@ -335,7 +340,7 @@ end
 ----------------
 function Unit:changeTarget(target)
   local taunt = self.buffs:taunted()
-  self.target = taunt or target
+  self.attackTarget = taunt or target
 end
 
 function Unit:inRange(target)
@@ -358,14 +363,18 @@ function Unit:moveTowards(target)
   local feared = self.buffs:feared()
   if feared then return self:runFrom(feared) end
 
-  if math.abs(target.x - self.x) <= target.width / 2 + self.width / 2 then
+  if not target then return end
+
+  local targetx = type(target) == 'number' and target or target.x
+
+  if math.abs(targetx - self.x) <= 1 then
     self.animation:set('idle')
     return
   end
 
-  self.x = self.x + self.speed * math.sign(target.x - self.x) * tickRate
+  self.x = self.x + math.min(self.speed * tickRate, math.abs(targetx - self.x)) * math.sign(targetx - self.x)
   self.animation:set('walk')
-  self.animation.flipped = self.x > target.x
+  self.animation.flipped = self.x > targetx
 end
 
 function Unit:runFrom(target)
@@ -444,6 +453,10 @@ function Unit:hurt(amount, source, kind)
      sound:setVolume(.4)
     end)
     self.dying = true
+
+    table.each(ctx.units.objects, function(u)
+      if u.attackTarget == self then u.attackTarget = nil end
+    end)
   end
 
   if amount > 5 then
@@ -460,11 +473,11 @@ function Unit:heal(amount, source)
 end
 
 function Unit:die()
-  self:abilityCall('deactivate')
+  if self.player then
+    self.player.deck[self.class.code].instance = nil
+  end
 
-  table.each(ctx.units.objects, function(u)
-    if u.target == self then u.target = nil end
-  end)
+  self:abilityCall('deactivate')
 
   ctx.units:remove(self)
 end

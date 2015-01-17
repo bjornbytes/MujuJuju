@@ -17,15 +17,15 @@ end
 
 function Players:keyreleased(key)
   local p = ctx.id and self:get(ctx.id)
-  if p and p.input then
-    p.input:keyreleased(key)
+  if p then
+    p:keyreleased(key)
   end
 end
 
 function Players:mousepressed(x, y, b)
   local p = ctx.id and self:get(ctx.id)
-  if p and p.input then
-    p.input:mousepressed(x, y, b)
+  if p then
+    p:mousepressed(x, y, b)
   end
 end
 

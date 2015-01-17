@@ -144,6 +144,24 @@ function Player:keypressed(key)
 	end
 end
 
+function Player:mousepressed(x, y, b)
+  local instance = self.deck[self.selected].instance
+  if b == 'r' and instance then
+    instance.moveTarget = instance.x
+    instance.attackTarget = nil
+    ctx.units:each(function(unit)
+      if not unit.player and unit:contains(x, y) then
+        instance.attackTarget = unit
+        return true
+      end
+    end)
+
+    if not instance.attackTarget then
+      instance.moveTarget = x
+    end
+  end
+end
+
 function Player:gamepadpressed(gamepad, button)
 	if gamepad == self.gamepad then
 		if (button == 'a' or button == 'rightstick' or button == 'rightshoulder') and not self.dead then
@@ -209,10 +227,11 @@ function Player:summon()
 	local cooldown = self.deck[self.selected].cooldown
   local population = self:getPopulation()
 	local cost = data.unit[minion].cost
-	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(cost) then
+	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and not self.deck[self.selected].instance and self:spend(cost) then
 		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
     self.totalSummoned = self.totalSummoned + 1
     self.invincible = 0
+    self.deck[self.selected].instance = unit
 
     for i = 1, #self.deck do
       if i == self.selected then
@@ -325,7 +344,8 @@ function Player:initDeck()
         runes = deck.runes[i] or {},
         cooldown = 0,
         maxCooldown = 3,
-        code = code
+        code = code,
+        instance = nil
       }
 
       self.deck[i] = self.deck[code]
