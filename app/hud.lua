@@ -117,7 +117,7 @@ function Hud:keypressed(key)
       for i = 1, #config.biomeOrder do
         if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end
       end
-			Context:add(Menu, biomeIndex)
+			Context:add(Menu, biomeIndex, {muted = ctx.game.sound.muted})
 		end
 	end
 end
@@ -149,7 +149,7 @@ function Hud:mousereleased(x, y, b)
       for i = 1, #config.biomeOrder do
         if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end
       end
-      Context:add(Menu, biomeIndex)
+      Context:add(Menu, biomeIndex, {muted = ctx.sound.muted})
       Context:remove(ctx)
     end
 	end
@@ -159,8 +159,8 @@ function Hud:mousereleased(x, y, b)
 		if math.inside(x, y, w * .4, h * .4, 155, 60) then
 			ctx.paused = not ctx.paused
 		elseif math.inside(x, y, w * .4, h * .51, 155, 60) then
+			Context:add(Menu, nil, {muted = ctx.sound.muted})
 			Context:remove(ctx)
-			Context:add(Menu)
 		end
 	end
 end

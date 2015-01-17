@@ -4,10 +4,13 @@ local g = love.graphics
 Menu = class()
 Menu.started = false
 
-function Menu:load(selectedBiome)
+function Menu:load(selectedBiome, options)
   data.load()
+
   self.sound = Sound()
   self.menuSounds = self.sound:loop('riteOfPassage')
+  if options and options.muted then self.sound:mute() end
+
   self.cursor = love.mouse.newCursor('media/graphics/cursor.png')
   self.cursorHover = love.mouse.newCursor('media/graphics/cursorHover.png', 3, 2)
   love.mouse.setCursor(self.cursor)
