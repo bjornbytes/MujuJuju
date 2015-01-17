@@ -50,14 +50,14 @@ function HudSelector:draw()
 
   local x2 = math.lerp(self.prevx2, self.x2, tickDelta / tickRate)
 
-  local x = math.round(math.min(self.x1, x2)) + .5
-  local w = math.round(math.abs(self.x1 - x2))
+  local x = math.min(self.x1, x2)
+  local w = math.abs(self.x1 - x2)
   
   g.setColor(255, 255, 255, 50 * self.alpha)
   g.rectangle('fill', x, -1, w, ctx.hud.v + 2)
 
   g.setColor(255, 255, 255, 255 * self.alpha)
-  g.rectangle('line', x, -1, w, ctx.hud.v + 2)
+  g.rectangle('line', x + .5, -1, w, ctx.hud.v + 2)
 end
 
 function HudSelector:mousepressed(x, y, b)
