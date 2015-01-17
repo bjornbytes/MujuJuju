@@ -183,7 +183,7 @@ function Game:nextBiome()
   for i = 1, #config.biomeOrder do if config.biomeOrder[i] == self.biome then biomeIndex = i break end end
   if not config.biomeOrder[biomeIndex + 1] then
     Context:remove(ctx)
-    Context:add(Menu, biomeIndex)
+    Context:add(Menu, biomeIndex, {muted=ctx.game.sound.muted})
   end
   self.biome = config.biomeOrder[biomeIndex + 1]
 
