@@ -22,6 +22,7 @@ function Hud:init()
   self.u, self.v = love.graphics.getDimensions()
   self.selector = HudSelector()
   self.health = HudHealth()
+  self.portrait = HudPortrait()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
   self.shrujuPatches = {HudShrujuPatch(), HudShrujuPatch()}
@@ -49,6 +50,7 @@ function Hud:update()
   self.status:update()
   self.selector:update()
   self.health:update()
+  self.portrait:update()
   self.upgrades:update()
   self.shruju:update()
   self.units:update()
@@ -71,6 +73,7 @@ function Hud:gui()
     self.status:draw()
     self.selector:draw()
     self.health:draw()
+    self.portrait:draw()
     table.with(self.shrujuPatches, 'draw')
     self.shruju:draw()
 
@@ -112,6 +115,7 @@ end
 function Hud:keypressed(key)
   table.with(self.shrujuPatches, 'keypressed', key)
   self.upgrades:keypressed(key)
+  self.portrait:keypressed(key)
 
 	if ctx.ded and self.deadAlpha > .9 then
 		if key == 'escape' then
