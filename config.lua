@@ -109,15 +109,15 @@ return {
       units = {
         minEnemyRate = 14,
         maxEnemyRate = 17,
-        minEnemyRateDecay = .1,
-        maxEnemyRateDecay = .1,
+        minEnemyRateDecay = .05,
+        maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .2,
         levelScale = 1,
         upgradeCostIncrease = 1,
         maxElites = 1,
         thresholds = {
           duju = 0,
-          spuju = 360,
+          spuju = 500,
           kuju = 720
         },
         bosses = {{'duju', 900}}
