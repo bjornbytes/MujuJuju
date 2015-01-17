@@ -18,10 +18,9 @@ function HudSelector:update()
     end
     self.active = true
   else
-    self.active = false
     self.prevx2 = self.x2
 
-    if self.x1 and self.x2 then
+    if self.x1 and self.x2 and self.active then
       local p = ctx.player
       local x1, x2 = self.x1, self.x2
       if x1 > x2 then x1, x2 = x2, x1 end
@@ -33,6 +32,8 @@ function HudSelector:update()
         end
       end
     end
+
+    self.active = false
   end
 
   if self.active then
