@@ -175,27 +175,21 @@ function HudHealth:draw()
     bar(x, y - 65, hard, soft, color, w, h)
   end)
 
-  --[[ctx.units:each(function(unit)
-    local x, y, hard, soft = unit:getHealthbar()
-    local elitebuffs = unit.buffs:buffswithtag('elite')
-    local location = math.floor(unit.x)
-    stack(t, location, unit.width, 2)
-
-    if next(elitebuffs) then
-      local string = ''
-      table.each(elitebuffs, function(buff)
-        string = string .. buff.name .. ' '
-      end)
-      g.setfont('pixel', 8)
-      g.setcolor(0, 0, 0)
-      g.printcenter(string, x + 1, (y - 30 - 5 * t[location]) - 12 + 1)
-      g.setcolor(255, 255, 255)
-      g.printcenter(string, x, (y - 30 - 5 * t[location]) - 12)
+  local ground = ctx.map.height - ctx.map.groundHeight
+  ctx.units:each(function(unit)
+    if unit.player then
+      if unit.attackTarget then
+        g.setColor(255, 0, 0)
+        g.line(unit.attackTarget.x - 4, ground - 4, unit.attackTarget.x + 4, ground + 4)
+        g.line(unit.attackTarget.x - 4, ground + 4, unit.attackTarget.x + 4, ground - 4)
+      elseif unit.moveTarget then
+        local targetx = type(unit.moveTarget) == 'number' and unit.moveTarget or unit.moveTarget.x
+        g.setColor(0, 255, 0)
+        g.line(targetx - 4, ground - 4, targetx + 4, ground + 4)
+        g.line(targetx - 4, ground + 4, targetx + 4, ground - 4)
+      end
     end
-
-    local color = (p and unit.team == p.team) and green or red
-    bar(x, y - 30 - 5 * t[location], hard, soft, color, 80, 3)
-  end)]]
+  end)
 
   table.each(self.bins, function(binList)
     table.each(binList, function(bin)
