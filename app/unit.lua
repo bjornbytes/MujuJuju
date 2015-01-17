@@ -30,15 +30,15 @@ function Unit:activate()
 
   self.animation:on('event', function(event)
     if event.data.name == 'attack' then
-      if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
+      if self.attackTarget and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
         if self.class.attackSpell then
-          ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.target})
+          ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.attackTarget})
           ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
         else
-          self:attack()
-          if self.target.player and not self.target.attackTarget and math.abs(self.target.x - self.target.moveTarget) < 2 then
-            self.target.attackTarget = self
+          if self.attackTarget.player and not self.attackTarget.attackTarget and math.abs(self.attackTarget.x - self.attackTarget.moveTarget) < 2 then
+            self.attackTarget.attackTarget = self
           end
+          self:attack()
         end
       end
     elseif event.data.name == 'deathjuju' then
@@ -216,6 +216,10 @@ function Unit:update()
   else
     self.animation.speed = 1
   end
+
+  if self.player and math.abs(ctx.shrine.x - self.x) <= self.width / 2 + ctx.shrine.width / 2 then
+    self:heal(self.maxHealth * .02 * tickRate)
+  end
 end
 
 function Unit:draw()
@@ -311,16 +315,6 @@ end
 -- Stances
 ----------------
 Unit.stances = {}
-function Unit.stances:defensive()
-  self:changeTarget(ctx.target:closest(self, 'enemy', 'player', 'unit'))
-
-  if self.target and self:inRange(self.target) then
-    self:startAttacking(self.target)
-  else
-    self.animation:set('idle')
-  end
-end
-
 function Unit.stances:aggressive()
   if not self.player then self:changeTarget(ctx.target:closest(self, 'enemy', 'shrine', 'player', 'unit')) end
 
@@ -366,7 +360,10 @@ function Unit:moveTowards(target)
   local feared = self.buffs:feared()
   if feared then return self:runFrom(feared) end
 
-  if not target then return end
+  if not target then
+    self.animation:set('idle')
+    return
+  end
 
   local targetx = type(target) == 'number' and target or target.x
 
@@ -391,12 +388,11 @@ function Unit:startAttacking(target)
   if feared then return self:runFrom(feared) end
 
   if not self:inRange(target) or self.buffs:stunned() then
-    self.target = nil
     self.animation:set('idle')
     return
   end
 
-  self.target = target
+  self.attackTarget = target
   if self.animation.state.name ~= 'attack' then self.attackStart = tick end
   self.animation.flipped = self.x > target.x
   self.animation:set('attack')
@@ -404,7 +400,7 @@ end
 
 function Unit:attack(options)
   options = options or {}
-  local target = options.target or self.target
+  local target = options.target or self.attackTarget
   if not target then return end
   local amount = options.damage or self.damage
   amount = self:abilityCall('preattack', target, amount) or amount
@@ -457,7 +453,7 @@ function Unit:hurt(amount, source, kind)
     end)
     self.dying = true
 
-    table.each(ctx.units.objects, function(u)
+    ctx.units:each(function(u)
       if u.attackTarget == self then u.attackTarget = nil end
     end)
   end
