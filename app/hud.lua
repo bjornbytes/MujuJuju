@@ -20,6 +20,7 @@ function Hud:init()
 	self.protectAlpha = 3
 
   self.u, self.v = love.graphics.getDimensions()
+  self.selector = HudSelector()
   self.health = HudHealth()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
@@ -46,6 +47,7 @@ function Hud:update()
   self.tooltip:update()
   self.button:update()
   self.status:update()
+  self.selector:update()
   self.health:update()
   self.upgrades:update()
   self.shruju:update()
@@ -67,6 +69,7 @@ function Hud:gui()
 	if not ctx.ded then
 
     self.status:draw()
+    self.selector:draw()
     self.health:draw()
     table.with(self.shrujuPatches, 'draw')
     self.shruju:draw()
