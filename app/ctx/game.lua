@@ -1,6 +1,6 @@
 Game = class()
 
-function Game:load(user, biome)
+function Game:load(user, biome, options)
   data.media.graphics.juju:setMipmapFilter('linear', 1)
   data.media.graphics.map.forest:setMipmapFilter('linear', 1)
   data.media.graphics.map.forestSpirit:setMipmapFilter('linear', 1)
@@ -47,6 +47,8 @@ function Game:load(user, biome)
 
 	backgroundSound = self.sound:loop('background')
 	love.keyboard.setKeyRepeat(false)
+
+  if options.muted then self.sound:mute() end
 end
 
 function Game:update()
