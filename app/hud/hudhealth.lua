@@ -183,7 +183,7 @@ function HudHealth:draw()
         g.line(unit.attackTarget.x - 4, ground - 4, unit.attackTarget.x + 4, ground + 4)
         g.line(unit.attackTarget.x - 4, ground + 4, unit.attackTarget.x + 4, ground - 4)
       elseif unit.moveTarget then
-        local targetx = type(unit.moveTarget) == 'number' and unit.moveTarget or unit.moveTarget.x
+        local targetx = unit.moveTarget
         g.setColor(0, 255, 0)
         g.line(targetx - 4, ground - 4, targetx + 4, ground + 4)
         g.line(targetx - 4, ground + 4, targetx + 4, ground - 4)

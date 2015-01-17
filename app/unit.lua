@@ -36,6 +36,9 @@ function Unit:activate()
           ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
         else
           self:attack()
+          if self.target.player and not self.target.attackTarget and math.abs(self.target.x - self.target.moveTarget) < 2 then
+            self.target.attackTarget = self
+          end
         end
       end
     elseif event.data.name == 'deathjuju' then
