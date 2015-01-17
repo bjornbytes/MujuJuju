@@ -35,10 +35,9 @@ function Player:init()
 	self.prevx = self.x
 	self.prevy = self.y
 
-	self.selected = 1
+	self.summonSelect = 1
   self.maxPopulation = config.player.basePopulation
   self.totalSummoned = 0
-	self.recentSelect = 0
 	self.invincible = 0
   self.flatCooldownReduction = 0
   self.ghostSpeedMultiplier = 1
@@ -118,8 +117,6 @@ function Player:update()
       table.remove(self.shruju, i)
     end)
   end)
-
-	self.recentSelect = timer.rot(self.recentSelect)
 end
 
 function Player:draw()
@@ -133,8 +130,17 @@ end
 function Player:keypressed(key)
 	for i = 1, #self.deck do
 		if tonumber(key) == i then
-			self.selected = i
-			self.recentSelect = 1
+      if self.deck[i].instance then
+        if not love.keyboard.isDown('lshift') then
+          for j = 1, #self.deck do
+            self.deck[j].selected = false
+          end
+        end
+
+        self.deck[i].selected = true
+      end
+
+      self.summonSelect = i
 			return
 		end
 	end
@@ -145,19 +151,37 @@ function Player:keypressed(key)
 end
 
 function Player:mousepressed(x, y, b)
-  local instance = self.deck[self.selected].instance
-  if b == 'r' and instance then
-    instance.moveTarget = instance.x
-    instance.attackTarget = nil
-    ctx.units:each(function(unit)
-      if not unit.player and unit:contains(x, y) then
-        instance.attackTarget = unit
-        return true
+  if b == 'l' then
+    local dirty = false
+    for i = 1, #self.deck do
+      if self.deck[i].instance and not self.deck[i].selected and self.deck[i].instance:contains(x, y) then
+        self.deck[i].selected = true
+        dirty = true
+        break
       end
-    end)
+    end
+    if not dirty then
+      for i = 1, #self.deck do
+        self.deck[i].selected = false
+      end
+    end
+  elseif b == 'r' then
+    for i = 1, #self.deck do
+      if self.deck[i].selected and self.deck[i].instance then
+        local instance = self.deck[i].instance
+        instance.moveTarget = nil
+        instance.attackTarget = nil
+        ctx.units:each(function(unit)
+          if not unit.player and unit:contains(x, y) then
+            instance.attackTarget = unit
+            return true
+          end
+        end)
 
-    if not instance.attackTarget then
-      instance.moveTarget = x
+        if not instance.attackTarget then
+          instance.moveTarget = x
+        end
+      end
     end
   end
 end
@@ -203,38 +227,24 @@ function Player:move()
 		local delta = self.x + self.speed * tickRate
 		self.x = self.x + self.speed * tickRate
 		self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
-
-		-- Controller
-		if self.gamepad then
-			local ltrigger = self.gamepad:getGamepadAxis('triggerleft') > .5
-			local rtrigger = self.gamepad:getGamepadAxis('triggerright') > .5
-			if not self.gamepadSelectDirty then
-				if rtrigger then self.selectedMinion = self.selectedMinion + 1 end
-				if ltrigger then self.selectedMinion = self.selectedMinion - 1 end
-				if ltrigger or rtrigger then self.recentSelect = 1 end
-				if self.selectedMinion <= 0 then self.selectedMinion = #self.deck
-				elseif self.selectedMinion > #self.deck then self.selectedMinion = 1 end
-			end
-			self.gamepadSelectDirty = rtrigger or ltrigger
-		end
 	end
 
 	self.x = math.clamp(self.x, 0, love.graphics.getWidth())
 end
 
 function Player:summon()
-	local minion = self.deck[self.selected].code
-	local cooldown = self.deck[self.selected].cooldown
+	local minion = self.deck[self.summonSelect].code
+	local cooldown = self.deck[self.summonSelect].cooldown
   local population = self:getPopulation()
 	local cost = data.unit[minion].cost
-	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and not self.deck[self.selected].instance and self:spend(cost) then
+	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and not self.deck[self.summonSelect].instance and self:spend(cost) then
 		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
     self.totalSummoned = self.totalSummoned + 1
     self.invincible = 0
-    self.deck[self.selected].instance = unit
+    self.deck[self.summonSelect].instance = unit
 
     for i = 1, #self.deck do
-      if i == self.selected then
+      if i == self.summonSelect then
         self.deck[i].cooldown = math.max(config.player.baseCooldown - self.flatCooldownReduction, config.player.minCooldown)
         self.deck[i].maxCooldown = self.deck[i].cooldown
       else
@@ -345,7 +355,8 @@ function Player:initDeck()
         cooldown = 0,
         maxCooldown = 3,
         code = code,
-        instance = nil
+        instance = nil,
+        selected = false
       }
 
       self.deck[i] = self.deck[code]
