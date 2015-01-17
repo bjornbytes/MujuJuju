@@ -97,7 +97,7 @@ function HudUnits:update()
 
 	for i = 1, #self.selectFactor do
     self.prevSelectFactor[i] = self.selectFactor[i]
-		self.selectFactor[i] = math.lerp(self.selectFactor[i], (p.deck[i].selected or p.summonSelect == i) and 1 or 0, 8 * tickRate)
+		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.deck[i].selected and 1 or (p.summonSelect == i and .5 or 0), 8 * tickRate)
 	end
 
 	for i = 1, #self.cooldownPop do
