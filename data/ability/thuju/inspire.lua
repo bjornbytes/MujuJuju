@@ -9,8 +9,8 @@ function Inspire:activate()
 end
 
 function Inspire:use()
-  self.animation:set('taunt')
-  self.casting = true
+  self.unit.animation:set('taunt')
+  self.unit.casting = true
   self.timer = 10
 end
 
