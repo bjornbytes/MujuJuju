@@ -61,6 +61,12 @@ function Menu:load(selectedBiome, options)
   self.main.selectedBiome = selectedBiome or self.main.selectedBiome
 
   love.keyboard.setKeyRepeat(true)
+
+  self.hashes = {}
+  self.hasherThread = love.thread.newThread('app/thread/hasher.lua')
+  self.hasherOut = love.thread.getChannel('hasher.out')
+  
+  self.hasherThread:start()
 end
 
 function Menu:update()
@@ -75,6 +81,32 @@ function Menu:update()
   self.main:update()
 
   love.mouse.setCursor((self.button.hoverFactor > 0 or self.tooltip.active) and self.cursorHover or self.cursor)
+
+  repeat
+    local hashed = self.hasherOut:pop()
+    if hashed == 'done' then
+      self.hash = self.hasherOut:pop()
+      self:doneHashing(self.hash)
+    elseif type(hashed) == 'table' then
+      table.insert(self.hashes, hashed)
+    end
+  until not hashed
+
+  if self.hasherThread:getError() then
+    print(self.hasherThread:getError())
+  end
+
+  if self.patcher then
+    repeat
+      local response = self.patcherChannel:pop()
+      if response then
+        -- Crazy zip shit
+      end
+    until not response
+    if self.patcherThread:getError() then
+      print(self.patcherThread:getError())
+    end
+  end
 end
 
 function Menu:draw()
@@ -207,4 +239,13 @@ function Menu:initAnimations()
     self.animationTransforms[code] = {}
     self.prevAnimationTransforms[code] = {}
   end
+end
+
+function Menu:doneHashing(hash)
+  --table.sort(self.hashes, function(a, b) return a.path > b.path end)
+  -- Send to the Hub.
+  self.patcherThread = love.thread.newThread('app/thread/patcher.lua')
+  self.patcherChannel = love.thread.getChannel('patcher.response')
+
+  self.patcherThread:start(self.hash, json.encode(self.hashes))
 end
