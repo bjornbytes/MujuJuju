@@ -48,7 +48,7 @@ function HudPortrait:keypressed(key)
     local entry = p.deck[self.focus]
     if entry.instance and entry.selected then
       for i = 1, #hotkeys do
-        if key == hotkeys[i] then
+        if key == hotkeys[i] and data.unit[entry.code].castables then
           local code = data.unit[entry.code].castables[i]
           local instance = entry.instance
           if instance then
