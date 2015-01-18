@@ -109,15 +109,15 @@ return {
       units = {
         minEnemyRate = 14,
         maxEnemyRate = 17,
-        minEnemyRateDecay = .1,
-        maxEnemyRateDecay = .1,
+        minEnemyRateDecay = .05,
+        maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .2,
         levelScale = 1,
         upgradeCostIncrease = 1,
         maxElites = 1,
         thresholds = {
           duju = 0,
-          spuju = 360,
+          spuju = 500,
           kuju = 720
         },
         bosses = {{'duju', 900}}
@@ -363,7 +363,7 @@ return {
     minions = {'thuju', 'bruju', 'buju'},
     runes = {},
     deck = {minions = {}, runes = {}},
-    deckSlots = 3,
+    deckSlots = 1,
     biomes = {'forest'},
     highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0},
     completed = {forest = false, cavern = false, tundra = false, volcano = false},

@@ -93,8 +93,7 @@ end
 function Game:keypressed(key)
 	if not self.ded then
 		if key == 'p' or (key == 'escape' and not self.hud:menuActive()) then self.paused = not self.paused
-		elseif key == 'm' then self.sound:mute()
-		elseif key == 'f' then love.window.setFullscreen(not love.window.getFullscreen()) end
+		elseif key == 'm' then self.sound:mute() end
 	end
 	self.hud:keypressed(key)
 	self.players:keypressed(key)
@@ -120,6 +119,7 @@ function Game:gamepadpressed(gamepad, button)
 end
 
 function Game:distribute()
+  print('you survived for ' .. (ctx.timer * tickRate) .. ' seconds.')
 
   -- So the hud can draw them
   self.rewards = {runes = {}, biomes = {}, minions = {}}

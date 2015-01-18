@@ -13,10 +13,10 @@ Spuju.speed = 20
 Spuju.flow = 1
 
 Spuju.healthScaling = {6, .9}
-Spuju.damageScaling = {1.1, .9}
+Spuju.damageScaling = {1, .9}
 
 Spuju.attackSpell = 'spujuskull'
 
-Spuju.startingAbilities = {'fear'}
+Spuju.startingAbilities = {'fear', 'blight'}
 
 return Spuju

@@ -13,6 +13,8 @@ Thuju.speed = 35
 Thuju.flow = 1
 Thuju.cost = 5
 
+Thuju.castables = {'tremor', 'inspire'}
+
 ----------------
 -- Upgrades
 ----------------
@@ -22,7 +24,7 @@ Thuju.upgrades = {
     maxLevel = 3,
     costs = {200, 400, 600},
     name = 'Inspire',
-    description = 'Thuju inspires allies when he is brought into battle, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
+    description = 'Thuju inspires allies, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
     x = -1,
     y = 0,
     values = {

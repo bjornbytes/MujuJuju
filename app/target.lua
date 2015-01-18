@@ -9,21 +9,21 @@ local teamFilters = {
 local getEntries = {
   shrine = function(source, teamFilter, t)
     ctx.shrines:each(function(shrine)
-      if source ~= shrine and teamFilter(source, shrine) then
+      if source ~= shrine and not shrine.untargetable and teamFilter(source, shrine) then
         table.insert(t, {shrine, math.abs(shrine.x - source.x)})
       end
     end)
   end,
   player = function(source, teamFilter, t)
     ctx.players:each(function(player)
-      if source ~= player and not player.dead and player.invincible == 0 and teamFilter(source, player) then
+      if source ~= player and not player.untargetable and not player.dead and player.invincible == 0 and teamFilter(source, player) then
         table.insert(t, {player, math.abs(player.x - source.x)})
       end
     end)
   end,
   unit = function(source, teamFilter, t)
     ctx.units:each(function(unit)
-      if source ~= unit and not unit.dying and not unit.untargetable and teamFilter(source, unit) then
+      if source ~= unit and not unit.untargetable and not unit.dying and teamFilter(source, unit) then
         table.insert(t, {unit, math.abs(unit.x - source.x)})
       end
     end)
@@ -67,7 +67,7 @@ end
 function Target:atMouse(...)
   local mx, my = ctx.view:worldPoint(love.mouse.getPosition())
   for _, entry in ipairs(self:inRange(...)) do
-    if entry[1]:contains(mx, my) then return unpack(entry) end
+    if entry:contains(mx, my) then return entry end
   end
   return nil
 end

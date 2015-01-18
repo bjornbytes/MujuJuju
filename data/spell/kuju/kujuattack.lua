@@ -18,6 +18,11 @@ function KujuAttack:update()
   self.x = self.x + math.dx(self.speed * tickRate, 0) * self.direction
   if not self.target or math.abs(self.x - self.target.x) < self.width / 2 then
     self.unit:attack({target = self.target, damage = self.unit.damage})
+    if self.target.buffs then
+      self.target.buffs:add('kujuattackslow', {timer = 1, amount = .1})
+      local buff = self.target.buffs:get('kujuattackslow')
+      buff.slow = buff.stacks * .1
+    end
     ctx.spells:remove(self)
   end
 end

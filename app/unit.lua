@@ -30,15 +30,15 @@ function Unit:activate()
 
   self.animation:on('event', function(event)
     if event.data.name == 'attack' then
-      if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
+      if self.attackTarget and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
         if self.class.attackSpell then
-          ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.target})
+          ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.attackTarget})
           ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
         else
-          self:attack()
-          if self.target.player and not self.target.attackTarget and math.abs(self.target.x - self.target.moveTarget) < 2 then
-            self.target.attackTarget = self
+          if self.attackTarget.player and not self.attackTarget.attackTarget and math.abs(self.attackTarget.x - (self.attackTarget.moveTarget or self.attackTarget.x)) < 2 then
+            self.attackTarget.attackTarget = self
           end
+          self:attack()
         end
       end
     elseif event.data.name == 'deathjuju' then
@@ -92,7 +92,7 @@ function Unit:activate()
     elseif self.casting then
       self.casting = false
     elseif data.state.name == 'attack' then
-      self.ai.useAbilities(self)
+      self:aiCall('useAbilities')
     end
 
     if not data.state.loop then self.animation:set('idle', {force = true}) end
@@ -134,7 +134,6 @@ function Unit:activate()
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
   self.maxHealth = self.health
-  self.stance = 'aggressive'
   self.dying = false
   self.died = false
   self.casting = false
@@ -151,8 +150,6 @@ function Unit:activate()
     self:addAbility(ability)
   end)
 
-  self.range = self.range + love.math.random(-10, 10)
-
   self.healthDisplay = self.health
   self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
   self.alpha = 0
@@ -164,6 +161,10 @@ function Unit:activate()
 
   self.moveTarget = self.x
   self.attackTarget = nil
+
+  self.ai = (data.ai[self.class.code] or UnitAI)()
+  self.ai.unit = self
+  self:aiCall('activate')
 
   ctx.event:emit('view.register', {object = self})
 end
@@ -199,7 +200,7 @@ function Unit:update()
   self.buffs:preupdate()
 
   if not self.spawning and not self.casting and not self.channeling then
-    f.exe(self.stances[self.stance], self)
+    self:aiCall('update')
   end
 
   self.buffs:postupdate()
@@ -215,6 +216,10 @@ function Unit:update()
     self.animation.speed = self.speed / self.class.speed
   else
     self.animation.speed = 1
+  end
+
+  if self.player and math.abs(ctx.shrine.x - self.x) <= self.width / 2 + ctx.shrine.width / 2 then
+    self:heal(self.maxHealth * .02 * tickRate)
   end
 end
 
@@ -247,8 +252,10 @@ function Unit:draw()
     g.setShader()
   end)
 
-  data.media.shaders.horizontalBlur:send('amount', .0005)
-  data.media.shaders.verticalBlur:send('amount', .0005)
+  local selected = false
+  if self.player and self.player.deck[self.class.code].selected then selected = true end
+  data.media.shaders.horizontalBlur:send('amount', selected and .001 or .0005)
+  data.media.shaders.verticalBlur:send('amount', selected and .001 or .0005)
   g.setColor(255, 255, 255)
   for i = 1, 1 do
     g.setShader(data.media.shaders.horizontalBlur)
@@ -269,7 +276,7 @@ function Unit:draw()
   end)
   g.setShader()
   
-  g.setColor(255, 255, 255, 128 * self.alpha)
+  g.setColor(255, 255, 255, (selected and 200 or 128) * self.alpha)
   g.draw(self.backCanvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
   g.setColor(255, 255, 255)
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
@@ -306,105 +313,12 @@ function Unit:paused()
   self.animation:set('idle')
 end
 
-
-----------------
--- Stances
-----------------
-Unit.stances = {}
-function Unit.stances:defensive()
-  self:changeTarget(ctx.target:closest(self, 'enemy', 'player', 'unit'))
-
-  if self.target and self:inRange(self.target) then
-    self:startAttacking(self.target)
-  else
-    self.animation:set('idle')
-  end
-end
-
-function Unit.stances:aggressive()
-  if not self.player then self:changeTarget(ctx.target:closest(self, 'enemy', 'shrine', 'player', 'unit')) end
-
-  if self.attackTarget and self:inRange(self.attackTarget) then
-    self:startAttacking(self.attackTarget)
-  elseif self.attackTarget then
-    self:moveIntoRange(self.attackTarget)
-  else
-    self:moveTowards(self.moveTarget)
-  end
-end
-
-function Unit.stances:follow()
-  self:moveTowards(self.player)
-end
-
-
 ----------------
 -- Behavior
 ----------------
-function Unit:changeTarget(target)
-  local taunt = self.buffs:taunted()
-  self.attackTarget = taunt or target
-end
-
-function Unit:inRange(target)
-  return math.abs(target.x - self.x) <= self.range + target.width / 2 + self.width / 2
-end
-
-function Unit:moveIntoRange(target)
-  local feared = self.buffs:feared()
-  if feared then return self:runFrom(feared) end
-
-  if self:inRange(target) then
-    self.animation:set('idle')
-    return
-  end
-
-  self:moveTowards(target)
-end
-
-function Unit:moveTowards(target)
-  local feared = self.buffs:feared()
-  if feared then return self:runFrom(feared) end
-
-  if not target then return end
-
-  local targetx = type(target) == 'number' and target or target.x
-
-  if math.abs(targetx - self.x) <= 1 then
-    self.animation:set('idle')
-    return
-  end
-
-  self.x = self.x + math.min(self.speed * tickRate, math.abs(targetx - self.x)) * math.sign(targetx - self.x)
-  self.animation:set('walk')
-  self.animation.flipped = self.x > targetx
-end
-
-function Unit:runFrom(target)
-  self.x = self.x - self.speed * math.sign(target.x - self.x) * tickRate
-  self.animation:set('walk')
-  self.animation.flipped = self.x < target.x
-end
-
-function Unit:startAttacking(target)
-  local feared = self.buffs:feared()
-  if feared then return self:runFrom(feared) end
-
-  if not self:inRange(target) or self.buffs:stunned() then
-    self.target = nil
-    self.animation:set('idle')
-    return
-  end
-
-  self.target = target
-  if self.animation.state.name ~= 'attack' then self.attackStart = tick end
-  self.animation.flipped = self.x > target.x
-  self.animation:set('attack')
-end
-
 function Unit:attack(options)
   options = options or {}
-  local target = options.target or self.target
+  local target = options.target or self.attackTarget
   if not target then return end
   local amount = options.damage or self.damage
   amount = self:abilityCall('preattack', target, amount) or amount
@@ -457,7 +371,7 @@ function Unit:hurt(amount, source, kind)
     end)
     self.dying = true
 
-    table.each(ctx.units.objects, function(u)
+    ctx.units:each(function(u)
       if u.attackTarget == self then u.attackTarget = nil end
     end)
   end
@@ -487,19 +401,6 @@ end
 
 
 ----------------
--- AI
-----------------
-Unit.ai = {}
-function Unit.ai.useAbilities(self)
-  table.each(self.abilities, function(ability)
-    if ability:canUse() and love.math.random() < .5 then
-      f.exe(ability.use, ability)
-    end
-  end)
-end
-
-
-----------------
 -- Helper
 ----------------
 function Unit:abilityCall(key, ...)
@@ -507,6 +408,10 @@ function Unit:abilityCall(key, ...)
   table.each(self.abilities, function(ability)
     f.exe(ability[key], ability, unpack(arg))
   end)
+end
+
+function Unit:aiCall(key, ...)
+  f.exe(self.ai[key], self.ai, ...)
 end
 
 function Unit:contains(...)

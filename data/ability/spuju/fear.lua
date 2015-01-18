@@ -23,7 +23,7 @@ function Fear:activate()
 end
 
 function Fear:use()
-  if self.unit.target and isa(self.unit.target, Unit) then
+  if self.unit.attackTarget and isa(self.unit.attackTarget, Unit) then
     self.unit.animation:set('fear')
     self.unit.casting = true
     self.timer = self.cooldown
