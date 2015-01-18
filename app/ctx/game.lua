@@ -119,6 +119,7 @@ function Game:gamepadpressed(gamepad, button)
 end
 
 function Game:distribute()
+  print('you survived for ' .. (ctx.timer * tickRate) .. ' seconds.')
 
   -- So the hud can draw them
   self.rewards = {runes = {}, biomes = {}, minions = {}}
