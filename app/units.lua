@@ -47,7 +47,7 @@ function Units:update()
   self.bossCount = table.count(self:filter(function(u) return u.boss end))
   self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
-  if not ctx.won then self.level = self.level + (tickRate / 16) * config.biomes[ctx.biome].units.levelScale end
+  if not ctx.won then self.level = self.level + (tickRate / 15) * config.biomes[ctx.biome].units.levelScale end
 
   local nextBoss = config.biomes[ctx.biome].units.bosses and config.biomes[ctx.biome].units.bosses[self.bossIndex]
   if nextBoss and math.floor(ctx.timer * tickRate) >= nextBoss[2] then

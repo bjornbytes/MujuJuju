@@ -35,7 +35,7 @@ function Unit:activate()
           ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.attackTarget})
           ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
         else
-          if self.attackTarget.player and not self.attackTarget.attackTarget and math.abs(self.attackTarget.x - self.attackTarget.moveTarget) < 2 then
+          if self.attackTarget.player and not self.attackTarget.attackTarget and math.abs(self.attackTarget.x - (self.attackTarget.moveTarget or self.attackTarget.x)) < 2 then
             self.attackTarget.attackTarget = self
           end
           self:attack()
@@ -162,8 +162,9 @@ function Unit:activate()
   self.moveTarget = self.x
   self.attackTarget = nil
 
-  self.ai = UnitAI()
+  self.ai = (data.ai[self.class.code] or UnitAI)()
   self.ai.unit = self
+  self:aiCall('activate')
 
   ctx.event:emit('view.register', {object = self})
 end

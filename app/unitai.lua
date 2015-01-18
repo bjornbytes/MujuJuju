@@ -3,10 +3,19 @@ UnitAI = class()
 function UnitAI:update()
   if not self.unit.player then self:changeTarget(ctx.target:closest(self.unit, 'enemy', 'shrine', 'player', 'unit')) end
 
-  if self.unit.attackTarget and self:inRange(self.unit.attackTarget) then
-    self:startAttacking(self.unit.attackTarget)
-  elseif self.unit.attackTarget then
-    self:moveIntoRange(self.unit.attackTarget)
+  local target = self.unit.attackTarget
+  if target and target.untargetable then
+    self.unit.attackTarget = nil
+    target = nil
+    self.unit.animation:set('idle')
+  end
+
+  if target then
+    if self:inRange(target) then
+      self:startAttacking(target)
+    else
+      self:moveIntoRange(target)
+    end
   else
     self:moveTowards(self.unit.moveTarget)
   end

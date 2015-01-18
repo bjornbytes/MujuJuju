@@ -169,15 +169,7 @@ function Player:mousepressed(x, y, b)
     for i = 1, #self.deck do
       if self.deck[i].selected and self.deck[i].instance then
         local instance = self.deck[i].instance
-        instance.moveTarget = nil
-        instance.attackTarget = nil
-        ctx.units:each(function(unit)
-          if not unit.player and unit:contains(x, y) then
-            instance.attackTarget = unit
-            return true
-          end
-        end)
-
+        instance.attackTarget = ctx.target:atMouse(instance, math.huge, 'enemy', 'unit')
         if not instance.attackTarget then
           instance.moveTarget = x
         end

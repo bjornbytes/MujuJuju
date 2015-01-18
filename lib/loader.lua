@@ -129,5 +129,6 @@ data.load = function()
   load('data/effect', 'effect')
   load('data/gooey', 'gooey')
   load('data/shruju', 'shruju')
+  load('data/ai', 'ai')
 end
 

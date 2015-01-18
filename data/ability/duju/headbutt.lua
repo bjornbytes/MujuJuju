@@ -1,6 +1,5 @@
 local Headbutt = extend(Ability)
 
-
 ----------------
 -- Data
 ----------------
@@ -29,7 +28,7 @@ function Headbutt:activate()
 end
 
 function Headbutt:use()
-  if self.unit.target and not isa(self.unit.target, Shrine) then
+  if self.unit.attackTarget and isa(self.unit.attackTarget, Unit) then
     self.unit.animation:set('headbutt')
     self.unit.casting = true
     self.timer = self.cooldown
