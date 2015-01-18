@@ -92,7 +92,7 @@ function Unit:activate()
     elseif self.casting then
       self.casting = false
     elseif data.state.name == 'attack' then
-      self.ai.useAbilities(self)
+      self:aiCall('useAbilities')
     end
 
     if not data.state.loop then self.animation:set('idle', {force = true}) end
@@ -134,7 +134,6 @@ function Unit:activate()
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
   self.maxHealth = self.health
-  self.stance = 'aggressive'
   self.dying = false
   self.died = false
   self.casting = false
@@ -151,8 +150,6 @@ function Unit:activate()
     self:addAbility(ability)
   end)
 
-  self.range = self.range + love.math.random(-10, 10)
-
   self.healthDisplay = self.health
   self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
   self.alpha = 0
@@ -164,6 +161,9 @@ function Unit:activate()
 
   self.moveTarget = self.x
   self.attackTarget = nil
+
+  self.ai = UnitAI()
+  self.ai.unit = self
 
   ctx.event:emit('view.register', {object = self})
 end
@@ -199,7 +199,7 @@ function Unit:update()
   self.buffs:preupdate()
 
   if not self.spawning and not self.casting and not self.channeling then
-    f.exe(self.stances[self.stance], self)
+    self:aiCall('update')
   end
 
   self.buffs:postupdate()
@@ -312,94 +312,9 @@ function Unit:paused()
   self.animation:set('idle')
 end
 
-
-----------------
--- Stances
-----------------
-Unit.stances = {}
-function Unit.stances:aggressive()
-  if not self.player then self:changeTarget(ctx.target:closest(self, 'enemy', 'shrine', 'player', 'unit')) end
-
-  if self.attackTarget and self:inRange(self.attackTarget) then
-    self:startAttacking(self.attackTarget)
-  elseif self.attackTarget then
-    self:moveIntoRange(self.attackTarget)
-  else
-    self:moveTowards(self.moveTarget)
-  end
-end
-
-function Unit.stances:follow()
-  self:moveTowards(self.player)
-end
-
-
 ----------------
 -- Behavior
 ----------------
-function Unit:changeTarget(target)
-  local taunt = self.buffs:taunted()
-  self.attackTarget = taunt or target
-end
-
-function Unit:inRange(target)
-  return math.abs(target.x - self.x) <= self.range + target.width / 2 + self.width / 2
-end
-
-function Unit:moveIntoRange(target)
-  local feared = self.buffs:feared()
-  if feared then return self:runFrom(feared) end
-
-  if self:inRange(target) then
-    self.animation:set('idle')
-    return
-  end
-
-  self:moveTowards(target)
-end
-
-function Unit:moveTowards(target)
-  local feared = self.buffs:feared()
-  if feared then return self:runFrom(feared) end
-
-  if not target then
-    self.animation:set('idle')
-    return
-  end
-
-  local targetx = type(target) == 'number' and target or target.x
-
-  if math.abs(targetx - self.x) <= 1 then
-    self.animation:set('idle')
-    return
-  end
-
-  self.x = self.x + math.min(self.speed * tickRate, math.abs(targetx - self.x)) * math.sign(targetx - self.x)
-  self.animation:set('walk')
-  self.animation.flipped = self.x > targetx
-end
-
-function Unit:runFrom(target)
-  self.x = self.x - self.speed * math.sign(target.x - self.x) * tickRate
-  self.animation:set('walk')
-  self.animation.flipped = self.x < target.x
-end
-
-function Unit:startAttacking(target)
-  local feared = self.buffs:feared()
-  if feared then return self:runFrom(feared) end
-
-  if not self:inRange(target) or self.buffs:stunned() then
-    self.animation:set('idle')
-    return
-  end
-
-  self.attackTarget = target
-  if self.animation.state.name ~= 'attack' then self.attackStart = tick end
-  self.animation.flipped = self.x > target.x
-  self.animation:set('attack')
-end
-
 function Unit:attack(options)
   options = options or {}
   local target = options.target or self.attackTarget
@@ -485,19 +400,6 @@ end
 
 
 ----------------
--- AI
-----------------
-Unit.ai = {}
-function Unit.ai.useAbilities(self)
-  table.each(self.abilities, function(ability)
-    if ability:canUse() and love.math.random() < .5 then
-      f.exe(ability.use, ability)
-    end
-  end)
-end
-
-
-----------------
 -- Helper
 ----------------
 function Unit:abilityCall(key, ...)
@@ -505,6 +407,10 @@ function Unit:abilityCall(key, ...)
   table.each(self.abilities, function(ability)
     f.exe(ability[key], ability, unpack(arg))
   end)
+end
+
+function Unit:aiCall(key, ...)
+  f.exe(self.ai[key], self.ai, ...)
 end
 
 function Unit:contains(...)
