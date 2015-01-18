@@ -10,3 +10,6 @@
 [submodule "lib/deps/tween"]
 	path = lib/deps/tween
 	url = https://github.com/kikito/tween.lua
+[submodule "lib/deps/sha1"]
+	path = lib/deps/sha1
+	url = https://github.com/kikito/sha1.lua.git
