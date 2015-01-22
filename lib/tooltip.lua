@@ -94,9 +94,16 @@ function Tooltip:setUpgradeTooltip(who, what)
     table.insert(pieces, '{whoCares}{normal}Max Level')
   else
     table.insert(pieces, '{white}{bold}Next Level{normal}: ' .. upgrade.values[upgrade.level + 1])
+
+    if upgrade.levelRequirement then
+      local color = p.level >= upgrade.levelRequirement and '{green}' or '{red}'
+      table.insert(pieces, color .. 'Level ' .. upgrade.levelRequirement)
+    end
+
     local color = p.skillPoints >= 1 and '{green}' or '{red}' --upgrade.costs[upgrade.level + 1] and '{green}' or '{red}'
     --table.insert(pieces, color .. upgrade.costs[upgrade.level + 1] .. ' juju')
     table.insert(pieces, '1 skill point')
+
     if upgrade.prerequisites then
       for name, min in pairs(upgrade.prerequisites) do
         local color = data.unit[who].upgrades[name].level >= min and '{green}' or '{red}'
