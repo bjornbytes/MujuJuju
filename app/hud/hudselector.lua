@@ -24,12 +24,15 @@ function HudSelector:update()
       local p = ctx.player
       local x1, x2 = self.x1, self.x2
       if x1 > x2 then x1, x2 = x2, x1 end
-      for i = 1, #p.deck do
-        local instance = p.deck[i].instance
-        if not love.keyboard.isDown('lshift') then p.deck[i].selected = false end
-        if instance and  instance.x >= x1 and instance.x <= x2 then
-          p.deck[i].selected = true
-        end
+      if math.abs(x2 - x1) > 4 then
+        ctx.units:each(function(unit)
+          if unit.player == p then
+            if not love.keyboard.isDown('lshift') then unit.selected = false end
+            if unit.x >= x1 and unit.x <= x2 then
+              unit.selected = true
+            end
+          end
+        end)
       end
     end
 

@@ -252,10 +252,8 @@ function Unit:draw()
     g.setShader()
   end)
 
-  local selected = false
-  if self.player and self.player.deck[self.class.code].selected then selected = true end
-  data.media.shaders.horizontalBlur:send('amount', selected and .001 or .0005)
-  data.media.shaders.verticalBlur:send('amount', selected and .001 or .0005)
+  data.media.shaders.horizontalBlur:send('amount', self.selected and .001 or .0005)
+  data.media.shaders.verticalBlur:send('amount', self.selected and .001 or .0005)
   g.setColor(255, 255, 255)
   for i = 1, 1 do
     g.setShader(data.media.shaders.horizontalBlur)
@@ -276,7 +274,7 @@ function Unit:draw()
   end)
   g.setShader()
   
-  g.setColor(255, 255, 255, (selected and 200 or 128) * self.alpha)
+  g.setColor(255, 255, 255, (self.selected and 200 or 128) * self.alpha)
   g.draw(self.backCanvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
   g.setColor(255, 255, 255)
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})

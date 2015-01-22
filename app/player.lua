@@ -130,16 +130,6 @@ end
 function Player:keypressed(key)
 	for i = 1, #self.deck do
 		if tonumber(key) == i then
-      if self.deck[i].instance then
-        if not love.keyboard.isDown('lshift') then
-          for j = 1, #self.deck do
-            self.deck[j].selected = false
-          end
-        end
-
-        self.deck[i].selected = true
-      end
-
       self.summonSelect = i
 			return
 		end
@@ -152,28 +142,30 @@ end
 
 function Player:mousepressed(x, y, b)
   if b == 'l' then
-    local dirty = false
-    for i = 1, #self.deck do
-      if self.deck[i].instance and not self.deck[i].selected and self.deck[i].instance:contains(x, y) then
-        self.deck[i].selected = true
-        dirty = true
-        break
-      end
+    if not love.keyboard.isDown('lshift') then
+      ctx.units:each(function(unit)
+        if unit.player == self then
+          unit.selected = false
+        end
+      end)
     end
-    if not dirty then
-      for i = 1, #self.deck do
-        self.deck[i].selected = false
+
+    ctx.units:each(function(unit)
+      if unit.player == self and unit:contains(x, y) then
+        unit.selected = true
+        return 1
       end
-    end
+    end)
   elseif b == 'r' then
     for i = 1, #self.deck do
-      if self.deck[i].selected and self.deck[i].instance then
-        local instance = self.deck[i].instance
-        instance.attackTarget = ctx.target:atMouse(instance, math.huge, 'enemy', 'unit')
-        if not instance.attackTarget then
-          instance.moveTarget = x
+      ctx.units:each(function(unit)
+        if unit.player == self and unit.selected then
+          unit.attackTarget = ctx.target:atMouse(unit, math.huge, 'enemy', 'unit')
+          if not unit.attackTarget then
+            unit.moveTarget = x
+          end
         end
-      end
+      end)
     end
   end
 end
@@ -229,11 +221,10 @@ function Player:summon()
 	local cooldown = self.deck[self.summonSelect].cooldown
   local population = self:getPopulation()
 	local cost = data.unit[minion].cost
-	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and not self.deck[self.summonSelect].instance and self:spend(cost) then
+	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(cost) then
 		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
     self.totalSummoned = self.totalSummoned + 1
     self.invincible = 0
-    self.deck[self.summonSelect].instance = unit
 
     for i = 1, #self.deck do
       if i == self.summonSelect then
@@ -346,9 +337,7 @@ function Player:initDeck()
         runes = deck.runes[i] or {},
         cooldown = 0,
         maxCooldown = 3,
-        code = code,
-        instance = nil,
-        selected = false
+        code = code
       }
 
       self.deck[i] = self.deck[code]
