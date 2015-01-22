@@ -6,16 +6,35 @@ Player.depth = 0
 Player.walkSpeed = 65
 
 Player.nextLevels = {
-  100,
-  300,
-  600,
-  1000,
-  1500,
-  2100,
-  2800,
-  3600,
-  4500,
-  5500
+  83,
+  174,
+  276,
+  388,
+  512,
+  650,
+  801,
+  969,
+  1154,
+  1358,
+  1584,
+  1833,
+  2107,
+  2411,
+  2746,
+  3115,
+  3523,
+  3973,
+  4470,
+  5018,
+  5624,
+  6291,
+  7028,
+  7842,
+  8740,
+  9730,
+  10824,
+  12031,
+  13363
 }
 
 
@@ -242,13 +261,15 @@ function Player:summon()
 		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
     self.totalSummoned = self.totalSummoned + 1
     self.invincible = 0
+    
+    local cooldown = table.count(ctx.units:filter(function(u) return u.class.code == minion end))
 
     for i = 1, #self.deck do
       if i == self.summonSelect then
-        self.deck[i].cooldown = math.max(config.player.baseCooldown - self.flatCooldownReduction, config.player.minCooldown)
+        self.deck[i].cooldown = math.max(cooldown - self.flatCooldownReduction, config.player.minCooldown)
         self.deck[i].maxCooldown = self.deck[i].cooldown
       else
-        local cd = math.max(config.player.globalCooldown - self.flatCooldownReduction, config.player.minCooldown)
+        local cd = math.max((cooldown / 2) - self.flatCooldownReduction, config.player.minCooldown)
         if cd > self.deck[i].cooldown then
           self.deck[i].cooldown = cd
           self.deck[i].maxCooldown = cd

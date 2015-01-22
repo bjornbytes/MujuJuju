@@ -218,9 +218,7 @@ function Unit:update()
     self.animation.speed = 1
   end
 
-  if self.player and math.abs(ctx.shrine.x - self.x) <= self.width / 2 + ctx.shrine.width / 2 then
-    self:heal(self.maxHealth * .02 * tickRate)
-  end
+  if self.player then self:hurt(self.maxHealth * .01 * tickRate) end
 end
 
 function Unit:draw()

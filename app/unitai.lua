@@ -1,13 +1,16 @@
 UnitAI = class()
 
 function UnitAI:update()
-  if not self.unit.player then self:changeTarget(ctx.target:closest(self.unit, 'enemy', 'shrine', 'player', 'unit')) end
 
+  -- Try to find something to attack if you're not doing anything
+  local changeTarget = not self.unit.player or (not self.unit.attackTarget and not self.unit.moveTarget)
+  if changeTarget then self:changeTarget(ctx.target:closest(self.unit, 'enemy', 'shrine', 'player', 'unit')) end
   local target = self.unit.attackTarget
-  if target and target.untargetable then
+
+  -- Give up if there is no target or our target is untargetable
+  if not target or target.untargetable then
     self.unit.attackTarget = nil
     target = nil
-    self.unit.animation:set('idle')
   end
 
   if target then
@@ -16,8 +19,11 @@ function UnitAI:update()
     else
       self:moveIntoRange(target)
     end
-  else
+  elseif self.unit.moveTarget and math.abs(self.unit.x - self.unit.moveTarget) > 1 then
     self:moveTowards(self.unit.moveTarget)
+  else
+    self.unit.moveTarget = nil
+    self.unit.animation:set('idle')
   end
 end
 

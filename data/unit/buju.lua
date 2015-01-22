@@ -5,7 +5,7 @@ Buju.description = 'A shadow warrior able to phase into and out of the juju real
 ----------------
 -- Stats
 ----------------
-Buju.health = 120
+Buju.health = 60
 Buju.damage = 22
 Buju.range = 16
 Buju.attackSpeed = 1

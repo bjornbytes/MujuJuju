@@ -34,7 +34,7 @@ function UnitBuffs:postupdate()
 
   if self:feared() then speed = speed / 2 end
 
-  self.unit.speed = speed
+  self.unit.speed = speed * (.5 + (self.unit.health / self.unit.maxHealth) ^ .5 / 2)
 
   -- Apply Roots and Stuns
   if self:rooted() or self:stunned() then self.unit.speed = 0 end
