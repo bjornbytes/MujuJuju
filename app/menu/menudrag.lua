@@ -121,6 +121,7 @@ function MenuDrag:mousereleased(mx, my, b)
   if self.dragging == 'gutterRune' and b == 'l' then
     local deck = ctx.main.geometry.deck
     for i = 1, #deck do
+      ctx.user.deck.runes[i] = ctx.user.deck.runes[i] or {}
       if #ctx.user.deck.runes[i] < 3 then
         local x, y, r, runes = unpack(deck[i])
 
