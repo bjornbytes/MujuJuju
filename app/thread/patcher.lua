@@ -27,4 +27,4 @@ if code == 200 and json.patch then
   love.filesystem.write('patch.zip', str)
 end
 
-response:push(json.patch)
+response:push(json and json.patch)
