@@ -8,7 +8,7 @@ function UnitAI:update()
   local target = self.unit.attackTarget
 
   -- Give up if there is no target or our target is untargetable or our target is too far away
-  if not target or target.untargetable or (self.unit.player and changeTarget and math.abs(self.unit.moveTarget - target.x) > 160 + self.width / 2) then
+  if not target or target.untargetable or (self.unit.player and changeTarget and math.abs(self.unit.moveTarget - target.x) > 160) then
     self.unit.attackTarget = nil
     target = nil
   end
