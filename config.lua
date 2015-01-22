@@ -112,7 +112,7 @@ return {
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .2,
-        levelScale = 1,
+        levelScale = .75,
         upgradeCostIncrease = 1,
         maxElites = 1,
         thresholds = {
@@ -166,7 +166,7 @@ return {
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
-        levelScale = 1.1,
+        levelScale = .85,
         upgradeCostIncrease = 1,
         maxElites = 1,
         thresholds = {
@@ -220,7 +220,7 @@ return {
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
-        levelScale = 1.25,
+        levelScale = .95,
         upgradeCostIncrease = 1,
         maxElites = 2,
         thresholds = {
@@ -274,7 +274,7 @@ return {
         minEnemyRateDecay = .11,
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
-        levelScale = 1.5,
+        levelScale = 1.05,
         upgradeCostIncrease = 1,
         maxElites = 3,
         thresholds = {
