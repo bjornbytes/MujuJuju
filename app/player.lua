@@ -182,6 +182,7 @@ function Player:keypressed(key)
         ctx.units:each(function(unit)
           if unit.class.code == self.deck[i].code then
             unit.selected = true
+            unit.glowScale = 4
           elseif not love.keyboard.isDown('lshift') then
             unit.selected = false
           end
@@ -215,6 +216,7 @@ function Player:mousepressed(x, y, b)
     ctx.units:each(function(unit)
       if unit.player == self and unit:contains(x, y) then
         unit.selected = true
+        unit.glowScale = 4
         return 1
       end
     end)
@@ -227,6 +229,8 @@ function Player:mousepressed(x, y, b)
           unit.attackTarget = ctx.target:atMouse(unit, math.huge, 'enemy', 'unit')
           if not unit.attackTarget then
             unit.moveTarget = x
+          elseif unit.attackTarget.glowScale then
+            unit.attackTarget.glowScale = 4
           end
         end
       end)

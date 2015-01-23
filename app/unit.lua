@@ -2,7 +2,7 @@ local g = love.graphics
 
 Unit = class()
 
-Unit.classStats = {'width', 'health', 'damage', 'range', 'attackSpeed', 'speed', 'flow'}
+Unit.classStats = {'width', 'height', 'health', 'damage', 'range', 'attackSpeed', 'speed', 'flow'}
 Unit.stanceList = {'defensive', 'aggressive', 'follow'}
 table.each(Unit.stanceList, function(stance, i) Unit.stanceList[stance] = i end)
 
@@ -151,9 +151,9 @@ function Unit:activate()
   end)
 
   self.healthDisplay = self.health
-  self.prev = {x = self.x, y = self.y, healthDisplay = self.healthDisplay}
+  self.prev = {x = self.x, y = self.y, health = self.health, healthDisplay = self.healthDisplay, knockup = 0, glowScale = 1}
   self.alpha = 0
-  self.hurtGlow = 0
+  self.glowScale = 1
 
   local r = love.math.random(0, 20)
   self.y = self.y + r
@@ -174,14 +174,14 @@ function Unit:deactivate()
 end
 
 function Unit:update()
-  self.prev.healthDisplay = self.healthDisplay
   self.prev.x = self.x
   self.prev.y = self.y
   self.prev.health = self.health
+  self.prev.healthDisplay = self.healthDisplay
   self.prev.knockup = self.knockup
+  self.prev.glowScale = self.glowScale
 
   self.alpha = math.lerp(self.alpha, self.dying and 0 or 1, math.min(10 * tickRate, 1))
-  self.hurtGlow = math.lerp(self.hurtGlow, 0, 10 * tickRate)
 
   if self.dying then
     self.channeling = false
@@ -208,6 +208,7 @@ function Unit:update()
   f.exe(self.class.update, self)
 
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
+  self.glowScale = math.lerp(self.glowScale, 1, math.min(6 * tickRate, 1))
 
   if self.animation.state.name == 'attack' then
     local current = self.animation.spine.animationState:getCurrent(0)
@@ -225,18 +226,10 @@ function Unit:draw()
   local lerpd = table.interpolate(self.prev, self, tickDelta / tickRate)
   local x, y, health = lerpd.x, lerpd.y, lerpd.health
 
-  local r, gg, b
-  local max = self.player and self.class.health or self.maxHealth
-  if lerpd.healthDisplay > max then
-    local prc = (self.maxHealth - lerpd.healthDisplay) / (self.maxHealth - max)
-    r = math.lerp(128, 0, prc)
-    gg = math.lerp(0, 255, prc)
-    b = math.lerp(255, 0, prc)
-  else
-    local prc = math.min(lerpd.healthDisplay / self.class.health, 1)
-    r = math.lerp(255, 0, prc)
-    gg = math.lerp(0, 255, prc)
-    b = math.lerp(0, 0, prc)
+  local r, gg, b = 0, 0, 0
+  if self.selected or self:contains(love.mouse.getPosition()) then
+    r = self.team == ctx.player.team and 0 or 255
+    gg = self.team == ctx.player.team and 255 or 0
   end
 
   self.canvas:clear(r, gg, b, 0)
@@ -250,10 +243,10 @@ function Unit:draw()
     g.setShader()
   end)
 
-  data.media.shaders.horizontalBlur:send('amount', self.selected and .001 or .0005)
-  data.media.shaders.verticalBlur:send('amount', self.selected and .001 or .0005)
+  data.media.shaders.horizontalBlur:send('amount', .00075 * lerpd.glowScale)
+  data.media.shaders.verticalBlur:send('amount', .00075 * lerpd.glowScale)
   g.setColor(255, 255, 255)
-  for i = 1, 1 do
+  for i = 1, 3 do
     g.setShader(data.media.shaders.horizontalBlur)
     self.backCanvas:renderTo(function()
       g.draw(self.canvas)
@@ -264,31 +257,10 @@ function Unit:draw()
     end)
   end
 
-  g.setShader(data.media.shaders.colorize)
-  g.setColor(r, gg, b)
-  self.backCanvas:clear(r, gg, b, 0)
-  self.backCanvas:renderTo(function()
-    g.draw(self.canvas)
-  end)
-  g.setShader()
-  
-  g.setColor(255, 255, 255, (self.selected and 200 or 128) * self.alpha)
+  g.setColor(r, gg, b, math.clamp(255 * self.alpha * lerpd.glowScale, 0, 255))
   g.draw(self.backCanvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
   g.setColor(255, 255, 255)
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
-
-  if self.hurtGlow > .01 and not self.spawning and self.alpha > .99 then
-    table.each(self.animation.spine.skeleton.slots, function(slot)
-      slot.a = self.hurtGlow
-      slot.data.additiveBlending = true
-    end)
-    self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
-    table.each(self.animation.spine.skeleton.slots, function(slot)
-      slot.a = 1
-      slot.data.additiveBlending = false
-    end)
-    g.setBlendMode('alpha')
-  end
 
   if self.buffs:feared() then
     g.setColor(255, 255, 255, 150 * self.alpha)
@@ -370,10 +342,6 @@ function Unit:hurt(amount, source, kind)
     ctx.units:each(function(u)
       if u.attackTarget == self then u.attackTarget = nil end
     end)
-  end
-
-  if amount > 5 then
-    self.hurtGlow = .2
   end
 
   return amount

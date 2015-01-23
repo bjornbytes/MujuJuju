@@ -35,15 +35,17 @@ function Map:init()
       local scale = self.height / image:getHeight()
       g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
 
-      --[[g.setColor(255, 255, 255)
-      local image = data.media.graphics.map[ctx.biome .. 'Midground']
-      local scale = self.height / image:getHeight()
-      g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)
-
-      g.setColor(255, 255, 255, alpha)
-      local image = data.media.graphics.map[ctx.biome .. 'MidgroundSpirit']
-      local scale = self.height / image:getHeight()
-      g.draw(image, 0 * scale, 0 * scale, 0, scale, scale)]]
+      ctx.units:each(function(unit)
+        if unit.selected then
+          local lerpd = table.interpolate(unit.prev, unit, tickDelta / tickRate)
+          g.setBlendMode('additive')
+          g.setColor(0, 255, 0, 100)
+          local image = data.media.graphics.particles.ring
+          local scale = unit.width / image:getWidth()
+          g.draw(image, lerpd.x, ctx.map.height - ctx.map.groundHeight, 0, scale, scale / 2, image:getWidth() / 2, image:getHeight() / 2)
+          g.setBlendMode('alpha')
+        end
+      end)
     end
   }
 

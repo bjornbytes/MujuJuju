@@ -137,7 +137,7 @@ function HudHealth:update()
     local targetY = math.round(ctx.map.height - ctx.map.groundHeight - unit.height * 2 - (binIndex - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + .5))
     targetY = targetY - (self.bins[unit.class.code][self.unitBins[unit]].offsetY or 0)
     self.unitBarPrevY[unit] = self.unitBarY[unit] or startY
-    self.unitBarY[unit] = self.unitBarY[unit] and math.lerp(self.unitBarY[unit], targetY, math.min(200 * tickRate, 1)) or startY
+    self.unitBarY[unit] = self.unitBarY[unit] and math.lerp(self.unitBarY[unit], targetY, math.min(20 * tickRate, 1)) or startY
   end)
 end
 
@@ -175,22 +175,6 @@ function HudHealth:draw()
     bar(x, y - 65, hard, soft, color, w, h)
   end)
 
-  local ground = ctx.map.height - ctx.map.groundHeight
-  ctx.units:each(function(unit)
-    if unit.player then
-      if unit.attackTarget then
-        g.setColor(255, 0, 0)
-        g.line(unit.attackTarget.x - 4, ground - 4, unit.attackTarget.x + 4, ground + 4)
-        g.line(unit.attackTarget.x - 4, ground + 4, unit.attackTarget.x + 4, ground - 4)
-      elseif unit.moveTarget then
-        local targetx = unit.moveTarget
-        g.setColor(0, 255, 0)
-        g.line(targetx - 4, ground - 4, targetx + 4, ground + 4)
-        g.line(targetx - 4, ground + 4, targetx + 4, ground - 4)
-      end
-    end
-  end)
-
   table.each(self.bins, function(binList)
     table.each(binList, function(bin)
       local totalx = 0
@@ -210,54 +194,41 @@ function HudHealth:draw()
       local scale = width / w
       local xx = math.round(x - width / 2)
       local yy = math.round(y)
-
-      for j = 1, #bin.units do
-        local unit = bin.units[j]
-        local barY = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], tickDelta / tickRate)
-        g.setColor(255, 255, 255, 80 * bin.units[j].alpha)
-        g.draw(frame, xx, barY, 0, scale, scale)
-      end
-
-      xx = xx + math.round(3 * scale)
-      yy = yy + math.round(3 * scale)
-
+      local barx = xx + math.round(3 * scale)
+      local bary = yy + math.round(3 * scale)
       local barWidth = math.round(width - 6 * scale)
       local barHeight = data.media.graphics.healthbarGradient:getHeight()
 
       for j = 1, #bin.units do
+
+        -- Frame
         local unit = bin.units[j]
-        g.setColor(color[1], color[2], color[3], 200 * unit.alpha)
+        local alpha = (.5 + ((unit.selected or unit:contains(love.mouse.getPosition())) and .5 or 0)) * unit.alpha
+        local framey = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], tickDelta / tickRate)
+        g.setColor(255, 255, 255, 120 * alpha)
+        g.draw(frame, xx, framey, 0, scale, scale)
+
+        -- Bar
         local y = self.unitBarY[unit] + math.round(3 * scale)
-        --local y = math.round(yy + (j - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + 1.5))
         local _, _, hard, soft = unit:getHealthbar()
-        g.setColor(color[1], color[2], color[3], 100 * unit.alpha)
-        g.draw(data.media.graphics.healthbarBar, xx, y, 0, hard * barWidth, scale)
+        g.setColor(color[1], color[2], color[3], 150 * alpha)
+        g.draw(data.media.graphics.healthbarBar, barx, y, 0, hard * barWidth, scale)
         if soft then
-          g.setColor(color[1], color[2], color[3], 50)
-          g.draw(data.media.graphics.healthbarBar, xx, y, 0, soft * barWidth, scale)
+          g.setColor(color[1], color[2], color[3], 75 * alpha)
+          g.draw(data.media.graphics.healthbarBar, barx, y, 0, soft * barWidth, scale)
         end
 
+        -- Elite buffs
         local elitebuffs = unit.buffs:buffsWithTag('elite')
         if next(elitebuffs) then
           local string = ''
-          table.each(elitebuffs, function(buff)
-            string = string .. buff.code:capitalize() .. ' '
-          end)
-
+          table.each(elitebuffs, function(buff) string = string .. buff.code:capitalize() .. ' ' end)
           g.setFont('pixel', 8)
           local texty = y + data.media.graphics.healthbarBar:getHeight() * scale / 2 - g.getFont():getHeight() / 2
           g.setColor(255, 255, 255)
           g.printShadow(string, x, texty, true)
         end
       end
-
-      g.setBlendMode('additive')
-      for j = 1, #bin.units do
-        local y = self.unitBarY[bin.units[j]] + math.round(3 * scale)
-        g.setColor(255, 255, 255, 180)
-        --g.draw(data.media.graphics.healthbarGradient, xx, y, 0, 1 * math.round(width - 6 * scale), scale)
-      end
-      g.setBlendMode('alpha')
     end)
   end)
 end
