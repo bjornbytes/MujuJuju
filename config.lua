@@ -58,7 +58,7 @@ return {
         lifesteal = .5
       },
       spined = {
-        reflect = 1 
+        reflect = 1
       },
       venomous = {
         dotModifier = .35,
@@ -68,7 +68,9 @@ return {
         healthModifier = 2.5,
         slow = .5
       },
-      pure = {}
+      demolisher = {
+        damageModifier = 5
+      }
     }
   },
 
