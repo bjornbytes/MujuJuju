@@ -7,7 +7,7 @@ Juju.rarity = 6
 function Juju:activate()
   local p = ctx.player
   local amount = 25 + 5 * math.floor(ctx.timer * tickRate / 60)
-  p.juju = p.juju + amount
+  p:addJuju(amount)
   ctx.hud.status.jujuScale = 2
   ctx.hud.status.jujuAngle = 0
   ctx.spells:add('arcadetext', {

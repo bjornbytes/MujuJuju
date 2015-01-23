@@ -98,7 +98,7 @@ function HudStatus:draw()
   -- Juju Text
   g.setFont('mesmerize', height * .4)
   g.setColor(255, 255, 255)
-  local str = math.floor(self.jujuDisplay)
+  local str = p.skillPoints
   g.print(str, xx + (v * .03), (height * .5) - g.getFont():getHeight() / 2)
   local hitboxWidth = (xx + (v * .03) + g.getFont():getWidth(str)) - hitboxX
   self.hitboxes.juju[1] = hitboxX
@@ -161,9 +161,9 @@ function HudStatus:draw()
   local str = math.round(ctx.units.level / .1) * .1 .. '\n' .. math.round(ctx.units.minEnemyRate / .1) * .1 .. ' - ' .. math.round(ctx.units.maxEnemyRate / .1) * .1 .. '\n' .. 1 + math.floor(ctx.units.level * config.biomes[ctx.biome].units.maxEnemiesCoefficient)
   g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)]]
 
-  -- Level debug text
-  g.setFont('pixel', 8)
+  -- Experience debug text
+  --[[g.setFont('pixel', 8)
   g.setColor(255, 255, 255)
   local str = 'Level ' .. p.level .. '\n' .. math.floor(p.experience) .. ' / ' .. p.nextLevels[p.level] .. '\n' .. p.skillPoints .. ' skill points'
-  g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)
+  g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)]]
 end
