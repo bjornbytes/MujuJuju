@@ -6,7 +6,7 @@ Spuju.description = 'Yay Spuju.'
 -- Stats
 ----------------
 Spuju.health = 50
-Spuju.damage = 10
+Spuju.damage = 8
 Spuju.range = 165
 Spuju.attackSpeed = 1.5
 Spuju.speed = 20
