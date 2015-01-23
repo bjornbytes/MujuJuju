@@ -145,12 +145,16 @@ end
 function Tooltip:setAttributeTooltip(attribute, unit)
   local p = ctx.player
   local pieces = {}
-  table.insert(pieces, '{white}{title}' .. attribute:capitalize() .. '{normal}\n')
+  table.insert(pieces, '{white}{title}' .. attribute:capitalize() .. '{normal}')
   if unit then
     if type(unit) == 'string' then unit = data.unit[unit] end
     local level = unit.attributes[attribute]
-    --table.insert(pieces, '+' .. attribute.amount .. ' ' .. attribute.stat .. ' per level {green}(' .. (attribute.amount * attribute.level) .. '){white}')
+    table.each(config.attributes[attribute], function(amount, stat)
+      table.insert(pieces, '+' .. amount .. ' ' .. stat .. ' per level {green}(' .. (amount * level) .. '){white}')
+    end)
   end
+
+  table.insert(pieces, '')
 
   return self:setTooltip(table.concat(pieces, '\n'))
 end
