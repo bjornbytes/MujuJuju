@@ -2,13 +2,15 @@ UnitAI = class()
 
 function UnitAI:update()
 
+  local stance = self.unit.player and self.unit.player.deck[self.unit.class.code].stance or 'aggressive'
+
   -- Try to find something to attack if you're not doing anything
   local changeTarget = not self.unit.player or (not self.unit.attackTarget and math.abs(self.unit.x - self.unit.moveTarget) < 1)
   if changeTarget then self:changeTarget(ctx.target:closest(self.unit, 'enemy', 'shrine', 'player', 'unit')) end
   local target = self.unit.attackTarget
 
   -- Give up if there is no target or our target is untargetable or our target is too far away
-  if not target or target.untargetable or (self.unit.player and changeTarget and math.abs(self.unit.moveTarget - target.x) > 160) then
+  if not target or target.untargetable or (stance == 'defensive' and self.unit.player and changeTarget and math.abs(self.unit.moveTarget - target.x) > 160) then
     self.unit.attackTarget = nil
     target = nil
   end

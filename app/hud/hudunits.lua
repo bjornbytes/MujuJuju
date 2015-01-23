@@ -218,6 +218,24 @@ function HudUnits:draw()
       g.drawRune(rune, runex, runey, runeSize * 2, (runeSize - .01175 * v) * 2)
       runex = runex + runeInc
     end
+
+    -- Stance
+    local stances = {'aggressive', 'defensive'}
+    local stanceSize = v * .1 * scale
+    local stanceInc = stanceSize + (.02 * v)
+    local stancex = xx - (stanceInc * (#stances - 1) / 2)
+    local stancey = runey + .06 * v
+    g.setFont('pixel', 8)
+    for j = 1, #stances do
+      local x, y, w, h = stancex - stanceSize/ 2, stancey - stanceSize / 2, stanceSize, stanceSize
+      g.setColor(0, 0, 0, 200 * alpha)
+      g.rectangle('fill', x, y, w, h)
+      if p.deck[i].stance == stances[j] then g.setColor(255, 255, 255, 255 * alpha)
+      else g.setColor(100, 100, 100, 255 * alpha) end
+      g.rectangle('line', x, y, w, h)
+      g.printCenter(stances[j]:sub(1, 3), x + w / 2, y + h / 2)
+      stancex = stancex + stanceInc
+    end
     
     xx = xx + inc
   end

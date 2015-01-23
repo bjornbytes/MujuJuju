@@ -199,6 +199,13 @@ function Player:keypressed(key)
 	if key == ' ' and not self.dead then
 		self:summon()
 	end
+
+  -- Stances with z and x
+  if key == 'z' then
+    self.deck[self.summonSelect].stance = 'aggressive'
+  elseif key == 'x' then
+    self.deck[self.summonSelect].stance = 'defensive'
+  end
 end
 
 function Player:mousepressed(x, y, b)
@@ -415,7 +422,8 @@ function Player:initDeck()
         runes = deck.runes[i] or {},
         cooldown = 0,
         maxCooldown = 3,
-        code = code
+        code = code,
+        stance = 'aggressive'
       }
 
       self.deck[i] = self.deck[code]
