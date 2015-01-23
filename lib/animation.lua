@@ -29,8 +29,7 @@ end
 function Animation:draw(x, y, options)
   options = options or {}
   local skeleton, animationState = self.spine.skeleton, self.spine.animationState
-  skeleton.x = x + (self.offsetx or 0)
-  skeleton.y = y + (self.offsety or 0)
+  self:setPosition(x, y)
   skeleton.flipX = self.flipped
   if self.backwards then skeleton.flipX = not skeleton.flipX end
   if not options.noupdate then self:tick(delta) end
@@ -59,6 +58,12 @@ end
 function Animation:tick(delta)
   self.spine.animationState:update(delta * (self.state.speed or 1) * self.speed)
   self.spine.animationState:apply(self.spine.skeleton)
+end
+
+function Animation:setPosition(x, y)
+  local skeleton = self.spine.skeleton
+  skeleton.x = x + (self.offsetx or 0)
+  skeleton.y = y + (self.offsety or 0)
 end
 
 function Animation:set(name, options)

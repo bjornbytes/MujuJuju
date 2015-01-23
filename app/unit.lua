@@ -152,7 +152,7 @@ function Unit:activate()
 
   self.healthDisplay = self.health
   self.prev = {x = self.x, y = self.y, health = self.health, healthDisplay = self.healthDisplay, knockup = 0, glowScale = 1}
-  self.alpha = 0
+  self.alpha = 1
   self.glowScale = 1
 
   local r = love.math.random(0, 20)
@@ -232,7 +232,7 @@ function Unit:draw()
 
   self.canvas:clear(r, gg, b, 0)
   self.backCanvas:clear(r, gg, b, 0)
-  g.setColor(r, gg, b)
+  g.setColor(r, gg, b, 255 * self.alpha)
 
   local shader = data.media.shaders.colorize
   self.canvas:renderTo(function()
@@ -241,8 +241,8 @@ function Unit:draw()
     g.setShader()
   end)
 
-  data.media.shaders.horizontalBlur:send('amount', .00075 * lerpd.glowScale)
-  data.media.shaders.verticalBlur:send('amount', .00075 * lerpd.glowScale)
+  data.media.shaders.horizontalBlur:send('amount', .0005 * lerpd.glowScale)
+  data.media.shaders.verticalBlur:send('amount', .0005 * lerpd.glowScale)
   g.setColor(255, 255, 255)
   for i = 1, 3 do
     g.setShader(data.media.shaders.horizontalBlur)
@@ -254,11 +254,16 @@ function Unit:draw()
       g.draw(self.backCanvas)
     end)
   end
+  g.setShader()
 
-  g.setColor(r, gg, b, math.clamp(255 * self.alpha * lerpd.glowScale, 0, 255))
-  g.draw(self.backCanvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
   g.setColor(255, 255, 255)
-  self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
+  self.canvas:renderTo(function()
+    self.animation:draw(200, 200, {noupdate = true})
+  end)
+
+  g.setColor(255, 255, 255, 255 * self.alpha)
+  g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
+  self.animation:setPosition(x, y - (lerpd.knockup or 0))
 
   if self.buffs:feared() then
     g.setColor(255, 255, 255, 150 * self.alpha)
