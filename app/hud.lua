@@ -3,12 +3,6 @@ Hud.depth = -100
 
 local g = love.graphics
 
-local normalFont = love.graphics.newFont('media/fonts/inglobal.ttf', 14)
-local fancyFont = love.graphics.newFont('media/fonts/inglobal.ttf', 24)
-local boldFont = love.graphics.newFont('media/fonts/inglobalb.ttf', 14)
-local deadFontBig = love.graphics.newFont('media/fonts/inglobal.ttf', 64)
-local deadFontSmall = love.graphics.newFont('media/fonts/inglobal.ttf', 44)
-
 function Hud:init()
 	self.tooltip = nil
 	self.tooltipRaw = ''
@@ -17,7 +11,6 @@ function Hud:init()
 	self.deadQuit = data.media.graphics.deathReplay
 	self.pauseAlpha = 0
 	self.pauseScreen = data.media.graphics.pauseMenu
-	self.protectAlpha = 3
 
   self.u, self.v = love.graphics.getDimensions()
   self.selector = HudSelector()
@@ -44,7 +37,6 @@ function Hud:update()
 
 	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
-	self.protectAlpha = math.max(self.protectAlpha - tickRate, 0)
 
   self.tooltip:update()
   self.button:update()
@@ -79,16 +71,6 @@ function Hud:gui()
     self.portrait:draw()
     table.with(self.shrujuPatches, 'draw')
     self.shruju:draw()
-
-		-- Protect message
-		if self.protectAlpha > .1 then
-			g.setFont(deadFontBig)
-			g.setColor(0, 0, 0, 150 * math.min(self.protectAlpha, 1))
-			g.printf('Protect Your Shrine!', 2, h * .25 + 2, w, 'center')
-			g.setColor(253, 238, 65, 255 * math.min(self.protectAlpha, 1))
-			g.printf('Protect Your Shrine!', 0, h * .25, w, 'center')
-			g.setFont(boldFont)
-		end
 
 		-- Pause Menu
 		if self.pauseAlpha > .01 then
