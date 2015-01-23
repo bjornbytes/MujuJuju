@@ -150,10 +150,6 @@ function Player:update()
   -- Health decay
 	self:hurt(self.maxHealth * .033 * tickRate)
 
-  -- Max health increases over time
-  self.maxHealth = self.maxHealth + (.35 * tickRate)
-  self.health = self.health + (.35 * tickRate)
-
   -- Lerp healthbar
 	self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
@@ -354,6 +350,8 @@ function Player:addJuju(amount)
     self.level = self.level + 1
     self.skillPoints = self.skillPoints + 1
     self.attributePoints = self.attributePoints + 2
+    self.maxHealth = self.maxHealth + 50
+    self.health = self.health + 50
   end
 
   self.totalJuju = self.totalJuju + amount

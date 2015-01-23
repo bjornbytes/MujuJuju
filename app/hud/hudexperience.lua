@@ -15,11 +15,7 @@ function HudExperience:update()
   local target = 0
   if not p.nextLevels[p.level] then target = 0
   else target = (p.experience - prev) / (p.nextLevels[p.level] - prev) end
-  if self.display > target then
-    self.prevDisplay, self.display = target, target
-  else
-    self.display = math.lerp(self.display, target, math.min(10 * tickRate, 1))
-  end
+  self.display = math.lerp(self.display, target, math.min(10 * tickRate, 1))
 end
 
 function HudExperience:draw()
