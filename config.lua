@@ -43,15 +43,16 @@ return {
     jujuModifier = 2,
     minimumLevel = 20,
     scale = 1.25,
-    healthModifier = 3,
+    healthModifier = 6,
     damageModifier = 1.5,
     buffs = {
       sinister = {
-        damageModifier = 1.5
+        damageModifier = 1.75
       },
       chilling = {
-        exhaust = .3,
-        slow = .3
+        exhaust = .65,
+        slow = .65,
+        duration = 1
       },
       parasitic = {
         lifesteal = .5
@@ -64,7 +65,7 @@ return {
         dotTimer = 3
       },
       hulking = {
-        healthModifier = 3,
+        healthModifier = 2.5,
         slow = .5
       },
       pure = {}

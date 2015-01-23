@@ -10,17 +10,13 @@ Player.nextLevels = {200}
 for i = 2, 30 do
   local prev = Player.nextLevels[i - 1]
   local diff = prev - (Player.nextLevels[i - 2] or 0)
-  Player.nextLevels[i] = math.round(prev + 1.135 * diff ^ 1.001)
+  Player.nextLevels[i] = math.round(prev + 1.135 * diff)
 end
 
 ----------------
 -- Core
 ----------------
 function Player:init()
-  table.print(self.nextLevels)
-  for i = 1, #self.nextLevels do
-    print(self.nextLevels[i] - (self.nextLevels[i - 1] or 0))
-  end
 
   -- Physics
 	self.x = ctx.map.width / 2
