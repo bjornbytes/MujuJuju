@@ -235,26 +235,29 @@ end
 -- Behavior
 ----------------
 function Player:move()
-	if self.dead or self.animation.state.name == 'summon' or self.animation.state.name == 'death' or self.animation.state.name == 'resurrect' then
+
+  -- If we can't move then don't move
+  local animation = self.animation.state.name
+	if self.dead or animation == 'summon' or animation == 'death' or animation == 'resurrect' then
 		self.speed = 0
-	else
-		local maxSpeed = self.walkSpeed
-		if self.gamepad and math.abs(self.gamepad:getGamepadAxis('leftx')) > .5 then
-			maxSpeed = self.walkSpeed * math.abs(self.gamepad:getGamepadAxis('leftx'))
-		end
-		if love.keyboard.isDown('left', 'a') or (self.gamepad and self.gamepad:getGamepadAxis('leftx') < -.5) then
-			self.speed = math.lerp(self.speed, -maxSpeed, math.min(10 * tickRate, 1))
-		elseif love.keyboard.isDown('right', 'd') or (self.gamepad and self.gamepad:getGamepadAxis('leftx') > .5) then
-			self.speed = math.lerp(self.speed, maxSpeed, math.min(10 * tickRate, 1))
-		else
-			self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
-		end
+    return
+  end
 
-		local delta = self.x + self.speed * tickRate
-		self.x = self.x + self.speed * tickRate
-		self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
-	end
+  -- Adjust speed to target speed based on keystate
+  local maxSpeed = self.walkSpeed
+  if love.keyboard.isDown('left', 'a') then
+    self.speed = math.lerp(self.speed, -maxSpeed, math.min(10 * tickRate, 1))
+  elseif love.keyboard.isDown('right', 'd') then
+    self.speed = math.lerp(self.speed, maxSpeed, math.min(10 * tickRate, 1))
+  else
+    self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
+  end
 
+  -- Actually move
+  self.x = self.x + self.speed * tickRate
+  self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
+
+  -- Don't go outside map
 	self.x = math.clamp(self.x, 0, love.graphics.getWidth())
 end
 
