@@ -80,6 +80,7 @@ function HudUnits:update()
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
         ctx.hud.tooltip:setAttributeTooltip(attribute, p.deck[i].code)
+        ctx.cursor:hover()
       end
     end
   end
@@ -91,6 +92,7 @@ function HudUnits:update()
       local x, y, w, h = unpack(upgrades[i][j])
       if math.inside(mx, my, x, y, w, h) then
         ctx.hud.tooltip:setUpgradeTooltip(who, what)
+        ctx.cursor:hover()
       end
     end
   end
@@ -125,6 +127,7 @@ function HudUnits:update()
     for j = 1, runeCount do
       if math.insideCircle(mx, my, runex, runey, runeSize) then
         ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
+        ctx.cursor:hover()
       end
       runex = runex + runeInc
     end
@@ -228,10 +231,10 @@ function HudUnits:draw()
     g.setFont('pixel', 8)
     for j = 1, #stances do
       local x, y, w, h = stancex - stanceSize/ 2, stancey - stanceSize / 2, stanceSize, stanceSize
-      g.setColor(0, 0, 0, 200 * alpha)
+      g.setColor(0, 0, 0, 200 * alpha * math.clamp(1 - upgradeFactor, 0, 1))
       g.rectangle('fill', x, y, w, h)
-      if p.deck[i].stance == stances[j] then g.setColor(255, 255, 255, 255 * alpha)
-      else g.setColor(100, 100, 100, 255 * alpha) end
+      if p.deck[i].stance == stances[j] then g.setColor(255, 255, 255, 255 * alpha * math.clamp(1 - upgradeFactor, 0, 1))
+      else g.setColor(100, 100, 100, 255 * alpha * math.clamp(1 - upgradeFactor, 0, 1)) end
       g.rectangle('line', x, y, w, h)
       g.printCenter(stances[j]:sub(1, 3), x + w / 2, y + h / 2)
       stancex = stancex + stanceInc
@@ -348,7 +351,8 @@ function HudUnits:mousereleased(mx, my, b)
       if math.inside(mx, my, x, y, w, h) then
         local attribute = data.unit[p.deck[i].code].attributes[config.attributes[j]]
         local cost = ctx.upgrades.attributeCostBase + (ctx.upgrades.attributeCostIncrease * attribute.level)
-        if p:spend(cost) then
+        if attribute.level < p.level and p.attributePoints > 0 then
+          p.attributePoints = p.attributePoints - 1
           attribute.level = attribute.level + 1
           table.each(ctx.units.objects, function(unit)
             if unit.class.code == p.deck[i].code then

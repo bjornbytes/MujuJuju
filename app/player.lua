@@ -74,6 +74,7 @@ function Player:init()
   self.experience = 0
   self.level = 1
   self.skillPoints = 0
+  self.attributePoints = 0
 
   -- List of Shruju with effects (usually magic shruju)
   self.shruju = {}
@@ -349,6 +350,7 @@ function Player:addJuju(amount)
   while self.experience >= self.nextLevels[self.level] do
     self.level = self.level + 1
     self.skillPoints = self.skillPoints + 1
+    self.attributePoints = self.attributePoints + 3
   end
 
   self.totalJuju = self.totalJuju + amount

@@ -218,6 +218,10 @@ function Unit:update()
   else
     self.animation.speed = 1
   end
+
+  if self:contains(love.mouse.getPosition()) then
+    ctx.cursor:hover()
+  end
 end
 
 function Unit:draw()

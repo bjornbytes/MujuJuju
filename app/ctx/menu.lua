@@ -7,13 +7,10 @@ Menu.started = false
 function Menu:load(selectedBiome, options)
   data.load()
 
+  self.cursor = Cursor()
   self.sound = Sound()
   self.menuSounds = self.sound:loop('riteOfPassage')
   if options and options.muted then self.sound:mute() end
-
-  self.cursor = love.mouse.newCursor('media/graphics/cursor.png')
-  self.cursorHover = love.mouse.newCursor('media/graphics/cursorHover.png', 3, 2)
-  love.mouse.setCursor(self.cursor)
 
   if not love.filesystem.exists('save/user.json') then
     love.filesystem.createDirectory('save')
@@ -64,6 +61,7 @@ function Menu:load(selectedBiome, options)
 end
 
 function Menu:update()
+  self.cursor:update()
   self.tooltip:update()
   self.button:update()
 
@@ -73,8 +71,6 @@ function Menu:update()
   self.start:update()
   self.choose:update()
   self.main:update()
-
-  love.mouse.setCursor((self.button.hoverFactor > 0 or self.tooltip.active) and self.cursorHover or self.cursor)
 end
 
 function Menu:draw()
