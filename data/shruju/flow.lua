@@ -1,24 +1,16 @@
 local Flow = extend(Shruju)
 
 Flow.name = 'Flow'
-Flow.description = 'The cooldown for minion summoning is reduced by .5s.'
-Flow.cdr = .5
+Flow.description = 'Summon recharge rate increased by 10%'
+Flow.cdr = .1
 Flow.rarity = 5
 
 function Flow:activate()
   local p = ctx.player
-  p.flatCooldownReduction = p.flatCooldownReduction + self.cdr
-
-  ctx.shrujuPatches.flowLevel = ctx.shrujuPatches.flowLevel + 1
-
-  if ctx.shrujuPatches.flowLevel >= ctx.shrujuPatches.maxFlowLevel then
-    table.each(ctx.shrujuPatches.objects, function(patch)
-      patch:removeType('flow')
-    end)
-  end
+  p.cooldownSpeed = p.cooldownSpeed + self.cdr
 
   ctx.spells:add('arcadetext', {
-    text = self.cdr .. 's faster cooldown',
+    text = self.cdr .. '% faster cooldown',
     x = p.x,
     y = p.y - 40
   })

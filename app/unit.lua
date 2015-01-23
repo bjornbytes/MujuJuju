@@ -181,8 +181,6 @@ function Unit:update()
   self.prev.knockup = self.knockup
   self.prev.glowScale = self.glowScale
 
-  self.alpha = math.lerp(self.alpha, self.dying and 0 or 1, math.min(10 * tickRate, 1))
-
   if self.dying then
     self.channeling = false
     self.spawning = false

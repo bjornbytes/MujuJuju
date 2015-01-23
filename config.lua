@@ -61,7 +61,7 @@ return {
     globalCooldown = 3,
     baseJuju = 30,
     jujuRate = 1,
-    basePopulation = 3,
+    basePopulation = 1,
     maxPopulation = 10,
     colors = {
       purple = {.5, 0, 1},

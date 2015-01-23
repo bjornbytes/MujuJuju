@@ -13,7 +13,7 @@ Spuju.speed = 20
 Spuju.flow = 1
 
 Spuju.healthScaling = {6, .9}
-Spuju.damageScaling = {1, .9}
+Spuju.damageScaling = {.5, .9}
 
 Spuju.attackSpell = 'spujuskull'
 

@@ -6,11 +6,11 @@ SpiritRush.duration = 90
 SpiritRush.rarity = 1
 
 function SpiritRush:activate()
-  ctx.player.flatCooldownReduction = ctx.player.flatCooldownReduction + 10
+  ctx.player.cooldownSpeed = ctx.player.cooldownSpeed + 1
 end
 
 function SpiritRush:deactivate()
-  ctx.player.flatCooldownReduction = ctx.player.flatCooldownReduction - 10
+  ctx.player.cooldownSpeed = ctx.player.cooldownSpeed - 1
 end
 
 return SpiritRush

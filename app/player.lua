@@ -54,7 +54,7 @@ function Player:init()
   self.walkSpeed = Player.walkSpeed
 
   -- Health
-  self.maxHealth = 250
+  self.maxHealth = 100
   self.health = self.maxHealth
   self.healthDisplay = self.health
   self.prevHealthDisplay = self.healthDisplay
@@ -88,7 +88,7 @@ function Player:init()
   -- Buffs
 	self.invincible = 0
   self.ghostSpeedMultiplier = 1
-  self.flatCooldownReduction = 0
+  self.cooldownSpeed = 1
 end
 
 function Player:activate()
@@ -131,9 +131,13 @@ function Player:update()
 	self.invincible = timer.rot(self.invincible)
 
   for i = 1, #self.deck do
-    self.deck[i].cooldown = timer.rot(self.deck[i].cooldown, function()
-      ctx.hud.units.cooldownPop[i] = 1
-    end)
+    if self.deck[i].cooldown > 0 then
+      self.deck[i].cooldown = self.deck[i].cooldown - tickRate * self.cooldownSpeed
+      if self.deck[i].cooldown <= 0 then
+        ctx.hud.units.cooldownPop[i] = 1
+        self.deck[i].cooldown = 0
+      end
+    end
   end
 
   table.each(self.shruju, function(shruju, i)
@@ -307,10 +311,9 @@ function Player:summon()
   -- Set cooldowns (global cooldown)
   local cooldown = 1 + table.count(ctx.units:filter(function(u) return u.player ~= nil end))
   for i = 1, #self.deck do
-    local cd = math.max(cooldown - self.flatCooldownReduction, config.player.minCooldown)
-    if cd > self.deck[i].cooldown then
-      self.deck[i].cooldown = cd
-      self.deck[i].maxCooldown = cd
+    if cooldown > self.deck[i].cooldown then
+      self.deck[i].cooldown = cooldown
+      self.deck[i].maxCooldown = cooldown
     end
   end
 

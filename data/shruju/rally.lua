@@ -2,7 +2,7 @@ local Rally = extend(Shruju)
 
 Rally.name = 'Rally'
 Rally.description = 'On use, increases the maximum number of minions you can have summoned at a time by 1.'
-Rally.rarity = 5
+Rally.rarity = 4
 
 function Rally:activate()
   local p = ctx.player

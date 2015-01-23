@@ -14,6 +14,7 @@ function Button:update()
   self.prevHoverFactor = self.hoverFactor
   if self.hoverActive then
     self.hoverFactor = math.lerp(self.hoverFactor, 1, math.min(8 * tickRate, 1))
+    ctx.cursor:hover()
   else
     self.hoverFactor = 0
   end
