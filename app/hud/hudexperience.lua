@@ -21,16 +21,15 @@ function HudExperience:update()
   end
 
   if self.dingTimer > 0 then
-    target = 1
     self.dingTimer = timer.rot(self.dingTimer, function()
       self.display = 0
       self.prevDisplay = 0
     end)
-  else
-    local prev = p.nextLevels[p.level - 1] or 0
-    if not p.nextLevels[p.level] then target = 0
-    else target = (p.experience - prev) / (p.nextLevels[p.level] - prev) end
   end
+
+  local prev = p.nextLevels[p.level - 1] or 0
+  if not p.nextLevels[p.level] then target = 0
+  else target = (p.experience - prev) / (p.nextLevels[p.level] - prev) end
 
   self.display = math.lerp(self.display, target, math.min(10 * tickRate, 1))
 end
@@ -45,8 +44,8 @@ function HudExperience:draw()
   g.setBlendMode('alpha')
 
   if self.dingTimer > 0 then
-    g.setFont('mesmerize', .1 * v)
+    g.setFont('mesmerize', .08 * v)
     g.setColor(255, 255, 255, math.min(self.dingTimer / .2, 1) * 255)
-    g.printShadow('Level Up!', u * .5, v * .5, true)
+    g.printCenter('Level Up!', u * .5, v * .4, true)
   end
 end

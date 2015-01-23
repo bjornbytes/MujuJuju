@@ -351,7 +351,7 @@ function Player:addJuju(amount)
     self.skillPoints = self.skillPoints + 1
     self.attributePoints = self.attributePoints + 2
     self.maxHealth = self.maxHealth + 50
-    self.health = self.health + 50
+    self:heal(50)
   end
 
   self.totalJuju = self.totalJuju + amount
@@ -387,6 +387,7 @@ function Player:spawn()
 end
 
 function Player:heal(amount, source)
+  if self.dead then return end
   self.health = math.min(self.health + amount, self.maxHealth)
 end
 

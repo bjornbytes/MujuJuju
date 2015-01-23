@@ -39,7 +39,7 @@ function Units:createEnemy()
     return .5
   end
 
-  return self.minEnemyRate + love.math.random() * (self.maxEnemyRate - self.minEnemyRate)
+  return math.clamp(love.math.randomNormal(self.maxEnemyRate - self.minEnemyRate, (self.minEnemyRate + self.maxEnemyRate) / 2), tickRate, self.maxEnemyRate)
 end
 
 function Units:update()
