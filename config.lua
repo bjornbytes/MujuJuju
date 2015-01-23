@@ -107,8 +107,8 @@ return {
         }
       },
       units = {
-        minEnemyRate = 11,
-        maxEnemyRate = 14,
+        minEnemyRate = 13,
+        maxEnemyRate = 16,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .05,
         maxEnemiesCoefficient = .2,
