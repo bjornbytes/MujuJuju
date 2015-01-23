@@ -7,35 +7,35 @@ Player.walkSpeed = 65
 
 -- From Runescape
 Player.nextLevels = {
-  83,
-  174,
-  276,
-  388,
-  512,
-  650,
-  801,
-  969,
-  1154,
-  1358,
-  1584,
-  1833,
-  2107,
-  2411,
-  2746,
-  3115,
-  3523,
-  3973,
-  4470,
-  5018,
-  5624,
-  6291,
-  7028,
-  7842,
-  8740,
-  9730,
-  10824,
-  12031,
-  13363
+  91,
+  191,
+  304,
+  427,
+  563,
+  715,
+  881,
+  1066,
+  1269,
+  1494,
+  1742,
+  2016,
+  2318,
+  2652,
+  3020,
+  3427,
+  3875,
+  4370,
+  4917,
+  5520,
+  6186,
+  6920,
+  7731,
+  8626,
+  9614,
+  10703,
+  11906,
+  13234,
+  14700
 }
 
 
@@ -67,8 +67,8 @@ function Player:init()
   -- Juju
   self.juju = config.player.baseJuju
   self.totalJuju = 0
-  self.jujuTimer = config.player.jujuRate and 0
-  self.jujuRate = config.player.jujuRate and 0
+  self.jujuTimer = config.player.jujuRate
+  self.jujuRate = config.player.jujuRate
 
   -- Experience
   self.experience = 0

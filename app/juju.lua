@@ -46,7 +46,7 @@ function Juju:update()
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 	if self.vy > -.1 then
-		self.y = self.y - 10 * tickRate
+		self.y = self.y - 12 * tickRate
 	end
 	
   if love.math.random() < 3 * tickRate then
