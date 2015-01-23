@@ -13,7 +13,7 @@ Kuju.speed = 30
 Kuju.flow = 1
 
 Kuju.healthScaling = {6, 1}
-Kuju.damageScaling = {.85, 1.1}
+Kuju.damageScaling = {.6, 1.05}
 
 Kuju.attackSpell = 'kujuattack'
 
