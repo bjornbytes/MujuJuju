@@ -176,6 +176,8 @@ function Player:keypressed(key)
   -- Select minions with digits
 	for i = 1, #self.deck do
 		if tonumber(key) == i then
+
+      -- Double tap to select
       if (tick - self.selectTap) * tickRate < .275 and i == self.summonSelect then
         ctx.units:each(function(unit)
           if unit.class.code == self.deck[i].code then
