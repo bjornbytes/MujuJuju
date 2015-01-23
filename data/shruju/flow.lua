@@ -10,7 +10,7 @@ function Flow:activate()
   p.cooldownSpeed = p.cooldownSpeed + self.cdr
 
   ctx.spells:add('arcadetext', {
-    text = self.cdr .. '% faster cooldown',
+    text = (self.cdr * 100) .. '% faster cooldown',
     x = p.x,
     y = p.y - 40
   })

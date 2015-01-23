@@ -11,7 +11,10 @@ function HudExperience:update()
   self.prevDisplay = self.display
 
   local p = ctx.player
-  local target = (p.experience - (p.nextLevels[p.level - 1] or 0)) / (p.nextLevels[p.level] or math.huge)
+  local prev = p.nextLevels[p.level - 1] or 0
+  local target = 0
+  if not p.nextLevels[p.level] then target = 0
+  else target = (p.experience - prev) / (p.nextLevels[p.level] - prev) end
   if self.display > target then
     self.prevDisplay, self.display = target, target
   else

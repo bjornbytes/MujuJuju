@@ -14,7 +14,7 @@ Duju.speed = 40
 Duju.flow = 1
 
 Duju.healthScaling = {6, 1.1}
-Duju.damageScaling = {.5, 1}
+Duju.damageScaling = {1, 1}
 
 Duju.startingAbilities = {'headbutt'}
 

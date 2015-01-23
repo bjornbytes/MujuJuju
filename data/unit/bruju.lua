@@ -9,7 +9,7 @@ Bruju.width = 48
 Bruju.health = 85
 Bruju.damage = 9
 Bruju.range = 12
-Bruju.attackSpeed = 1
+Bruju.attackSpeed = 1.1
 Bruju.speed = 45
 Bruju.flow = 1
 Bruju.cost = 5
@@ -259,7 +259,7 @@ Bruju.attributes = {
   },
   agility = {
     level = 0,
-    amount = 6,
+    amount = 4,
     stat = 'speed'
   },
   flow = {

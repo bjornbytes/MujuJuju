@@ -353,7 +353,7 @@ function Player:addJuju(amount)
   while self.experience >= self.nextLevels[self.level] do
     self.level = self.level + 1
     self.skillPoints = self.skillPoints + 1
-    self.attributePoints = self.attributePoints + 3
+    self.attributePoints = self.attributePoints + 2
   end
 
   self.totalJuju = self.totalJuju + amount
