@@ -37,7 +37,6 @@ local function bar(x, y, hard, soft, color, width, height)
 
   g.setBlendMode('additive')
   g.setColor(255, 255, 255, 180)
-	--g.draw(data.media.graphics.healthbarGradient, xx, yy, 0, 1 * math.round(width - 6 * scale), scale)
   g.setBlendMode('alpha')
 end
 
@@ -181,14 +180,9 @@ function HudHealth:draw()
       for j = 1, #bin.units do totalx = totalx + bin.units[j].x end
 
       local meanx = totalx / (#bin.units == 0 and 1 or #bin.units)
-
-      -- Bar
-      local x, y = meanx, ctx.map.height - ctx.map.groundHeight - 150
-      local width = 80
+      local x, y = ctx.view:screenPoint(meanx, ctx.map.height - ctx.map.groundHeight - 150)
+      local width = 80 * ctx.view.scale
       local color = (p and bin.units[1] and bin.units[1].team == p.team) and green or red
-      x, y = ctx.view:screenPoint(x, y)
-      width = width * ctx.view.scale
-
       local frame = data.media.graphics.healthbarFrame
       local w, h = frame:getDimensions()
       local scale = width / w
