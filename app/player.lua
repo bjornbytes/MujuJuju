@@ -78,10 +78,11 @@ function Player:init()
   -- List of Shruju with effects (usually magic shruju)
   self.shruju = {}
 
-  -- Summoning and population
+  -- Summoning, selection, and population
 	self.summonSelect = 1
   self.maxPopulation = config.player.basePopulation
   self.totalSummoned = 0
+  self.selectTap = tick
 
   -- Buffs
 	self.invincible = 0
@@ -161,6 +162,8 @@ function Player:update()
 end
 
 function Player:draw()
+
+  -- Flash when invincible
 	if math.floor(self.invincible * 5) % 2 == 0 then
     local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
 		love.graphics.setColor(255, 255, 255)
@@ -173,7 +176,18 @@ function Player:keypressed(key)
   -- Select minions with digits
 	for i = 1, #self.deck do
 		if tonumber(key) == i then
+      if (tick - self.selectTap) * tickRate < .275 and i == self.summonSelect then
+        ctx.units:each(function(unit)
+          if unit.class.code == self.deck[i].code then
+            unit.selected = true
+          elseif not love.keyboard.isDown('lshift') then
+            unit.selected = false
+          end
+        end)
+      end
+
       self.summonSelect = i
+      self.selectTap = tick
 			return
 		end
 	end
