@@ -19,7 +19,23 @@ return {
     'volcano'
   },
 
-  attributes = {'vitality', 'strength', 'agility', 'flow'},
+  attributes = {
+    list = {'vitality', 'strength', 'agility', 'flow'},
+    vitality = {
+      health = 10
+    },
+    strength = {
+      damage = 3
+    },
+    agility = {
+      speed = 3,
+      attackSpeed = .03
+    },
+    flow = {
+      cooldownSpeed = .03,
+      spellPower = 5
+    }
+  },
 
   elites = {
     baseModifier = .005,

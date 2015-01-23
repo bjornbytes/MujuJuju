@@ -21,10 +21,7 @@ function HudExperience:update()
   end
 
   if self.dingTimer > 0 then
-    self.dingTimer = timer.rot(self.dingTimer, function()
-      self.display = 0
-      self.prevDisplay = 0
-    end)
+    self.dingTimer = timer.rot(self.dingTimer)
   end
 
   local prev = p.nextLevels[p.level - 1] or 0

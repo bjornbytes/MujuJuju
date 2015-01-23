@@ -76,7 +76,7 @@ function HudUnits:update()
   local attributes = self.geometry.attributes
   for i = 1, #attributes do
     for j = 1, #attributes[i] do
-      local attribute = config.attributes[j]
+      local attribute = config.attributes.list[j]
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
         ctx.hud.tooltip:setAttributeTooltip(attribute, p.deck[i].code)
@@ -253,10 +253,10 @@ function HudUnits:draw()
       g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
       g.draw(image, x, y, 0, scale, scale)
 
-      local attribute = data.unit[p.deck[i].code].attributes[config.attributes[j]]
+      local level = data.unit[p.deck[i].code].attributes[config.attributes.list[j]]
       g.setFont('pixel', 8)
       g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-      g.printShadow(attribute.level, x + 6, y + 2)
+      g.printShadow(level, x + 6, y + 2)
     end
   end
 
@@ -346,22 +346,13 @@ function HudUnits:mousereleased(mx, my, b)
   local attributes = self.geometry.attributes
   for i = 1, #attributes do
     for j = 1, #attributes[i] do
-      local attribute = config.attributes[j]
+      local attribute = config.attributes.list[j]
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
-        local attribute = data.unit[p.deck[i].code].attributes[config.attributes[j]]
-        local cost = ctx.upgrades.attributeCostBase + (ctx.upgrades.attributeCostIncrease * attribute.level)
-        if attribute.level < p.level and p.attributePoints > 0 then
+        local class = data.unit[p.deck[i].code]
+        if p.attributePoints > 0 then
           p.attributePoints = p.attributePoints - 1
-          attribute.level = attribute.level + 1
-          table.each(ctx.units.objects, function(unit)
-            if unit.class.code == p.deck[i].code then
-              unit[attribute.stat] = unit[attribute.stat] + attribute.amount
-              if attribute.stat == 'health' then
-                unit.maxHealth = unit.maxHealth + attribute.amount
-              end
-            end
-          end)
+          class.attributes[attribute] = class.attributes[attribute] + 1
         else
           ctx.sound:play('misclick')
         end

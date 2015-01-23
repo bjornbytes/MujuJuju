@@ -142,7 +142,7 @@ function Game:distribute()
     local runeLevel = love.math.random(1, maxLevel)
 
     rune.attributes = {}
-    local attributes = config.attributes
+    local attributes = config.attributes.list
     local attribute = attributes[love.math.random(1, #attributes)]
     local attributeLevels = math.max(math.round((runeLevel / 100) * 8), 1)
     local attributesDistributed = 0

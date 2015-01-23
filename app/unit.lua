@@ -125,15 +125,11 @@ function Unit:activate()
 
   self.health = self.health + config.units.baseHealthScaling * (ctx.timer * tickRate / 60)
   self.damage = self.damage + config.units.baseDamageScaling * (ctx.timer * tickRate / 60)
-  self.flow = 1
-
-  table.each(self.class.attributes, function(attribute)
-    self[attribute.stat] = self[attribute.stat] + attribute.amount * attribute.level
-  end)
+  self.spellPower = 0
+  self.cooldownSpeed = 1
 
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
-  self.maxHealth = self.health
   self.dying = false
   self.died = false
   self.casting = false
@@ -141,6 +137,12 @@ function Unit:activate()
   self.spawning = true
   self.droppedJuju = false
   self.knockup = 0
+
+  table.each(config.attributes.list, function(attribute)
+    table.each(config.attributes[attribute], function(perLevel, stat)
+      self[stat] = self[stat] + self.class.attributes[attribute] * perLevel
+    end)
+  end)
 
   table.each(self.class.upgrades, function(upgrade)
     f.exe(upgrade.apply, upgrade, self)
@@ -150,6 +152,7 @@ function Unit:activate()
     self:addAbility(ability)
   end)
 
+  self.maxHealth = self.health
   self.healthDisplay = self.health
   self.prev = {x = self.x, y = self.y, health = self.health, healthDisplay = self.healthDisplay, knockup = 0, glowScale = 1}
   self.alpha = 1

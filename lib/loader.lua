@@ -90,6 +90,11 @@ data.load = function()
       unit.upgrades[i] = unit.upgrades[upgrade]
       unit.upgrades[i].code = upgrade
     end)
+
+    unit.attributes = {}
+    table.each(config.attributes.list, function(attribute)
+      unit.attributes[attribute] = 0
+    end)
   end)
   load('data/spell', 'spell')
   load('data/animation', 'animation', function(animation)

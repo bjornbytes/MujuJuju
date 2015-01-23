@@ -243,30 +243,4 @@ Bruju.upgrades = {
   }
 }
 
-----------------
--- Attributes
-----------------
-Bruju.attributes = {
-  vitality = {
-    level = 0,
-    amount = 16,
-    stat = 'health',
-  },
-  strength = {
-    level = 0,
-    amount = 6,
-    stat = 'damage',
-  },
-  agility = {
-    level = 0,
-    amount = 4,
-    stat = 'speed'
-  },
-  flow = {
-    level = 0,
-    amount = .1,
-    stat = 'flow'
-  }
-}
-
 return Bruju

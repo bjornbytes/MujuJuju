@@ -145,15 +145,11 @@ end
 function Tooltip:setAttributeTooltip(attribute, unit)
   local p = ctx.player
   local pieces = {}
-  table.insert(pieces, '{white}{title}' .. attribute:capitalize() .. '{normal}')
+  table.insert(pieces, '{white}{title}' .. attribute:capitalize() .. '{normal}\n')
   if unit then
     if type(unit) == 'string' then unit = data.unit[unit] end
-    local attribute = unit.attributes[attribute]
-    table.insert(pieces, '+' .. attribute.amount .. ' ' .. attribute.stat .. ' per level {green}(' .. (attribute.amount * attribute.level) .. '){white}')
-
-    local cost = ctx.upgrades.attributeCostBase + (ctx.upgrades.attributeCostIncrease * attribute.level)
-    local color = p.juju >= cost and '{green}' or '{red}'
-    table.insert(pieces, color .. cost .. ' juju\n')
+    local level = unit.attributes[attribute]
+    --table.insert(pieces, '+' .. attribute.amount .. ' ' .. attribute.stat .. ' per level {green}(' .. (attribute.amount * attribute.level) .. '){white}')
   end
 
   return self:setTooltip(table.concat(pieces, '\n'))

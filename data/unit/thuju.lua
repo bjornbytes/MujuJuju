@@ -240,30 +240,4 @@ Thuju.upgrades = {
   },
 }
 
-----------------
--- Attributes
-----------------
-Thuju.attributes = {
-  vitality = {
-    level = 0,
-    amount = 20,
-    stat = 'health',
-  },
-  strength = {
-    level = 0,
-    amount = 4,
-    stat = 'damage',
-  },
-  agility = {
-    level = 0,
-    amount = 5,
-    stat = 'speed'
-  },
-  flow = {
-    level = 0,
-    amount = .1,
-    stat = 'flow'
-  }
-}
-
 return Thuju

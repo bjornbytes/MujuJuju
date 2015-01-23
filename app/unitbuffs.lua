@@ -40,8 +40,8 @@ function UnitBuffs:postupdate()
   if self:rooted() or self:stunned() then self.unit.speed = 0 end
 
   -- Apply Attack Speed Increases
+  local attackSpeed = self:getBaseAttackSpeed()
   local frenzies = self:buffsWithTag('frenzy')
-  local attackSpeed = self.unit.class.attackSpeed
   table.each(frenzies, function(frenzy)
     attackSpeed = attackSpeed * (1 - frenzy.frenzy)
   end)
@@ -83,8 +83,7 @@ end
 
 function UnitBuffs:remove(buff)
   if type(buff) == 'string' then
-    -- remove by code
-    return
+    buff = self:get(buff)
   end
 
   f.exe(buff.deactivate, buff, self.unit)
@@ -124,10 +123,21 @@ function UnitBuffs:getBaseSpeed()
   local speed = self.unit.class.speed
   if not self.unit.player then return speed end
 
-  local agility = self.unit.class.attributes.agility
-  speed = speed + agility.level * agility.amount 
+  local agilityLevel = self.unit.class.attributes.agility
+  speed = speed + agilityLevel * config.attributes.agility.speed
 
   return speed
+end
+
+function UnitBuffs:getBaseAttackSpeed()
+  local baseSpeed = self.unit.class.attackSpeed
+  local speed = baseSpeed
+  if not self.unit.player then return speed end
+
+  local agilityLevel = self.unit.class.attributes.agility
+  speed = speed - (agilityLevel * config.attributes.agility.attackSpeed) * baseSpeed
+
+  return math.max(speed, .4)
 end
 
 function UnitBuffs:prehurt(amount, source, kind)

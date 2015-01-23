@@ -5,44 +5,22 @@ Player.height = 90
 Player.depth = 0
 Player.walkSpeed = 65
 
--- From Runescape
-Player.nextLevels = {
-  91,
-  191,
-  304,
-  427,
-  563,
-  715,
-  881,
-  1066,
-  1269,
-  1494,
-  1742,
-  2016,
-  2318,
-  2652,
-  3020,
-  3427,
-  3875,
-  4370,
-  4917,
-  5520,
-  6186,
-  6920,
-  7731,
-  8626,
-  9614,
-  10703,
-  11906,
-  13234,
-  14700
-}
-
+-- Experience table
+Player.nextLevels = {200}
+for i = 2, 30 do
+  local prev = Player.nextLevels[i - 1]
+  local diff = prev - (Player.nextLevels[i - 2] or 0)
+  Player.nextLevels[i] = math.round(prev + 1.135 * diff ^ 1.001)
+end
 
 ----------------
 -- Core
 ----------------
 function Player:init()
+  table.print(self.nextLevels)
+  for i = 1, #self.nextLevels do
+    print(self.nextLevels[i] - (self.nextLevels[i - 1] or 0))
+  end
 
   -- Physics
 	self.x = ctx.map.width / 2
@@ -430,7 +408,7 @@ function Player:initDeck()
       table.each(self.deck[i].runes, function(rune)
         table.each(rune.attributes, function(amount, attribute)
           local class = data.unit[code]
-          class.attributes[attribute].level = class.attributes[attribute].level + amount
+          class.attributes[attribute] = class.attributes[attribute] + amount
         end)
       end)
     end
