@@ -304,17 +304,12 @@ function Player:summon()
   local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
 
   -- Set cooldowns (global cooldown)
-  local cooldown = table.count(ctx.units:filter(function(u) return u.class.code == minion end))
+  local cooldown = 1 + table.count(ctx.units:filter(function(u) return u.player ~= nil end))
   for i = 1, #self.deck do
-    if i == self.summonSelect then
-      self.deck[i].cooldown = math.max(cooldown - self.flatCooldownReduction, config.player.minCooldown)
-      self.deck[i].maxCooldown = self.deck[i].cooldown
-    else
-      local cd = math.max((cooldown / 2) - self.flatCooldownReduction, config.player.minCooldown)
-      if cd > self.deck[i].cooldown then
-        self.deck[i].cooldown = cd
-        self.deck[i].maxCooldown = cd
-      end
+    local cd = math.max(cooldown - self.flatCooldownReduction, config.player.minCooldown)
+    if cd > self.deck[i].cooldown then
+      self.deck[i].cooldown = cd
+      self.deck[i].maxCooldown = cd
     end
   end
 
