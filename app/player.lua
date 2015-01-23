@@ -5,6 +5,7 @@ Player.height = 90
 Player.depth = 0
 Player.walkSpeed = 65
 
+-- From Runescape
 Player.nextLevels = {
   83,
   174,
@@ -42,50 +43,55 @@ Player.nextLevels = {
 -- Core
 ----------------
 function Player:init()
+
+  -- Physics
 	self.x = ctx.map.width / 2
 	self.y = ctx.map.height - ctx.map.groundHeight - self.height
+	self.prevx = self.x
+	self.prevy = self.y
   self.direction = 1
   self.speed = 0
   self.walkSpeed = Player.walkSpeed
 
+  -- Health
   self.maxHealth = 250
   self.health = self.maxHealth
   self.healthDisplay = self.health
   self.prevHealthDisplay = self.healthDisplay
   self.prevHealth = self.health
 
+  -- Dead
   self.dead = false
   self.deathTimer = 0
 
+  -- Juju
   self.juju = config.player.baseJuju
   self.totalJuju = 0
   self.jujuTimer = config.player.jujuRate and 0
   self.jujuRate = config.player.jujuRate and 0
 
+  -- Experience
   self.experience = 0
   self.level = 1
   self.skillPoints = 0
 
+  -- List of Shruju with effects (usually magic shruju)
   self.shruju = {}
 
-	self.prevx = self.x
-	self.prevy = self.y
-
+  -- Summoning and population
 	self.summonSelect = 1
   self.maxPopulation = config.player.basePopulation
   self.totalSummoned = 0
-	self.invincible = 0
-  self.flatCooldownReduction = 0
-  self.ghostSpeedMultiplier = 1
 
-	local joysticks = love.joystick.getJoysticks()
-	for _, joystick in ipairs(joysticks) do
-		if joystick:isGamepad() then self.gamepad = joystick break end
-	end
-	self.gamepadSelectDirty = false
+  -- Buffs
+	self.invincible = 0
+  self.ghostSpeedMultiplier = 1
+  self.flatCooldownReduction = 0
 end
 
 function Player:activate()
+
+  -- Create animation
   self.animation = data.animation.muju()
   self.animation:on('complete', function(data)
     if data.state.name ~= 'death' and not data.state.loop then
@@ -93,53 +99,34 @@ function Player:activate()
     end
   end)
 
+  -- Color animation
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
     local slot = self.animation.spine.skeleton:findSlot(slot)
     slot.r, slot.g, slot.b = unpack(config.player.colors[ctx.user.color])
   end
 
+  -- Initialize deck data structure from ctx.user
   self:initDeck()
 
   ctx.event:emit('view.register', {object = self})
 end
 
 function Player:update()
+
+  -- Lerp vars
 	self.prevx = self.x
 	self.prevy = self.y
   self.prevHealthDisplay = self.healthDisplay
   self.prevHealth = self.health
 
+  -- Core updates
   self:move()
 	self:animate()
+	if self.ghost then self.ghost:update() end
 
-	self.deathTimer = timer.rot(self.deathTimer, function()
-		self.invincible = 4.5
-		self.health = self.maxHealth
-		self.dead = false
-		self.ghost:despawn()
-		self.ghost = nil
-
-    self.animation:set('resurrect')
-	end)
+  -- Rots
+	self.deathTimer = timer.rot(self.deathTimer, function() self:spawn() end)
 	self.invincible = timer.rot(self.invincible)
-
-	if self.ghost then
-		self.ghost:update()
-	end
-
-	self:hurt(self.maxHealth * .033 * tickRate)
-
-  self.maxHealth = self.maxHealth + (.35 * tickRate)
-  self.health = self.health + (.35 * tickRate)
-
-	self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
-
-  if not ctx.won then
-    self.jujuTimer = timer.rot(self.jujuTimer, function()
-      self:addJuju(1)
-      return self.jujuRate
-    end)
-  end
 
   for i = 1, #self.deck do
     self.deck[i].cooldown = timer.rot(self.deck[i].cooldown, function()
@@ -153,6 +140,24 @@ function Player:update()
       table.remove(self.shruju, i)
     end)
   end)
+
+  -- Health decay
+	self:hurt(self.maxHealth * .033 * tickRate)
+
+  -- Max health increases over time
+  self.maxHealth = self.maxHealth + (.35 * tickRate)
+  self.health = self.health + (.35 * tickRate)
+
+  -- Lerp healthbar
+	self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
+
+  -- Juju trickle
+  if not ctx.won then
+    self.jujuTimer = timer.rot(self.jujuTimer, function()
+      self:addJuju(1)
+      return self.jujuRate
+    end)
+  end
 end
 
 function Player:draw()
@@ -164,6 +169,8 @@ function Player:draw()
 end
 
 function Player:keypressed(key)
+
+  -- Select minions with digits
 	for i = 1, #self.deck do
 		if tonumber(key) == i then
       self.summonSelect = i
@@ -171,12 +178,15 @@ function Player:keypressed(key)
 		end
 	end
 
+  -- Summon with space
 	if key == ' ' and not self.dead then
 		self:summon()
 	end
 end
 
 function Player:mousepressed(x, y, b)
+
+  -- Select with lmb
   if b == 'l' then
     if not love.keyboard.isDown('lshift') then
       ctx.units:each(function(unit)
@@ -192,6 +202,8 @@ function Player:mousepressed(x, y, b)
         return 1
       end
     end)
+
+  -- Issue commands with rmb
   elseif b == 'r' then
     for i = 1, #self.deck do
       ctx.units:each(function(unit)
@@ -206,15 +218,9 @@ function Player:mousepressed(x, y, b)
   end
 end
 
-function Player:gamepadpressed(gamepad, button)
-	if gamepad == self.gamepad then
-		if (button == 'a' or button == 'rightstick' or button == 'rightshoulder') and not self.dead then
-      self:summon()
-		end
-	end
-end
-
 function Player:paused()
+
+  -- Reset prev variables when paused to fix lerp jitter.
   self.prevx = self.x
   self.prevy = self.y
   self.animation:set('idle')
@@ -257,43 +263,48 @@ function Player:summon()
 	local cooldown = self.deck[self.summonSelect].cooldown
   local population = self:getPopulation()
 	local cost = data.unit[minion].cost
-	if cooldown == 0 and population < self.maxPopulation and self.animation.state.name ~= 'dead' and self.animation.state.name ~= 'resurrect' and self:spend(0) then
-		local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
-    self.totalSummoned = self.totalSummoned + 1
-    self.invincible = 0
-    
-    local cooldown = table.count(ctx.units:filter(function(u) return u.class.code == minion end))
+  local animation = self.animation.state.name
 
-    for i = 1, #self.deck do
-      if i == self.summonSelect then
-        self.deck[i].cooldown = math.max(cooldown - self.flatCooldownReduction, config.player.minCooldown)
-        self.deck[i].maxCooldown = self.deck[i].cooldown
-      else
-        local cd = math.max((cooldown / 2) - self.flatCooldownReduction, config.player.minCooldown)
-        if cd > self.deck[i].cooldown then
-          self.deck[i].cooldown = cd
-          self.deck[i].maxCooldown = cd
-        end
+  -- Check if we can summon
+	if not (cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(0)) then
+    return ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
+  end
+
+  -- Create minion
+  local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
+
+  -- Set cooldowns (global cooldown)
+  local cooldown = table.count(ctx.units:filter(function(u) return u.class.code == minion end))
+  for i = 1, #self.deck do
+    if i == self.summonSelect then
+      self.deck[i].cooldown = math.max(cooldown - self.flatCooldownReduction, config.player.minCooldown)
+      self.deck[i].maxCooldown = self.deck[i].cooldown
+    else
+      local cd = math.max((cooldown / 2) - self.flatCooldownReduction, config.player.minCooldown)
+      if cd > self.deck[i].cooldown then
+        self.deck[i].cooldown = cd
+        self.deck[i].maxCooldown = cd
       end
     end
+  end
 
-		self.animation:set('summon')
-		local summonSound = love.math.random(1, 3)
-		ctx.sound:play('summon' .. summonSound)
-    for i = 1, 15 do
-      ctx.spells:add('dirt', {x = self.x, y = self.y + self.height})
-    end
-  else
-    ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
+  -- Aftermath, juice, animations, etc.
+  self.totalSummoned = self.totalSummoned + 1
+  self.invincible = 0
+  self.animation:set('summon')
+  local summonSound = love.math.random(1, 3)
+  ctx.sound:play('summon' .. summonSound)
+  for i = 1, 15 do
+    ctx.spells:add('dirt', {x = self.x, y = self.y + self.height})
   end
 end
 
 function Player:animate()
   if self.dead then return end
 
+  -- Flip animation, set animation speed
   self.animation:set(math.abs(self.speed) > self.walkSpeed / 2 and 'walk' or 'idle')
   self.animation.speed = self.animation.state.name == 'walk' and math.max(math.abs(self.speed / Player.walkSpeed), .4) or 1
-
 	if self.speed ~= 0 then self.animation.flipped = math.sign(self.speed) > 0 end
 end
 
@@ -307,42 +318,44 @@ function Player:spend(amount)
 end
 
 function Player:addJuju(amount)
+
+  -- Increment experience, level up
   self.experience = self.experience + amount
   while self.experience >= self.nextLevels[self.level] do
     self.level = self.level + 1
     self.skillPoints = self.skillPoints + 1
   end
+
   self.totalJuju = self.totalJuju + amount
 end
 
 function Player:hurt(amount, source)
 	if self.invincible == 0 then
-		self.health = math.max(self.health - amount, 0)
-		if self.gamepad and self.gamepad:isVibrationSupported() then
-			local l, r = .25, .25
-			if source then
-				if source.x > self.x then r = .5
-				elseif source.x < self.x then l = .5 end
-			end
+    self.health = math.max(self.health - amount, 0)
 
-			self.gamepad:setVibration(l, r, .25)
-		end
-	end
-	-- Check whether or not to enter Juju Realm
-	if self.health <= 0 and self.deathTimer == 0 then
-  	-- We jujuin'
-		self.deathTimer = 7
-		self.dead = true
-		self.ghost = GhostPlayer(self)
+    -- Die if we are dead
+    if self.health <= 0 and self.deathTimer == 0 then self:die() end
+  end
 
-    self.animation:set('death')
-		ctx.sound:play('death', function(sound) sound:setVolume(.18) end)
-
-		if self.gamepad and self.gamepad:isVibrationSupported() then
-			self.gamepad:setVibration(1, 1, .5)
-		end
-	end
   return amount
+end
+
+function Player:die()
+  self.deathTimer = 7
+  self.dead = true
+  self.ghost = GhostPlayer(self)
+
+  self.animation:set('death')
+  ctx.sound:play('death', function(sound) sound:setVolume(.2) end)
+end
+
+function Player:spawn()
+  self.invincible = 4.5
+  self.health = self.maxHealth
+  self.dead = false
+  self.ghost:despawn()
+  self.ghost = nil
+  self.animation:set('resurrect')
 end
 
 function Player:heal(amount, source)
@@ -400,17 +413,4 @@ end
 
 function Player:getPopulation()
   return table.count(ctx.units:filter(function(u) return u.player == self end))
-end
-
-function Player:hasUnitAbility(unit, ability)
-  if type(unit) == 'number' then unit = self.deck[unit].code end
-  if type(ability) == 'number' then ability = data.unit[unit].abilities[ability] end
-  return self.deck[unit].abilities[ability]
-end
-
-function Player:hasUnitAbilityUpgrade(unit, ability, upgrade)
-  if type(unit) == 'number' then unit = self.deck[unit].code end
-  if type(ability) == 'number' then ability = data.unit[unit].abilities[ability] end
-  if type(upgrade) == 'number' then upgrade = data.ability[unit][ability].upgrades[upgrade].code end
-  return self.deck[unit].upgrades[ability][upgrade]
 end
