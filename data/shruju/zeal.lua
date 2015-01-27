@@ -1,9 +1,7 @@
-local Zeal = extend(Shruju)
+local Zeal = {}
 
 Zeal.name = 'Zeal'
 Zeal.description = 'Muju moves twice as fast in the juju realm for 90 seconds.'
-Zeal.duration = 90
-Zeal.rarity = 1
 
 function Zeal:activate()
   ctx.player.ghostSpeedMultiplier = ctx.player.ghostSpeedMultiplier * 2

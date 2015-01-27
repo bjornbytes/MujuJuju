@@ -50,7 +50,7 @@ function Player:init()
   self.skillPoints = 0
   self.attributePoints = 0
 
-  -- List of Shruju with effects (usually magic shruju)
+  -- List of magic shruju effects
   self.shruju = {}
 
   -- Summoning, selection, and population

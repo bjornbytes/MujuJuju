@@ -2,7 +2,6 @@ local Renew = extend(Shruju)
 
 Renew.name = 'Renew'
 Renew.description = 'On use, heals your shrine for 20% of its maximum health'
-Renew.rarity = 2
 
 function Renew:activate()
   local p = ctx.player

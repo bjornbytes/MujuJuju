@@ -1,9 +1,7 @@
-local Imbue = extend(Shruju)
+local Imbue = {}
 
 Imbue.name = 'Imbue'
 Imbue.description = 'The shrine heals 20 health per second for 90 seconds.'
-Imbue.duration = 90
-Imbue.rarity = 1
 
 function Imbue:activate()
   ctx.shrine.regen = ctx.shrine.regen + 20

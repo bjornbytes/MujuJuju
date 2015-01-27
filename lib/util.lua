@@ -11,7 +11,7 @@ timer.rot = function(v, fn)
 end
 
 function isa(instance, class)
-  return getmetatable(instance).__index == class
+  return getmetatable(instance) and getmetatable(instance).__index == class
 end
 
 function math.insideCircle(x, y, cx, cy, r)

@@ -7,21 +7,13 @@ ShrujuPatch.height = 40
 ShrujuPatch.depth = 1
 
 function ShrujuPatch:activate()
-	self.y = ctx.map.height - ctx.map.groundHeight
+  self.y = ctx.map.height - ctx.map.groundHeight
   self.types = {} 
 
   for i = 1, #data.shruju do
-    table.insert(self.types, data.shruju[i].code)
-  end
-
-  self.weightSum = 0
-  table.each(self.types, function(code)
-    self.weightSum = self.weightSum + (data.shruju[code].rarity or 5)
-  end)
-
-  self.slots = {}
-  for i = 1, 3 do
-    self:randomizeSlot(i)
+    if isa(data.shruju[i], Shruju) then
+      table.insert(self.types, data.shruju[i].code)
+    end
   end
 
   self.timer = 0
@@ -49,7 +41,7 @@ function ShrujuPatch:update()
   end)
 
   self.prevHighlight = self.highlight
-	self.highlight = math.lerp(self.highlight, self:playerNearby() and 128 or 0, math.min(5 * tickRate))
+  self.highlight = math.lerp(self.highlight, self:playerNearby() and 128 or 0, math.min(5 * tickRate))
 end
 
 function ShrujuPatch:draw()
@@ -72,13 +64,10 @@ function ShrujuPatch:draw()
   if self.shrujuAnimation then self.shrujuAnimation:draw(self.x, self.y) end
 end
 
-function ShrujuPatch:grow(index)
-  if not self:playerNearby() or self.growing or self.slot or not self.slots[index] then return end
-  local code = self.slots[index]
-  self.timer = self:getGrowTime(code)
-  self.growing = code
-
-  self:randomizeSlot(index)
+function ShrujuPatch:grow(what)
+  if not self:playerNearby() or not table.has(self.types, what) or self.growing or self.slot then return end
+  self.timer = self:getGrowTime(what)
+  self.growing = what
 end
 
 function ShrujuPatch:take()
@@ -97,6 +86,12 @@ end
 function ShrujuPatch:makeShruju()
   if self.growing and not self.slot then
     local shruju = data.shruju[self.growing]()
+
+    -- Magic effect
+    if love.math.random() < .25 then
+      local effects = table.keys(ShrujuEffects)
+      shruju.effect = setmetatable({timer = config.shruju.magicDuration}, {__index = Shruju[effects[love.math.random(1, #effects)]]})
+    end
 
     self.slot = shruju
     self.growing = nil
@@ -118,23 +113,4 @@ function ShrujuPatch:removeType(code)
   for i = 1, #self.types do
     if self.types[i] == code then table.remove(self.types, i) return end
   end
-end
-
-function ShrujuPatch:randomizeSlot(index)
-  local code = nil
-  self.slots[index] = nil
-
-  while not code do
-    local random = love.math.random() * self.weightSum
-    for i = 1, #self.types do
-      local rarity = data.shruju[self.types[i]].rarity
-      if random < rarity then
-        if not table.has(self.slots, code) or love.math.random() < .5 then code = self.types[i] end
-        break
-      end
-      random = random - rarity
-    end
-  end
-
-  self.slots[index] = code
 end

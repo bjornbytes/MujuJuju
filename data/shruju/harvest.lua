@@ -2,7 +2,6 @@ local Harvest = extend(Shruju)
 
 Harvest.name = 'Harvest'
 Harvest.description = 'Permanently causes all shruju to grow 5 seconds faster.'
-Harvest.rarity = 3
 
 function Harvest:activate()
   ctx.shrujuPatches.harvestLevel = ctx.shrujuPatches.harvestLevel + 1

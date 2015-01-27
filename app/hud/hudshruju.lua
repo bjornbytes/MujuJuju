@@ -37,7 +37,11 @@ function HudShruju:update()
   for i = 1, #shruju do
     local x, y, w, h = unpack(self.geometry.shruju[i])
     if p.shruju[i] and math.inside(mx, my, x, y, w, h) then
-      ctx.hud.tooltip:setShrujuTooltip(p.shruju[i])
+      ctx.hud.tooltip:setMagicShrujuTooltip(p.shruju[i])
+    end
+
+    if love.math.random() < 4 * tickRate then
+      ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
     end
   end
 end

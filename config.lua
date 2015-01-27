@@ -140,7 +140,7 @@ return {
           kuju = 720
         }
       },
-      shrujuPatches = {60, 450},
+      shrujuPatches = {1, 450},
       runes = {
         maxLevel = 25,
         specialChance = .1

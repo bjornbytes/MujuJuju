@@ -1,9 +1,7 @@
-local Wealth = extend(Shruju)
+local Wealth = {}
 
 Wealth.name = 'Wealth'
 Wealth.description = 'Doubles your passive juju income for 90 seconds.'
-Wealth.duration = 90
-Wealth.rarity = 1
 
 function Wealth:activate()
   ctx.player.jujuRate = ctx.player.jujuRate / 2

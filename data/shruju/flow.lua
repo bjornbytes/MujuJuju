@@ -3,7 +3,6 @@ local Flow = extend(Shruju)
 Flow.name = 'Flow'
 Flow.description = 'Summon recharge rate increased by 10%'
 Flow.cdr = .1
-Flow.rarity = 5
 
 function Flow:activate()
   local p = ctx.player
