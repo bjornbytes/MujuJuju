@@ -3,8 +3,6 @@ local g = love.graphics
 Unit = class()
 
 Unit.classStats = {'width', 'height', 'health', 'damage', 'range', 'attackSpeed', 'speed', 'flow'}
-Unit.stanceList = {'defensive', 'aggressive', 'follow'}
-table.each(Unit.stanceList, function(stance, i) Unit.stanceList[stance] = i end)
 
 Unit.width = 64
 Unit.height = 64
@@ -30,14 +28,11 @@ function Unit:activate()
 
   self.animation:on('event', function(event)
     if event.data.name == 'attack' then
-      if self.attackTarget and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
+      if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
         if self.class.attackSpell then
-          ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.attackTarget})
+          ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.target})
           ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
         else
-          if self.attackTarget.player and not self.attackTarget.attackTarget and math.abs(self.attackTarget.x - (self.attackTarget.moveTarget or self.attackTarget.x)) < 2 then
-            self.attackTarget.attackTarget = self
-          end
           self:attack()
         end
       end
@@ -162,8 +157,7 @@ function Unit:activate()
   self.y = self.y + r
   self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
 
-  self.moveTarget = self.x
-  self.attackTarget = nil
+  self.target = nil
 
   self.ai = (data.ai[self.class.code] or UnitAI)()
   self.ai.unit = self
@@ -230,10 +224,8 @@ function Unit:draw()
   local x, y, health = lerpd.x, lerpd.y, lerpd.health
 
   local r, gg, b = 0, 0, 0
-  if self.selected or self:contains(love.mouse.getPosition()) then
-    r = self.team == ctx.player.team and 0 or 255
-    gg = self.team == ctx.player.team and 255 or 0
-  end
+  r = self.team == ctx.player.team and 0 or 255
+  gg = self.team == ctx.player.team and 255 or 0
 
   self.canvas:clear(r, gg, b, 0)
   self.backCanvas:clear(r, gg, b, 0)
@@ -294,7 +286,7 @@ end
 ----------------
 function Unit:attack(options)
   options = options or {}
-  local target = options.target or self.attackTarget
+  local target = options.target or self.target
   if not target then return end
   local amount = options.damage or self.damage
   amount = self:abilityCall('preattack', target, amount) or amount
@@ -348,7 +340,7 @@ function Unit:hurt(amount, source, kind)
     self.dying = true
 
     ctx.units:each(function(u)
-      if u.attackTarget == self then u.attackTarget = nil end
+      if u.target == self then u.target = nil end
     end)
   end
 

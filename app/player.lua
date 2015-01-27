@@ -57,7 +57,6 @@ function Player:init()
   self.summonSelect = 1
   self.maxPopulation = config.player.basePopulation
   self.totalSummoned = 0
-  self.selectTap = tick
 
   -- Buffs
   self.invincible = 0
@@ -151,21 +150,7 @@ function Player:keypressed(key)
   -- Select minions with digits
   for i = 1, #self.deck do
     if tonumber(key) == i then
-
-      -- Double tap to select
-      if (tick - self.selectTap) * tickRate < .275 and i == self.summonSelect then
-        ctx.units:each(function(unit)
-          if unit.class.code == self.deck[i].code then
-            unit.selected = true
-            unit.glowScale = 4
-          elseif not love.keyboard.isDown('lshift') then
-            unit.selected = false
-          end
-        end)
-      end
-
       self.summonSelect = i
-      self.selectTap = tick
       return
     end
   end
@@ -174,50 +159,10 @@ function Player:keypressed(key)
   if key == ' ' and not self.dead then
     self:summon()
   end
-
-  -- Stances with z and x
-  if key == 'z' then
-    self.deck[self.summonSelect].stance = 'aggressive'
-  elseif key == 'x' then
-    self.deck[self.summonSelect].stance = 'defensive'
-  end
 end
 
 function Player:mousepressed(x, y, b)
-
-  -- Select with lmb
-  if b == 'l' then
-    if not love.keyboard.isDown('lshift') then
-      ctx.units:each(function(unit)
-        if unit.player == self then
-          unit.selected = false
-        end
-      end)
-    end
-
-    ctx.units:each(function(unit)
-      if unit.player == self and unit:contains(x, y) then
-        unit.selected = true
-        unit.glowScale = 4
-        return 1
-      end
-    end)
-
-  -- Issue commands with rmb
-  elseif b == 'r' then
-    for i = 1, #self.deck do
-      ctx.units:each(function(unit)
-        if unit.player == self and unit.selected then
-          unit.attackTarget = ctx.target:atMouse(unit, math.huge, 'enemy', 'unit')
-          if not unit.attackTarget then
-            unit.moveTarget = x
-          elseif unit.attackTarget.glowScale then
-            unit.attackTarget.glowScale = 4
-          end
-        end
-      end)
-    end
-  end
+  --
 end
 
 function Player:paused()
