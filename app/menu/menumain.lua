@@ -24,9 +24,10 @@ function MenuMain:init()
       local inc = size + .2 * v
       local runeSize = .08 * v
       local runeInc = runeSize + .02 * v
-      local x = u * .5 - inc * ((#ctx.user.deck.minions - 1) / 2)
+      local frame = self.geometry.gutterRunesFrame
+      local x = frame[1] + frame[3] / 2 - inc * ((#ctx.user.deck.minions - 1) / 2)
       local y = .35 * v
-      local runey = y - .2 * v
+      local runey = y - .225 * v
       local res = {}
       for i = 1, #ctx.user.deck.minions do
         table.insert(res, {x, y, size / 2, {}})
@@ -118,7 +119,7 @@ function MenuMain:init()
       local frame = self.geometry.gutterRunesFrame
       local w, h = .2 * u, .13 * v
       local midx = (.6 + (.4 / 2)) * u
-      return {midx - w / 2, frame[2] + frame[4] / 2 - h / 2, w, h}
+      return {midx - w / 2, frame[2] + frame[4] - h, w, h}
     end
   }
 
@@ -220,7 +221,7 @@ function MenuMain:draw()
   if not self.active then return end
 
   local u, v = ctx.u, ctx.v
-  --[=[local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
+  local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
   local biomes = self.geometry.biomes
   for i = 1, #biomes do
     local biome = config.biomeOrder[i]
@@ -283,7 +284,7 @@ function MenuMain:draw()
     local factor = math.lerp(self.prevBiomeArrowScales[i], self.biomeArrowScales[i], tickDelta / tickRate)
     g.setColor(255, 255, 255)
     g.draw(image, x, y, 0, scale * (i == 2 and -1 or 1) * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
-  end]=]
+  end
 
   g.setColor(0, 0, 0, 100)
   g.rectangle('fill', unpack(self.geometry.gutterRunesFrame))
@@ -337,10 +338,11 @@ function MenuMain:draw()
     end
   end
 
-  if #ctx.user.deck.minions >= ctx.user.deckSlots then g.setColor(255, 100, 100)
+  -- Deck capacity indicator
+  --[[if #ctx.user.deck.minions >= ctx.user.deckSlots then g.setColor(255, 100, 100)
   else g.setColor(255, 255, 255) end
   g.setFont('mesmerize', .02 * v)
-  g.printCenter(#ctx.user.deck.minions .. ' / ' .. ctx.user.deckSlots, u * .5, .04 * v)
+  g.printCenter(#ctx.user.deck.minions .. ' / ' .. ctx.user.deckSlots, u * .5, .04 * v)]]
 
   local deck = self.geometry.deck
   g.setColor(255, 255, 255)
@@ -420,8 +422,17 @@ function MenuMain:mousereleased(mx, my, b)
   if not self.active then return end
 
   if b == 'l' then
+    for i = 1, 2 do
+      local width = ctx.v * .04
+      local x, y = unpack(self.geometry.biomeArrows[i])
+      if math.inside(mx, my, x - width / 2, y - width / 2, width, width) then
+        if i == 1 then self:previousBiome()
+        elseif i == 2 then self:nextBiome() end
+      end
+    end
+
     local play = self.geometry.play
-    if math.inside(mx, my, unpack(self.geometry.play)) then
+    if math.inside(mx, my, unpack(self.geometry.play)) and table.has(ctx.user.biomes, config.biomeOrder[self.selectedBiome]) then
       ctx.sound:play('menuClick')
       ctx.animations.muju:set('death')
     end
