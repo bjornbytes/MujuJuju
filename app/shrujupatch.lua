@@ -43,8 +43,6 @@ function ShrujuPatch:deactivate()
 end
 
 function ShrujuPatch:update()
-  if ctx.won then return end
-
   self.timer = timer.rot(self.timer, function()
     self:makeShruju()
     ctx.sound:play('shrujuSpawn')

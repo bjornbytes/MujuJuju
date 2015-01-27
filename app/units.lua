@@ -5,15 +5,13 @@ function Units:init()
   Manager.init(self)
   self.level = self.level or 0
   self.nextEnemy = 5
-  self.bossIndex = 1
   self.enemyCount = 0
-  self.bossCount = 0
   table.merge(config.biomes[ctx.biome].units, self)
 end
 
 function Units:createEnemy()
   local conf = config.biomes[ctx.biome]
-  if self.bossCount == 0 and not ctx.won and self.enemyCount < 1 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
+  if self.enemyCount < 1 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
     local choices = {}
     table.each(conf.units.thresholds, function(time, code)
       if ctx.timer * tickRate >= time then table.insert(choices, code) end
@@ -44,16 +42,9 @@ end
 
 function Units:update()
   self.enemyCount = table.count(self:filter(function(u) return u.team == 0 end))
-  self.bossCount = table.count(self:filter(function(u) return u.boss end))
   self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
-  if not ctx.won then self.level = self.level + (tickRate / 15) * config.biomes[ctx.biome].units.levelScale end
-
-  local nextBoss = config.biomes[ctx.biome].units.bosses and config.biomes[ctx.biome].units.bosses[self.bossIndex]
-  if nextBoss and math.floor(ctx.timer * tickRate) >= nextBoss[2] then
-    self.bossIndex = self.bossIndex + 1
-    self:add(nextBoss[1], {x = 0, boss = true})
-  end
+  self.level = self.level + (tickRate / 15) * config.biomes[ctx.biome].units.levelScale
 
   return Manager.update(self)
 end

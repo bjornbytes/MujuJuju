@@ -16,7 +16,7 @@ function Unit:activate()
   Unit.backCanvas = Unit.backCanvas or g.newCanvas(400, 400)
 
   self.animation = data.animation[self.class.code]({
-    scale = data.animation[self.class.code].scale * (self.elite and config.elites.scale or (self.boss and 2 or 1))
+    scale = data.animation[self.class.code].scale * (self.elite and config.elites.scale or 1)
   })
 
   if self.player then
@@ -50,9 +50,6 @@ function Unit:activate()
           if self.elite then
             amount = amount * config.elites.jujuModifier
             jujus = 1
-          elseif self.boss then
-            amount = amount * 4
-            jujus = 1
           end
 
           for i = 1, jujus do
@@ -61,17 +58,12 @@ function Unit:activate()
               y = self.y,
               amount = amount / jujus,
               vx = love.math.random(-50, 50),
-              vy = love.math.random(-300, -100),
-              dead = self.boss
+              vy = love.math.random(-300, -100)
             })
           end
         end
 
         self.died = true
-        
-        if self.boss and not ctx.ded then
-          ctx.won = true
-        end
       end
     elseif event.data.name == 'spawn' then
       ctx.sound:play(data.media.sounds[self.class.code].spawn, function(sound) sound:setVolume(.5) end)
@@ -99,9 +91,6 @@ function Unit:activate()
   if self.elite then
     self.health = self.health * config.elites.healthModifier
     self.damage = self.damage * config.elites.damageModifier
-  elseif self.boss then
-    self.health = self.health * 50
-    self.damage = self.damage * 3
   end
 
   self.abilities = {}

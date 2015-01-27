@@ -16,7 +16,6 @@ function Game:load(user, biome, options)
 
 	self.paused = false
 	self.ded = false
-  self.won = false
   self.timer = 0
 
   self.event = Event()
@@ -65,7 +64,7 @@ function Game:update()
 		return
 	end
 
-  if not self.won then self.timer = self.timer + 1 end
+  self.timer = self.timer + 1
 
 	self.players:update()
 	self.units:update()
@@ -172,28 +171,4 @@ function Game:distribute()
   end
 
   saveUser(self.user)
-end
-
-function Game:nextBiome()
-  if not self.user.completed[self.biome] then
-    self.user.deckSlots = math.min(self.user.deckSlots + 1, 3)
-    self.user.completed[self.biome] = true
-    saveUser(self.user)
-  end
-
-  local biomeIndex
-  for i = 1, #config.biomeOrder do if config.biomeOrder[i] == self.biome then biomeIndex = i break end end
-  if not config.biomeOrder[biomeIndex + 1] then
-    Context:remove(ctx)
-    Context:add(Menu, biomeIndex, {muted=ctx.game.sound.muted})
-  end
-  self.biome = config.biomeOrder[biomeIndex + 1]
-
-  self.units.level = self.units.level + 50
-
-  self.units:clear()
-  self.spells:clear()
-  self.jujus:clear()
-	self.effects:clear()
-  self.won = false
 end

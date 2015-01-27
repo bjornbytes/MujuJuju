@@ -127,12 +127,10 @@ function Player:update()
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
   -- Juju trickle
-  if not ctx.won then
-    self.jujuTimer = timer.rot(self.jujuTimer, function()
-      self:addJuju(1)
-      return self.jujuRate
-    end)
-  end
+  self.jujuTimer = timer.rot(self.jujuTimer, function()
+    self:addJuju(1)
+    return self.jujuRate
+  end)
 end
 
 function Player:draw()
