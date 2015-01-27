@@ -96,7 +96,7 @@ return {
   shruju = {
     growTime = 60,
     minGrowTime = 20,
-    harvestCooldownReduction = 5,
+    harvestCooldownReduction = 4,
     magicDuration = 90
   },
 

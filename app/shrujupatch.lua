@@ -10,6 +10,13 @@ function ShrujuPatch:activate()
   self.y = ctx.map.height - ctx.map.groundHeight
   self.types = {} 
 
+  self.effects = {}
+  for i = 1, #data.shruju do
+    if not isa(data.shruju[i], Shruju) then
+      table.insert(self.effects, data.shruju[i].code)
+    end
+  end
+
   for i = 1, #data.shruju do
     if isa(data.shruju[i], Shruju) then
       table.insert(self.types, data.shruju[i].code)
@@ -89,8 +96,8 @@ function ShrujuPatch:makeShruju()
 
     -- Magic effect
     if love.math.random() < .25 then
-      local effects = table.keys(ShrujuEffects)
-      shruju.effect = setmetatable({timer = config.shruju.magicDuration}, {__index = Shruju[effects[love.math.random(1, #effects)]]})
+      local effects = self.effects
+      shruju.effect = setmetatable({timer = config.shruju.magicDuration}, {__index = data.shruju[effects[love.math.random(1, #effects)]]})
     end
 
     self.slot = shruju

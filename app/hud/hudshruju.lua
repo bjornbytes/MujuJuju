@@ -62,7 +62,7 @@ function HudShruju:draw()
     local scale = math.min((w - (.02 * v)) / (image:getHeight() - 8), (h - (.02 * v)) / (image:getWidth() - 8))
     g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
-    local cd = p.shruju[i].timer / p.shruju[i].duration
+    local cd = p.shruju[i].timer / config.shruju.magicDuration
     local points = {}
     w, h = w - 3, h - 3
     local function insert(x, y) table.insert(points, x + 2) table.insert(points, y + 2) end
