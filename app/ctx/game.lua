@@ -14,12 +14,12 @@ function Game:load(user, biome, options)
   self.id = 1
   self.biome = biome
 
-	self.paused = false
-	self.ded = false
+  self.paused = false
+  self.ded = false
   self.timer = 0
 
   self.event = Event()
-	self.view = View()
+  self.view = View()
   self.map = Map()
   self.players = Players()
   self.player = ctx.players:add(1)
@@ -36,7 +36,7 @@ function Game:load(user, biome, options)
   self.effects = Effects()
   self.target = Target()
   self.sound = Sound()
-	self.effects = Effects()
+  self.effects = Effects()
 
   Upgrades.clear()
 
@@ -45,8 +45,8 @@ function Game:load(user, biome, options)
     self:distribute()
   end)
 
-	backgroundSound = self.sound:loop('background')
-	love.keyboard.setKeyRepeat(false)
+  backgroundSound = self.sound:loop('background')
+  love.keyboard.setKeyRepeat(false)
 
   if options.muted then self.sound:mute() end
 end
@@ -54,51 +54,51 @@ end
 function Game:update()
   self.cursor:update()
 
-	if self.hud.upgrading or self.paused or self.ded then
-		self.hud:update()
-		if self.ded and self.effects:get('deathblur') then self.effects:get('deathblur'):update() end
+  if self.hud.upgrading or self.paused or self.ded then
+    self.hud:update()
+    if self.ded and self.effects:get('deathblur') then self.effects:get('deathblur'):update() end
     self.players:paused()
     self.units:paused()
     self.spells:paused()
     self.particles:update()
-		return
-	end
+    return
+  end
 
   self.timer = self.timer + 1
 
-	self.players:update()
-	self.units:update()
-	self.shrines:update()
-	self.jujus:update()
+  self.players:update()
+  self.units:update()
+  self.shrines:update()
+  self.jujus:update()
   self.spells:update()
-	self.view:update()
-	self.hud:update()
-	self.effects:update()
-	self.particles:update()
+  self.view:update()
+  self.hud:update()
+  self.effects:update()
+  self.particles:update()
   self.shrujuPatches:update()
 end
 
 function Game:unload()
-	backgroundSound:stop()
+  backgroundSound:stop()
 end
 
 function Game:draw()
-	self.view:draw()
+  self.view:draw()
 end
 
 function Game:resize()
   self.hud:resize()
-	self.view:resize()
-	self.effects:resize()
+  self.view:resize()
+  self.effects:resize()
 end
 
 function Game:keypressed(key)
-	if not self.ded then
-		if key == 'p' or (key == 'escape' and not self.hud:menuActive()) then self.paused = not self.paused
-		elseif key == 'm' then self.sound:mute() end
-	end
-	self.hud:keypressed(key)
-	self.players:keypressed(key)
+  if not self.ded then
+    if key == 'p' or (key == 'escape' and not self.hud:menuActive()) then self.paused = not self.paused
+    elseif key == 'm' then self.sound:mute() end
+  end
+  self.hud:keypressed(key)
+  self.players:keypressed(key)
 end
 
 function Game:keyreleased(...)
@@ -114,9 +114,9 @@ function Game:mousereleased(...)
 end
 
 function Game:gamepadpressed(gamepad, button)
-	if button == 'start' or button == 'guide' then self.paused = not self.paused end
-	self.hud:gamepadpressed(gamepad, button)
-	self.players:gamepadpressed(gamepad, button)
+  if button == 'start' or button == 'guide' then self.paused = not self.paused end
+  self.hud:gamepadpressed(gamepad, button)
+  self.players:gamepadpressed(gamepad, button)
 end
 
 function Game:distribute()
