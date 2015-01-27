@@ -13,7 +13,6 @@ function Hud:init()
 	self.pauseScreen = data.media.graphics.pauseMenu
 
   self.u, self.v = love.graphics.getDimensions()
-  self.selector = HudSelector()
   self.health = HudHealth()
   self.experience = HudExperience()
   self.portrait = HudPortrait()
@@ -41,7 +40,6 @@ function Hud:update()
   self.tooltip:update()
   self.button:update()
   self.status:update()
-  self.selector:update()
   self.health:update()
   self.experience:update()
   self.portrait:update()
@@ -65,7 +63,6 @@ function Hud:gui()
 	if not ctx.ded then
 
     self.status:draw()
-    self.selector:draw()
     self.health:draw()
     self.experience:draw()
     self.portrait:draw()
