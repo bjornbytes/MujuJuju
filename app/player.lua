@@ -161,10 +161,6 @@ function Player:keypressed(key)
   end
 end
 
-function Player:mousepressed(x, y, b)
-  --
-end
-
 function Player:paused()
 
   -- Reset prev variables when paused to fix lerp jitter.
@@ -340,8 +336,7 @@ function Player:initDeck()
         runes = deck.runes[i] or {},
         cooldown = 0,
         maxCooldown = 3,
-        code = code,
-        stance = 'aggressive'
+        code = code
       }
 
       self.deck[i] = self.deck[code]

@@ -354,12 +354,7 @@ function Unit:heal(amount, source)
 end
 
 function Unit:die()
-  if self.player then
-    self.player.deck[self.class.code].instance = nil
-  end
-
   self:abilityCall('deactivate')
-
   ctx.units:remove(self)
 end
 

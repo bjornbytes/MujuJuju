@@ -108,7 +108,6 @@ end
 
 function Game:mousepressed(...)
   self.hud:mousepressed(...)
-  self.players:mousepressed(...)
 end
 
 function Game:mousereleased(...)
