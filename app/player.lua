@@ -19,10 +19,10 @@ end
 function Player:init()
 
   -- Physics
-	self.x = ctx.map.width / 2
-	self.y = ctx.map.height - ctx.map.groundHeight - self.height
-	self.prevx = self.x
-	self.prevy = self.y
+  self.x = ctx.map.width / 2
+  self.y = ctx.map.height - ctx.map.groundHeight - self.height
+  self.prevx = self.x
+  self.prevy = self.y
   self.direction = 1
   self.speed = 0
   self.walkSpeed = Player.walkSpeed
@@ -54,13 +54,13 @@ function Player:init()
   self.shruju = {}
 
   -- Summoning, selection, and population
-	self.summonSelect = 1
+  self.summonSelect = 1
   self.maxPopulation = config.player.basePopulation
   self.totalSummoned = 0
   self.selectTap = tick
 
   -- Buffs
-	self.invincible = 0
+  self.invincible = 0
   self.ghostSpeedMultiplier = 1
   self.cooldownSpeed = 1
 end
@@ -90,19 +90,19 @@ end
 function Player:update()
 
   -- Lerp vars
-	self.prevx = self.x
-	self.prevy = self.y
+  self.prevx = self.x
+  self.prevy = self.y
   self.prevHealthDisplay = self.healthDisplay
   self.prevHealth = self.health
 
   -- Core updates
   self:move()
-	self:animate()
-	if self.ghost then self.ghost:update() end
+  self:animate()
+  if self.ghost then self.ghost:update() end
 
   -- Rots
-	self.deathTimer = timer.rot(self.deathTimer, function() self:spawn() end)
-	self.invincible = timer.rot(self.invincible)
+  self.deathTimer = timer.rot(self.deathTimer, function() self:spawn() end)
+  self.invincible = timer.rot(self.invincible)
 
   for i = 1, #self.deck do
     if self.deck[i].cooldown > 0 then
@@ -122,10 +122,10 @@ function Player:update()
   end)
 
   -- Health decay
-	self:hurt(self.maxHealth * .033 * tickRate)
+  self:hurt(self.maxHealth * .033 * tickRate)
 
   -- Lerp healthbar
-	self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
+  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
   -- Juju trickle
   if not ctx.won then
@@ -139,18 +139,18 @@ end
 function Player:draw()
 
   -- Flash when invincible
-	if math.floor(self.invincible * 5) % 2 == 0 then
+  if math.floor(self.invincible * 5) % 2 == 0 then
     local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
-		love.graphics.setColor(255, 255, 255)
-		self.animation:draw(x, y)
-	end
+    love.graphics.setColor(255, 255, 255)
+    self.animation:draw(x, y)
+  end
 end
 
 function Player:keypressed(key)
 
   -- Select minions with digits
-	for i = 1, #self.deck do
-		if tonumber(key) == i then
+  for i = 1, #self.deck do
+    if tonumber(key) == i then
 
       -- Double tap to select
       if (tick - self.selectTap) * tickRate < .275 and i == self.summonSelect then
@@ -166,14 +166,14 @@ function Player:keypressed(key)
 
       self.summonSelect = i
       self.selectTap = tick
-			return
-		end
-	end
+      return
+    end
+  end
 
   -- Summon with space
-	if key == ' ' and not self.dead then
-		self:summon()
-	end
+  if key == ' ' and not self.dead then
+    self:summon()
+  end
 
   -- Stances with z and x
   if key == 'z' then
@@ -240,8 +240,8 @@ function Player:move()
 
   -- If we can't move then don't move
   local animation = self.animation.state.name
-	if self.dead or animation == 'summon' or animation == 'death' or animation == 'resurrect' then
-		self.speed = 0
+  if self.dead or animation == 'summon' or animation == 'death' or animation == 'resurrect' then
+    self.speed = 0
     return
   end
 
@@ -260,18 +260,18 @@ function Player:move()
   self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
 
   -- Don't go outside map
-	self.x = math.clamp(self.x, 0, love.graphics.getWidth())
+  self.x = math.clamp(self.x, 0, love.graphics.getWidth())
 end
 
 function Player:summon()
-	local minion = self.deck[self.summonSelect].code
-	local cooldown = self.deck[self.summonSelect].cooldown
+  local minion = self.deck[self.summonSelect].code
+  local cooldown = self.deck[self.summonSelect].cooldown
   local population = self:getPopulation()
-	local cost = data.unit[minion].cost
+  local cost = data.unit[minion].cost
   local animation = self.animation.state.name
 
   -- Check if we can summon
-	if not (cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(0)) then
+  if not (cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(0)) then
     return ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
   end
 
@@ -304,13 +304,13 @@ function Player:animate()
   -- Flip animation, set animation speed
   self.animation:set(math.abs(self.speed) > self.walkSpeed / 2 and 'walk' or 'idle')
   self.animation.speed = self.animation.state.name == 'walk' and math.max(math.abs(self.speed / Player.walkSpeed), .4) or 1
-	if self.speed ~= 0 then self.animation.flipped = math.sign(self.speed) > 0 end
+  if self.speed ~= 0 then self.animation.flipped = math.sign(self.speed) > 0 end
 end
 
 function Player:spend(amount)
-	if self.juju >= amount then
-		self.juju = self.juju - amount
-		return true
+  if self.juju >= amount then
+    self.juju = self.juju - amount
+    return true
   end
 
   return false
@@ -332,7 +332,7 @@ function Player:addJuju(amount)
 end
 
 function Player:hurt(amount, source)
-	if self.invincible == 0 then
+  if self.invincible == 0 then
     self.health = math.max(self.health - amount, 0)
 
     -- Die if we are dead
