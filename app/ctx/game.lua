@@ -120,19 +120,21 @@ function Game:gamepadpressed(gamepad, button)
 end
 
 function Game:distribute()
-  print('you survived for ' .. (ctx.timer * tickRate) .. ' seconds.')
 
   -- So the hud can draw them
   self.rewards = {runes = {}, biomes = {}, minions = {}}
 
   local time = math.floor(self.timer * tickRate)
+  local bronze = time >= config.biomes[self.biome].benchmarks.bronze
+  local silver = time >= config.biomes[self.biome].benchmarks.silver
+  local gold = time >= config.biomes[self.biome].benchmarks.gold
 
   -- Distribute runes
   local runeCount = 0
-  if self.biome == 'forest' and love.math.random() < .5 then runeCount = 1
-  elseif self.biome == 'cavern' then runeCount = 1 + math.round(love.math.random())
-  elseif self.biome == 'tundra' then runeCount = 1 + math.round(2 * love.math.random())
-  elseif self.biome == 'volcano' then runeCount = 1 + math.round(2 * love.math.random()) end
+  if not bronze and love.math.random() < .3 then runeCount = runeCount + 1 end
+  if bronze and love.math.random() < .9 then runeCount = runeCount + 1 end
+  if silver and love.math.random() < .5 then runeCount = runeCount + 1 end
+  if gold and love.math.random() < .25 then runeCount = runeCount + 1 end
 
   for i = 1, runeCount do
     local rune = {}
@@ -168,6 +170,23 @@ function Game:distribute()
 
     table.insert(self.user.runes, rune)
     table.insert(self.rewards.runes, rune)
+  end
+
+  -- Distribute biomes
+  if silver then
+    local nextBiome = config.biomes[self.biome].rewards.silver
+    if nextBiome and not table.has(self.user.biomes, nextBiome) then
+      table.insert(self.user.biomes, nextBiome)
+      table.insert(self.rewards.biomes, nextBiome)
+      saveUser(self.user)
+    end
+  end
+
+  -- Calculate highscores
+  if time > self.user.highscores[self.biome] then
+    self.user.highscores[self.biome] = time
+    self.rewards.highscore = true
+    saveUser(self.user)
   end
 
   saveUser(self.user)
