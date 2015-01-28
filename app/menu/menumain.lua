@@ -394,7 +394,7 @@ function MenuMain:draw()
   g.setColor(255, 255, 255)
   local x, y, w, h = unpack(self.geometry.play)
   ctx.button:draw('Play', x, y, w, h)
-
+  
   self.drag:draw()
 end
 
@@ -420,6 +420,7 @@ end
 
 function MenuMain:mousereleased(mx, my, b)
   if not self.active then return end
+  if ctx.options.active then return end
 
   if b == 'l' then
     for i = 1, 2 do

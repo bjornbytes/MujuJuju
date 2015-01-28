@@ -46,12 +46,14 @@ function Menu:load(selectedBiome, options)
   self.background2 = g.newCanvas(self.u, self.v)
   self.workingCanvas = g.newCanvas(self.u, self.v)
   self.unitCanvas = g.newCanvas(400, 400)
+  self.screenCanvas = g.newCanvas(self.u, self.v)
 
   self.page = self.page or (Menu.started and 'main' or 'start')
 
   self.start = MenuStart()
   self.choose = MenuChoose()
   self.main = MenuMain()
+  self.options = MenuOptions()
 
   if self.page ~= 'start' then self:refreshBackground() end
 
@@ -71,6 +73,7 @@ function Menu:update()
   self.start:update()
   self.choose:update()
   self.main:update()
+  self.options:update()
 end
 
 function Menu:draw()
@@ -80,10 +83,18 @@ function Menu:draw()
     delta = 0
   end
 
-  self.start:draw()
-  self:drawBackground()
-  self.choose:draw()
-  self.main:draw()
+  self.screenCanvas:clear(0, 0, 0, 0)
+  self.screenCanvas:renderTo(function()
+    self.start:draw()
+    self:drawBackground()
+    self.choose:draw()
+    self.main:draw()
+  end)
+
+  g.setColor(255, 255, 255)
+  g.draw(self.screenCanvas)
+
+  self.options:draw()
 
   self.tooltip:draw()
 end
@@ -92,8 +103,10 @@ function Menu:keypressed(key)
   self.start:keypressed(key)
   self.choose:keypressed(key)
   self.main:keypressed(key)
+  self.options:keypressed(key)
 
-  if key == 'm' then self.sound:mute() end
+  if key == 'm' then self.sound:mute()
+  elseif key == 'escape' then love.event.quit() end
 end
 
 function Menu:mousepressed(mx, my, b)
