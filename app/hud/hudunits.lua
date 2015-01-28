@@ -124,7 +124,7 @@ function HudUnits:update()
     local runeSize = v * .04 * scale
     local runeInc = runeSize * 3
     local runex = xx - (runeInc * (runeCount - 1) / 2)
-    local runey = yy + .365 * v * scale * ctx.view.scale
+    local runey = yy + .365 * v * scale
     for j = 1, runeCount do
       if math.insideCircle(mx, my, runex, runey, runeSize) then
         ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
