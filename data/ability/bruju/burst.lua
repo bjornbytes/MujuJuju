@@ -1,5 +1,8 @@
 local Burst = extend(Ability)
 
+Burst.damage = 0
+Burst.range = 0
+
 function Burst:die()
   local damages = {20, 40, 70, 110, 160}
   local ranges = {[0] = 60, 80, 110, 150}
@@ -15,8 +18,8 @@ function Burst:die()
   heal = heal + 1 * self.unit.spirit
 
   self:createSpell({
-    damage = damage,
-    range = range,
+    damage = self.damage + damage,
+    range = self.range + range,
     heal = heal,
     maxHealth = .5
   })
