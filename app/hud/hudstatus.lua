@@ -99,21 +99,21 @@ function HudStatus:draw()
   g.setFont('mesmerize', height * .4)
   g.setColor(255, 255, 255)
   local str = p.level .. ', ' .. p.skillPoints .. ', ' .. p.attributePoints
-  g.print(str, xx + (v * .03), (height * .5) - g.getFont():getHeight() / 2)
+  g.print(str, xx + (v * .03), (height * .5) - g.getFont():getHeight() / 2 + 1)
   local hitboxWidth = (xx + (v * .03) + g.getFont():getWidth(str)) - hitboxX
   self.hitboxes.juju[1] = hitboxX
   self.hitboxes.juju[2] = 0
   self.hitboxes.juju[3] = hitboxWidth
   self.hitboxes.juju[4] = height
 
-  xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .04)
+  xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .05)
   local hitboxX = xx
 
   -- Population Icon
   local image = data.media.graphics.hud.population
   local scale = (height * .6) / image:getHeight()
   local s = scale * lerpd.populationScale
-  xx = xx + image:getWidth() * scale / 2
+  xx = xx + image:getWidth() / 2 * scale
   local r = math.lerp(21, 255, lerpd.maxPopFactor)
   local gg = math.lerp(142, 100, lerpd.maxPopFactor)
   local b = math.lerp(149, 100, lerpd.maxPopFactor)
@@ -126,14 +126,14 @@ function HudStatus:draw()
   local gg = math.lerp(255, 150, lerpd.maxPopFactor)
   local b = math.lerp(255, 150, lerpd.maxPopFactor)
   g.setColor(r, gg, b)
-  g.print(str, xx + (v * .025), (height * .5) - g.getFont():getHeight() / 2)
+  g.print(str, xx + (v * .025), (height * .5) - g.getFont():getHeight() / 2 + 1)
   local hitboxWidth = (xx + (v * .025) + g.getFont():getWidth(str)) - hitboxX
   self.hitboxes.population[1] = hitboxX
   self.hitboxes.population[2] = 0
   self.hitboxes.population[3] = hitboxWidth
   self.hitboxes.population[4] = height
 
-  xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .04)
+  xx = xx + math.max(v * .05, g.getFont():getWidth(str)) + (v * .04)
   local hitboxX = xx
   g.setColor(255, 255, 255)
 
@@ -141,14 +141,14 @@ function HudStatus:draw()
   local image = self.clockIcon
   local scale = (height * .6) / image:getHeight()
   local s = scale * lerpd.clockScale
-  xx = xx + image:getWidth() * scale / 2
+  xx = xx + image:getWidth() / 2 * scale
   g.draw(image, xx, height / 2, 0, s, s, image:getWidth() / 2, image:getHeight() / 2)
 
   -- Timer Text
   local str = toTime(ctx.timer * tickRate, true)
 
   g.setColor(255, 255, 255)
-  g.print(str, xx + (.025 * v), (height * .5) - g.getFont():getHeight() / 2)
+  g.print(str, xx + (.025 * v), (height * .5) - g.getFont():getHeight() / 2 + 1)
   local hitboxWidth = (xx + (v * .025) + g.getFont():getWidth(str)) - hitboxX
   self.hitboxes.timer[1] = hitboxX
   self.hitboxes.timer[2] = 0

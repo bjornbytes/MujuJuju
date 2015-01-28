@@ -138,17 +138,9 @@ end
 function View:resize()
   local w, h = love.graphics.getDimensions()
   local ratio = w / h
-  self.frame.x, self.frame.y = 0, 0
-  self.frame.height = h
-  self.scale = h / self.height
-  self.frame.width = math.min(w, (self.xmax - self.xmin) * self.scale)
-  self.width = math.min(self.frame.width / self.scale, self.xmax - self.xmin)
 
-  --self.frame.width, self.frame.height = math.min(w, self.width), h
-  if self.frame.width < w then self.frame.x = (w - self.frame.width) / 2 end
-  if self.frame.height < h then self.frame.y = (h - self.frame.height) / 2 end
-
-  --[[if (self.width / self.height) > (w / h) then
+  self.frame.x, self.frame.y, self.frame.width, self.frame.height = 0, 0, self.width, self.height
+  if (self.width / self.height) > (w / h) then
     self.scale = w / self.width
     local margin = math.max(math.round(((h - w * (self.height / self.width)) / 2)), 0)
     self.frame.y = margin
@@ -160,9 +152,9 @@ function View:resize()
     self.frame.x = margin
     self.frame.width = w - 2 * margin
     self.frame.height = h
-  end]]
+  end
 
-   self.sourceCanvas = love.graphics.newCanvas(w, h)
+  self.sourceCanvas = love.graphics.newCanvas(w, h)
   self.targetCanvas = love.graphics.newCanvas(w, h)
 end
 
@@ -249,4 +241,9 @@ function View:worldPush()
   g.translate(self.frame.x, self.frame.y)
   g.scale(s)
   g.translate(-x, -y)
+end
+
+function View:guiPush()
+  g.push()
+  g.translate(self.frame.x, self.frame.y)
 end

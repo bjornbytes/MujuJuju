@@ -71,7 +71,7 @@ end
 
 function HudUnits:update()
   local p = ctx.player
-  local mx, my = love.mouse.getPosition()
+  local mx, my = ctx.view:frameMouseX(), ctx.view:frameMouseY()
 
   local attributes = self.geometry.attributes
   for i = 1, #attributes do
@@ -113,17 +113,18 @@ function HudUnits:update()
   local upgradeFactor, t = ctx.hud.upgrades:getFactor()
   local inc = u * (.2 + (.075 * upgradeFactor))
   local xx = .5 * u - (inc * (ct - 1) / 2)
+  ctx.view:guiPush()
   for i = 1, ct do
     local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
     local bg = data.media.graphics.hud.minion
     local w, h = bg:getDimensions()
-    local scale = (.25 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / w
-    local yy = v * (.01 * selectFactor)
+    local scale = (.2 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / h
+    local yy = v * (.01 * selectFactor) * scale
     local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
-    local runeSize = v * .032 * scale
+    local runeSize = v * .04 * scale
     local runeInc = runeSize * 3
     local runex = xx - (runeInc * (runeCount - 1) / 2)
-    local runey = yy + .365 * v * scale
+    local runey = yy + .365 * v * scale * ctx.view.scale
     for j = 1, runeCount do
       if math.insideCircle(mx, my, runex, runey, runeSize) then
         ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
@@ -133,6 +134,7 @@ function HudUnits:update()
     end
     xx = xx + inc
   end
+  g.pop()
 end
 
 function HudUnits:draw()
@@ -159,21 +161,21 @@ function HudUnits:draw()
     local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
     local bg = data.media.graphics.hud.minion
     local w, h = bg:getDimensions()
-    local scale = (.25 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / w
+    local scale = (.2 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / h
     local yy = v * (.01 * selectFactor)
     local alpha = .45 + selectFactor * .35
 
     -- Backdrop
     g.setColor(255, 255, 255, 255 * alpha)
-    g.draw(bg, xx, yy, 0, scale, scale, w / 2, 0)
+    g.draw(bg, xx, yy, 0, scale * ctx.view.scale, scale * ctx.view.scale, w / 2, 0)
 
     -- Cooldown
     local title = data.media.graphics.hud.title
-    local titlex = xx - (title:getWidth() / 2) * scale
+    local titlex = xx - (title:getWidth() / 2) * scale * ctx.view.scale
     g.setColor(255, 255, 255, 80 * alpha)
-    g.draw(title, xx, yy + (10 * scale), 0, scale, scale, title:getWidth() / 2, 0)
+    g.draw(title, xx, yy + (10 * scale * ctx.view.scale), 0, scale * ctx.view.scale, scale * ctx.view.scale, title:getWidth() / 2, 0)
     g.setColor(255, 255, 255, 255 * alpha)
-    g.draw(title, titlex, yy + (10 * scale), 0, scale * (1 - (p.deck[i].cooldown / p.deck[i].maxCooldown)), scale)
+    g.draw(title, titlex, yy + (10 * scale * ctx.view.scale), 0, scale * (1 - (p.deck[i].cooldown / p.deck[i].maxCooldown)) * ctx.view.scale, scale * ctx.view.scale)
 
     local cooldownPop = math.lerp(self.prevCooldownPop[i], self.cooldownPop[i], tickDelta / tickRate)
     g.setBlendMode('additive')
@@ -184,9 +186,11 @@ function HudUnits:draw()
     -- Animation
     self.canvas[i]:clear(0, 0, 0, 0)
     g.setCanvas(self.canvas[i])
+    g.pop()
     self.animations[i]:draw(100, 100)
+    ctx.view:guiPush()
     g.setCanvas()
-    g.draw(self.canvas[i], xx, yy + .2 * scale * v, 0, scale, scale, 100, 100)
+    g.draw(self.canvas[i], xx, yy + .2 * scale * v, 0, scale * ctx.view.scale, scale * ctx.view.scale, 100, 100)
 
     -- Text
     local unit = data.unit[p.deck[i].code]
@@ -211,14 +215,14 @@ function HudUnits:draw()
 
     -- Runes
     local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
-    local runeSize = v * .04 * scale
+    local runeSize = v * .04 * scale * ctx.view.scale
     local runeInc = runeSize * 3
     local runex = xx - (runeInc * (runeCount - 1) / 2)
     local runey = yy + .365 * v * scale
     g.setColor(255, 255, 255, 255 * alpha)
     for j = 1, runeCount do
       local rune = p.deck[i].runes and p.deck[i].runes[j]
-      g.drawRune(rune, runex, runey, runeSize * 2, (runeSize - .01175 * v) * 2)
+      g.drawRune(rune, runex, runey, runeSize * 2, (runeSize - .016 * v * scale * ctx.view.scale) * 2)
       runex = runex + runeInc
     end
 
@@ -303,6 +307,8 @@ end
 function HudUnits:mousereleased(mx, my, b)
   if ctx.ded then return end
   if b ~= 'l' then return end
+
+  mx, my = ctx.view:frameMouseX(), ctx.view:frameMouseY()
 
   local p = ctx.player
 

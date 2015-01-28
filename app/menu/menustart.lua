@@ -47,8 +47,8 @@ function MenuStart:draw()
 
     g.setColor(255, 255, 255)
     local image = data.media.graphics.menu.titlescreen
-    local scale = math.min(u / image:getWidth(), v / image:getHeight())
-    g.draw(image, 0, 0, 0, scale, scale)
+    local scale = math.max(u / image:getWidth(), v / image:getHeight())
+    g.draw(image, u / 2, v / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
     local image = data.media.graphics.menu.title
     local scale = v * .45 / image:getHeight()

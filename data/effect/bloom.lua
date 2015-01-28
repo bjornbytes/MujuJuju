@@ -48,8 +48,10 @@ function Bloom:applyEffect(source, target)
   g.setBlendMode('alpha')
 
 	if p.dead then
+    ctx.view:worldPush()
 		p.ghost:draw()
 		table.each(ctx.jujus.jujus, function(juju) juju:draw() end)
+    g.pop()
 	end
 
   table.each(ctx.particles.objects, function(particle)

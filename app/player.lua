@@ -199,7 +199,7 @@ function Player:move()
   self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
 
   -- Don't go outside map
-  self.x = math.clamp(self.x, 0, love.graphics.getWidth())
+  self.x = math.clamp(self.x, 0, ctx.map.width)
 end
 
 function Player:summon()

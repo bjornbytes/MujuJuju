@@ -89,8 +89,8 @@ function GhostPlayer:update()
 		self.y = math.lerp(self.y, py + math.dy(self.maxDis, angle), 8 * tickRate)
 	end
 
-	self.x = math.clamp(self.x, self.radius, love.graphics.getWidth() - self.radius)
-	self.y = math.clamp(self.y, self.radius, love.graphics.getHeight() - self.radius - ctx.map.groundHeight)
+	self.x = math.clamp(self.x, self.radius, ctx.map.width - self.radius)
+	self.y = math.clamp(self.y, self.radius, ctx.map.height - self.radius - ctx.map.groundHeight)
 
 	local scale = math.min(self.owner.deathTimer, 2) / 2
 	local maxJuju = 7

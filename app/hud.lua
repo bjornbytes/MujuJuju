@@ -12,7 +12,7 @@ function Hud:init()
 	self.pauseAlpha = 0
 	self.pauseScreen = data.media.graphics.pauseMenu
 
-  self.u, self.v = love.graphics.getDimensions()
+  self.u, self.v = ctx.view.frame.width, ctx.view.frame.height
   self.health = HudHealth()
   self.experience = HudExperience()
   self.portrait = HudPortrait()
@@ -151,7 +151,7 @@ function Hud:mousereleased(x, y, b)
 end
 
 function Hud:resize()
-  self.u, self.v = love.graphics.getDimensions()
+  self.u, self.v = ctx.view.frame.width, ctx.view.frame.height
   self.tooltip:resize()
 end
 

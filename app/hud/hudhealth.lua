@@ -113,9 +113,10 @@ function HudHealth:update()
 
   local frame = data.media.graphics.healthbarFrame
   local w, h = frame:getDimensions()
-  local scale = 80 / w
+  local scale = (80 * ctx.view.scale) / w
   ctx.units:each(function(unit)
-    local startY = math.round(ctx.map.height - ctx.map.groundHeight - unit.height * 2 + (h * scale) + .5)
+    local _, yy = ctx.view:screenPoint(0, ctx.map.height - ctx.map.groundHeight - unit.height * 2)
+    local startY = math.round(yy + (h * scale) + .5)
     self.unitBarY[unit] = self.unitBarY[unit] or startY
   end)
 
@@ -133,7 +134,8 @@ function HudHealth:update()
       end
     end
 
-    local targetY = math.round(ctx.map.height - ctx.map.groundHeight - unit.height * 2 - (binIndex - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + .5))
+    local _, yy = ctx.view:screenPoint(0, ctx.map.height - ctx.map.groundHeight - unit.height * 2)
+    local targetY = math.round(yy - (binIndex - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + .5))
     targetY = targetY - (self.bins[unit.class.code][self.unitBins[unit]].offsetY or 0)
     self.unitBarPrevY[unit] = self.unitBarY[unit] or startY
     self.unitBarY[unit] = self.unitBarY[unit] and math.lerp(self.unitBarY[unit], targetY, math.min(20 * tickRate, 1)) or startY
@@ -159,7 +161,6 @@ function HudHealth:draw()
   if ctx.ending then return end
 
   local p = ctx.player
-  local vx, vy = math.lerp(ctx.view.prevx, ctx.view.x, tickDelta / tickRate), math.lerp(ctx.view.prevy, ctx.view.y, tickDelta / tickRate)
 
   ctx.players:each(function(player)
     local x, y, hard, soft = player:getHealthbar()
