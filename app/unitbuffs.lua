@@ -5,6 +5,10 @@ function UnitBuffs:init(unit)
   self.list = {}
 
   table.merge(table.only(self.unit.class, Unit.classStats), self.unit)
+  self:applyRunes('health')
+  self:applyRunes('damage')
+  self:applyRunes('spirit')
+  self:applyRunes('haste')
 end
 
 function UnitBuffs:preupdate()
@@ -119,12 +123,30 @@ function UnitBuffs:isCrowdControl(buff)
   return t('slow') or t('root') or t('stun') or t('silence') or t('knockback') or t('taunt')
 end
 
+function UnitBuffs:applyRunes(stat)
+  if not self.unit.player or not self.unit:hasRunes() then return end
+
+  local runes = self.unit.player.deck[self.unit.class.code].runes
+  table.each(runes, function(rune)
+    if rune.stats and rune.stats[stat] then
+      self.unit[stat] = self.unit[stat] + rune.stats[stat]
+    end
+  end)
+end
+
 function UnitBuffs:getBaseSpeed()
   local speed = self.unit.class.speed
   if not self.unit.player then return speed end
 
   local agilityLevel = self.unit.class.attributes.agility
   speed = speed + agilityLevel * config.attributes.agility.speed
+
+  local runes = self.unit.player.deck[self.unit.class.code].runes
+  table.each(runes, function(rune)
+    if rune.stats and rune.stats.speed then
+      speed = speed + rune.stats.speed
+    end
+  end)
 
   return speed
 end
@@ -136,6 +158,13 @@ function UnitBuffs:getBaseAttackSpeed()
 
   local agilityLevel = self.unit.class.attributes.agility
   speed = speed - (agilityLevel * config.attributes.agility.attackSpeed) * baseSpeed
+
+  local runes = self.unit.player.deck[self.unit.class.code].runes
+  table.each(runes, function(rune)
+    if rune.stats and rune.stats.attackSpeed then
+      speed = speed - (rune.stats.attackSpeed * baseSpeed)
+    end
+  end)
 
   return math.max(speed, .4)
 end

@@ -7,12 +7,12 @@ function Burst:die()
   local eruption = self.unit:upgradeLevel('eruption')
   local sanctuary = self.unit:upgradeLevel('sanctuary')
 
-  local damage = damages[burst] + 1 * self.unit.spellPower
+  local damage = damages[burst] + 1 * self.unit.spirit
   local range = ranges[eruption]
   local heal = 0
 
   heal = sanctuary > 0 and damage * .5 or 0
-  heal = heal + 1 * self.unit.spellPower
+  heal = heal + 1 * self.unit.spirit
 
   self:createSpell({
     damage = damage,

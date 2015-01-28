@@ -18,7 +18,7 @@ function Ability:canUse()
 end
 
 function Ability:rot()
-  self.timer = self.timer - math.min(self.timer, tickRate * self.unit.cooldownSpeed)
+  self.timer = self.timer - math.min(self.timer, tickRate * self.unit.haste)
   if self.timer <= 0 then
     f.exe(self.ready, self)
   end

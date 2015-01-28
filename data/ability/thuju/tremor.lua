@@ -17,7 +17,7 @@ end
 function Tremor:fire()
   local level = self.unit:upgradeLevel('tremor')
   local damages = {30, 60, 90}
-  local damage = damages[level] + 1.5 * self.unit.spellPower
+  local damage = damages[level] + 1.5 * self.unit.spirit
   local stun = 1 * level
   local width = 180 + (60 * self.unit:upgradeLevel('fissure'))
 

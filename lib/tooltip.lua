@@ -136,9 +136,20 @@ end
 function Tooltip:setRuneTooltip(rune)
   local pieces = {}
   table.insert(pieces, '{white}{title}' .. rune.name .. '{normal}')
-  table.each(rune.attributes, function(amount, attribute)
-    table.insert(pieces, '+' .. amount .. ' to ' .. attribute:capitalize())
-  end)
+  if rune.attributes then
+    table.each(rune.attributes, function(amount, attribute)
+      table.insert(pieces, '+' .. amount .. ' to ' .. attribute:capitalize())
+    end)
+  elseif rune.stats then
+    table.each(rune.stats, function(amount, stat)
+      table.insert(pieces, '+' .. math.round(amount) .. ' to ' .. stat:capitalize())
+    end)
+  elseif rune.unit and rune.abilities then
+    table.insert(pieces, rune.unit:capitalize() .. ' only')
+    local ability = next(rune.abilities)
+    local stat, amount = next(rune.abilities[ability])
+    table.insert(pieces, '+' .. math.round(amount) .. ' to ' .. ability:capitalize() .. ' ' .. stat)
+  end
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

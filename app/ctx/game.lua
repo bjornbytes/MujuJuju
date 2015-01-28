@@ -121,6 +121,10 @@ end
 
 function Game:distribute()
 
+  local function tableRandom(t)
+    return t[love.math.random(1, #t)]
+  end
+
   -- So the hud can draw them
   self.rewards = {runes = {}, biomes = {}, minions = {}}
 
@@ -131,43 +135,82 @@ function Game:distribute()
 
   -- Distribute runes
   local runeCount = 0
-  if not bronze and love.math.random() < .3 then runeCount = runeCount + 1 end
   if bronze and love.math.random() < .9 then runeCount = runeCount + 1 end
-  if silver and love.math.random() < .5 then runeCount = runeCount + 1 end
-  if gold and love.math.random() < .25 then runeCount = runeCount + 1 end
+  if silver and love.math.random() < .3 then runeCount = runeCount + 1 end
+  if gold and love.math.random() < .2 then runeCount = runeCount + 1 end
 
   for i = 1, runeCount do
+
+    -- Basics
     local rune = {}
     local maxLevel = config.biomes[ctx.biome].runes.maxLevel
-    local runeLevel = love.math.random(1, maxLevel)
+    local mu = 0
+    if gold then mu = maxLevel
+    elseif silver then mu = maxLevel * .75
+    elseif bronze then mu = maxLevel * .25 end
 
-    rune.attributes = {}
-    local attributes = config.attributes.list
-    local attribute = attributes[love.math.random(1, #attributes)]
-    local attributeLevels = math.max(math.round((runeLevel / 100) * 8), 1)
-    local attributesDistributed = 0
-    while attributesDistributed < attributeLevels do
-      local amount = love.math.random(1, attributeLevels - attributesDistributed)
-      rune.attributes[attribute] = (rune.attributes[attribute] or 0) + amount
-      attributesDistributed = attributesDistributed + amount
-      if love.math.random() < .2 then
-        attribute = attributes[love.math.random(1, #attributes)]
+    local runeLevel = math.clamp(love.math.randomNormal(10, mu), 1, 100)
+
+    -- Generate prefix
+    local prefixes = config.runes.prefixes
+    local prefixLevel = math.clamp(runeLevel + love.math.random(-4, 4), 0, 100)
+    local prefix = prefixes[1 + math.round((prefixLevel / 100) * (#prefixes - 1))]
+    rune.name = prefix .. ' Rune'
+
+    -- Generate bonuses
+    local r = love.math.random()
+    if r < .33 then
+
+      -- Attributes
+      rune.attributes = {}
+      local attribute = tableRandom(config.attributes.list)
+      local attributeLevels = math.max(math.round((runeLevel / 100) * 8), 1)
+      local attributeLevelsDistributed = 0
+      local attributesDistributed = {attribute}
+      while attributeLevelsDistributed < attributeLevels do
+        local amount = love.math.random(1, attributeLevels - attributeLevelsDistributed)
+        rune.attributes[attribute] = (rune.attributes[attribute] or 0) + amount
+        attributeLevelsDistributed = attributeLevelsDistributed + amount
+        if #attributesDistributed < 2 and love.math.random() < .4 then
+          attribute = tableRandom(config.attributes.list)
+          table.insert(attributesDistributed, attribute)
+        end
       end
+
+      table.sort(attributesDistributed)
+      rune.name = rune.name .. ' of ' .. tableRandom(config.runes.suffixes.attributes[table.concat(attributesDistributed)])
+    elseif r < .67 then
+
+      -- Stat bonuses
+      local stats = config.runes.stats
+      local stat = stats[love.math.random(1, #stats)]
+      local min, max = unpack(config.runes.statRanges[stat])
+      local mu, sigma = math.lerp(min, max, runeLevel / 100), (max - min) / 10
+      local amount = math.clamp(love.math.randomNormal(sigma, mu), min, max)
+      rune.stats = {[stat] = amount}
+
+      rune.name = rune.name .. ' of ' .. tableRandom(config.runes.suffixes.stats[stat])
+    else
+
+      -- Ability bonuses
+      local unit = tableRandom(table.keys(config.runes.abilities))
+      local ability = tableRandom(table.keys(config.runes.abilities[unit]))
+      local stat = tableRandom(table.keys(config.runes.abilities[unit][ability]))
+      local min, max = unpack(config.runes.abilities[unit][ability][stat])
+      local mu, sigma = math.lerp(min, max, runeLevel / 100), (max - min) / 10
+      local amount = math.clamp(love.math.randomNormal(sigma, mu), min, max)
+      rune.unit = unit
+      rune.abilities = {[ability] = {[stat] = amount}}
+
+      rune.name = rune.name .. ' of ' .. tableRandom(config.runes.suffixes.abilities[ability])
     end
 
-    rune.name = 'Rune'
-
-    local prefixes = config.runes.prefixes
-    local prefixLevel = math.clamp(runeLevel + love.math.random(-3, 3), 0, 100)
-    local prefix = prefixes[1 + math.round((prefixLevel / 100) * (#prefixes - 1))]
-
-    rune.name = prefix .. ' ' .. rune.name
-
-    local colors = table.keys(config.runes.colors)
-    rune.color = colors[love.math.random(1, #colors)]
+    -- Generate appearance
+    rune.color = tableRandom(table.keys(config.runes.colors))
     rune.image = love.math.random(1, config.runes.imageCount)
     rune.background = runeLevel < 30 and 'broken' or 'normal'
 
+    -- Add to account
     table.insert(self.user.runes, rune)
     table.insert(self.rewards.runes, rune)
   end

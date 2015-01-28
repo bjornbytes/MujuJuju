@@ -32,8 +32,8 @@ return {
       attackSpeed = .03
     },
     flow = {
-      cooldownSpeed = .03,
-      spellPower = 5
+      haste = .03,
+      spirit = 5
     }
   },
 
@@ -142,8 +142,7 @@ return {
       },
       shrujuPatches = {1, 450},
       runes = {
-        maxLevel = 25,
-        specialChance = .1
+        maxLevel = 25
       },
       effects = {
         vignette = {
@@ -195,8 +194,7 @@ return {
       },
       shrujuPatches = {},
       runes = {
-        maxLevel = 25,
-        specialChance = .1
+        maxLevel = 25
       },
       effects = {
         vignette = {
@@ -248,8 +246,7 @@ return {
       },
       shrujuPatches = {},
       runes = {
-        maxLevel = 75,
-        specialChance = .1
+        maxLevel = 75
       },
       effects = {
         vignette = {
@@ -301,8 +298,7 @@ return {
       },
       shrujuPatches = {},
       runes = {
-        maxLevel = 100,
-        specialChance = .1
+        maxLevel = 100
       },
       effects = {
         vignette = {
@@ -317,21 +313,22 @@ return {
   },
 
   runes = {
-    stats = {'health', 'damage', 'speed'},
-    health = {
-      names = {'Rune of Fortitude', 'Rune of Vitality', 'Rune of Stamina', 'Rune of the Soul'},
-      flatRange = {10, 250},
-      scalingRange = {1, 25}
+    stats = {'health', 'damage', 'speed', 'attackSpeed', 'spirit', 'haste'},
+    statRanges = {
+      health = {10, 250},
+      damage = {3, 70},
+      speed = {5, 80},
+      attackSpeed = {.01, .15},
+      spirit = {5, 200},
+      haste = {.04, .2}
     },
-    damage = {
-      names = {'Rune of Might', 'Rune of Force', 'Rune of Ruin', 'Rune of Power'},
-      flatRange = {3, 70},
-      scalingRange = {1, 8}
-    },
-    speed = {
-      names = {'Rune of Agility', 'Rune of Haste', 'Rune of Swiftness', 'Rune of the Wind'},
-      flatRange = {5, 80},
-      scalingRange = {1, 8}
+    abilities = {
+      bruju = {
+        burst = {
+          damage = {5, 50},
+          range = {10, 50}
+        }
+      }
     },
     prefixes = {
       'Broken',
@@ -351,6 +348,31 @@ return {
       'Exquisite',
       'Grand',
       'Legendary'
+    },
+    suffixes = {
+      attributes = {
+        agility = {'the Wind'},
+        agilityflow = {'Vigor'},
+        agilitystrength = {'Skill'},
+        agilityvitality = {'Energy'},
+        flow = {'Spirit'},
+        flowstrength = {'the Monk'},
+        flowvitality = {'the Gods'},
+        strength = {'Power'},
+        strengthvitality = {'the Bear'},
+        vitality = {'the Mountain'}
+      },
+      stats = {
+        health = {'Fortitude'},
+        damage = {'Might'},
+        speed = {'Swiftness'},
+        attackSpeed = {'Alacrity'},
+        spirit = {'Essence'},
+        haste = {'Refreshment'}
+      },
+      abilities = {
+        burst = {'the Supernova'}
+      }
     },
     colors = {
       red = {230, 92, 92},

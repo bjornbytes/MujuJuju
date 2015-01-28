@@ -120,13 +120,14 @@ function MenuDrag:mousereleased(mx, my, b)
 
   if self.dragging == 'gutterRune' and b == 'l' then
     local deck = ctx.main.geometry.deck
+    local rune = ctx.user.runes[self.draggingIndex]
     for i = 1, #deck do
       ctx.user.deck.runes[i] = ctx.user.deck.runes[i] or {}
-      if #ctx.user.deck.runes[i] < 3 then
+      if #ctx.user.deck.runes[i] < 3 and (not rune.unit or rune.unit == ctx.user.deck.minions[i]) then
         local x, y, r, runes = unpack(deck[i])
 
         if math.insideCircle(mx, my, x, y, r) then
-          table.insert(ctx.user.deck.runes[i], ctx.user.runes[self.draggingIndex])
+          table.insert(ctx.user.deck.runes[i], rune)
           table.remove(ctx.user.runes, self.draggingIndex)
           dirty = true
           break
@@ -135,7 +136,7 @@ function MenuDrag:mousereleased(mx, my, b)
         for j = 1, #runes do
           local x, y, w, h = unpack(runes[j])
           if math.inside(mx, my, x, y, w, h) then
-            table.insert(ctx.user.deck.runes[i], ctx.user.runes[self.draggingIndex])
+            table.insert(ctx.user.deck.runes[i], rune)
             table.remove(ctx.user.runes, self.draggingIndex)
             dirty = true
             break

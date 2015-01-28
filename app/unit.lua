@@ -109,8 +109,8 @@ function Unit:activate()
 
   self.health = self.health + config.units.baseHealthScaling * (ctx.timer * tickRate / 60)
   self.damage = self.damage + config.units.baseDamageScaling * (ctx.timer * tickRate / 60)
-  self.spellPower = 0
-  self.cooldownSpeed = 1
+  self.spirit = 0
+  self.haste = 1
 
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
@@ -378,6 +378,18 @@ function Unit:addAbility(code)
   local ability = Ability()
   ability.unit = self
   table.insert(self.abilities, ability)
+
+  -- Apply ability runes
+  if self.player then
+    table.each(self.player.deck[self.class.code].runes, function(rune)
+      if rune.unit == self.class.code and rune.abilities[code] then
+        table.each(rune.abilities[code], function(amount, stat)
+          ability[stat] = ability[stat] + amount
+        end)
+      end
+    end)
+  end
+
   f.exe(ability.activate, ability)
 end
 
