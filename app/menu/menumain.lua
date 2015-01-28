@@ -50,7 +50,7 @@ function MenuMain:init()
       local y = v * .675
       local res = {}
       for i = 1, 21 do
-        table.insert(res, {x, y, size, size})
+        table.insert(res, {math.round(x), math.round(y), size, size})
         x = x + inc
         if i % 7 == 0 then y = y + inc x = ox end
       end
@@ -67,7 +67,7 @@ function MenuMain:init()
       local label = self.geometry.gutterRunesLabel
       local x = label[1] - v * .02
       local y = label[2] - v * .01
-      local w = u * .36 + v * .02
+      local w = ((self.geometry.gutterRunes[1][4] + .01 * v) * 7) + v * .03
       local h = v * .34
       return {x, y, w, h}
     end,

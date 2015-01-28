@@ -81,15 +81,18 @@ function MenuDrag:mousepressed(mx, my, b)
     end
   end
 
-  if #ctx.user.deck.minions < ctx.user.deckSlots then
-    local gutterMinions = ctx.main.geometry.gutterMinions
-    for i = 1, #gutterMinions do
-      local x, y, r = unpack(gutterMinions[i])
-      if math.insideCircle(mx, my, x, y, r) then
+  local gutterMinions = ctx.main.geometry.gutterMinions
+  for i = 1, #gutterMinions do
+    local x, y, r = unpack(gutterMinions[i])
+    if math.insideCircle(mx, my, x, y, r) then
+      if #ctx.user.deck.minions < ctx.user.deckSlots then
         self.active = true
         self.dragging = 'gutterMinion'
         self.draggingIndex = i
         break
+      else
+        local code = ctx.user.minions[i]
+        lerpAnimation(code, 'scale', 1.5)
       end
     end
   end
