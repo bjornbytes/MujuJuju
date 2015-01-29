@@ -21,7 +21,7 @@ function Hud:init()
   self.status = HudStatus()
   self.tooltip = Tooltip()
   self.button = Button()
-  
+
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
 end

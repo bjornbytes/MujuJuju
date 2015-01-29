@@ -8,7 +8,7 @@ ShrujuPatch.depth = 1
 
 function ShrujuPatch:activate()
   self.y = ctx.map.height - ctx.map.groundHeight
-  self.types = {} 
+  self.types = {}
 
   self.effects = {}
   for i = 1, #data.shruju do

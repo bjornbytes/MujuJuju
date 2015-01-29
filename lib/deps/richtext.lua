@@ -95,7 +95,7 @@ end
 
 function rich:parse(t)
 	local text = t[1]
-	if string.len(text) > 0 then 
+	if string.len(text) > 0 then
 		-- look for {tags} or [tags]
 		for textfragment, foundtag in text:gmatch'([^{]*){(.-)}' do
 			parsefragment(self.parsedtext, textfragment)
@@ -169,7 +169,7 @@ local function wrapText(parsedtext, fragment, lines, maxheight, x, width, i, fnt
 		x = 0
 		table.insert(lines, {})
 	end
-	
+
 	return maxheight, 0
 end
 

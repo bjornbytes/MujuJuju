@@ -394,7 +394,7 @@ function MenuMain:draw()
   g.setColor(255, 255, 255)
   local x, y, w, h = unpack(self.geometry.play)
   ctx.button:draw('Play', x, y, w, h)
-  
+
   self.drag:draw()
 end
 
@@ -403,7 +403,7 @@ function MenuMain:keypressed(key)
   if key == 'return' and table.has(ctx.user.biomes, config.biomeOrder[self.selectedBiome]) then
     ctx.animations.muju:set('death')
   elseif key == 'left' then self:previousBiome()
-  elseif key == 'right' then self:nextBiome() 
+  elseif key == 'right' then self:nextBiome()
   elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
     love.filesystem.remove('save/user.json')
     if ctx.menuSounds then ctx.menuSounds:stop() end

@@ -25,7 +25,7 @@ function Juju:update()
 
 	self.prevx = self.x
 	self.prevy = self.y
-	
+
 	if self.dead then
 		local tx, ty = 866, 18
 		self.x, self.y = math.lerp(self.x, tx, 10 * tickRate), math.lerp(self.y, ty, 10 * tickRate)
@@ -48,7 +48,7 @@ function Juju:update()
 	if self.vy > -.1 then
 		self.y = self.y - 12 * tickRate
 	end
-	
+
   if love.math.random() < 3 * tickRate then
     ctx.particles:emit('jujusex', self.x, self.y, 1, {speed = {60, 80}})
   end

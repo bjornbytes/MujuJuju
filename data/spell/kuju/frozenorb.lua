@@ -25,7 +25,7 @@ function FrozenOrb:deactivate()
 end
 
 function FrozenOrb:update()
-  local direction = self.ability:getUnitDirection() 
+  local direction = self.ability:getUnitDirection()
   local inRange = math.abs(self.ability.unit.x - self.x) < self.ability.range
 
   self.prevx = self.x

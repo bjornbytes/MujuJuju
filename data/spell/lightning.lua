@@ -59,7 +59,7 @@ function Lightning:draw()
 	local g = love.graphics
 	local hp = math.lerp(self.prevHealth, self.health, tickDelta / tickRate)
 	local dis = self.distance * (1 - math.max((hp / self.maxHealth) - .5, 0) * 2)
-	
+
 	for i = 1, #self.path - 2, 2 do
 		g.setLineWidth(3 * (1 - (dis / self.distance)))
 		g.setColor(255, 255, 220, math.min(2 * hp / self.maxHealth, 1) * 255)

@@ -10,7 +10,7 @@ Typo.font = function(name, size)
     Typo.fonts.default[size] = Typo.fonts.default[size] or love.graphics.newFont(size)
     return Typo.fonts.default[size]
   end
-  
+
   if Typo.fonts[name] and Typo.fonts[name][size] then return Typo.fonts[name][size] end
   Typo.fonts[name] = Typo.fonts[name] or {}
   Typo.fonts[name][size] = Typo.fonts[name][size] or love.graphics.newFont('media/fonts/' .. name .. '.ttf', size)

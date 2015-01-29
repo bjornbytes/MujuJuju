@@ -75,7 +75,7 @@ return {
       text = 'Cancel',
       center = true,
       border = {255, 255, 255}
-    } 
+    }
   },
   { id = 'exitButton',
     kind = 'Button',

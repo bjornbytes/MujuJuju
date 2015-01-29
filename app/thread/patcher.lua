@@ -22,7 +22,7 @@ end
 local str, code = http.request(protocol .. '://' .. address .. ':' .. port .. '/api/patch', format({hash = hash}))
 local json = json.decode(str)
 
-if code == 200 and json.patch then 
+if code == 200 and json.patch then
   local str, code = http.request(protocol .. '://' .. address .. ':' .. port .. '/api/patch', format({hashes = hashes}))
   love.filesystem.write('patch.zip', str)
 end

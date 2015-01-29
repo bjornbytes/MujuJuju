@@ -37,7 +37,7 @@ function MenuChoose:init()
       return res
     end
   }
-  
+
   self.active = false
 end
 

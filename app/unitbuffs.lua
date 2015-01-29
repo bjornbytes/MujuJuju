@@ -21,7 +21,7 @@ function UnitBuffs:postupdate()
   table.with(self.list, 'update')
 
   self.unit.speed = self:getBaseSpeed()
-  
+
   local speed = self.unit.speed
 
   -- Apply Hastes

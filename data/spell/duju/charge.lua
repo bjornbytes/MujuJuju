@@ -12,7 +12,7 @@ function Charge:deactivate()
 end
 
 function Charge:update()
-  local direction = self.ability:getUnitDirection() 
+  local direction = self.ability:getUnitDirection()
   local charging = math.abs(self.startx - self.unit.x) < self.ability.range
 
   if charging then
@@ -20,7 +20,7 @@ function Charge:update()
     table.each(ctx.target:inRange(self.unit, 1, 'enemy', 'unit'), function(target)
       if not self.damaged[target.id] then
         target:hurt(self.damage)
-        self.damaged[target.id] = true 
+        self.damaged[target.id] = true
         if self.ability:hasUpgrade('trample') then
           target.buffs:add('chargestun', {stun = self.duration, timer = self.duration})
         else

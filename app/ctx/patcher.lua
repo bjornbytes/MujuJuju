@@ -4,7 +4,7 @@ function Patcher:load()
   self.hashes = {}
   self.hasherThread = love.thread.newThread('app/thread/hasher.lua')
   self.hasherOut = love.thread.getChannel('hasher.out')
-  
+
   self.hasherThread:start()
 end
 

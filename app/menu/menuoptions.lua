@@ -18,11 +18,11 @@ end
 
 function MenuOptions:draw()
   self.offsetTween:update(delta)
-  
+
   local u, v = ctx.u, ctx.v
 
   if self.offset > -1 then return end
-  
+
   local x1 = u + self.offset
   local width = self.width * u
 
@@ -41,7 +41,7 @@ function MenuOptions:draw()
       ctx.workingCanvas:renderTo(function()
         g.draw(self.canvas)
       end)
-      
+
       shader = data.media.shaders.verticalBlur
       shader:send('amount', .002 * (self.offset / -width))
       g.setShader(shader)

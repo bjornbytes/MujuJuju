@@ -5,12 +5,12 @@ Context = {
 function Context:add(obj, ...)
   local c = obj(...)
   table.insert(self.list, c)
-  
+
   local tmp = ctx
   ctx = c
   f.exe(ctx.load, ctx, ...)
   ctx = tmp
-  
+
   return c
 end
 

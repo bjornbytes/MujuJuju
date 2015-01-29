@@ -15,7 +15,7 @@ function Map:init()
     ctx.view.ymax = self.height
     ctx.view.x = self.width / 2 - ctx.view.width / 2
   end
-  
+
   self.background = {
     depth = 10,
     draw = function()

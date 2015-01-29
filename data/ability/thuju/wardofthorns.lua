@@ -12,7 +12,7 @@ function WardOfThorns:prehurt(amount, source, kind)
         local buff = self.unit.buffs:get('vigor')
         if buff then buff.maxStacks = 1 + self.unit:upgradeLevel('vigor') end
         buff = self.unit.buffs:add('vigor', {timer = 5})
-        
+
         if self.unit:upgradeLevel('impenetrablehide') > 0 then
           buff.armor = (.05 + (.05 * self.unit:upgradeLevel('impenetrablehide') * buff.stacks))
           if self.unit:upgradeLevel('unbreakable') > 0 then

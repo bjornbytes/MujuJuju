@@ -59,7 +59,7 @@ function View:update()
 
   self.x = self.x + self.vx * tickRate
   self.y = self.y + self.vy * tickRate
-  
+
   self:contain()
 
   self.shake = math.lerp(self.shake, 0, 8 * tickRate)
@@ -129,7 +129,7 @@ function View:draw()
   g.translate(fx, fy)
 
   for i = 1, #self.guis do self.guis[i]:gui() end
-  
+
   g.pop()
 
   g.setColor(0, 0, 0, 255)
