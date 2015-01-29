@@ -1,8 +1,8 @@
 Shrine = class()
 Shrine.code = 'shrine'
 
-Shrine.width = 128 
-Shrine.height = 128 
+Shrine.width = 144
+Shrine.height = 144
 
 Shrine.maxHealth = 5000
 
@@ -30,7 +30,7 @@ function Shrine:update()
   if ctx.id then
     local p = ctx.player
     self.color = table.interpolate(self.color, p.dead and {160, 100, 225} or {255, 255, 255}, math.min(.6 * tickRate, 1))
-    self.highlight = math.lerp(self.highlight, p:atShrine() and 128 or 0, math.min(5 * tickRate, 1))
+    self.highlight = math.lerp(self.highlight, p:atShrine() and 100 or 0, math.min(5 * tickRate, 1))
   end
 
   self.health = math.min(self.health + math.max(self.regen, 0) * tickRate, self.maxHealth)
@@ -40,13 +40,13 @@ function Shrine:draw()
 	local g = love.graphics
   local image = data.media.graphics.shrine
 
-	local scale = self.width / image:getWidth()
+	local scale = self.height / image:getHeight()
 	g.setColor(self.color)
-	g.draw(image, self.x, self.y + self.height + 12, 0, scale, scale, image:getWidth() / 2, image:getHeight())
+	g.draw(image, self.x + 10, self.y + self.height + 16, 0, scale, scale, image:getWidth() / 2, image:getHeight())
 
 	g.setBlendMode('additive')
 	g.setColor(255, 255, 255, self.highlight)
-	g.draw(image, self.x, self.y + self.height + 12, 0, scale, scale, image:getWidth() / 2, image:getHeight())
+	g.draw(image, self.x + 10, self.y + self.height + 16, 0, scale, scale, image:getWidth() / 2, image:getHeight())
 	g.setColor(255, 255, 255, 255)
 	g.setBlendMode('alpha')
 end

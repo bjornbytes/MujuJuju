@@ -34,16 +34,16 @@ function MenuOptions:draw()
   g.setCanvas()
 
   if self.offset / -width > .1 then
-    for i = 1,8 do
+    for i = 1, 4 do
       local shader = data.media.shaders.horizontalBlur
-      shader:send('amount', .004 * (self.offset / -width))
+      shader:send('amount', .002 * (self.offset / -width))
       g.setShader(shader)
       ctx.workingCanvas:renderTo(function()
         g.draw(self.canvas)
       end)
       
       shader = data.media.shaders.verticalBlur
-      shader:send('amount', .004 * (self.offset / -width))
+      shader:send('amount', .002 * (self.offset / -width))
       g.setShader(shader)
       self.canvas:renderTo(function()
         g.draw(ctx.workingCanvas)

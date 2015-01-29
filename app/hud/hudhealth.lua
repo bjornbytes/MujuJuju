@@ -172,7 +172,7 @@ function HudHealth:draw()
     local color = (p and shrine.team == p.team) and green or red
     local x, y, hard, soft = shrine:getHealthbar()
     local w, h = 120 + (60 * (shrine.hurtFactor)), 4 + (1 * shrine.hurtFactor)
-    bar(x, y - 65, hard, soft, color, w, h)
+    bar(x, y - 25, hard, soft, color, w, h)
   end)
 
   table.each(self.bins, function(binList)
