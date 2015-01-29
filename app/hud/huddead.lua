@@ -22,8 +22,8 @@ function HudDead:draw()
   if not ctx.ded then return end
 
   local u, v = ctx.hud.u, ctx.hud.v
-  local bigFont = .09 * v 
-  local smallFont = .05 * v 
+  local bigFont = .09 * v
+  local smallFont = .05 * v
 
   if self.deadScreen == 1 then
     g.setColor(244, 188, 80, 255 * self.deadAlpha)
