@@ -5,8 +5,8 @@ function love.conf(t)
 
 	t.window.title = 'Muju Juju'
   t.window.icon = 'media/graphics/icon.png'
-	t.window.width = 800 --1067
-	t.window.height = 600 --600
+	t.window.width = 0
+	t.window.height = 0
   t.window.minwidth = 400
   t.window.minheight = 250
   t.window.fullscreen = true
