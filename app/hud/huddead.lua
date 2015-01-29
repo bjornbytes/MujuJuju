@@ -39,19 +39,19 @@ function HudDead:draw()
     g.setColor(240, 240, 240, 255 * self.deadAlpha)
     str = tostring(math.floor(ctx.timer))
     g.printCenter(str, u * .5, v * .45)
-    
+
     g.setColor(253, 238, 65, 255 * self.deadAlpha)
     str = 'Your Name:'
     g.printCenter(str, u * .5, v * .525)
 
     g.setColor(255, 255, 255, 255 * self.deadAlpha)
     g.draw(self.deadNameFrame, u / 2 - self.deadNameFrame:getWidth() / 2, v * .584)
-    
+
     g.setColor(240, 240, 240, 255 * self.deadAlpha)
     local font = g.getFont()
     local scale = 1
     while font:getWidth(self.deadName) * scale > self.deadNameFrame:getWidth() - 24 do scale = scale - .05 end
-    
+
     local xx = u / 2 - font:getWidth(self.deadName) * scale / 2
     local yy = v * .584 + (self.deadNameFrame:getHeight() / 2) - font:getHeight() * scale / 2
     g.print(self.deadName, xx, yy, 0, scale, scale)
@@ -75,7 +75,7 @@ function HudDead:draw()
         g.printf(entry.score, 0, yy, u * .7, 'right')
         yy = yy + g.getFont():getHeight() + 4
       end
-      
+
       g.draw(self.deadQuit, u/ 2 - self.deadQuit:getWidth() / 2, v * .825)
     else
       g.setColor(253, 238, 65, 255 * self.deadAlpha)
@@ -118,7 +118,7 @@ function HudDead:mousereleased(x, y, b)
   if self.deadScreen == 1 then
     local u, v = ctx.hud.u, ctx.hud.v
     local xx = u / 2 - self.deadOk:getWidth() / 2
-    local yy = v * .825 
+    local yy = v * .825
 
     if b == 'l' and math.inside(x, y, xx, yy, xx + self.deadOk:getWidth(), yy + self.deadOk:getHeight()) then
       self:sendScore()
@@ -152,7 +152,7 @@ end
 
 function HudDead:sendScore()
   self.highscores = nil
-  
+
   if #self.deadName > 0 then
     local http = require('socket.http')
     local payload = 'name=' .. self.deadName .. '&score=' .. math.floor(ctx.timer) .. '&biome=' .. ctx.biome
