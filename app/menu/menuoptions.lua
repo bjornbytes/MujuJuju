@@ -66,6 +66,11 @@ function MenuOptions:draw()
   g.print('Graphics', x1 + .03 * v, .15 * v)
   g.print('Sound', x1 + .03 * v, .5 * v)
   g.print('Input', x1 + .03 * v, .7 * v)
+
+  ctx.checkbox:draw(x1 + .05 * v, .22 * v, true)
+  g.setFont('mesmerize', .02 * v)
+  local fontHeight = g.getFont():getHeight()
+  g.print('Enable Vertical Sync', x1 + .08 * v, .22 * v - fontHeight / 2)
 end
 
 function MenuOptions:keypressed(key)

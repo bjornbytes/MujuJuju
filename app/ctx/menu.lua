@@ -24,6 +24,7 @@ function Menu:load(selectedBiome, options)
   self.u, self.v = love.graphics.getDimensions()
   self.tooltip = Tooltip()
   self.button = Button()
+  self.checkbox = Checkbox()
 
   self:initAnimations()
 
