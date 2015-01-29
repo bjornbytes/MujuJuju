@@ -11,10 +11,25 @@ function MenuStart:init()
   self.geometryFunctions = {
     start = function()
       local u, v = ctx.u, ctx.v
-      local image = data.media.graphics.menu.start
       local w = u * .25
-      local h = w * (image:getHeight() / image:getWidth())
+      local h = w * .28
       return {u * .5 - w / 2, v * .7 - h / 2, w, h}
+    end,
+
+    options = function()
+      local u, v = ctx.u, ctx.v
+      local sx, sy, sw, sh = unpack(self.geometry.start)
+      local w = u * .12
+      local h = w * .28
+      return {u * .5 - sw / 2, sy + sh + v * .01, w, h}
+    end,
+
+    quit = function()
+      local u, v = ctx.u, ctx.v
+      local sx, sy, sw, sh = unpack(self.geometry.start)
+      local w = u * .12
+      local h = w * .28
+      return {u * .5 + v * .01, sy + sh + v * .01, w, h}
     end
   }
 
@@ -56,6 +71,12 @@ function MenuStart:draw()
 
     local x, y, w, h = unpack(self.geometry.start)
     ctx.button:draw('Start', x, y, w, h)
+
+    local x, y, w, h = unpack(self.geometry.options)
+    ctx.button:draw('Options', x, y, w, h)
+
+    local x, y, w, h = unpack(self.geometry.quit)
+    ctx.button:draw('Quit', x, y, w, h)
   end
 end
 
@@ -75,6 +96,10 @@ function MenuStart:mousereleased(mx, my, b)
   if math.inside(mx, my, unpack(self.geometry.start)) then
     ctx.sound:play('menuClick')
     self:start()
+  elseif math.inside(mx, my, unpack(self.geometry.options)) then
+    ctx.options:toggle()
+  elseif math.inside(mx, my, unpack(self.geometry.quit)) then
+    love.event.quit()
   end
 end
 

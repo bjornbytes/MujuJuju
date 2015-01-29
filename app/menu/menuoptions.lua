@@ -70,12 +70,15 @@ end
 
 function MenuOptions:keypressed(key)
   if key == ' ' then
-    if self.active then
-      self.offsetTween = tween.new(self.tweenDuration, self, {offset = 0}, 'inBack')
-    else
-      self.offsetTween = tween.new(self.tweenDuration, self, {offset = -self.width * ctx.u}, 'outBack')
-    end
-
-    self.active = not self.active
+    self:toggle()
   end
+end
+
+function MenuOptions:toggle()
+  if self.active then
+    self.offsetTween = tween.new(self.tweenDuration, self, {offset = 0}, 'inBack')
+  else
+    self.offsetTween = tween.new(self.tweenDuration, self, {offset = -self.width * ctx.u}, 'outBack')
+  end
+  self.active = not self.active
 end
