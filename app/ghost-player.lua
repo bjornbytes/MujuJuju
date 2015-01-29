@@ -16,10 +16,9 @@ function GhostPlayer:init(owner)
 	self.image = data.media.graphics.spiritMuju
 
 	self.angle = -math.pi / 2
-	self.maxRange = 500
+	self.maxRange = ctx.map.height - ctx.map.groundHeight
 
-	local maxJuju = 7
-	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.deathTimer / maxJuju)) ^ 3)
+	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.deathTimer / self.owner.deathDuration)) ^ 5)
 
 	local sound = ctx.sound:play('spirit')
 	if sound then sound:setVolume(.12) end
@@ -28,8 +27,6 @@ function GhostPlayer:init(owner)
 end
 
 function GhostPlayer:update()
-	local maxJuju = 7
-
 	self.prevx = self.x
 	self.prevy = self.y
   self.prevalpha = self.alpha
@@ -74,7 +71,7 @@ function GhostPlayer:update()
 	end
 
 	local len = (self.vx ^ 2 + self.vy ^ 2) ^ .5
-	if len > 0 and self.owner.deathTimer < maxJuju - 1 then
+	if len > 0 and self.owner.deathTimer < self.owner.deathDuration - 1 then
 		self.vx = (self.vx / len) * math.min(len, speed)
 		self.vy = (self.vy / len) * math.min(len, speed)
 	end
@@ -82,20 +79,19 @@ function GhostPlayer:update()
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 
-	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.deathTimer / maxJuju)) ^ 3)
-	if math.distance(self.x, self.y, px, py) > self.maxDis then
+	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.deathTimer / self.owner.deathDuration)) ^ 5)
+	if math.distance(self.x, self.y, px, py) + self.radius > self.maxDis then
 		local angle = math.direction(px, py, self.x, self.y)
-		self.x = math.lerp(self.x, px + math.dx(self.maxDis, angle), 8 * tickRate)
-		self.y = math.lerp(self.y, py + math.dy(self.maxDis, angle), 8 * tickRate)
+		self.x = math.lerp(self.x, px + math.dx(self.maxDis - self.radius, angle), 1)
+		self.y = math.lerp(self.y, py + math.dy(self.maxDis - self.radius, angle), 1)
 	end
 
 	self.x = math.clamp(self.x, self.radius, ctx.map.width - self.radius)
 	self.y = math.clamp(self.y, self.radius, ctx.map.height - self.radius - ctx.map.groundHeight)
 
 	local scale = math.min(self.owner.deathTimer, 2) / 2
-	local maxJuju = 7
-	if maxJuju - self.owner.deathTimer < 1 then
-		scale = maxJuju - self.owner.deathTimer
+	if self.owner.deathDuration - self.owner.deathTimer < 1 then
+		scale = self.owner.deathDuration - self.owner.deathTimer
 	end
 	scale = .4 + scale * .4
 	self.radius = 40 * scale
@@ -117,12 +113,11 @@ function GhostPlayer:draw()
   local alpha = math.lerp(self.prevalpha, self.alpha, tickDelta / tickRate)
 
 	local scale = math.min(self.owner.deathTimer, 2) / 2
-	local maxJuju = 7
-	if maxJuju - self.owner.deathTimer < 1 then
-		scale = maxJuju - self.owner.deathTimer
+	if self.owner.deathDuration - self.owner.deathTimer < 1 then
+		scale = self.owner.deathDuration - self.owner.deathTimer
 	end
 	scale = .4 + scale * .4
-	local alphaScale = math.min(self.owner.deathTimer * 6 / maxJuju, 1)
+	local alphaScale = math.min(self.owner.deathTimer * 6 / self.owner.deathDuration, 1)
   local color = {128, 0, 255}
   color = table.interpolate(color, {255, 255, 255}, .8)
   color[4] = 200 * alpha * alphaScale

@@ -37,6 +37,7 @@ function Player:init()
   -- Dead
   self.dead = false
   self.deathTimer = 0
+  self.deathDuration = 7
 
   -- Juju
   self.juju = config.player.baseJuju
@@ -282,7 +283,7 @@ function Player:hurt(amount, source)
 end
 
 function Player:die()
-  self.deathTimer = 7
+  self.deathTimer = self.deathDuration
   self.dead = true
   self.ghost = GhostPlayer(self)
 
