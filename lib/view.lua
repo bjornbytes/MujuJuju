@@ -93,46 +93,50 @@ end
 
 function View:draw()
   local w, h = g.getDimensions()
+  local source, target = self.sourceCanvas, self.targetCanvas
 
   self:worldPush()
 
-  self.sourceCanvas:clear()
-  self.targetCanvas:clear()
-  self.sourceCanvas:renderTo(function()
-    for i = 1, #self.draws do self.draws[i]:draw() end
-  end)
-
+  source:clear()
+  target:clear()
+  g.setCanvas(source)
+  for i = 1, #self.draws do self.draws[i]:draw() end
+  g.setCanvas()
   g.pop()
 
   for i = 1, #self.effects do
+    local effect = self.effects[i]
     g.setColor(255, 255, 255)
-    if self.effects[i].applyEffect then
-      self.effects[i]:applyEffect(self.sourceCanvas, self.targetCanvas)
+    if effect.applyEffect then
+      effect:applyEffect(source, target)
     else
-      g.setShader(self.effects[i].shader)
-      g.setCanvas(self.targetCanvas)
-      g.draw(self.sourceCanvas)
+      g.setShader(effect.shader)
+      g.setCanvas(target)
+      g.draw(source)
     end
     g.setCanvas()
     g.setShader()
-    self.sourceCanvas, self.targetCanvas = self.targetCanvas, self.sourceCanvas
+    source, target = target, source
   end
 
   g.setColor(255, 255, 255)
-  g.draw(self.sourceCanvas)
+  g.draw(source)
 
   g.push()
-  g.translate(self.frame.x, self.frame.y)
+
+  local fr = self.frame
+  local fx, fy, fw, fh = fr.x, fr.y, fr.width, fr.height
+  g.translate(fx, fy)
 
   for i = 1, #self.guis do self.guis[i]:gui() end
   
   g.pop()
 
   g.setColor(0, 0, 0, 255)
-  g.rectangle('fill', 0, 0, w, self.frame.y)
-  g.rectangle('fill', 0, 0, self.frame.x, h)
-  g.rectangle('fill', 0, self.frame.y + self.frame.height, w, h - (self.frame.y + self.frame.height))
-  g.rectangle('fill', self.frame.x + self.frame.width, 0, w - (self.frame.x + self.frame.width), h)
+  g.rectangle('fill', 0, 0, w, fy)
+  g.rectangle('fill', 0, 0, fx, h)
+  g.rectangle('fill', 0, fy + fh, w, h - (fy + fh))
+  g.rectangle('fill', fx + fw, 0, w - (fx + fw), h)
 end
 
 function View:resize()

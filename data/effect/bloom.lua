@@ -10,60 +10,50 @@ end
 function Bloom:update()
   local p = ctx.player
   local alphas = config.biomes[ctx.biome].effects.bloom.alpha
-  self.alpha = math.lerp(self.alpha, p.dead and alphas[2] or alphas[1], 3 * tickRate)
+  self.alpha = math.lerp(self.alpha, p.dead and alphas[2] or alphas[1], 5 * tickRate)
 end
 
 function Bloom:applyEffect(source, target)
   local p = ctx.player
-  g.setCanvas(self.canvas)
-	g.push()
-	g.scale(.25)
-	g.draw(source)
-	g.pop()
-  self.hblur:send('amount', .007)
-  self.vblur:send('amount', .007)
+  local w, h = g.getWidth(), g.getHeight()
+  local threshold = data.media.shaders.threshold
+
+  if self.alpha < 5 then
+    g.setCanvas(target)
+    g.draw(source)
+    return
+  end
+
+  self.canvas:clear()
+  self.working:clear()
   g.setColor(255, 255, 255)
+  g.setCanvas(self.canvas)
+
+  threshold:send('threshold', 0.8)
+  g.setShader(threshold)
+  g.draw(source, 0, 0, 0, .25, .25)
+
+  self.hblur:send('amount', 4 / w)
+  self.vblur:send('amount', 4 / h)
   for i = 1, 3 do
     g.setShader(self.hblur)
-    self.working:renderTo(function()
-      g.draw(self.canvas)
-    end)
+    g.setCanvas(self.working)
+    g.draw(self.canvas)
     g.setShader(self.vblur)
-    self.canvas:renderTo(function()
-      g.draw(self.working)
-    end)
+    g.setCanvas(self.canvas)
+    g.draw(self.working)
   end
 
   g.setShader()
   g.setCanvas(target)
   g.draw(source)
-  love.graphics.setColor(255, 255, 255, self.alpha)
+
+  g.setColor(255, 255, 255, self.alpha)
   g.setBlendMode('additive')
 	g.draw(self.canvas, 0, 0, 0, 4, 4)
-	local x = p.dead and math.clamp(p.ghost.x, 300, 500) or 400
-	local y = p.dead and math.clamp(p.ghost.y, 0, 600) or 300
-	for i = 6, 2, -1 do
-		g.draw(self.canvas, x, y, 0, 4 + i * 1.25, 4 + i * 1.25, self.canvas:getWidth() / 2, self.canvas:getHeight() / 2)
-	end
   g.setBlendMode('alpha')
 
-	if p.dead then
-    ctx.view:worldPush()
-		p.ghost:draw()
-		table.each(ctx.jujus.jujus, function(juju) juju:draw() end)
-    g.pop()
-	end
-
-  table.each(ctx.particles.objects, function(particle)
-    if particle.code == 'jujusex' then
-      particle:draw()
-    end
-  end)
-
   g.setCanvas()
-
-  self.canvas:clear()
-  self.working:clear()
 end
 
 function Bloom:resize()

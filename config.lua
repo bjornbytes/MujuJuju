@@ -146,11 +146,11 @@ return {
       },
       effects = {
         vignette = {
-          blur = {.45, 1.15},
-          radius = {.85, .85}
+          blur = {.45, .45},
+          radius = {.85, .65}
         },
         bloom = {
-          alpha = {10, 50}
+          alpha = {0, 80}
         }
       }
     },

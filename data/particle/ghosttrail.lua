@@ -5,7 +5,7 @@ GhostTrail.blendMode = 'additive'
 
 GhostTrail.options = {}
 GhostTrail.options.particleLifetime = {.5, 1}
-GhostTrail.options.colors = {{255, 200, 255, 80}, {255, 255, 255, 0}}
+GhostTrail.options.colors = {{255, 200, 255, 60}, {255, 255, 255, 0}}
 GhostTrail.options.sizes = {1.5, 0}
 GhostTrail.options.sizeVariation = .1
 GhostTrail.options.areaSpread = {'normal', 5, 5}

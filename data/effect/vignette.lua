@@ -1,3 +1,4 @@
+local g = love.graphics
 local Vignette = {}
 
 function Vignette:init()
@@ -14,6 +15,20 @@ function Vignette:update()
 	self.radius = math.lerp(self.radius, p.dead and self.config.radius[2] or self.config.radius[1], 4 * tickRate)
 	self.shader:send('blur', self.blur)
 	self.shader:send('radius', self.radius)
+end
+
+function Vignette:applyEffect(source, target)
+  g.setShader(self.shader)
+  g.setCanvas(target)
+  g.draw(source)
+  g.setShader()
+  local p = ctx.player
+	if p.dead then
+    ctx.view:worldPush()
+		p.ghost:draw()
+		table.each(ctx.jujus.jujus, function(juju) juju:draw() end)
+    g.pop()
+	end
 end
 
 function Vignette:resize()

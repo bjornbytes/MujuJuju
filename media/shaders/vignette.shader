@@ -11,6 +11,9 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
   if (vignette > 0) {
     result.rgb *= vignette;
   }
+  else {
+    result.rgb = vec3(0);
+  }
 
   return result * color;
 }

@@ -23,7 +23,7 @@ function GhostPlayer:init(owner)
 	local sound = ctx.sound:play('spirit')
 	if sound then sound:setVolume(.12) end
 
-	ctx.view:register(self)
+	--ctx.view:register(self)
 end
 
 function GhostPlayer:update()
@@ -97,7 +97,7 @@ function GhostPlayer:update()
 	self.radius = 40 * scale
   self.alpha = math.min(self.alpha + tickRate, 1)
 
-  ctx.particles:emit('ghosttrail', self.x, self.y, 1, {
+  ctx.particles:emit('ghosttrail', self.x, self.y, math.round(2 * love.math.random()), {
     linearAcceleration = {-self.vx * 1, -self.vy * 1, -self.vx * 1.5, -self.vy * 1.5}
   })
 end

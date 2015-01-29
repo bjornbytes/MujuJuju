@@ -68,7 +68,7 @@ function ShrujuPatch:draw()
   end)
   g.setBlendMode('alpha')
 
-  if self.shrujuAnimation then self.shrujuAnimation:draw(self.x, self.y) end
+  if self.shrujuAnimation then self.shrujuAnimation:draw(self.x, self.y + 15) end
 end
 
 function ShrujuPatch:grow(what)

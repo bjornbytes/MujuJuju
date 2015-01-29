@@ -29,7 +29,7 @@ function Shrine:update()
 
   if ctx.id then
     local p = ctx.player
-    self.color = table.interpolate(self.color, p.dead and {160, 100, 225} or {255, 255, 255}, math.min(.6 * tickRate, 1))
+    --self.color = table.interpolate(self.color, p.dead and {160, 100, 225} or {255, 255, 255}, math.min(.6 * tickRate, 1))
     self.highlight = math.lerp(self.highlight, p:atShrine() and 100 or 0, math.min(5 * tickRate, 1))
   end
 
