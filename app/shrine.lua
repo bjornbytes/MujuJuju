@@ -4,7 +4,7 @@ Shrine.code = 'shrine'
 Shrine.width = 144
 Shrine.height = 144
 
-Shrine.maxHealth = 5000
+Shrine.maxHealth = 5
 
 Shrine.depth = 5
 

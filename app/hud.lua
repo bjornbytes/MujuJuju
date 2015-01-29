@@ -6,9 +6,6 @@ local g = love.graphics
 function Hud:init()
 	self.tooltip = nil
 	self.tooltipRaw = ''
-  self.deadAlpha = 0
-	self.deadReplay = data.media.graphics.deathQuit
-	self.deadQuit = data.media.graphics.deathReplay
 	self.pauseAlpha = 0
 	self.pauseScreen = data.media.graphics.pauseMenu
 
@@ -18,6 +15,7 @@ function Hud:init()
   self.portrait = HudPortrait()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
+  self.dead = HudDead()
   self.shrujuPatches = {HudShrujuPatch(), HudShrujuPatch()}
   self.shruju = HudShruju()
   self.status = HudStatus()
@@ -33,7 +31,6 @@ function Hud:update()
 
   local oldTitle = self.tooltip.tooltipText and self.tooltip.tooltipText:sub(1, self.tooltip.tooltipText:find('\n'))
 
-	self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
 	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * tickRate)
 
   self.tooltip:update()
@@ -45,6 +42,8 @@ function Hud:update()
   self.upgrades:update()
   self.shruju:update()
   self.units:update()
+  self.dead:update()
+
   table.with(self.shrujuPatches, 'update')
 
   local newTitle = self.tooltip.tooltipText and self.tooltip.tooltipText:sub(1, self.tooltip.tooltipText:find('\n'))
@@ -77,17 +76,9 @@ function Hud:gui()
 		end
 
     self.units:draw()
-  else
-    g.setColor(244, 188, 80, 255 * self.deadAlpha)
+  end
 
-    g.setFont('mesmerize', .08 * v)
-    str = 'Your shrine has been destroyed!'
-    g.printCenter(str:upper(), u * .5, v * .5)
-
-    g.setColor(255, 255, 255)
-    ctx.hud.button:draw('Continue', u * .375, v * .7, u * .25, v * .12)
-	end
-
+  self.dead:draw()
   self.tooltip:draw()
 end
 
@@ -95,17 +86,7 @@ function Hud:keypressed(key)
   table.with(self.shrujuPatches, 'keypressed', key)
   self.upgrades:keypressed(key)
   self.portrait:keypressed(key)
-
-	if ctx.ded and self.deadAlpha > .9 then
-		if key == 'escape' then
-			Context:remove(ctx)
-      local biomeIndex = nil
-      for i = 1, #config.biomeOrder do
-        if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end
-      end
-			Context:add(Menu, biomeIndex, {muted = ctx.game.sound.muted})
-		end
-	end
+  self.dead:keypressed(key)
 end
 
 function Hud:keyreleased(key)
@@ -127,17 +108,7 @@ function Hud:mousereleased(x, y, b)
     self.units:mousereleased(x, y, b)
   end
 
-	if b == 'l' and ctx.ded then
-    local u, v = ctx.hud.u, ctx.hud.v
-    if math.inside(x, y, u * .375, v * .7, u * .25, v * .12) then
-      local biomeIndex = nil
-      for i = 1, #config.biomeOrder do
-        if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end
-      end
-      Context:add(Menu, biomeIndex, {muted = ctx.sound.muted})
-      Context:remove(ctx)
-    end
-	end
+  self.dead:mousereleased(x, y, b)
 
 	if b == 'l' and ctx.paused then
 		local w, h = g.getDimensions()
@@ -148,6 +119,10 @@ function Hud:mousereleased(x, y, b)
 			Context:remove(ctx)
 		end
 	end
+end
+
+function Hud:textinput(char)
+  self.dead:textinput(char)
 end
 
 function Hud:resize()

@@ -118,6 +118,10 @@ function Game:gamepadpressed(gamepad, button)
   self.players:gamepadpressed(gamepad, button)
 end
 
+function Game:textinput(...)
+  self.hud:textinput(...)
+end
+
 function Game:distribute()
 
   local function tableRandom(t)
