@@ -196,7 +196,27 @@ function Player:move()
   end
 
   -- Actually move
-  self.x = self.x + self.speed * tickRate
+  local unit = ctx.target:closest(self, 'enemy', 'unit')
+  local canMoveLeft, canMoveRight = true, true
+  if unit then
+    local leftx = self.x - math.abs(self.speed) * tickRate
+    local x1, x2 = leftx - self.width / 2, leftx + self.width / 2
+    local y1, y2 = unit.x - unit.width / 2, unit.x + unit.width / 2
+    if math.max(x1, y1) <= math.min(x2, y2) then
+      canMoveLeft = false
+    end
+
+    local rightx = self.x + math.abs(self.speed) * tickRate
+    local x1, x2 = rightx - self.width / 2, rightx + self.width / 2
+    local y1, y2 = unit.x - unit.width / 2, unit.x + unit.width / 2
+    if math.max(x1, y1) <= math.min(x2, y2) then
+      canMoveRight = false
+    end
+  end
+
+  if (canMoveLeft and self.speed < 0) or (canMoveRight and self.speed > 0) or self.invincible > 0 or (not canMoveLeft and not canMoveRight) then
+    self.x = self.x + self.speed * tickRate
+  end
   self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
 
   -- Don't go outside map
