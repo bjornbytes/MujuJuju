@@ -17,7 +17,6 @@ function Gooey:draw(component)
 end
 
 function Gooey:keypressed(key)
-  self.hot = nil
   self:call('keypressed', key)
 end
 
@@ -26,6 +25,7 @@ function Gooey:keyreleased(key)
 end
 
 function Gooey:mousepressed(mx, my, b)
+  self.hot = nil
   self:call('mousepressed', mx, my, b)
 end
 

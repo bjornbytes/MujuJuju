@@ -32,8 +32,14 @@ function Dropdown:render()
   g.print(self.value, x + .01 * v, y + .01 * v)
 end
 
+function Dropdown:mousepressed(mx, my, b)
+  if b == 'l' and self:contains(mx, my) then
+    self.gooey.hot = self
+  end
+end
+
 function Dropdown:mousereleased(mx, my, b)
-  if b == 'l' then
+  if b == 'l' and self.gooey.hot == self then
     if not self:focused() then
       if self:contains(mx, my) then
         self.gooey:focus(self)
