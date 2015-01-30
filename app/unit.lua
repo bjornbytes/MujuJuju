@@ -196,7 +196,7 @@ function Unit:update()
 
   if self.animation.state.name == 'attack' then
     local current = self.animation.spine.animationState:getCurrent(0)
-    if current then self.animation.speed = current.endTime / self.attackSpeed end
+    if current then self.animation.speed = current.endTime / self.animation.state.speed / self.attackSpeed end
   elseif self.animation.state.name == 'walk' then
     self.animation.speed = self.speed / self.class.speed
   else
