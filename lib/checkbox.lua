@@ -13,8 +13,8 @@ function Checkbox:draw(x, y, checked, code)
   end
 
   state.scale = math.lerp(state.scale, 1, math.min(6 * delta, 1))
-
   local radius = state.scale * 10
+
   if checked then
     g.setColor(100, 200, 50)
     g.circle('fill', x, y, radius, 20)
@@ -39,5 +39,5 @@ end
 function Checkbox:toggle(code)
   local state = self.states[code] or self:makeState(code)
   state.active = not state.active
-  state.scale = state.active and 1.5 or .5
+  state.scale = state.active and 1.5 or .67
 end

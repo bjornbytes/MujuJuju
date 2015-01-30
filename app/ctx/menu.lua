@@ -22,9 +22,8 @@ function Menu:load(selectedBiome, options)
   self.user = json.decode(str)
 
   self.u, self.v = love.graphics.getDimensions()
+  self.gooey = Gooey()
   self.tooltip = Tooltip()
-  self.button = Button()
-  self.checkbox = Checkbox()
 
   self:initAnimations()
 
@@ -66,7 +65,7 @@ end
 function Menu:update()
   self.cursor:update()
   self.tooltip:update()
-  self.button:update()
+  self.gooey:update()
 
   self.prevBackgroundAlpha = self.backgroundAlpha
   self.backgroundAlpha = math.lerp(self.backgroundAlpha, 1, math.min(8 * tickRate, 1))
@@ -117,6 +116,7 @@ function Menu:mousepressed(mx, my, b)
 end
 
 function Menu:mousereleased(mx, my, b)
+  self.gooey:mousereleased(mx, my, b)
   self.start:mousereleased(mx, my, b)
   self.choose:mousereleased(mx, my, b)
   self.main:mousereleased(mx, my, b)

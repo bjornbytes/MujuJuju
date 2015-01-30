@@ -54,7 +54,7 @@ function MenuOptions:draw()
 
   g.draw(self.canvas, x1, 0)
 
-  g.setColor(0, 0, 0, 150)
+  g.setColor(0, 0, 0, 180)
   g.rectangle('fill', x1, 0, width + .05 * u, v)
 
   g.setColor(200, 200, 200)
@@ -67,10 +67,15 @@ function MenuOptions:draw()
   g.print('Sound', x1 + .03 * v, .5 * v)
   g.print('Input', x1 + .03 * v, .7 * v)
 
-  ctx.checkbox:draw(x1 + .05 * v, .22 * v, love.keyboard.isDown('z'), 'vsync')
+  --[[ctx.checkbox:draw(x1 + .05 * v, .22 * v, love.keyboard.isDown('z'), 'vsync')
   g.setFont('mesmerize', .025 * v)
   local fontHeight = g.getFont():getHeight()
-  g.print('Enable Vertical Sync', x1 + .09 * v, .22 * v - fontHeight / 2 + 1)
+  g.print('Vertical Sync', x1 + .09 * v, .22 * v - fontHeight / 2 + 1)
+
+  ctx.checkbox:draw(x1 + .05 * v, .27 * v, love.keyboard.isDown('z'), 'fullscreen')
+  g.setFont('mesmerize', .025 * v)
+  local fontHeight = g.getFont():getHeight()
+  g.print('Fullscreen', x1 + .09 * v, .27 * v - fontHeight / 2 + 1)]]
 end
 
 function MenuOptions:keypressed(key)

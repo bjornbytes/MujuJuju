@@ -44,6 +44,21 @@ function MenuStart:init()
     self.alpha = 0
     self.scale = 1
   end
+
+  self.start = ctx.gooey:add(Button, 'menu.start.start')
+  self.start.geometry = function() return self.geometry.start end
+  self.start.text = 'Start'
+  self.start:on('click', function() self:continue() end)
+
+  self.options = ctx.gooey:add(Button, 'menu.start.options')
+  self.options.geometry = function() return self.geometry.options end
+  self.options:on('click', function() ctx.options:toggle() end)
+  self.options.text = 'Options'
+
+  self.quit = ctx.gooey:add(Button, 'menu.start.quit')
+  self.quit.geometry = function() return self.geometry.quit end
+  self.quit:on('click', function() love.event.quit() end)
+  self.quit.text = 'Quit'
 end
 
 function MenuStart:update()
@@ -69,21 +84,16 @@ function MenuStart:draw()
     local scale = v * .45 / image:getHeight()
     g.draw(image, u * .5, v * .3, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
 
-    local x, y, w, h = unpack(self.geometry.start)
-    ctx.button:draw('Start', x, y, w, h)
-
-    local x, y, w, h = unpack(self.geometry.options)
-    ctx.button:draw('Options', x, y, w, h)
-
-    local x, y, w, h = unpack(self.geometry.quit)
-    ctx.button:draw('Quit', x, y, w, h)
+    self.start:draw()
+    self.options:draw()
+    self.quit:draw()
   end
 end
 
 function MenuStart:keypressed(key)
   if not self.active then return end
   if key == 'return' then
-    self:start()
+    self:continue()
   end
 end
 
@@ -93,17 +103,9 @@ end
 
 function MenuStart:mousereleased(mx, my, b)
   if not self.active then return end
-  if math.inside(mx, my, unpack(self.geometry.start)) then
-    ctx.sound:play('menuClick')
-    self:start()
-  elseif math.inside(mx, my, unpack(self.geometry.options)) then
-    ctx.options:toggle()
-  elseif math.inside(mx, my, unpack(self.geometry.quit)) then
-    love.event.quit()
-  end
 end
 
-function MenuStart:start()
+function MenuStart:continue()
   ctx:refreshBackground()
   self.active = false
 

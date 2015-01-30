@@ -129,6 +129,11 @@ function MenuMain:init()
   self.biomeArrowScales = {}
   self.prevBiomeArrowScales = {}
 
+  self.play = ctx.gooey:add(Button, 'menu.main.play')
+  self.play.geometry = function() return self.geometry.play end
+  self.play:on('click', function() ctx.animations.muju:set('death') end)
+  self.play.text = 'Play'
+
   self.drag = MenuDrag()
 end
 
@@ -391,9 +396,7 @@ function MenuMain:draw()
     end
   end
 
-  g.setColor(255, 255, 255)
-  local x, y, w, h = unpack(self.geometry.play)
-  ctx.button:draw('Play', x, y, w, h)
+  self.play:draw()
 
   self.drag:draw()
 end
@@ -430,12 +433,6 @@ function MenuMain:mousereleased(mx, my, b)
         if i == 1 then self:previousBiome()
         elseif i == 2 then self:nextBiome() end
       end
-    end
-
-    local play = self.geometry.play
-    if math.inside(mx, my, unpack(self.geometry.play)) and table.has(ctx.user.biomes, config.biomeOrder[self.selectedBiome]) then
-      ctx.sound:play('menuClick')
-      ctx.animations.muju:set('death')
     end
   end
 

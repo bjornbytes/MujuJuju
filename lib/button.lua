@@ -1,28 +1,44 @@
 local g = love.graphics
-Button = class()
+require 'lib/component'
+Button = extend(Component)
 
-function Button:init()
-  self.states = {}
+function Button:activate()
+  self.hoverActive = false
+  self.hoverFactor = 0
+  self.prevHoverFactor = 0
+  self.hoverX = nil
+  self.hoverY = nil
+  self.hoverDistance = 0
 end
 
 function Button:update()
-  table.each(self.states, function(state)
-    state.prevHoverFactor = state.hoverFactor
-    if state.hoverActive then
-      state.hoverFactor = math.lerp(state.hoverFactor, 1, math.min(8 * tickRate, 1))
-      ctx.cursor:hover()
-    else
-      state.hoverFactor = 0
-    end
-  end)
+  self.prevHoverFactor = self.hoverFactor
+  if self.hoverActive then
+    self.hoverFactor = math.lerp(self.hoverFactor, 1, math.min(8 * tickRate, 1))
+    ctx.cursor:hover()
+  else
+    self.hoverFactor = 0
+  end
 end
 
-function Button:draw(text, x, y, w, h)
+function Button:draw()
+  self.gooey:draw(self)
+end
 
-  -- Button
+function Button:mousereleased(mx, my, b)
+  if math.inside(mx, my, unpack(self.geometry())) then
+    self:emit('click')
+  end
+end
+
+function Button:render()
+  local x, y, w, h = unpack(self.geometry())
+  local text = self.text
   local mx, my = love.mouse.getPosition()
   local hover = math.inside(mx, my, x, y, w, h)
   local active = hover and love.mouse.isDown('l')
+
+  -- Button
   local button = data.media.graphics.menu.button
   local buttonActive = data.media.graphics.menu.buttonActive
   local diff = (button:getHeight() - buttonActive:getHeight())
@@ -31,14 +47,12 @@ function Button:draw(text, x, y, w, h)
   local yscale = h / button:getHeight()
   g.draw(image, x, bgy, 0, w, yscale, 0, image:getHeight())
 
-  local state = self.states[text] or self:makeState(text)
-
   if hover then
-    if not state.hoverActive then
-      state.hoverX = mx
-      state.hoverY = my
+    if not self.hoverActive then
+      self.hoverX = mx
+      self.hoverY = my
       local d = math.distance
-      state.hoverDistance = math.max(d(mx, my, x, y), d(mx, my, x + w, y), d(mx, my, x, y + h), d(mx, my, x + w, y + h))
+      self.hoverDistance = math.max(d(mx, my, x, y), d(mx, my, x + w, y), d(mx, my, x, y + h), d(mx, my, x + w, y + h))
     end
 
     g.setColor(255, 255, 255)
@@ -48,22 +62,22 @@ function Button:draw(text, x, y, w, h)
       g.rectangle('fill', x, y, w, h)
     end)
 
-    local factor = math.lerp(state.prevHoverFactor, state.hoverFactor, tickDelta / tickRate)
+    local factor = math.lerp(self.prevHoverFactor, self.hoverFactor, tickDelta / tickRate)
     g.setColor(255, 255, 255, 20)
     g.setBlendMode('additive')
-    g.circle('fill', state.hoverX, state.hoverY, factor * state.hoverDistance)
+    g.circle('fill', self.hoverX, self.hoverY, factor * self.hoverDistance)
     g.setBlendMode('alpha')
 
     g.setColor(255, 255, 255, 10)
     g.setBlendMode('subtractive')
-    g.circle('fill', state.hoverX, state.hoverY, (factor ^ 2) * state.hoverDistance)
+    g.circle('fill', self.hoverX, self.hoverY, (factor ^ 2) * self.hoverDistance)
     g.setBlendMode('alpha')
 
     g.setStencil()
 
-    state.hoverActive = true
+    self.hoverActive = true
   else
-    state.hoverActive = false
+    self.hoverActive = false
   end
 
   -- Text
@@ -73,16 +87,4 @@ function Button:draw(text, x, y, w, h)
   g.printCenter(text, x + w / 2 + 1, y + (h - diff * yscale) / 2 + 1)
   g.setColor(255, 255, 255)
   g.printCenter(text, x + w / 2, y + (h - diff * yscale) / 2)
-end
-
-function Button:makeState(key)
-  self.states[key] = {
-    hoverActive = false,
-    hoverFactor = 0,
-    prevHoverFactor = 0,
-    hoverX = nil,
-    hoverY = nil,
-    hoverDistance = 0
-  }
-  return self.states[key]
 end
