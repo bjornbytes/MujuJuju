@@ -47,6 +47,7 @@ function Button:render()
   local image = active and buttonActive or button
   local bgy = y + h
   local yscale = h / button:getHeight()
+  g.setColor(255, 255, 255)
   g.draw(image, x, bgy, 0, w, yscale, 0, image:getHeight())
 
   if hover then
