@@ -38,6 +38,7 @@ end
 function Checkbox:toggle()
   self.value = not self.value
   self.scale = self.value and 1.5 or .67
+  self:emit('change')
 end
 
 function Checkbox:contains(x, y)

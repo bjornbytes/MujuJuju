@@ -49,7 +49,13 @@ function MenuOptions:init()
         for j = 1, #self.controls[group] do
           local control = self.controls[group][j]
           local radius = .014 * v
-          res.controls[control] = {x + v * .05, y, radius}
+          if self.controlTypes[control] == Checkbox then
+            res.controls[control] = {x + v * .05, y, radius}
+          elseif self.controlTypes[control] == Dropdown then
+            res.controls[control] = {x + v * .05, y - v * .02, v * .2, v * .04}
+          else
+            res.controls[control] = {x + v * .05, y, radius}
+          end
           y = y + v * .05
         end
 
@@ -62,8 +68,12 @@ function MenuOptions:init()
   self.components = {}
   table.each(self.controlGroups, function(group)
     table.each(self.controls[group], function(control)
-      local component = ctx.gooey:add(Checkbox, control)
+      local component = ctx.gooey:add(self.controlTypes[control] or Checkbox, control)
       component.geometry = function() return self.geometry.options.controls[control] end
+      if self.controlTypes[control] == Dropdown then
+        component.choices = {'choice 1', 'choice 2', 'choice 3'}
+        component.value = 'choice 1'
+      end
       --[[component.value = ctx.options[control]
       component:on('change', function()
         ctx.options[control] = component.value
@@ -136,7 +146,18 @@ function MenuOptions:draw()
     g.print(unpack(self.geometry.options.labels[i]))
   end
 
-  table.with(self.components, 'draw')
+  local focused = nil
+  table.each(self.components, function(component)
+    if not focused and ctx.gooey.focused == component then
+      focused = component
+    else
+      component:draw()
+    end
+  end)
+
+  if focused then
+    focused:draw()
+  end
 
   --[[ctx.checkbox:draw(x1 + .05 * v, .22 * v, love.keyboard.isDown('z'), 'vsync')
   g.setFont('mesmerize', .025 * v)

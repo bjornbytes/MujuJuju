@@ -13,3 +13,7 @@ function Component:emit(event, data)
   if not self.event then return end
   self.event:emit(event, data)
 end
+
+function Component:focused()
+  return self.gooey.focused == self
+end
