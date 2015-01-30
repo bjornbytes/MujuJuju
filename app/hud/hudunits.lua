@@ -170,21 +170,19 @@ function HudUnits:draw()
     g.setColor(255, 255, 255, 255 * alpha)
     g.draw(bg, xx, yy, 0, imageScale, imageScale, w / 2, 0)
 
-    local title = data.media.graphics.hud.title
-    local titlex = xx - (title:getWidth() / 2) * scale
-    --[[
     -- Cooldown
+    local title = data.media.graphics.hud.title
+    local titlex = xx - (title:getWidth() / 2) * imageScale
     g.setColor(255, 255, 255, 80 * alpha)
-    g.draw(title, xx, yy + (10 * scale * ctx.view.scale), 0, scale * ctx.view.scale, scale * ctx.view.scale, title:getWidth() / 2, 0)
+    g.draw(title, xx, yy + (10 * imageScale), 0, imageScale, imageScale, title:getWidth() / 2, 0)
     g.setColor(255, 255, 255, 255 * alpha)
-    g.draw(title, titlex, yy + (10 * scale * ctx.view.scale), 0, scale * (1 - (p.deck[i].cooldown / p.deck[i].maxCooldown)) * ctx.view.scale, scale * ctx.view.scale)
+    g.draw(title, titlex, yy + (10 * imageScale), 0, imageScale * (1 - (p.deck[i].cooldown / p.deck[i].maxCooldown)), imageScale)
 
     local cooldownPop = math.lerp(self.prevCooldownPop[i], self.cooldownPop[i], tickDelta / tickRate)
     g.setBlendMode('additive')
     g.setColor(255, 255, 255, 200 * cooldownPop)
-    g.draw(title, xx, yy + (10 * scale), 0, scale, scale, title:getWidth() / 2, 0)
+    g.draw(title, xx, yy + (10 * imageScale), 0, imageScale, imageScale, title:getWidth() / 2, 0)
     g.setBlendMode('alpha')
-    ]]
 
     -- Animation
     self.canvas[i]:clear(0, 0, 0, 0)
@@ -193,7 +191,7 @@ function HudUnits:draw()
     self.animations[i]:draw(100, 100)
     ctx.view:guiPush()
     g.setCanvas()
-    g.draw(self.canvas[i], xx, yy + .1 * scale * v, 0, scale, scale, 100, 100)
+    g.draw(self.canvas[i], xx, yy + .1 * scale * v, 0, imageScale, imageScale, 100, 100)
 
     -- Text
     local unit = data.unit[p.deck[i].code]
@@ -206,15 +204,15 @@ function HudUnits:draw()
     g.printCenter(str, math.round(xx), math.round(yy + (.025 * v * scale)))
 
     g.setColor(0, 100, 0, 200)
-    g.printCenter(unit.cost, xx - (.095 * v * scale) + 1, yy + (.102 * v * scale) + 2)
+    g.printCenter(unit.cost, xx - (.09125 * v * scale) + 1, yy + (.0975 * v * scale) + 2)
     g.setColor(255, 255, 255)
-    g.printCenter(unit.cost, xx - (.095 * v * scale), yy + (.102 * v * scale))
+    g.printCenter(unit.cost, xx - (.09125 * v * scale), yy + (.0975 * v * scale))
 
     local count = table.count(ctx.units:filter(function(u) return u.class.code == p.deck[i].code end))
     g.setColor(0, 100, 0, 200)
-    g.printCenter(count, xx + (.09125 * v * scale) + 1, yy + (.105 * v * scale) + 2)
+    g.printCenter(count, xx + (.087 * v * scale) + 1, yy + (.1 * v * scale) + 2)
     g.setColor(255, 255, 255)
-    g.printCenter(count, xx + (.09125 * v * scale), yy + (.105 * v * scale))
+    g.printCenter(count, xx + (.087 * v * scale), yy + (.1 * v * scale))
 
     --[[
     -- Runes
