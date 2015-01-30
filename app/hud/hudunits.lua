@@ -206,15 +206,15 @@ function HudUnits:draw()
     g.printCenter(str, math.round(xx), math.round(yy + (.025 * v * scale)))
 
     g.setColor(0, 100, 0, 200)
-    g.printCenter(unit.cost, xx - (.19 * v * scale) + 1, yy + (.204 * v * scale) + 2)
+    g.printCenter(unit.cost, xx - (.095 * v * scale) + 1, yy + (.102 * v * scale) + 2)
     g.setColor(255, 255, 255)
-    g.printCenter(unit.cost, xx - (.19 * v * scale), yy + (.204 * v * scale))
+    g.printCenter(unit.cost, xx - (.095 * v * scale), yy + (.102 * v * scale))
 
     local count = table.count(ctx.units:filter(function(u) return u.class.code == p.deck[i].code end))
     g.setColor(0, 100, 0, 200)
-    g.printCenter(count, xx + (.1825 * v * scale) + 1, yy + (.21 * v * scale) + 2)
+    g.printCenter(count, xx + (.09125 * v * scale) + 1, yy + (.105 * v * scale) + 2)
     g.setColor(255, 255, 255)
-    g.printCenter(count, xx + (.1825 * v * scale), yy + (.21 * v * scale))
+    g.printCenter(count, xx + (.09125 * v * scale), yy + (.105 * v * scale))
 
     --[[
     -- Runes
