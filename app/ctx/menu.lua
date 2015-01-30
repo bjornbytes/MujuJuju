@@ -110,6 +110,7 @@ function Menu:keypressed(key)
 end
 
 function Menu:mousepressed(mx, my, b)
+  self.gooey:mousepressed(mx, my, b)
   self.start:mousepressed(mx, my, b)
   self.choose:mousepressed(mx, my, b)
   self.main:mousepressed(mx, my, b)

@@ -25,8 +25,14 @@ function Button:draw()
   self.gooey:draw(self)
 end
 
+function Button:mousepressed(mx, my, b)
+  if b == 'l' and self:contains(mx, my) then
+    self.gooey.hot = self
+  end
+end
+
 function Button:mousereleased(mx, my, b)
-  if math.inside(mx, my, unpack(self.geometry())) then
+  if b == 'l' and self.gooey.hot == self and self:contains(mx, my) then
     self:emit('click')
   end
 end
@@ -35,8 +41,8 @@ function Button:render()
   local x, y, w, h = unpack(self.geometry())
   local text = self.text
   local mx, my = love.mouse.getPosition()
-  local hover = math.inside(mx, my, x, y, w, h)
-  local active = hover and love.mouse.isDown('l')
+  local hover = self:contains(mx, my)
+  local active = hover and love.mouse.isDown('l') and self.gooey.hot == self
 
   -- Button
   local button = data.media.graphics.menu.button
@@ -87,4 +93,8 @@ function Button:render()
   g.printCenter(text, x + w / 2 + 1, y + (h - diff * yscale) / 2 + 1)
   g.setColor(255, 255, 255)
   g.printCenter(text, x + w / 2, y + (h - diff * yscale) / 2)
+end
+
+function Button:contains(x, y)
+  return math.inside(x, y, unpack(self.geometry()))
 end
