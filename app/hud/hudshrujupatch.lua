@@ -27,14 +27,15 @@ function HudShrujuPatch:init(patch)
       local ct = #self.patch.types
       local factor, t = self:getFactor()
       local length = (.1 + (.2 * factor)) * v
-      local angleIncrement = .35
+      local angleIncrement = .3
       local angle = (-math.pi / 2) - (angleIncrement * (ct - 1) / 2)
 
-      local size = v * .08
+      local size = v * .06
       local res = {}
       for i = 1, ct do
-        local x = self.patch.x + math.dx(length, angle) - size / 2
-        local y = self.patch.y + math.dy(length, angle) - size / 2
+        local patchx, patchy = ctx.view:screenPoint(self.patch.x, self.patch.y)
+        local x = patchx + math.dx(length, angle) - size / 2
+        local y = patchy + math.dy(length, angle) - size / 2
         local w, h = size, size
 
         table.insert(res, {x, y, w, h})
@@ -47,7 +48,8 @@ function HudShrujuPatch:init(patch)
       local u, v = ctx.hud.u, ctx.hud.v
       local size = v * .08
       local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
-      return {self.patch.x - size / 2, math.lerp(self.patch.y, v - size - .04 * v, growingFactor), size, size}
+      local patchx, patchy = ctx.view:screenPoint(self.patch.x, self.patch.y)
+      return {patchx - size / 2, math.lerp(patchy, v - size - .04 * v, growingFactor), size, size}
     end
   }
 end
