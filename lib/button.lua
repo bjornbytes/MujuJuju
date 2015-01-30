@@ -21,10 +21,6 @@ function Button:update()
   end
 end
 
-function Button:draw()
-  self.gooey:draw(self)
-end
-
 function Button:mousepressed(mx, my, b)
   if b == 'l' and self:contains(mx, my) then
     self.gooey.hot = self

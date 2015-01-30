@@ -4,6 +4,74 @@ local g = love.graphics
 MenuOptions = class()
 
 function MenuOptions:init()
+  self.geometry = setmetatable({}, {__index = function(t, k)
+    return rawset(t, k, self.geometryFunctions[k]())[k]
+  end})
+
+  self.controlGroups = {'graphics', 'sound', 'gameplay'}
+
+  self.controls = {
+    graphics = {'resolution', 'fullscreen', 'monitor', 'vsync', 'antialiasing', 'textureSmoothing', 'postprocessing', 'particles'},
+    sound = {'mute', 'master', 'music', 'sound'},
+    gameplay = {'colorblind'}
+  }
+
+  self.controlTypes = {
+    resolution = Dropdown,
+    fullscreen = Checkbox,
+    monitor = Dropdown,
+    vsync = Checkbox,
+    antialiasing = Checkbox,
+    textureSmoothing = Checkbox,
+    postprocessing = Checkbox,
+    particles = Checkbox,
+    mute = Checkbox,
+    master = Slider,
+    music = Slider,
+    sound = Slider,
+    colorblind = Checkbox
+  }
+
+  self.geometryFunctions = {
+    options = function()
+      local res = {labels = {}, controls = {}}
+      local u, v = ctx.u, ctx.v
+      local width = self.width * u
+      local x = u + self.offset
+      local y = .15 * v
+      local headerFont = g.setFont('mesmerize', .03 * v)
+      for i = 1, #self.controlGroups do
+        local group = self.controlGroups[i]
+        local str = group:capitalize()
+        table.insert(res.labels, {str, x + width - v * .01 - headerFont:getWidth(str), y})
+        y = y + v * .06
+
+        for j = 1, #self.controls[group] do
+          local control = self.controls[group][j]
+          local radius = .014 * v
+          res.controls[control] = {x + v * .05, y, radius}
+          y = y + v * .05
+        end
+
+        y = y
+      end
+      return res
+    end
+  }
+
+  self.components = {}
+  table.each(self.controlGroups, function(group)
+    table.each(self.controls[group], function(control)
+      local component = ctx.gooey:add(Checkbox, control)
+      component.geometry = function() return self.geometry.options.controls[control] end
+      --[[component.value = ctx.options[control]
+      component:on('change', function()
+        ctx.options[control] = component.value
+      end)]]
+      self.components[control] = component
+    end)
+  end)
+
   self.active = false
   self.offset = 0
   self.tweenDuration = .25
@@ -22,6 +90,7 @@ function MenuOptions:draw()
   local u, v = ctx.u, ctx.v
 
   if self.offset > -1 then return end
+  if self.offsetTween.clock < self.tweenDuration then table.clear(self.geometry) end
 
   local x1 = u + self.offset
   local width = self.width * u
@@ -63,9 +132,11 @@ function MenuOptions:draw()
 
   g.setFont('mesmerize', .03 * v)
   g.setColor(255, 255, 255)
-  g.print('Graphics', x1 + .03 * v, .15 * v)
-  g.print('Sound', x1 + .03 * v, .5 * v)
-  g.print('Input', x1 + .03 * v, .7 * v)
+  for i = 1, #self.geometry.options.labels do
+    g.print(unpack(self.geometry.options.labels[i]))
+  end
+
+  table.with(self.components, 'draw')
 
   --[[ctx.checkbox:draw(x1 + .05 * v, .22 * v, love.keyboard.isDown('z'), 'vsync')
   g.setFont('mesmerize', .025 * v)

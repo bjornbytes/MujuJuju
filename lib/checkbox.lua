@@ -1,21 +1,20 @@
-local tween = require 'lib/deps/tween/tween'
 local g = love.graphics
-Checkbox = class()
+require 'lib/component'
+Checkbox = extend(Component)
 
-function Checkbox:init()
-  self.states = {}
+function Checkbox:activate()
+  self.value = false
+  self.scale = 1
+  self.tween = nil
 end
 
-function Checkbox:draw(x, y, checked, code)
-  local state = self.states[code] or self:makeState(code)
-  if checked and not state.active or not checked and state.active then
-    self:toggle(code)
-  end
+function Checkbox:render()
+  local x, y, r = unpack(self.geometry())
 
-  state.scale = math.lerp(state.scale, 1, math.min(6 * delta, 1))
-  local radius = state.scale * 10
+  self.scale = math.lerp(self.scale, 1, math.min(6 * delta, 1))
+  local radius = self.scale * r
 
-  if checked then
+  if self.value then
     g.setColor(100, 200, 50)
     g.circle('fill', x, y, radius, 20)
   end
@@ -26,18 +25,21 @@ function Checkbox:draw(x, y, checked, code)
   g.setLineWidth(1)
 end
 
-function Checkbox:makeState(code)
-  self.states[code] = {
-    active = false,
-    scale = 1,
-    tween = nil
-  }
-
-  return self.states[code]
+function Checkbox:mousepressed(mx, my, b)
+  
 end
 
-function Checkbox:toggle(code)
-  local state = self.states[code] or self:makeState(code)
-  state.active = not state.active
-  state.scale = state.active and 1.5 or .67
+function Checkbox:mousereleased(mx, my, b)
+  if b == 'l' and self:contains(mx, my) then
+    self:toggle()
+  end
+end
+
+function Checkbox:toggle()
+  self.value = not self.value
+  self.scale = self.value and 1.5 or .67
+end
+
+function Checkbox:contains(x, y)
+  return math.insideCircle(x, y, unpack(self.geometry()))
 end

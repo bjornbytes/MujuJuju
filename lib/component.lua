@@ -1,5 +1,9 @@
 Component = class()
 
+function Component:draw()
+  self.gooey:draw(self)
+end
+
 function Component:on(event, callback)
   self.event = self.event or Event()
   self.event:on(event, callback)
