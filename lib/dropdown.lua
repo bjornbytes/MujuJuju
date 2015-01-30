@@ -35,6 +35,7 @@ end
 function Dropdown:mousepressed(mx, my, b)
   if b == 'l' and self:contains(mx, my) then
     self.gooey.hot = self
+    if self:focused() then return true end
   end
 end
 
@@ -48,7 +49,6 @@ function Dropdown:mousereleased(mx, my, b)
       local hit = self:contains(mx, my)
 
       self.gooey:unfocus()
-
       if hit then
         self.value = self.choices[hit] or self.value
         return true
