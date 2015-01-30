@@ -161,17 +161,19 @@ function HudUnits:draw()
     local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
     local bg = data.media.graphics.hud.minion
     local w, h = bg:getDimensions()
-    local scale = (.2 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / h
-    local yy = v * (.01 * selectFactor)
+    local scale = 1 + .6 * upgradeFactor
+    local imageScale = (.2 * scale * v) / h
+    local yy = v * .005
     local alpha = .45 + selectFactor * .35
 
     -- Backdrop
     g.setColor(255, 255, 255, 255 * alpha)
-    g.draw(bg, xx, yy, 0, scale * ctx.view.scale, scale * ctx.view.scale, w / 2, 0)
+    g.draw(bg, xx, yy, 0, imageScale, imageScale, w / 2, 0)
 
-    -- Cooldown
     local title = data.media.graphics.hud.title
-    local titlex = xx - (title:getWidth() / 2) * scale * ctx.view.scale
+    local titlex = xx - (title:getWidth() / 2) * scale
+    --[[
+    -- Cooldown
     g.setColor(255, 255, 255, 80 * alpha)
     g.draw(title, xx, yy + (10 * scale * ctx.view.scale), 0, scale * ctx.view.scale, scale * ctx.view.scale, title:getWidth() / 2, 0)
     g.setColor(255, 255, 255, 255 * alpha)
@@ -182,6 +184,7 @@ function HudUnits:draw()
     g.setColor(255, 255, 255, 200 * cooldownPop)
     g.draw(title, xx, yy + (10 * scale), 0, scale, scale, title:getWidth() / 2, 0)
     g.setBlendMode('alpha')
+    ]]
 
     -- Animation
     self.canvas[i]:clear(0, 0, 0, 0)
@@ -190,17 +193,17 @@ function HudUnits:draw()
     self.animations[i]:draw(100, 100)
     ctx.view:guiPush()
     g.setCanvas()
-    g.draw(self.canvas[i], xx, yy + .2 * scale * v, 0, scale * ctx.view.scale, scale * ctx.view.scale, 100, 100)
+    g.draw(self.canvas[i], xx, yy + .1 * scale * v, 0, scale, scale, 100, 100)
 
     -- Text
     local unit = data.unit[p.deck[i].code]
-    local font = g.setFont('mesmerize', math.round(.04 * scale * v))
+    local font = g.setFont('mesmerize', math.round(.02 * scale * v))
     local str = unit.name
     if math.inside(mx, my, titlex, yy + (10 * scale), title:getWidth() * scale, title:getHeight() * scale) then
       str = string.format('%.2f', p.deck[i].cooldown)
     end
     g.setColor(255, 255, 255)
-    g.printCenter(str, math.round(xx), math.round(yy + (.05 * v * scale)))
+    g.printCenter(str, math.round(xx), math.round(yy + (.025 * v * scale)))
 
     g.setColor(0, 100, 0, 200)
     g.printCenter(unit.cost, xx - (.19 * v * scale) + 1, yy + (.204 * v * scale) + 2)
@@ -213,6 +216,7 @@ function HudUnits:draw()
     g.setColor(255, 255, 255)
     g.printCenter(count, xx + (.1825 * v * scale), yy + (.21 * v * scale))
 
+    --[[
     -- Runes
     local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
     local runeSize = v * .04 * scale * ctx.view.scale
@@ -225,7 +229,7 @@ function HudUnits:draw()
       g.drawRune(rune, runex, runey, runeSize * 2, (runeSize - .016 * v * scale * ctx.view.scale) * 2)
       runex = runex + runeInc
     end
-
+    ]]
     xx = xx + inc
   end
 

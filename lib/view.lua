@@ -15,8 +15,8 @@ function View:init()
   self.frame = {}
   self.frame.x = 0
   self.frame.y = 0
-  self.frame.width = love.window.getWidth()
-  self.frame.height = love.window.getHeight()
+  self.frame.width = love.graphics.getWidth()
+  self.frame.height = love.graphics.getHeight()
 
   self.vx = 0
   self.vy = 0
