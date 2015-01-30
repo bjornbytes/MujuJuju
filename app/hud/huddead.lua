@@ -88,6 +88,8 @@ function HudDead:draw()
 end
 
 function HudDead:keypressed(key)
+  if not ctx.ded then return end
+
 	if self.deadScreen == 1 then
 		if key == 'escape' then
 			Context:remove(ctx)
@@ -95,7 +97,7 @@ function HudDead:keypressed(key)
       for i = 1, #config.biomeOrder do
         if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end
       end
-			Context:add(Menu, biomeIndex, {muted = ctx.game.sound.muted})
+			Context:add(Menu, biomeIndex, {muted = ctx.sound.muted})
     elseif key == 'backspace' then
       self.deadName = self.deadName:sub(1, -2)
     elseif key == 'return' then
@@ -115,6 +117,8 @@ function HudDead:keypressed(key)
 end
 
 function HudDead:mousereleased(x, y, b)
+  if not ctx.ded then return end
+
   if self.deadScreen == 1 then
     local u, v = ctx.hud.u, ctx.hud.v
     local xx = u / 2 - self.deadOk:getWidth() / 2
