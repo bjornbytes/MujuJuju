@@ -52,11 +52,11 @@ function MenuOptions:init()
           if self.controlTypes[control] == Checkbox then
             res.controls[control] = {x + v * .05, y, radius}
           elseif self.controlTypes[control] == Dropdown then
-            res.controls[control] = {x + v * .05, y - v * .02, v * .2, v * .04}
+            res.controls[control] = {x + v * .05 - radius - 2, y - v * .02, u * .15, v * .04}
           else
             res.controls[control] = {x + v * .05, y, radius}
           end
-          y = y + v * .05
+          y = y + v * .06
         end
 
         y = y
@@ -71,7 +71,7 @@ function MenuOptions:init()
       local component = ctx.gooey:add(self.controlTypes[control] or Checkbox, control)
       component.geometry = function() return self.geometry.options.controls[control] end
       if self.controlTypes[control] == Dropdown then
-        component.choices = {'choice 1', 'choice 2', 'choice 3'}
+        component.choices = {'choice 1', 'choice 2', 'choice 3', 'choice 4', 'choice 5', 'choice 6', 'choice 7', 'choice 8', 'choice 9'}
         component.value = 'choice 1'
       end
       --[[component.value = ctx.options[control]
