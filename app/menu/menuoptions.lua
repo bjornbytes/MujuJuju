@@ -29,7 +29,7 @@ function MenuOptions:init()
           if self.controlTypes[control] == Checkbox then
             res.controls[control] = {x + padding, y, radius}
           elseif self.controlTypes[control] == Dropdown then
-            res.controls[control] = {x + padding - radius - 2, y - v * .02, u * .18, v * .04}
+            res.controls[control] = {x + padding - radius - 2, y - v * .02, u * .22, v * .04}
           elseif self.controlTypes[control] == Slider then
             res.controls[control] = {x + padding, y, u * .15, radius}
           end

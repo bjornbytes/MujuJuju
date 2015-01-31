@@ -150,6 +150,7 @@ function Menu:resize()
   self.start:resize()
   self.choose:resize()
   self.main:resize()
+  self.optionsPane:resize()
 end
 
 function Menu:startGame()
