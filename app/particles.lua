@@ -4,6 +4,9 @@ Particles = extend(Manager)
 Particles.depth = -60
 
 function Particles:init()
+  self.active = ctx.options.particles
+  if not self.active then return end
+
   self.systems = {}
   self.modes = {draw = {}, gui = {}}
 
@@ -23,11 +26,12 @@ function Particles:init()
 end
 
 function Particles:update()
+  if not self.active then return end
   table.with(self.systems, 'update', tickRate)
 end
 
 function Particles:draw()
-  if ctx.ded then return end
+  if ctx.ded or not self.active then return end
   g.setColor(255, 255, 255)
   table.each(self.modes.draw, function(system, code)
     g.setBlendMode(data.particle[code].blendMode or 'alpha')
@@ -37,7 +41,7 @@ function Particles:draw()
 end
 
 function Particles:gui()
-  if ctx.ded then return end
+  if ctx.ded or not self.active then return end
   g.setColor(255, 255, 255)
   table.each(self.modes.gui, function(system, code)
     g.setBlendMode(data.particle[code].blendMode or 'alpha')
@@ -47,7 +51,7 @@ function Particles:gui()
 end
 
 function Particles:emit(code, x, y, count, options)
-  if not data.particle[code] then return end
+  if not self.active or not data.particle[code] then return end
 
   if type(count) == 'table' then
     options = count
@@ -71,6 +75,7 @@ function Particles:emit(code, x, y, count, options)
 end
 
 function Particles:apply(code, option, value)
+  if not self.active then return end
   local system = self.systems[code]
   local setter = system['set' .. option:capitalize()]
   if type(value) == 'table' then setter(system, unpack(value))

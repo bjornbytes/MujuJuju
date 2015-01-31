@@ -1,7 +1,7 @@
 Effects = class()
 
 function Effects:init()
-  self.active = love.graphics.isSupported('shader')
+  self.active = love.graphics.isSupported('shader') and ctx.options.postprocessing
   self.effects = {}
 	self:add('wave')
 	self:add('bloom')

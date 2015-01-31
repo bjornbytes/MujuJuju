@@ -1,14 +1,18 @@
 Game = class()
 
 function Game:load(user, biome, options)
-  data.media.graphics.juju:setMipmapFilter('linear', 1)
-  data.media.graphics.map.forest:setMipmapFilter('linear', 1)
-  data.media.graphics.map.forestSpirit:setMipmapFilter('linear', 1)
-  for i = 1, 9 do
-    data.media.graphics.runes[i]:setMipmapFilter('linear', 1)
+  self.options = options
+
+  if self.options.textureSmoothing then
+    data.media.graphics.juju:setMipmapFilter('linear', 1)
+    data.media.graphics.map.forest:setMipmapFilter('linear', 1)
+    data.media.graphics.map.forestSpirit:setMipmapFilter('linear', 1)
+    for i = 1, 9 do
+      data.media.graphics.runes[i]:setMipmapFilter('linear', 1)
+    end
+    data.media.graphics.hud.minion:setMipmapFilter('linear', 1)
+    data.media.graphics.hud.population:setMipmapFilter('linear', 1)
   end
-  data.media.graphics.hud.minion:setMipmapFilter('linear', 1)
-  data.media.graphics.hud.population:setMipmapFilter('linear', 1)
 
   self.user = user
   self.id = 1
@@ -47,7 +51,7 @@ function Game:load(user, biome, options)
   backgroundSound = self.sound:loop('background')
   love.keyboard.setKeyRepeat(false)
 
-  if options.muted then self.sound:mute() end
+  if self.options.muted then self.sound:mute() end
 end
 
 function Game:update()

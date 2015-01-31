@@ -157,7 +157,7 @@ function Menu:startGame()
   if #self.user.deck.minions == 0 then return end
   if self.menuSounds then self.menuSounds:stop() end
   Context:remove(ctx)
-  Context:add(Game, self.user, config.biomeOrder[self.main.selectedBiome], {muted = self.sound.muted})
+  Context:add(Game, self.user, config.biomeOrder[self.main.selectedBiome], self.options)
 end
 
 function Menu:refreshBackground()
