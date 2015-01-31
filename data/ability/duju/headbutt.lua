@@ -28,7 +28,7 @@ function Headbutt:activate()
 end
 
 function Headbutt:use()
-  if self.unit.attackTarget and isa(self.unit.attackTarget, Unit) then
+  if self.unit.target and isa(self.unit.target, Unit) then
     self.unit.animation:set('headbutt')
     self.unit.casting = true
     self.timer = self.cooldown
