@@ -31,6 +31,7 @@ end
 
 function Gooey:mousereleased(mx, my, b)
   self:call('mousereleased', mx, my, b)
+  self.hot = nil
 end
 
 function Gooey:get(code)

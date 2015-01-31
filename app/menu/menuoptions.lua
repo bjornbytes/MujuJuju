@@ -40,6 +40,7 @@ function MenuOptions:init()
       local x = u + self.offset
       local y = .15 * v
       local headerFont = g.setFont('mesmerize', .03 * v)
+      local padding = v * .055
       for i = 1, #self.controlGroups do
         local group = self.controlGroups[i]
         local str = group:capitalize()
@@ -50,11 +51,11 @@ function MenuOptions:init()
           local control = self.controls[group][j]
           local radius = .014 * v
           if self.controlTypes[control] == Checkbox then
-            res.controls[control] = {x + v * .05, y, radius}
+            res.controls[control] = {x + padding, y, radius}
           elseif self.controlTypes[control] == Dropdown then
-            res.controls[control] = {x + v * .05 - radius - 2, y - v * .02, u * .15, v * .04}
-          else
-            res.controls[control] = {x + v * .05, y, radius}
+            res.controls[control] = {x + padding - radius - 2, y - v * .02, u * .15, v * .04}
+          elseif self.controlTypes[control] == Slider then
+            res.controls[control] = {x + padding, y, u * .15, radius}
           end
           y = y + v * .06
         end
@@ -159,16 +160,6 @@ function MenuOptions:draw()
   if focused then
     focused:draw()
   end
-
-  --[[ctx.checkbox:draw(x1 + .05 * v, .22 * v, love.keyboard.isDown('z'), 'vsync')
-  g.setFont('mesmerize', .025 * v)
-  local fontHeight = g.getFont():getHeight()
-  g.print('Vertical Sync', x1 + .09 * v, .22 * v - fontHeight / 2 + 1)
-
-  ctx.checkbox:draw(x1 + .05 * v, .27 * v, love.keyboard.isDown('z'), 'fullscreen')
-  g.setFont('mesmerize', .025 * v)
-  local fontHeight = g.getFont():getHeight()
-  g.print('Fullscreen', x1 + .09 * v, .27 * v - fontHeight / 2 + 1)]]
 end
 
 function MenuOptions:keypressed(key)
@@ -178,6 +169,7 @@ function MenuOptions:keypressed(key)
 end
 
 function MenuOptions:toggle()
+  if self.offsetTween.clock < self.tweenDuration then return end
   if self.active then
     self.offsetTween = tween.new(self.tweenDuration, self, {offset = 0}, 'inBack')
   else
