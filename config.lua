@@ -43,7 +43,7 @@ return {
     jujuModifier = 2,
     minimumLevel = 20,
     scale = 1.25,
-    healthModifier = 6,
+    healthModifier = 9,
     damageModifier = 1.5,
     buffs = {
       sinister = {
@@ -70,6 +70,22 @@ return {
       },
       demolisher = {
         damageModifier = 5
+      },
+      rallying = {
+        range = 100,
+        damageModifier = 4
+      },
+      frenzied = {
+        frenzy = 1,
+        haste = 1,
+        healthModified = 7
+      },
+      pummeling = {
+        offset = 100
+      },
+      cursed = {
+        range = 100,
+        weakenModifier = .2
       }
     }
   },

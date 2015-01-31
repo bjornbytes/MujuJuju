@@ -90,8 +90,10 @@ function UnitBuffs:remove(buff)
     buff = self:get(buff)
   end
 
-  f.exe(buff.deactivate, buff, self.unit)
-  self.list[buff] = nil
+  if buff then
+    f.exe(buff and buff.deactivate, buff, self.unit)
+    self.list[buff] = nil
+  end
 end
 
 function UnitBuffs:get(code)

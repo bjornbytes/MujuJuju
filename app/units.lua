@@ -25,10 +25,11 @@ function Units:createEnemy()
     isElite = isElite and eliteCount < conf.units.maxElites
     local unit = self:add(enemyType, {x = x, elite = isElite})
 
-    if isElite then
+    if isElite or true then
       local buffs = table.keys(config.elites.buffs)
       local buff = buffs[love.math.random(1, #buffs)]
-      unit.buffs:add(buff, config.elites.buffs[buff])
+      --unit.buffs:add(buff, config.elites.buffs[buff])
+      unit.buffs:add('cursed', config.elites.buffs.cursed)
     end
 
     self.minEnemyRate = math.max(self.minEnemyRate - conf.units.minEnemyRateDecay * math.clamp((1.5 + self.minEnemyRate) / 10, .2, 1) ^ 1.5, 1.5)

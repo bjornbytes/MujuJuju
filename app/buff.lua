@@ -23,3 +23,7 @@ function Buff:rot()
     end
   end
 end
+
+function Buff:getUnitDirection()
+  return (self.unit.animation.flipped and -1 or 1)
+end
