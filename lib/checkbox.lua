@@ -14,7 +14,11 @@ function Checkbox:update()
   self.prevScale = self.scale
   self.prevFactor = self.factor
 
-  local hover = self:contains(love.mouse.getPosition())
+  local mx, my = love.mouse.getPosition()
+  local ox, oy = self:getOffset()
+  mx, my = mx + ox, my + oy
+
+  local hover = self:contains(mx, my)
   self.scale = math.lerp(self.scale, hover and 1.15 or 1, math.min(16 * tickRate, 1))
 
   self.factor = math.lerp(self.factor, self.value and 1 or 0, math.min(16 * tickRate, 1))
@@ -48,6 +52,8 @@ function Checkbox:mousepressed(mx, my, b)
 end
 
 function Checkbox:mousereleased(mx, my, b)
+  local ox, oy = self:getOffset()
+  mx, my = mx + ox, my + oy
   if b == 'l' and self:contains(mx, my) then
     self:toggle()
   end

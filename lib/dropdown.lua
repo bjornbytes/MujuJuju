@@ -14,12 +14,15 @@ function Dropdown:activate()
 end
 
 function Dropdown:update()
+  local mx, my = love.mouse.getPosition()
+  local ox, oy = self:getOffset()
+  mx, my = mx + ox, my + oy
   self.prevFactor = self.factor
   self.prevHoverFactor = self.hoverFactor
   self.factor = math.lerp(self.factor, self:focused() and 1 or 0, math.min(16 * tickRate, 1))
-  self.hoverFactor = math.lerp(self.hoverFactor, (self:focused() or self:contains(love.mouse.getPosition())) and 1 or 0, math.min(16 * tickRate, 1))
+  self.hoverFactor = math.lerp(self.hoverFactor, (self:focused() or self:contains(mx, my)) and 1 or 0, math.min(16 * tickRate, 1))
   if self:focused() then
-    local hoverIndex = self:contains(love.mouse.getPosition())
+    local hoverIndex = self:contains(mx, my)
     local hoverAmount = 1 + (love.mouse.isDown('l') and .5 or 0)
     for i = 1, #self.choices do
       self.prevChoiceHoverFactors[i] = self.choiceHoverFactors[i] or 0
@@ -81,6 +84,9 @@ function Dropdown:mousepressed(mx, my, b)
 end
 
 function Dropdown:mousereleased(mx, my, b)
+  local ox, oy = self:getOffset()
+  mx, my = mx + ox, my + oy
+
   if b == 'l' then
     if not self:focused() then
       if self.gooey.hot == self and self:contains(mx, my) then

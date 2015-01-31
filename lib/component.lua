@@ -17,3 +17,7 @@ end
 function Component:focused()
   return self.gooey.focused == self
 end
+
+function Component:getOffset(x, y)
+  return 0, 0
+end

@@ -149,6 +149,7 @@ function MenuOptions:init()
       local value = ctx.options[control]
       local component = ctx.gooey:add(self.controlTypes[control] or Checkbox, control, {value = value})
       component.geometry = function() return self.geometry.options.controls[control] end
+      component.getOffset = function() return 0, self.scroll end
       component.label = self.controlLabels[control] or control:capitalize()
       component:on('change', function() self.refreshOptions(control, component.value) end)
       if isa(component, Dropdown) then
@@ -293,10 +294,13 @@ function MenuOptions:mousepressed(mx, my, b)
 end
 
 function MenuOptions:resize()
+  self.canvas = g.newCanvas((self.width + .05) * ctx.u, ctx.v)
+  if self.active then self.offsetTween = tween.new(self.tweenDuration, self, {offset = -self.width * ctx.u}, 'inBack')
+  else self.offsetTween = tween.new(self.tweenDuration, self, {offset = 0}, 'outBack') end
   table.clear(self.geometry)
 end
 
-function MenuOptions:toggle()
+function MenuOptions:toggle(force)
   if self.offsetTween.clock < self.tweenDuration then return end
   if self.active then
     self.offsetTween = tween.new(self.tweenDuration, self, {offset = 0}, 'inBack')

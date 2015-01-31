@@ -17,6 +17,8 @@ end
 
 function Slider:update()
   local mx, my = love.mouse.getPosition()
+  local ox, oy = self:getOffset()
+  mx, my = mx + ox, my + oy
 
   if self.gooey.hot == self then
     local x, y, w, r = self:getSliderGeometry()
@@ -64,6 +66,8 @@ function Slider:render()
 end
 
 function Slider:mousepressed(mx, my, b)
+  local ox, oy = self:getOffset()
+  mx, my = mx + ox, my + oy
   if b == 'l' and self:containsBar(mx, my) then
     self.gooey.hot = self
   end
