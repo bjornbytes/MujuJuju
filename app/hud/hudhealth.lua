@@ -195,10 +195,11 @@ function HudHealth:draw()
       local barHeight = data.media.graphics.healthbarGradient:getHeight()
 
       for j = 1, #bin.units do
+        local unit = bin.units[j]
+        local hover = unit:contains(ctx.view:worldMouseX(), ctx.view:worldMouseY())
 
         -- Frame
-        local unit = bin.units[j]
-        local alpha = (.5 + ((unit.selected or unit:contains(love.mouse.getPosition())) and .5 or 0)) * unit.alpha
+        local alpha = (.5 + (hover and .5 or 0)) * unit.alpha
         local framey = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], tickDelta / tickRate)
         g.setColor(255, 255, 255, 120 * alpha)
         g.draw(frame, xx, framey, 0, scale, scale)
