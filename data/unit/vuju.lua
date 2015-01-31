@@ -6,7 +6,7 @@ Vuju.description = 'Yay Vuju.'
 -- Stats
 ----------------
 Vuju.health = 65
-Vuju.damage = 6
+Vuju.damage = 4
 Vuju.range = 145
 Vuju.attackSpeed = 1
 Vuju.speed = 40

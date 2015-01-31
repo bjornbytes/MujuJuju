@@ -1,4 +1,4 @@
-local Puppetize = class()
+local Puppetize = extend(Buff)
 
 function Puppetize:activate()
   self.team = self.team == 0 and ctx.player.team or 0
