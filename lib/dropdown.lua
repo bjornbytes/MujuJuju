@@ -6,20 +6,24 @@ function Dropdown:activate()
   self.value = nil
   self.choices = self.choices or {}
   self.factor = 0
-  self.prevFactor = 0
-  self.hoverFactors = {}
-  self.prevHoverFactors = {}
+  self.prevFactor = self.factor
+  self.hoverFactor = 0
+  self.prevHoverFactor = self.hoverFactor
+  self.choiceHoverFactors = {}
+  self.prevChoiceHoverFactors = {}
 end
 
 function Dropdown:update()
   self.prevFactor = self.factor
+  self.prevHoverFactor = self.hoverFactor
   self.factor = math.lerp(self.factor, self:focused() and 1 or 0, math.min(16 * tickRate, 1))
+  self.hoverFactor = math.lerp(self.hoverFactor, (self:focused() or self:contains(love.mouse.getPosition())) and 1 or 0, math.min(16 * tickRate, 1))
   if self:focused() then
     local hoverIndex = self:contains(love.mouse.getPosition())
     local hoverAmount = 1 + (love.mouse.isDown('l') and .5 or 0)
     for i = 1, #self.choices do
-      self.prevHoverFactors[i] = self.hoverFactors[i] or 0
-      self.hoverFactors[i] = math.lerp(self.prevHoverFactors[i], i == hoverIndex and hoverAmount or 0, math.min(16 * tickRate, 1))
+      self.prevChoiceHoverFactors[i] = self.choiceHoverFactors[i] or 0
+      self.choiceHoverFactors[i] = math.lerp(self.prevChoiceHoverFactors[i], i == hoverIndex and hoverAmount or 0, math.min(16 * tickRate, 1))
     end
   end
 end
@@ -28,20 +32,20 @@ function Dropdown:render()
   local u, v = ctx.u, ctx.v
   local x, y, w, h = unpack(self.geometry())
   local hoverIndex = self:contains(love.mouse.getPosition())
-  local hoverFactors = table.interpolate(self.prevHoverFactors, self.hoverFactors, tickDelta / tickRate)
+  local choiceHoverFactors = table.interpolate(self.prevChoiceHoverFactors, self.choiceHoverFactors, tickDelta / tickRate)
+  local hoverFactor = math.lerp(self.prevHoverFactor, self.hoverFactor, tickDelta / tickRate)
   local factor = math.lerp(self.prevFactor, self.factor, tickDelta / tickRate)
   local dropdownHeight = self:getDropdownHeight() * factor
+  local font = g.setFont('mesmerize', h - .02 * v)
 
-  g.setFont('mesmerize', h - .02 * v)
-
-  g.setColor(255, 255, 255, 40)
+  g.setColor(255, 255, 255, 40 + (20 * hoverFactor))
   g.rectangle('fill', x, y, w, h)
 
   g.setColor(0, 0, 0, 255 * factor)
   g.rectangle('fill', x, y + h, w, dropdownHeight)
 
   if hoverIndex and hoverIndex > 0 then
-    g.setColor(255, 255, 255, 30 * hoverFactors[hoverIndex])
+    g.setColor(255, 255, 255, 30 * choiceHoverFactors[hoverIndex])
     g.rectangle('fill', x, y + h * hoverIndex, w, h)
   end
 
@@ -54,7 +58,7 @@ function Dropdown:render()
     if self:focused() then
       local prev = self:getDropdownHeight() * (i - 1) / #self.choices
       factor = math.clamp((dropdownHeight - prev) / h, 0, 1) ^ 4
-      hoverFactor = hoverFactors[i]
+      hoverFactor = choiceHoverFactors[i]
     end
     local alpha = math.min(180 * factor + (75 * hoverFactor), 255)
     if self.choices[i] == self.value then g.setColor(100, 200, 50, 255 * factor)
@@ -63,7 +67,10 @@ function Dropdown:render()
   end
 
   g.setColor(255, 255, 255)
-  g.print(self.value, x + .01 * v, y + .01 * v)
+  g.print(self.label, x + .01 * v, y + .01 * v)
+
+  g.setColor(100, 200, 50, 255)
+  g.print(self.value, x + w - .01 * v - font:getWidth(self.value), y + .01 * v)
 end
 
 function Dropdown:mousepressed(mx, my, b)

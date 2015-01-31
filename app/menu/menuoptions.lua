@@ -74,6 +74,7 @@ function MenuOptions:init()
         component.choices = {'choice 1', 'choice 2', 'choice 3', 'choice 4', 'choice 5', 'choice 6', 'choice 7', 'choice 8', 'choice 9'}
         component.value = 'choice 1'
       end
+      component.label = control:capitalize()
       --[[component.value = ctx.options[control]
       component:on('change', function()
         ctx.options[control] = component.value
