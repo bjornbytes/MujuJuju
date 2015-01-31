@@ -408,7 +408,7 @@ return {
   },
 
   defaultOptions = {
-    resolution = {0, 0},
+    resolution = nil,
     fullscreen = true,
     monitor = 1,
     vsync = false,
