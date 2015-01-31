@@ -91,15 +91,19 @@ function MenuOptions:init()
   self.width = .35
   self.offsetTween = tween.new(self.tweenDuration, self, {offset = 0}, 'outBack')
   self.targetScroll = 0
+  self.prevTargetScroll = self.targetScroll
   self.scroll = self.targetScroll
+  self.prevScroll = self.scroll
   self.height = 10000
   self.canvas = g.newCanvas((self.width + .05) * ctx.u, ctx.v)
 end
 
 function MenuOptions:update()
   local u, v = ctx.u, ctx.v
+  self.prevScroll = self.scroll
   if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(16 * tickRate, 1))
   elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(16 * tickRate, 1)) end
+  self.scroll = math.lerp(self.scroll, self.targetScroll, math.max(6 * tickRate, 1))
 end
 
 function MenuOptions:draw()
@@ -112,7 +116,7 @@ function MenuOptions:draw()
     table.clear(self.geometry)
     self.height = self.geometry.options.height
   end
-  self.scroll = math.lerp(self.scroll, self.targetScroll, 8 * delta)
+  local scroll = math.lerp(self.prevScroll, self.scroll, tickDelta / tickRate)
 
   local x1 = u + self.offset
   local width = self.width * u
@@ -149,7 +153,7 @@ function MenuOptions:draw()
   g.rectangle('fill', x1, 0, width + .05 * u, v)
 
   g.push()
-  g.translate(0, -self.scroll)
+  g.translate(0, -scroll)
 
   g.setColor(200, 200, 200)
   g.setFont('mesmerize', .04 * v)
@@ -189,9 +193,9 @@ function MenuOptions:mousepressed(mx, my, b)
   local width = self.width * u
   if math.inside(mx, my, x1, 0, width, v) then
     local scrollSpeed = .1
-    if b == 'wu' then
+    if b == 'wd' then
       self.targetScroll = self.targetScroll + (v * scrollSpeed)
-    elseif b == 'wd' then
+    elseif b == 'wu' then
       self.targetScroll = self.targetScroll - (v * scrollSpeed)
     end
   end
