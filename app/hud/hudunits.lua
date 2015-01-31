@@ -118,10 +118,11 @@ function HudUnits:update()
     local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
     local bg = data.media.graphics.hud.minion
     local w, h = bg:getDimensions()
-    local scale = (.2 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / h
-    local yy = v * (.01 * selectFactor) * scale
+    local scale = 1 + .6 * upgradeFactor
+    local imageScale = (.2 * scale * v) / h
+    local yy = v * .005
     local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
-    local runeSize = v * .0385 * scale
+    local runeSize = v * .0385 * imageScale
     local runeInc = runeSize * 3
     local runex = xx - (runeInc * (runeCount - 1) / 2)
     local runey = yy + .174 * v * scale

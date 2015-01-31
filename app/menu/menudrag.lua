@@ -85,15 +85,10 @@ function MenuDrag:mousepressed(mx, my, b)
   for i = 1, #gutterMinions do
     local x, y, r = unpack(gutterMinions[i])
     if math.insideCircle(mx, my, x, y, r) then
-      if #ctx.user.deck.minions < ctx.user.deckSlots then
-        self.active = true
-        self.dragging = 'gutterMinion'
-        self.draggingIndex = i
-        break
-      else
-        local code = ctx.user.minions[i]
-        lerpAnimation(code, 'scale', 1.5)
-      end
+      self.active = true
+      self.dragging = 'gutterMinion'
+      self.draggingIndex = i
+      break
     end
   end
 
@@ -108,8 +103,8 @@ function MenuDrag:mousepressed(mx, my, b)
     end
 
     for j = 1, #runes do
-      local x, y, r = unpack(runes[j])
-      if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and math.insideCircle(mx, my, x, y, r) then
+      local x, y, w, h = unpack(runes[j])
+      if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and math.inside(mx, my, x, y, w, h) then
         self.active = true
         self.dragging = 'rune'
         self.draggingIndex = {i, j}
@@ -139,7 +134,7 @@ function MenuDrag:mousereleased(mx, my, b)
         for j = 1, #runes do
           local x, y, w, h = unpack(runes[j])
           if math.inside(mx, my, x, y, w, h) then
-            table.insert(ctx.user.deck.runes[i], rune)
+            ctx.user.deck.runes[i][j] = rune
             table.remove(ctx.user.runes, self.draggingIndex)
             dirty = true
             break
@@ -150,9 +145,25 @@ function MenuDrag:mousereleased(mx, my, b)
   elseif self.dragging == 'rune' then
     if b == 'r' or (b == 'l' and math.inside(mx, my, unpack(ctx.main.geometry.gutterRunesFrame))) then
       local i, j = unpack(self.draggingIndex)
-      table.insert(ctx.user.runes, ctx.user.deck.runes[i][j])
-      table.remove(ctx.user.deck.runes[i], j)
+      local rune = ctx.user.deck.runes[i][j]
+      table.insert(ctx.user.runes, rune)
+      ctx.user.deck.runes[i][j] = nil
       dirty = true
+    end
+
+    if b == 'l' then
+      local deck = ctx.main.geometry.deck
+      local i, j = unpack(self.draggingIndex)
+      for i = 1, #deck do
+        local x, y, r, runes = unpack(deck[i])
+        for k = 1, #runes do
+          local x, y, w, h = unpack(runes[k])
+          if math.inside(mx, my, x, y, w, h) then
+            ctx.user.deck.runes[i][j], ctx.user.deck.runes[i][k] = ctx.user.deck.runes[i][k], ctx.user.deck.runes[i][j]
+            dirty = true
+          end
+        end
+      end
     end
   elseif self.dragging == 'minion' then
     if b == 'r' or mx < self.gutterThreshold * ctx.u then
@@ -168,13 +179,22 @@ function MenuDrag:mousereleased(mx, my, b)
       dirty = true
     end
   elseif self.dragging == 'gutterMinion' then
-    if (b == 'r' or mx > self.gutterThreshold * ctx.u) and #ctx.user.deck.minions < ctx.user.deckSlots then
+    if b == 'r' or mx > self.gutterThreshold * ctx.u then
       local index = self.draggingIndex
       local code = ctx.user.minions[index]
       ctx.animations[code]:set('spawn')
       table.insert(ctx.user.deck.minions, code)
       table.remove(ctx.user.minions, index)
-      ctx.user.deck.runes[#ctx.user.deck.minions] = {}
+      if #ctx.user.deck.minions > 1 then
+        table.insert(ctx.user.minions, ctx.user.deck.minions[1])
+        table.remove(ctx.user.deck.minions, 1)
+      end
+      table.each(ctx.user.deck.runes[1], function(rune, j)
+        if rune.unit and rune.unit ~= ctx.user.deck.minions[1] then
+          table.insert(ctx.user.runes, rune)
+          ctx.user.deck.runes[1][j] = nil
+        end
+      end)
       dirty = true
     end
   end

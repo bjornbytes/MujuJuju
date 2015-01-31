@@ -23,7 +23,7 @@ function GhostPlayer:init(owner)
 	local sound = ctx.sound:play('spirit')
 	if sound then sound:setVolume(.12) end
 
-	--ctx.view:register(self)
+	if not ctx.effects.active then ctx.view:register(self) end
 end
 
 function GhostPlayer:update()
@@ -104,7 +104,7 @@ end
 
 function GhostPlayer:despawn()
 	GhostPlayer.first = false
-	ctx.view:unregister(self)
+	if not ctx.effects.active then ctx.view:unregister(self) end
 end
 
 function GhostPlayer:draw()

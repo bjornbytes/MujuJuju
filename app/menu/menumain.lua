@@ -176,7 +176,6 @@ function MenuMain:update()
 
         if math.inside(mx, my, unpack(runes[j])) then
           ctx.tooltip:setRuneTooltip(ctx.user.deck.runes[i][j])
-          break
         end
       end
     end
@@ -343,12 +342,6 @@ function MenuMain:draw()
     end
   end
 
-  -- Deck capacity indicator
-  --[[if #ctx.user.deck.minions >= ctx.user.deckSlots then g.setColor(255, 100, 100)
-  else g.setColor(255, 255, 255) end
-  g.setFont('mesmerize', .02 * v)
-  g.printCenter(#ctx.user.deck.minions .. ' / ' .. ctx.user.deckSlots, u * .5, .04 * v)]]
-
   local deck = self.geometry.deck
   g.setColor(255, 255, 255)
   for i = 1, #deck do
@@ -383,6 +376,14 @@ function MenuMain:draw()
       local scale = w / image:getWidth()
       g.setColor(255, 255, 255)
       g.draw(image, x, y, 0, scale, scale)
+    end
+  end
+
+  for i = 1, #deck do
+    local x, y, r, runes = unpack(deck[i])
+
+    for j = 1, #runes do
+      local x, y, w, h = unpack(runes[j])
 
       if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and not self.drag:isDragging('rune', i, j) then
         local rune = ctx.user.deck.runes[i][j]
