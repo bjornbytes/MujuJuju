@@ -146,6 +146,10 @@ function Menu:mousereleased(mx, my, b)
   self.main:mousereleased(mx, my, b)
 end
 
+function Menu:gamepadpressed(gamepad, button)
+  print('Menu:gamepadpressed', gamepad, button)
+end
+
 function Menu:textinput(char)
   self.choose:textinput(char)
 end

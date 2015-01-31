@@ -117,6 +117,7 @@ function Game:mousereleased(...)
 end
 
 function Game:gamepadpressed(gamepad, button)
+  print('Game:gamepadpressed', gamepad, button)
   if button == 'start' or button == 'guide' then self.paused = not self.paused end
   self.hud:gamepadpressed(gamepad, button)
   self.players:gamepadpressed(gamepad, button)

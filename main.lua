@@ -15,6 +15,7 @@ function love.load()
 
 	Context:add(Menu)
   Context:add(Patcher)
+  Context:add(Gamepad)
 end
 
 love.update = Context.update
