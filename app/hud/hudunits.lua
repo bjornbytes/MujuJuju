@@ -121,10 +121,10 @@ function HudUnits:update()
     local scale = (.2 + (.12 * upgradeFactor) + (.02 * selectFactor)) * v / h
     local yy = v * (.01 * selectFactor) * scale
     local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
-    local runeSize = v * .04 * scale
+    local runeSize = v * .0385 * scale
     local runeInc = runeSize * 3
     local runex = xx - (runeInc * (runeCount - 1) / 2)
-    local runey = yy + .365 * v * scale
+    local runey = yy + .174 * v * scale
     for j = 1, runeCount do
       if math.insideCircle(mx, my, runex, runey, runeSize) then
         ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
@@ -214,20 +214,18 @@ function HudUnits:draw()
     g.setColor(255, 255, 255)
     g.printCenter(count, xx + (.087 * v * scale), yy + (.1 * v * scale))
 
-    --[[
     -- Runes
     local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
-    local runeSize = v * .04 * scale * ctx.view.scale
+    local runeSize = v * .0385 * imageScale
     local runeInc = runeSize * 3
     local runex = xx - (runeInc * (runeCount - 1) / 2)
-    local runey = yy + .365 * v * scale
+    local runey = yy + .174 * v * scale
     g.setColor(255, 255, 255, 255 * alpha)
     for j = 1, runeCount do
       local rune = p.deck[i].runes and p.deck[i].runes[j]
-      g.drawRune(rune, runex, runey, runeSize * 2, (runeSize - .016 * v * scale * ctx.view.scale) * 2)
+      g.drawRune(rune, runex, runey, runeSize * 2, (runeSize - .016 * v * imageScale) * 2)
       runex = runex + runeInc
     end
-    ]]
     xx = xx + inc
   end
 
