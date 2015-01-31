@@ -3,9 +3,7 @@ local Teleport = extend(Ability)
 ----------------
 -- Data
 ----------------
-Teleport.cooldown = 5
-Teleport.knockbackDistance = 100
-Teleport.damageModifier = 1.25
+Teleport.cooldown = 6
 
 
 ----------------
