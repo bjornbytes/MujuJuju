@@ -364,13 +364,15 @@ function HudUnits:ready()
   local animationScaleFactors = {
     bruju = 1.5,
     thuju = .85,
-    buju = .85
+    buju = .85,
+    kuju = .85
   }
 
   local animationOffsets = {
     bruju = 0,
     thuju = -14,
-    buju = 0
+    buju = 0,
+    kuju = -16
   }
 
   for i = 1, self.count do

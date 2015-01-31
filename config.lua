@@ -3,13 +3,14 @@ return {
   starters = {
     'bruju',
     'thuju',
-    'buju'
+    'buju',
+    'kuju'
   },
 
   enemies = {
     'duju',
     'spuju',
-    'kuju'
+    'vuju'
   },
 
   biomeOrder = {
@@ -153,7 +154,7 @@ return {
         thresholds = {
           duju = 0,
           spuju = 500,
-          kuju = 720
+          vuju = 720
         }
       },
       shrujuPatches = {1, 450},
@@ -413,7 +414,7 @@ return {
   },
 
   defaultUser = {
-    minions = {'thuju', 'bruju', 'buju'},
+    minions = {'thuju', 'bruju', 'buju', 'kuju'},
     runes = {},
     deck = {minions = {}, runes = {}},
     deckSlots = 1,

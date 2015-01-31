@@ -1,21 +1,24 @@
 local Kuju = {}
 Kuju.name = 'Kuju'
-Kuju.description = 'Yay Kuju.'
+Kuju.description = 'An ice witch who is great at stopping enemies in their tracks with powerful slows and cold magic.'
 
 ----------------
 -- Stats
 ----------------
-Kuju.health = 60
-Kuju.damage = 10
-Kuju.range = 145
-Kuju.attackSpeed = 1.5
-Kuju.speed = 30
+Kuju.health = 70
+Kuju.damage = 14
+Kuju.range = 150
+Kuju.attackSpeed = 1.3
+Kuju.speed = 35
+Kuju.cost = 5
 
-Kuju.healthScaling = {6, 1}
-Kuju.damageScaling = {.6, 1.05}
+----------------
+-- Upgrades
+----------------
+Kuju.upgrades = {
+  --
+}
 
 Kuju.attackSpell = 'kujuattack'
-
-Kuju.startingAbilities = {'frozenorb'}
 
 return Kuju
