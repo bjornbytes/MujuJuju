@@ -140,6 +140,18 @@ function MenuOptions:init()
       end
     elseif keyChanged == 'mute' then
       ctx.sound:setMute(value)
+    elseif keyChanged == 'master' then
+      ctx.sound.volumes.master = value
+      ctx.sound:refreshVolumes()
+      ctx.sound:play('juju1', function(sound) sound:setPitch(.5 + value / 2) end)
+    elseif keyChanged == 'music' then
+      ctx.sound.volumes.music = value
+      ctx.sound:refreshVolumes()
+      ctx.sound:play('juju1', function(sound) sound:setPitch(.5 + value / 2) end)
+    elseif keyChanged == 'sound' then
+      ctx.sound.volumes.sound = value
+      ctx.sound:refreshVolumes()
+      ctx.sound:play('juju1', function(sound) sound:setPitch(.5 + value / 2) end)
     end
   end
 
