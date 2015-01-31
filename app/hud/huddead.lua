@@ -75,14 +75,15 @@ function HudDead:draw()
     if self.highscores then
       g.setColor(253, 238, 65, 255 * self.deadAlpha)
       g.setFont('mesmerize', smallFont)
-      g.printCenter('Highscores', u * .5, v * .09)
+      g.printCenter('Highscores', u * .5, v * .07)
 
       g.setColor(255, 255, 255, 255 * self.deadAlpha)
-      local yy = v * .14
+      local yy = v * .149
 
       for _, entry in ipairs(self.highscores) do
-        g.print(entry.name, u * .3, yy)
-        g.printf(entry.score, 0, yy, u * .7, 'right')
+        g.print(entry.country, u * .27, yy)
+        g.print(entry.name, u * .325, yy)
+        g.printf(entry.score, 0, yy, u * .725, 'right')
         yy = yy + g.getFont():getHeight() + 4
       end
     else
@@ -160,7 +161,7 @@ end
 
 function HudDead:textinput(char)
   if ctx.ded then
-    if #self.deadName < 16 and char:match('%w') then
+    if #self.deadName < 12 and char:match('%w') then
       self.deadName = self.deadName .. char
     end
   end
