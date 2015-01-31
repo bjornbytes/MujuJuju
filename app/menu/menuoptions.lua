@@ -194,7 +194,7 @@ function MenuOptions:draw()
   local u, v = ctx.u, ctx.v
 
   if self.offset > -1 then return end
-  if self.offsetTween.clock < self.tweenDuration then
+  if self.offsetTween.clock < self.tweenDuration or self.offset < self.width * u then
     table.clear(self.geometry)
     self.height = self.geometry.options.height
   end
@@ -212,16 +212,16 @@ function MenuOptions:draw()
   g.setCanvas()
 
   if self.offset / -width > .1 then
-    for i = 1, 4 do
+    for i = 1, 6 do
       local shader = data.media.shaders.horizontalBlur
-      shader:send('amount', .002 * (self.offset / -width))
+      shader:send('amount', 2 / self.canvas:getWidth() * (self.offset / -width))
       g.setShader(shader)
       ctx.workingCanvas:renderTo(function()
         g.draw(self.canvas)
       end)
 
       shader = data.media.shaders.verticalBlur
-      shader:send('amount', .002 * (self.offset / -width))
+      shader:send('amount', 2 / self.canvas:getHeight() * (self.offset / -width))
       g.setShader(shader)
       self.canvas:renderTo(function()
         g.draw(ctx.workingCanvas)

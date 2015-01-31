@@ -95,7 +95,7 @@ function Menu:draw()
   self.screenCanvas:clear(0, 0, 0, 0)
   self.screenCanvas:renderTo(function()
     self.start:draw()
-    self:drawBackground()
+    if self.page ~= 'start' then self:drawBackground() end
     self.choose:draw()
     self.main:draw()
   end)
@@ -156,6 +156,9 @@ function Menu:resize()
   self.choose:resize()
   self.main:resize()
   self.optionsPane:resize()
+  --self.canvas = g.newCanvas(u, v)
+  --self.workingCanvas = g.newCanvas(u, v)
+  self:refreshBackground()
 end
 
 function Menu:startGame()
