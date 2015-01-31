@@ -406,14 +406,7 @@ function MenuMain:keypressed(key)
   if key == 'return' and table.has(ctx.user.biomes, config.biomeOrder[self.selectedBiome]) then
     ctx.animations.muju:set('death')
   elseif key == 'left' then self:previousBiome()
-  elseif key == 'right' then self:nextBiome()
-  elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
-    love.filesystem.remove('save/user.json')
-    if ctx.menuSounds then ctx.menuSounds:stop() end
-    Menu.started = false
-    Context:remove(ctx)
-    Context:add(Menu)
-  end
+  elseif key == 'right' then self:nextBiome() end
 end
 
 function MenuMain:mousepressed(mx, my, b)
@@ -423,7 +416,7 @@ end
 
 function MenuMain:mousereleased(mx, my, b)
   if not self.active then return end
-  if ctx.options.active then return end
+  if ctx.optionsPane.active then return end
 
   if b == 'l' then
     for i = 1, 2 do

@@ -7,19 +7,27 @@ Menu.started = false
 function Menu:load(selectedBiome, options)
   data.load()
 
-  self.cursor = Cursor()
-  self.sound = Sound()
-  self.menuSounds = self.sound:loop('riteOfPassage')
-  if options and options.muted then self.sound:mute() end
+  -- Initialize options
+  if not love.filesystem.exists('save/options.json') then
+    love.filesystem.createDirectory('save')
+    love.filesystem.write('save/options.json', json.encode(config.defaultOptions))
+  end
+  local str = love.filesystem.read('save/options.json')
+  self.options = options or json.decode(str)
 
+  -- Initialize user
   if not love.filesystem.exists('save/user.json') then
     love.filesystem.createDirectory('save')
     love.filesystem.write('save/user.json', json.encode(config.defaultUser))
     self.page = 'choose'
   end
-
   local str = love.filesystem.read('save/user.json')
   self.user = json.decode(str)
+
+  self.cursor = Cursor()
+  self.sound = Sound()
+  self.menuSounds = self.sound:loop('riteOfPassage')
+  if options and options.muted then self.sound:mute() end
 
   self.u, self.v = love.graphics.getDimensions()
   self.gooey = Gooey()
@@ -53,7 +61,7 @@ function Menu:load(selectedBiome, options)
   self.start = MenuStart()
   self.choose = MenuChoose()
   self.main = MenuMain()
-  self.options = MenuOptions()
+  self.optionsPane = MenuOptions()
 
   if self.page ~= 'start' then self:refreshBackground() end
 
@@ -73,7 +81,7 @@ function Menu:update()
   self.start:update()
   self.choose:update()
   self.main:update()
-  self.options:update()
+  self.optionsPane:update()
 end
 
 function Menu:draw()
@@ -94,7 +102,7 @@ function Menu:draw()
   g.setColor(255, 255, 255)
   g.draw(self.screenCanvas)
 
-  self.options:draw()
+  self.optionsPane:draw()
 
   self.tooltip:draw()
 end
@@ -103,10 +111,18 @@ function Menu:keypressed(key)
   self.start:keypressed(key)
   self.choose:keypressed(key)
   self.main:keypressed(key)
-  self.options:keypressed(key)
+  self.optionsPane:keypressed(key)
 
   if key == 'm' then self.sound:mute()
-  elseif key == 'escape' then love.event.quit() end
+  elseif key == 'escape' then love.event.quit()
+  elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
+    love.filesystem.remove('save/user.json')
+    love.filesystem.remove('save/options.json')
+    if ctx.menuSounds then ctx.menuSounds:stop() end
+    Menu.started = false
+    Context:remove(ctx)
+    Context:add(Menu)
+  end
 end
 
 function Menu:mousepressed(mx, my, b)
@@ -114,6 +130,7 @@ function Menu:mousepressed(mx, my, b)
   self.start:mousepressed(mx, my, b)
   self.choose:mousepressed(mx, my, b)
   self.main:mousepressed(mx, my, b)
+  self.optionsPane:mousepressed(mx, my, b)
 end
 
 function Menu:mousereleased(mx, my, b)

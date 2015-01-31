@@ -405,5 +405,21 @@ return {
     highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0},
     name = 'Muju',
     color = 'purple'
+  },
+
+  defaultOptions = {
+    resolution = {0, 0},
+    fullscreen = true,
+    monitor = 1,
+    vsync = false,
+    antialiasing = 4,
+    textureSmoothing = true,
+    postprocessing = true,
+    particles = true,
+    mute = false,
+    master = 1.0,
+    music = 1.0,
+    sound = .75,
+    colorblind = false
   }
 }

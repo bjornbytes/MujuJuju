@@ -38,13 +38,13 @@ function MenuOptions:init()
       local u, v = ctx.u, ctx.v
       local width = self.width * u
       local x = u + self.offset
-      local y = .15 * v
+      local y = .1 * v
       local headerFont = g.setFont('mesmerize', .03 * v)
       local padding = v * .055
       for i = 1, #self.controlGroups do
         local group = self.controlGroups[i]
         local str = group:capitalize()
-        table.insert(res.labels, {str, x + width - v * .01 - headerFont:getWidth(str), y})
+        table.insert(res.labels, {str, x + width - padding - headerFont:getWidth(str), y})
         y = y + v * .06
 
         for j = 1, #self.controls[group] do
@@ -59,9 +59,10 @@ function MenuOptions:init()
           end
           y = y + v * .06
         end
-
-        y = y
       end
+
+      res.height = math.max(y, v)
+
       return res
     end
   }
@@ -89,11 +90,16 @@ function MenuOptions:init()
   self.tweenDuration = .25
   self.width = .35
   self.offsetTween = tween.new(self.tweenDuration, self, {offset = 0}, 'outBack')
+  self.targetScroll = 0
+  self.scroll = self.targetScroll
+  self.height = 10000
   self.canvas = g.newCanvas((self.width + .05) * ctx.u, ctx.v)
 end
 
 function MenuOptions:update()
-  --
+  local u, v = ctx.u, ctx.v
+  if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(16 * tickRate, 1))
+  elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(16 * tickRate, 1)) end
 end
 
 function MenuOptions:draw()
@@ -102,7 +108,11 @@ function MenuOptions:draw()
   local u, v = ctx.u, ctx.v
 
   if self.offset > -1 then return end
-  if self.offsetTween.clock < self.tweenDuration then table.clear(self.geometry) end
+  if self.offsetTween.clock < self.tweenDuration then
+    table.clear(self.geometry)
+    self.height = self.geometry.options.height
+  end
+  self.scroll = math.lerp(self.scroll, self.targetScroll, 8 * delta)
 
   local x1 = u + self.offset
   local width = self.width * u
@@ -138,12 +148,15 @@ function MenuOptions:draw()
   g.setColor(0, 0, 0, 180)
   g.rectangle('fill', x1, 0, width + .05 * u, v)
 
+  g.push()
+  g.translate(0, -self.scroll)
+
   g.setColor(200, 200, 200)
-  g.setFont('mesmerize', .05 * v)
+  g.setFont('mesmerize', .04 * v)
   g.printCenter('Options', x1 + width / 2, .05 * v)
 
   g.setFont('mesmerize', .03 * v)
-  g.setColor(255, 255, 255)
+  g.setColor(255, 255, 255, 180)
   for i = 1, #self.geometry.options.labels do
     g.print(unpack(self.geometry.options.labels[i]))
   end
@@ -160,11 +173,27 @@ function MenuOptions:draw()
   if focused then
     focused:draw()
   end
+
+  g.pop()
 end
 
 function MenuOptions:keypressed(key)
   if key == ' ' then
     self:toggle()
+  end
+end
+
+function MenuOptions:mousepressed(mx, my, b)
+  local u, v = ctx.u, ctx.v
+  local x1 = u + self.offset
+  local width = self.width * u
+  if math.inside(mx, my, x1, 0, width, v) then
+    local scrollSpeed = .1
+    if b == 'wu' then
+      self.targetScroll = self.targetScroll + (v * scrollSpeed)
+    elseif b == 'wd' then
+      self.targetScroll = self.targetScroll - (v * scrollSpeed)
+    end
   end
 end
 

@@ -52,7 +52,7 @@ function MenuStart:init()
 
   self.options = ctx.gooey:add(Button, 'menu.start.options')
   self.options.geometry = function() return self.geometry.options end
-  self.options:on('click', function() ctx.options:toggle() end)
+  self.options:on('click', function() ctx.optionsPane:toggle() end)
   self.options.text = 'Options'
 
   self.quit = ctx.gooey:add(Button, 'menu.start.quit')
