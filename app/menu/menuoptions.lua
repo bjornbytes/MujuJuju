@@ -101,9 +101,9 @@ end
 function MenuOptions:update()
   local u, v = ctx.u, ctx.v
   self.prevScroll = self.scroll
-  if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(16 * tickRate, 1))
-  elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(16 * tickRate, 1)) end
-  self.scroll = math.lerp(self.scroll, self.targetScroll, math.max(6 * tickRate, 1))
+  if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(12 * tickRate, 1))
+  elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(12 * tickRate, 1)) end
+  --self.scroll = math.lerp(self.scroll, self.targetScroll, math.max(2 * tickRate, 1))
 end
 
 function MenuOptions:draw()
@@ -116,7 +116,10 @@ function MenuOptions:draw()
     table.clear(self.geometry)
     self.height = self.geometry.options.height
   end
-  local scroll = math.lerp(self.prevScroll, self.scroll, tickDelta / tickRate)
+  self.scroll = math.lerp(self.scroll, self.targetScroll, 8 * delta) --math.lerp(self.prevScroll, self.scroll, tickDelta / tickRate)
+  local scroll = self.scroll
+
+  g.line(0, self.targetScroll, u, self.targetScroll)
 
   local x1 = u + self.offset
   local width = self.width * u
@@ -192,7 +195,7 @@ function MenuOptions:mousepressed(mx, my, b)
   local x1 = u + self.offset
   local width = self.width * u
   if math.inside(mx, my, x1, 0, width, v) then
-    local scrollSpeed = .1
+    local scrollSpeed = .05
     if b == 'wd' then
       self.targetScroll = self.targetScroll + (v * scrollSpeed)
     elseif b == 'wu' then
