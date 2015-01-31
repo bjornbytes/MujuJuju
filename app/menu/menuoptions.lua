@@ -45,7 +45,7 @@ function MenuOptions:init()
         local group = self.controlGroups[i]
         local str = group:capitalize()
         table.insert(res.labels, {str, x + width - padding - headerFont:getWidth(str), y})
-        y = y + v * .06
+        y = y + v * .08
 
         for j = 1, #self.controls[group] do
           local control = self.controls[group][j]
@@ -93,7 +93,6 @@ function MenuOptions:init()
   self.targetScroll = 0
   self.prevTargetScroll = self.targetScroll
   self.scroll = self.targetScroll
-  self.prevScroll = self.scroll
   self.height = 10000
   self.canvas = g.newCanvas((self.width + .05) * ctx.u, ctx.v)
 end
@@ -103,7 +102,6 @@ function MenuOptions:update()
   self.prevScroll = self.scroll
   if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(12 * tickRate, 1))
   elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(12 * tickRate, 1)) end
-  --self.scroll = math.lerp(self.scroll, self.targetScroll, math.max(2 * tickRate, 1))
 end
 
 function MenuOptions:draw()
@@ -116,10 +114,8 @@ function MenuOptions:draw()
     table.clear(self.geometry)
     self.height = self.geometry.options.height
   end
-  self.scroll = math.lerp(self.scroll, self.targetScroll, 8 * delta) --math.lerp(self.prevScroll, self.scroll, tickDelta / tickRate)
+  self.scroll = math.lerp(self.scroll, self.targetScroll, 8 * delta)
   local scroll = self.scroll
-
-  g.line(0, self.targetScroll, u, self.targetScroll)
 
   local x1 = u + self.offset
   local width = self.width * u
@@ -154,6 +150,21 @@ function MenuOptions:draw()
 
   g.setColor(0, 0, 0, 180)
   g.rectangle('fill', x1, 0, width + .05 * u, v)
+
+  g.setColor(255, 255, 255, 40)
+  local percent = self.scroll / ((self.height == v) and 1 or (self.height - v))
+  local height = v / self.height * (v - 4)
+  local scrolly = 0 + (percent * (v - height))
+  local clamped = math.clamp(scrolly, 4, v - height - 4)
+  local dif = math.abs(scrolly - clamped)
+  if clamped > scrolly then
+    height = height - dif
+  elseif clamped < scrolly then
+    clamped = clamped + dif
+    height = height - dif
+  end
+
+  g.rectangle('fill', x1 + width - u * .005 - 1, clamped, u * .005, height)
 
   g.push()
   g.translate(0, -scroll)
