@@ -432,6 +432,10 @@ function MenuMain:mousereleased(mx, my, b)
   self.drag:mousereleased(mx, my, b)
 end
 
+function MenuMain:resize()
+  table.clear(self.geometry)
+end
+
 function MenuMain:previousBiome()
   self.selectedBiome = self.selectedBiome - 1
   if self.selectedBiome <= 0 then self.selectedBiome = #config.biomeOrder end

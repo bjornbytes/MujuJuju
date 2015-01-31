@@ -34,6 +34,10 @@ function Gooey:mousereleased(mx, my, b)
   self.hot = nil
 end
 
+function Gooey:resize()
+  self:call('resize')
+end
+
 function Gooey:get(code)
   return self.components[code]
 end

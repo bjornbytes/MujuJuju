@@ -8,55 +8,6 @@ function MenuOptions:init()
     return rawset(t, k, self.geometryFunctions[k]())[k]
   end})
 
-  self.controlGroups = {'graphics', 'sound', 'gameplay'}
-
-  self.controls = {
-    graphics = {'resolution', 'fullscreen', 'monitor', 'vsync', 'antialiasing', 'textureSmoothing', 'postprocessing', 'particles'},
-    sound = {'mute', 'master', 'music', 'sound'},
-    gameplay = {'colorblind'}
-  }
-
-  self.controlTypes = {
-    resolution = Dropdown,
-    fullscreen = Checkbox,
-    monitor = Dropdown,
-    vsync = Checkbox,
-    antialiasing = Checkbox,
-    textureSmoothing = Checkbox,
-    postprocessing = Checkbox,
-    particles = Checkbox,
-    mute = Checkbox,
-    master = Slider,
-    music = Slider,
-    sound = Slider,
-    colorblind = Checkbox
-  }
-
-  self.controlLabels = {
-    textureSmoothing = 'Texture Smoothing',
-    colorblind = 'Colorblind Mode'
-  }
-
-  self.sliderData = {
-    master = {0.0, 1.0, 0.05},
-    music = {0.0, 1.0, 0.05},
-    sound = {0.0, 1.0, 0.05}
-  }
-
-  -- Generate dropdown choices
-  self.dropdownChoices = {
-    resolution = {},
-    monitor = {}
-  }
-  local resolutions = love.window.getFullscreenModes()
-  table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
-  for i = 1, #resolutions do
-    self.dropdownChoices.resolution[i] = resolutions[i].width .. ' x ' .. resolutions[i].height
-  end
-  for i = 1, love.window.getDisplayCount() do
-    table.insert(self.dropdownChoices.monitor, i)
-  end
-
   self.geometryFunctions = {
     options = function()
       local res = {labels = {}, controls = {}}
@@ -78,7 +29,7 @@ function MenuOptions:init()
           if self.controlTypes[control] == Checkbox then
             res.controls[control] = {x + padding, y, radius}
           elseif self.controlTypes[control] == Dropdown then
-            res.controls[control] = {x + padding - radius - 2, y - v * .02, u * .15, v * .04}
+            res.controls[control] = {x + padding - radius - 2, y - v * .02, u * .18, v * .04}
           elseif self.controlTypes[control] == Slider then
             res.controls[control] = {x + padding, y, u * .15, radius}
           end
@@ -92,25 +43,124 @@ function MenuOptions:init()
     end
   }
 
+  self.controlGroups = {'graphics', 'sound', 'gameplay'}
+
+  self.controls = {
+    graphics = {'resolution', 'fullscreen', 'display', 'vsync', 'fsaa', 'textureSmoothing', 'postprocessing', 'particles'},
+    sound = {'mute', 'master', 'music', 'sound'},
+    gameplay = {'colorblind'}
+  }
+
+  self.controlTypes = {
+    resolution = Dropdown,
+    fullscreen = Checkbox,
+    display = Dropdown,
+    vsync = Checkbox,
+    fsaa = Checkbox,
+    textureSmoothing = Checkbox,
+    postprocessing = Checkbox,
+    particles = Checkbox,
+    mute = Checkbox,
+    master = Slider,
+    music = Slider,
+    sound = Slider,
+    colorblind = Checkbox
+  }
+
+  self.controlLabels = {
+    display = 'Monitor',
+    fsaa = 'Antialiasing',
+    textureSmoothing = 'Texture Smoothing',
+    colorblind = 'Colorblind Mode'
+  }
+
+  self.sliderData = {
+    master = {0.0, 1.0, 0.05},
+    music = {0.0, 1.0, 0.05},
+    sound = {0.0, 1.0, 0.05}
+  }
+
+  -- Generate dropdown choices
+  self.dropdownChoices = {
+    resolution = {},
+    display = {}
+  }
+
+  local resolutions = love.window.getFullscreenModes()
+  table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
+  for i = 1, #resolutions do
+    self.dropdownChoices.resolution[i] = resolutions[i].width .. ' x ' .. resolutions[i].height
+  end
+
+  for i = 1, love.window.getDisplayCount() do
+    table.insert(self.dropdownChoices.display, i)
+  end
+
+  -- Called at load and when an option is changed externally so components can refresh their state.
+  self.refreshControls = function()
+    local translators = {
+      resolution = function(t)
+        if t then return t[1] .. ' x ' .. t[2] end
+        return self.dropdownChoices.resolution[1]
+      end,
+      fsaa = function(x) return x > 0 end
+    }
+
+    table.each(self.controlGroups, function(group)
+      table.each(self.controls[group], function(control)
+        local val = ctx.options[control]
+        self.components[control].value = translators[control] and translators[control](val) or val
+      end)
+    end)
+  end
+
+  -- Called when a component changes its value.
+  self.refreshOptions = function(keyChanged, value)
+    local translators = {
+      resolution = function(str)
+        local w, h = str:match('(%d+)%sx%s(%d+)')
+        return {w, h}
+      end,
+      fsaa = function(value)
+        return value and 4 or 0
+      end
+    }
+
+    ctx.options[keyChanged] = translators[keyChanged] and translators[keyChanged](value) or value
+
+    if keyChanged == 'resolution' or keyChanged == 'fullscreen' or keyChanged == 'display' or keyChanged == 'vsync' or keyChanged == 'fsaa' then
+      local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'fsaa'})
+      local dw, dh = love.window.getDesktopDimensions()
+      if not ctx.options.resolution then
+        ctx.options.resolution = {love.window.getDesktopDimensions()}
+      end
+      options.fullscreentype = (ctx.options.resolution[1] == dw and ctx.options.resolution[2] == dh) and 'desktop' or 'normal'
+      if love.window.setMode(ctx.options.resolution[1], ctx.options.resolution[2], options) then
+        ctx:resize()
+      end
+    elseif keyChanged == 'mute' then
+      ctx.sound:setMute(value)
+    end
+  end
+
   self.components = {}
   table.each(self.controlGroups, function(group)
     table.each(self.controls[group], function(control)
       local value = ctx.options[control]
       local component = ctx.gooey:add(self.controlTypes[control] or Checkbox, control, {value = value})
       component.geometry = function() return self.geometry.options.controls[control] end
-      if self.controlTypes[control] == Dropdown then
+      component.label = self.controlLabels[control] or control:capitalize()
+      component:on('change', function() self.refreshOptions(control, component.value) end)
+      if isa(component, Dropdown) then
         component.choices = self.dropdownChoices[control]
-        component.value = ctx.options[control] or component.choices[1]
-      elseif self.controlTypes[control] == Slider then
+      elseif isa(component, Slider) then
         component.min, component.max, component.round = unpack(self.sliderData[control])
       end
-      component.label = self.controlLabels[control] or control:capitalize()
-      component:on('change', function()
-        ctx.options[control] = component.value
-      end)
       self.components[control] = component
     end)
   end)
+
+  self.refreshControls()
 
   self.active = false
   self.offset = 0
@@ -240,6 +290,10 @@ function MenuOptions:mousepressed(mx, my, b)
       self.targetScroll = self.targetScroll - (v * scrollSpeed)
     end
   end
+end
+
+function MenuOptions:resize()
+  table.clear(self.geometry)
 end
 
 function MenuOptions:toggle()

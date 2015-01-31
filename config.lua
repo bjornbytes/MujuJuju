@@ -410,9 +410,9 @@ return {
   defaultOptions = {
     resolution = nil,
     fullscreen = true,
-    monitor = 1,
+    display = 1,
     vsync = false,
-    antialiasing = 4,
+    fsaa = 4,
     textureSmoothing = true,
     postprocessing = true,
     particles = true,

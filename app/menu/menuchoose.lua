@@ -152,3 +152,7 @@ function MenuChoose:textinput(char)
     ctx.user.name = ctx.user.name .. char
   end
 end
+
+function MenuChoose:resize()
+  table.clear(self.geometry)
+end

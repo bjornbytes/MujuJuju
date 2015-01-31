@@ -144,6 +144,14 @@ function Menu:textinput(char)
   self.choose:textinput(char)
 end
 
+function Menu:resize()
+  self.u, self.v = g.getDimensions()
+  self.gooey:resize()
+  self.start:resize()
+  self.choose:resize()
+  self.main:resize()
+end
+
 function Menu:startGame()
   if #self.user.deck.minions == 0 then return end
   if self.menuSounds then self.menuSounds:stop() end

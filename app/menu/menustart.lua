@@ -105,6 +105,10 @@ function MenuStart:mousereleased(mx, my, b)
   if not self.active then return end
 end
 
+function MenuStart:resize()
+  table.clear(self.geometry)
+end
+
 function MenuStart:continue()
   ctx:refreshBackground()
   self.active = false
