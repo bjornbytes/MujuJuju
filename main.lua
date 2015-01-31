@@ -8,6 +8,11 @@ function love.load()
     love.filesystem.write('save/user.json', json.encode(user))
   end
 
+  function saveOptions(options)
+    love.filesystem.createDirectory('save')
+    love.filesystem.write('save/options.json', json.encode(options))
+  end
+
 	Context:add(Menu)
   Context:add(Patcher)
 end

@@ -14,6 +14,7 @@ function Menu:load(selectedBiome, options)
   end
   local str = love.filesystem.read('save/options.json')
   self.options = options or json.decode(str)
+  self.options = self.options or table.copy(config.defaultOptions)
 
   -- Initialize user
   if not love.filesystem.exists('save/user.json') then
@@ -113,7 +114,11 @@ function Menu:keypressed(key)
   self.main:keypressed(key)
   self.optionsPane:keypressed(key)
 
-  if key == 'm' then self.sound:mute()
+  if key == 'm' then
+    self.options.mute = not self.options.mute
+    self.sound:setMute(self.options.mute)
+    saveOptions(self.options)
+    self.optionsPane.refreshControls()
   elseif key == 'escape' then love.event.quit()
   elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
     love.filesystem.remove('save/user.json')
