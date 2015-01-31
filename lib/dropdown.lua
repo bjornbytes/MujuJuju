@@ -92,6 +92,7 @@ function Dropdown:mousereleased(mx, my, b)
       self.gooey:unfocus()
       if hit then
         self.value = self.choices[hit] or self.value
+        self:emit('change', {component = self})
         return true
       end
     end

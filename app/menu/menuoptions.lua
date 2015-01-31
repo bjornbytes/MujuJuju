@@ -32,6 +32,31 @@ function MenuOptions:init()
     colorblind = Checkbox
   }
 
+  self.controlLabels = {
+    textureSmoothing = 'Texture Smoothing',
+    colorblind = 'Colorblind Mode'
+  }
+
+  self.sliderData = {
+    master = {0.0, 1.0, 0.05},
+    music = {0.0, 1.0, 0.05},
+    sound = {0.0, 1.0, 0.05}
+  }
+
+  -- Generate dropdown choices
+  self.dropdownChoices = {
+    resolution = {},
+    monitor = {}
+  }
+  local resolutions = love.window.getFullscreenModes()
+  table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
+  for i = 1, #resolutions do
+    self.dropdownChoices.resolution[i] = resolutions[i].width .. ' x ' .. resolutions[i].height
+  end
+  for i = 1, love.window.getDisplayCount() do
+    table.insert(self.dropdownChoices.monitor, i)
+  end
+
   self.geometryFunctions = {
     options = function()
       local res = {labels = {}, controls = {}}
@@ -70,17 +95,19 @@ function MenuOptions:init()
   self.components = {}
   table.each(self.controlGroups, function(group)
     table.each(self.controls[group], function(control)
-      local component = ctx.gooey:add(self.controlTypes[control] or Checkbox, control)
+      local value = ctx.options[control]
+      local component = ctx.gooey:add(self.controlTypes[control] or Checkbox, control, {value = value})
       component.geometry = function() return self.geometry.options.controls[control] end
       if self.controlTypes[control] == Dropdown then
-        component.choices = {'choice 1', 'choice 2', 'choice 3', 'choice 4', 'choice 5', 'choice 6', 'choice 7', 'choice 8', 'choice 9'}
-        component.value = 'choice 1'
+        component.choices = self.dropdownChoices[control]
+        component.value = ctx.options[control] or component.choices[1]
+      elseif self.controlTypes[control] == Slider then
+        component.min, component.max, component.round = unpack(self.sliderData[control])
       end
-      component.label = control:capitalize()
-      --[[component.value = ctx.options[control]
+      component.label = self.controlLabels[control] or control:capitalize()
       component:on('change', function()
         ctx.options[control] = component.value
-      end)]]
+      end)
       self.components[control] = component
     end)
   end)

@@ -3,7 +3,7 @@ require 'lib/component'
 Checkbox = extend(Component)
 
 function Checkbox:activate()
-  self.value = false
+  self.value = self.value == nil and false or self.value
   self.scale = 1
   self.prevScale = self.scale
   self.factor = 0
@@ -56,7 +56,7 @@ end
 function Checkbox:toggle()
   self.value = not self.value
   self.scale = self.value and 1.4 or .9
-  self:emit('change')
+  self:emit('change', {component = self})
 end
 
 function Checkbox:contains(mx, my)

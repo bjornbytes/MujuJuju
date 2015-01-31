@@ -3,10 +3,10 @@ require 'lib/component'
 Slider = extend(Component)
 
 function Slider:activate()
-  self.value = 0
-  self.min = 0
-  self.max = 100
-  self.round = 10
+  self.value = self.value or 0
+  self.min = self.min or 0
+  self.max = self.max or 100
+  self.round = self.round or 10
   self.scale = 1
   self.prevScale = self.scale
   self.factor = self.value
@@ -70,8 +70,7 @@ function Slider:mousepressed(mx, my, b)
 end
 
 function Slider:mousereleased(mx, my, b)
-  if b == 'l' and self.gooey.hot == self then
-  end
+  --
 end
 
 function Slider:contains(mx, my)
@@ -87,7 +86,9 @@ function Slider:containsBar(mx, my)
 end
 
 function Slider:setValue(value)
+  local old = self.value
   self.value = math.round(value / self.round) * self.round
+  if self.value ~= old then self:emit('change', {component = self}) end
 end
 
 function Slider:getSliderGeometry()
