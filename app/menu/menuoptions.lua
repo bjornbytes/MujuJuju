@@ -129,15 +129,7 @@ function MenuOptions:init()
     ctx.options[keyChanged] = translators[keyChanged] and translators[keyChanged](value) or value
 
     if keyChanged == 'resolution' or keyChanged == 'fullscreen' or keyChanged == 'display' or keyChanged == 'vsync' or keyChanged == 'fsaa' then
-      local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'fsaa'})
-      local dw, dh = love.window.getDesktopDimensions()
-      if not ctx.options.resolution then
-        ctx.options.resolution = {love.window.getDesktopDimensions()}
-      end
-      options.fullscreentype = (ctx.options.resolution[1] == dw and ctx.options.resolution[2] == dh) and 'desktop' or 'normal'
-      if love.window.setMode(ctx.options.resolution[1], ctx.options.resolution[2], options) then
-        ctx:resize()
-      end
+      self:setMode()
     elseif keyChanged == 'mute' then
       ctx.sound:setMute(value)
     elseif keyChanged == 'master' or keyChanged == 'music' or keyChanged == 'sound' then
@@ -314,4 +306,16 @@ function MenuOptions:toggle(force)
     self.offsetTween = tween.new(self.tweenDuration, self, {offset = -self.width * ctx.u}, 'outBack')
   end
   self.active = not self.active
+end
+
+function MenuOptions:setMode()
+  local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'fsaa'})
+  local dw, dh = love.window.getDesktopDimensions()
+  if not ctx.options.resolution then
+    ctx.options.resolution = {love.window.getDesktopDimensions()}
+  end
+  options.fullscreentype = (ctx.options.resolution[1] == dw and ctx.options.resolution[2] == dh) and 'desktop' or 'normal'
+  if love.window.setMode(ctx.options.resolution[1], ctx.options.resolution[2], options) then
+    ctx:resize()
+  end
 end

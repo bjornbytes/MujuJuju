@@ -63,6 +63,7 @@ function Menu:load(selectedBiome, options)
   self.choose = MenuChoose()
   self.main = MenuMain()
   self.optionsPane = MenuOptions()
+  self.optionsPane:setMode()
 
   if self.page ~= 'start' then self:refreshBackground() end
 
@@ -156,8 +157,8 @@ function Menu:resize()
   self.choose:resize()
   self.main:resize()
   self.optionsPane:resize()
-  --self.canvas = g.newCanvas(u, v)
-  --self.workingCanvas = g.newCanvas(u, v)
+  self.canvas = g.newCanvas(u, v)
+  self.workingCanvas = g.newCanvas(u, v)
   self:refreshBackground()
 end
 
