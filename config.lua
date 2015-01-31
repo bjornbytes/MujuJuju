@@ -206,7 +206,7 @@ return {
         thresholds = {
           spuju = 0,
           duju = 1100,
-          kuju = 1300
+          vuju = 1300
         }
       },
       shrujuPatches = {},
@@ -256,7 +256,7 @@ return {
         upgradeCostIncrease = 1,
         maxElites = 2,
         thresholds = {
-          kuju = 0,
+          vuju = 0,
           spuju = 2100,
           duju = 2400
         }
@@ -308,7 +308,7 @@ return {
         upgradeCostIncrease = 1,
         maxElites = 3,
         thresholds = {
-          kuju = 0,
+          vuju = 0,
           spuju = 0,
           duju = 0
         }
