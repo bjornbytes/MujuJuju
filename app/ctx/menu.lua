@@ -155,6 +155,12 @@ end
 
 function Menu:resize()
   self.u, self.v = g.getDimensions()
+  self.background1 = g.newCanvas(self.u, self.v)
+  self.background2 = g.newCanvas(self.u, self.v)
+  self.workingCanvas = g.newCanvas(self.u, self.v)
+  self.unitCanvas = g.newCanvas(400, 400)
+  self.screenCanvas = g.newCanvas(self.u, self.v)
+
   self.gooey:resize()
   self.start:resize()
   self.choose:resize()
