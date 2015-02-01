@@ -86,6 +86,8 @@ function MenuOptions:init()
     display = {}
   }
 
+  self:setMode()
+
   local resolutions = love.window.getFullscreenModes()
   table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
   for i = 1, #resolutions do
@@ -310,12 +312,17 @@ end
 
 function MenuOptions:setMode()
   local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'fsaa'})
-  local dw, dh = love.window.getDesktopDimensions()
-  if not ctx.options.resolution then
-    ctx.options.resolution = {love.window.getDesktopDimensions()}
+  if love.window then
+    local dw, dh = love.window.getDesktopDimensions()
+    if not ctx.options.resolution then
+      ctx.options.resolution = {love.window.getDesktopDimensions()}
+    end
+    options.fullscreentype = (ctx.options.resolution[1] == dw and ctx.options.resolution[2] == dh) and 'desktop' or 'normal'
   end
-  options.fullscreentype = (ctx.options.resolution[1] == dw and ctx.options.resolution[2] == dh) and 'desktop' or 'normal'
-  if love.window.setMode(ctx.options.resolution[1], ctx.options.resolution[2], options) then
+
+  if love.window.setMode(ctx.options.resolution[1] or 0, ctx.options.resolution[2] or 0, options) then
+    love.window.setTitle('Muju Juju')
+    love.window.setIcon(love.image.newImageData('media/graphics/icon.png'))
     ctx:resize()
   end
 end

@@ -4,18 +4,18 @@ local g = love.graphics
 
 Tooltip = class()
 Tooltip.maxWidth = .3
-Tooltip.richOptions = {
-  title = g.setFont('mesmerize', 24),
-  bold = g.setFont('mesmerizeb', 14),
-  normal = g.setFont('mesmerize', 14),
-  white = {255, 255, 255},
-  whoCares = {225, 225, 225},
-  red = {255, 100, 100},
-  green = {100, 255, 100},
-  purple = {147, 96, 200}
-}
-
 function Tooltip:init()
+  self.richOptions = {
+    title = g.setFont('mesmerize', 24),
+    bold = g.setFont('mesmerizeb', 14),
+    normal = g.setFont('mesmerize', 14),
+    white = {255, 255, 255},
+    whoCares = {225, 225, 225},
+    red = {255, 100, 100},
+    green = {100, 255, 100},
+    purple = {147, 96, 200}
+  }
+
   self.active = false
   self.tooltip = nil
   self.tooltipText = nil

@@ -16,6 +16,12 @@ function Menu:load(selectedBiome, options)
   self.options = options or json.decode(str)
   self.options = self.options or table.copy(config.defaultOptions)
 
+  self.gooey = Gooey()
+  self.start = MenuStart()
+  self.choose = MenuChoose()
+  self.main = MenuMain()
+  self.optionsPane = MenuOptions()
+
   -- Initialize user
   if not love.filesystem.exists('save/user.json') then
     love.filesystem.createDirectory('save')
@@ -31,7 +37,6 @@ function Menu:load(selectedBiome, options)
   if options and options.muted then self.sound:mute() end
 
   self.u, self.v = love.graphics.getDimensions()
-  self.gooey = Gooey()
   self.tooltip = Tooltip()
 
   self:initAnimations()
@@ -58,12 +63,6 @@ function Menu:load(selectedBiome, options)
   self.screenCanvas = g.newCanvas(self.u, self.v)
 
   self.page = self.page or (Menu.started and 'main' or 'start')
-
-  self.start = MenuStart()
-  self.choose = MenuChoose()
-  self.main = MenuMain()
-  self.optionsPane = MenuOptions()
-  self.optionsPane:setMode()
 
   if self.page ~= 'start' then self:refreshBackground() end
 
@@ -160,7 +159,7 @@ function Menu:resize()
   self.start:resize()
   self.choose:resize()
   self.main:resize()
-  self.optionsPane:resize()
+  if self.optionsPane then self.optionsPane:resize() end
   self.canvas = g.newCanvas(u, v)
   self.workingCanvas = g.newCanvas(u, v)
   self:refreshBackground()
@@ -175,6 +174,8 @@ end
 
 function Menu:refreshBackground()
   local u, v = self.u, self.v
+
+  if not self.background1 or not self.background2 then return end
 
   g.setColor(255, 255, 255)
   self.background2:renderTo(function()
