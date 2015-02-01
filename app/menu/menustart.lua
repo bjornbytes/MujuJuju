@@ -35,7 +35,6 @@ function MenuStart:init()
 
   if not Menu.started then
     self.active = true
-    Menu.started = true
     self.alpha = 1
     self.scale = 0
     self.tween = tween.new(.5, self, {scale = 1}, 'outBack')

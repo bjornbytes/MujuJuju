@@ -115,7 +115,7 @@ function Hud:mousereleased(x, y, b)
 		if math.inside(x, y, w * .4, h * .4, 155, 60) then
 			ctx.paused = not ctx.paused
 		elseif math.inside(x, y, w * .4, h * .51, 155, 60) then
-			Context:add(Menu, nil, {muted = ctx.sound.muted})
+			Context:add(Menu, nil, ctx.options)
 			Context:remove(ctx)
 		end
 	end

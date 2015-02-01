@@ -34,7 +34,7 @@ function Menu:load(selectedBiome, options)
   self.cursor = Cursor()
   self.sound = Sound()
   self.menuSounds = self.sound:loop('riteOfPassage')
-  if options and options.muted then self.sound:mute() end
+  if ctx.options and ctx.options.mute then self.sound:setMute(ctx.options.mute) end
 
   self.u, self.v = love.graphics.getDimensions()
   self.tooltip = Tooltip()
@@ -65,6 +65,8 @@ function Menu:load(selectedBiome, options)
   self.page = self.page or (Menu.started and 'main' or 'start')
 
   if self.page ~= 'start' then self:refreshBackground() end
+
+  Menu.started = true
 
   self.main.selectedBiome = selectedBiome or self.main.selectedBiome
 
