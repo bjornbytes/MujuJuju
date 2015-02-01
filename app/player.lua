@@ -63,6 +63,9 @@ function Player:init()
   self.invincible = 0
   self.ghostSpeedMultiplier = 1
   self.cooldownSpeed = 1
+
+  -- joystick
+  self.joystick = #love.joystick.getJoysticks() > 0 and love.joystick.getJoysticks()[1]
 end
 
 function Player:activate()
@@ -160,6 +163,15 @@ function Player:keypressed(key)
   end
 end
 
+function Player:gamepadpressed(gamepad, button)
+end
+
+function Player:gamepadaxis(joystick, axis, value)
+  if axis == 'triggerright' and value > .75 and not self.dead then
+    self:summon()
+  end
+end
+
 function Player:paused()
 
   -- Reset prev variables when paused to fix lerp jitter.
@@ -187,9 +199,10 @@ function Player:move()
 
   -- Adjust speed to target speed based on keystate
   local maxSpeed = self.walkSpeed
-  if love.keyboard.isDown('left', 'a') then
+
+  if love.keyboard.isDown('left', 'a') or (self.joystick and self.joystick:getGamepadAxis('leftx') < -.5) then
     self.speed = math.lerp(self.speed, -maxSpeed, math.min(10 * tickRate, 1))
-  elseif love.keyboard.isDown('right', 'd') then
+  elseif love.keyboard.isDown('right', 'd') or (self.joystick and self.joystick:getGamepadAxis('leftx') > .5) then
     self.speed = math.lerp(self.speed, maxSpeed, math.min(10 * tickRate, 1))
   else
     self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))

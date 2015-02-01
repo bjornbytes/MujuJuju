@@ -96,7 +96,10 @@ function Hud:keyreleased(key)
 end
 
 function Hud:gamepadpressed(gamepad, button)
-  --
+  local x, y = love.mouse.getPosition()
+  if button == 'a' then
+    self:mousereleased(x, y, 'l')
+  end
 end
 
 function Hud:mousepressed(x, y, b)

@@ -104,6 +104,14 @@ function MenuStart:mousereleased(mx, my, b)
   if not self.active then return end
 end
 
+function MenuStart:gamepadpressed(gamepad, button)
+  if not self.active then return end
+
+  if button == 'b' and not ctx.optionsPane.active then
+    love.event.quit()
+  end
+end
+
 function MenuStart:resize()
   table.clear(self.geometry)
 end

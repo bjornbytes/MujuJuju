@@ -36,8 +36,8 @@ function GhostPlayer:update()
 	local speed = 140 * self.owner.ghostSpeedMultiplier
 
 	local gx, gy = 0, 0
-	if self.owner.gamepad then
-		gx, gy = self.owner.gamepad:getGamepadAxis('leftx'), self.owner.gamepad:getGamepadAxis('lefty')
+	if self.owner.joystick then
+		gx, gy = self.owner.joystick:getGamepadAxis('leftx'), self.owner.joystick:getGamepadAxis('lefty')
 		if math.abs(gx) < .1 then gx = 0 end
 		if math.abs(gy) < .1 then gy = 0 end
 	end

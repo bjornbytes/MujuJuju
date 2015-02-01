@@ -51,7 +51,7 @@ function Game:load(user, biome, options)
   backgroundSound = self.sound:loop('background')
   love.keyboard.setKeyRepeat(false)
 
-  if self.options.muted then self.sound:mute() end
+  if self.options.mute then self.sound:mute() end
 end
 
 function Game:update()
@@ -121,6 +121,10 @@ function Game:gamepadpressed(gamepad, button)
   if button == 'start' or button == 'guide' then self.paused = not self.paused end
   self.hud:gamepadpressed(gamepad, button)
   self.players:gamepadpressed(gamepad, button)
+end
+
+function Game:gamepadaxis(...)
+  self.players:gamepadaxis(...)
 end
 
 function Game:textinput(...)

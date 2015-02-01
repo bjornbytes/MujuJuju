@@ -180,8 +180,14 @@ end
 function MenuOptions:update()
   local u, v = ctx.u, ctx.v
   self.prevScroll = self.scroll
-  if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(12 * tickRate, 1))
-  elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(12 * tickRate, 1)) end
+  local joysticks = love.joystick.getJoysticks()
+  if #joysticks == 0 then
+    if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(12 * tickRate, 1))
+    elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(12 * tickRate, 1)) end
+  else
+    if self.targetScroll < 0 then self.targetScroll = 0
+    elseif self.targetScroll > self.height -v then self.targetScroll = self.height - v end
+  end
 end
 
 function MenuOptions:draw()
@@ -286,13 +292,29 @@ function MenuOptions:mousepressed(mx, my, b)
   local x1 = u + self.offset
   local width = self.width * u
   if math.inside(mx, my, x1, 0, width, v) then
-    local scrollSpeed = .05
     if b == 'wd' then
-      self.targetScroll = self.targetScroll + (v * scrollSpeed)
+      self:scrollPane(1)
     elseif b == 'wu' then
-      self.targetScroll = self.targetScroll - (v * scrollSpeed)
+      self:scrollPane(-1)
     end
   end
+end
+
+function MenuOptions:gamepadpressed(gamepad, button)
+  if button == 'b' and self.active then
+    self:toggle()
+  end
+end
+
+function MenuOptions:gamepadaxis(gamepad, axis, value)
+  if axis == 'righty' then
+    self:scrollPane(value)
+  end
+end
+
+function MenuOptions:scrollPane(direction)
+  local scrollSpeed = .05
+  self.targetScroll = self.targetScroll + (ctx.v * scrollSpeed) * direction
 end
 
 function MenuOptions:resize()

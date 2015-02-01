@@ -16,6 +16,7 @@ function Menu:load(selectedBiome, options)
   self.options = options or json.decode(str)
   self.options = self.options or table.copy(config.defaultOptions)
 
+  self.virtualCursor = VirtualCursor()
   self.gooey = Gooey()
   self.start = MenuStart()
   self.choose = MenuChoose()
@@ -71,6 +72,7 @@ function Menu:load(selectedBiome, options)
   self.main.selectedBiome = selectedBiome or self.main.selectedBiome
 
   love.keyboard.setKeyRepeat(true)
+
 end
 
 function Menu:update()
@@ -85,6 +87,8 @@ function Menu:update()
   self.choose:update()
   self.main:update()
   self.optionsPane:update()
+
+  self.virtualCursor:update()
 end
 
 function Menu:draw()
@@ -148,7 +152,25 @@ function Menu:mousereleased(mx, my, b)
 end
 
 function Menu:gamepadpressed(gamepad, button)
-  print('Menu:gamepadpressed', gamepad, button)
+  if button == 'a' then
+    local x, y = love.mouse.getPosition()
+    self:mousepressed(x, y, 'l')
+  else
+    self.start:gamepadpressed(gamepad, button)
+    self.main:gamepadpressed(gamepad, button)
+    self.optionsPane:gamepadpressed(gamepad, button)
+  end
+end
+
+function Menu:gamepadreleased(gamepad, button)
+  if button == 'a' then
+    local x, y = love.mouse.getPosition()
+    self:mousereleased(x, y, 'l')
+  end
+end
+
+function Menu:gamepadaxis(...)
+  self.optionsPane:gamepadaxis(...)
 end
 
 function Menu:textinput(char)

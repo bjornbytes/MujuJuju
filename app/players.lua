@@ -29,6 +29,20 @@ function Players:mousepressed(x, y, b)
   end
 end
 
+function Players:gamepadpressed(gamepad, button)
+  local p = ctx.id and self:get(ctx.id)
+  if p then
+    p:gamepadpressed(gamepad, button)
+  end
+end
+
+function Players:gamepadaxis(gamepad, axis, value)
+  local p = ctx.id and self:get(ctx.id)
+  if p then
+    p:gamepadaxis(gamepad, axis, value)
+  end
+end
+
 function Players:paused()
   table.with(self.players, 'paused')
 end

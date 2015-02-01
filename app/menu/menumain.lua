@@ -433,6 +433,18 @@ function MenuMain:mousereleased(mx, my, b)
   self.drag:mousereleased(mx, my, b)
 end
 
+function MenuMain:gamepadpressed(gamepad, button)
+  if not self.active then return end
+  if button == 'dpleft' then self:previousBiome()
+  elseif button == 'dpright' then self:nextBiome()
+  elseif button == 'start' then ctx.animations.muju:set('death')
+  elseif button == 'b' then
+    ctx.page = 'start'
+    ctx.start.active = true
+    ctx.start.alpha = 1
+  end
+end
+
 function MenuMain:resize()
   table.clear(self.geometry)
 end
