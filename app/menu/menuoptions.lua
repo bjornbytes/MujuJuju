@@ -118,6 +118,8 @@ function MenuOptions:init()
 
   -- Called when a component changes its value.
   self.refreshOptions = function(keyChanged, value)
+    if ctx.options[keyChanged] == value then return end
+
     local translators = {
       resolution = function(str)
         local w, h = str:match('(%d+)%sx%s(%d+)')

@@ -53,7 +53,6 @@ function Hud:update()
 end
 
 function Hud:gui()
-	local w, h = love.graphics.getDimensions()
   local u, v = self.u, self.v
   local p = ctx.player
 
@@ -68,11 +67,13 @@ function Hud:gui()
 
 		-- Pause Menu
 		if self.pauseAlpha > .01 then
+      local image = self.pauseScreen
+      local scale = .5 * v / image:getWidth()
 			g.setColor(0, 0, 0, 128 * self.pauseAlpha)
 			g.rectangle('fill', 0, 0, g.getDimensions())
 
 			g.setColor(255, 255, 255, 255 * self.pauseAlpha)
-			g.draw(self.pauseScreen, w * .5, h * .5, 0, 1, 1, self.pauseScreen:getWidth() / 2, self.pauseScreen:getHeight() / 2)
+			g.draw(self.pauseScreen, u * .5, v * .5, 0, scale, scale, self.pauseScreen:getWidth() / 2, self.pauseScreen:getHeight() / 2)
 		end
 
     self.units:draw()
@@ -111,10 +112,10 @@ function Hud:mousereleased(x, y, b)
   self.dead:mousereleased(x, y, b)
 
 	if b == 'l' and ctx.paused then
-		local w, h = g.getDimensions()
-		if math.inside(x, y, w * .4, h * .4, 155, 60) then
+    local u, v = ctx.hud.u, ctx.hud.v
+		if math.inside(x, y, u * .4, v * .4, u * .19375, v * .1) then
 			ctx.paused = not ctx.paused
-		elseif math.inside(x, y, w * .4, h * .51, 155, 60) then
+		elseif math.inside(x, y, u * .4, v * .51, u * .19375, v * .1) then
 			Context:add(Menu, nil, ctx.options)
 			Context:remove(ctx)
 		end
