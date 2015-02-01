@@ -1,8 +1,7 @@
 local Vuju = extend(Animation)
 
-Vuju.scale = .35
+Vuju.scale = .3
 Vuju.offsety = 64
-Vuju.backwards = true
 Vuju.default = 'spawn'
 Vuju.states = {}
 

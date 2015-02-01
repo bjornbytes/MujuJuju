@@ -152,9 +152,9 @@ return {
         upgradeCostIncrease = 1,
         maxElites = 1,
         thresholds = {
-          duju = 0,
+          duju = 100,
           spuju = 500,
-          vuju = 720
+          vuju = 0
         }
       },
       shrujuPatches = {1, 450},
