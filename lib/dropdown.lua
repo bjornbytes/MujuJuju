@@ -34,7 +34,10 @@ end
 function Dropdown:render()
   local u, v = ctx.u, ctx.v
   local x, y, w, h = unpack(self.geometry())
-  local hoverIndex = self:contains(love.mouse.getPosition())
+  local mx, my = love.mouse.getPosition()
+  local ox, oy = self:getOffset()
+  mx, my = mx + ox, my + oy
+  local hoverIndex = self:contains(mx, my)
   local choiceHoverFactors = table.interpolate(self.prevChoiceHoverFactors, self.choiceHoverFactors, tickDelta / tickRate)
   local hoverFactor = math.lerp(self.prevHoverFactor, self.hoverFactor, tickDelta / tickRate)
   local factor = math.lerp(self.prevFactor, self.factor, tickDelta / tickRate)
@@ -77,6 +80,8 @@ function Dropdown:render()
 end
 
 function Dropdown:mousepressed(mx, my, b)
+  local ox, oy = self:getOffset()
+  mx, my = mx + ox, my + oy
   if b == 'l' and self:contains(mx, my) then
     self.gooey.hot = self
     if self:focused() then return true end
