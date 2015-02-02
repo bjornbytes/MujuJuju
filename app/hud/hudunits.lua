@@ -294,13 +294,6 @@ function HudUnits:draw()
       g.setFont('pixel', 8)
       g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
       g.printShadow(str, x + 6, y + 2)
-      local cost = upgrade.costs[upgrade.level + 1]
-      if cost then
-        local y = y + 2 + g.getFont():getHeight()
-        if p.juju >= cost then g.setColor(100, 255, 100, 200 * upgradeAlphaFactor)
-        else g.setColor(255, 100, 100, 200 * upgradeAlphaFactor) end
-        g.printShadow(cost, x + 6, y)
-      end
     end
   end
 end
@@ -321,7 +314,6 @@ function HudUnits:mousereleased(mx, my, b)
       if math.inside(mx, my, x, y, w, h) then
         local upgrade = data.unit[who].upgrades[what]
         local nextLevel = upgrade.level + 1
-        local cost = upgrade.costs[nextLevel]
         if ctx.upgrades.canBuy(who, what) and p.skillPoints > 0 then
           p.skillPoints = p.skillPoints - 1
           ctx.upgrades.unlock(who, what)
