@@ -241,9 +241,9 @@ function HudUnits:draw()
       g.draw(image, x, y, 0, scale, scale)
 
       local level = data.unit[p.deck[i].code].attributes[config.attributes.list[j]]
-      g.setFont('pixel', 8)
+      g.setFont('mesmerize', math.round(.0175 * v))
       g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-      g.printShadow(level, x + 6, y + 2)
+      g.printShadow(level, x + .01 * v, y + .01 * v)
     end
   end
 
@@ -264,6 +264,7 @@ function HudUnits:draw()
           else
             g.setColor(200, 0, 0, 200 * upgradeAlphaFactor)
           end
+          g.setLineWidth(.005 * v)
           g.line(points)
         end)
       end
@@ -291,9 +292,9 @@ function HudUnits:draw()
       end
 
       local str = upgrade.level .. '/' .. upgrade.maxLevel
-      g.setFont('pixel', 8)
+      g.setFont('mesmerize', .0175 * v)
       g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-      g.printShadow(str, x + 6, y + 2)
+      g.printShadow(str, x + .01 * v, y + .01 * v)
     end
   end
 end
