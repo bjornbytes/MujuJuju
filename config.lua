@@ -7,12 +7,6 @@ return {
     'kuju'
   },
 
-  enemies = {
-    'duju',
-    'spuju',
-    'vuju'
-  },
-
   biomeOrder = {
     'forest',
     'cavern',
@@ -151,10 +145,10 @@ return {
         levelScale = .75,
         upgradeCostIncrease = 1,
         maxElites = 1,
-        thresholds = {
-          duju = 100,
+        types = {
+          duju = 0,
           spuju = 500,
-          vuju = 0
+          vuju = 5000
         }
       },
       shrujuPatches = {1, 450},
@@ -203,7 +197,7 @@ return {
         levelScale = .85,
         upgradeCostIncrease = 1,
         maxElites = 1,
-        thresholds = {
+        types = {
           spuju = 0,
           duju = 1100,
           vuju = 1300
@@ -255,7 +249,7 @@ return {
         levelScale = .95,
         upgradeCostIncrease = 1,
         maxElites = 2,
-        thresholds = {
+        types = {
           vuju = 0,
           spuju = 2100,
           duju = 2400
@@ -307,7 +301,7 @@ return {
         levelScale = 1.05,
         upgradeCostIncrease = 1,
         maxElites = 3,
-        thresholds = {
+        types = {
           vuju = 0,
           spuju = 0,
           duju = 0

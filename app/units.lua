@@ -13,7 +13,7 @@ function Units:createEnemy()
   local conf = config.biomes[ctx.biome]
   if self.enemyCount < 1 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
     local choices = {}
-    table.each(conf.units.thresholds, function(time, code)
+    table.each(conf.units.types, function(time, code)
       if ctx.timer * tickRate >= time then table.insert(choices, code) end
     end)
     local enemyType = choices[love.math.random(1, #choices)]
