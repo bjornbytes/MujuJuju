@@ -20,6 +20,8 @@ function Tooltip:init()
   self.cursorX, self.cursorY = love.mouse.getPosition()
   self.prevCursorX = self.cursorX
   self.prevCursorY = self.cursorY
+
+  self:resize()
 end
 
 function Tooltip:update()
@@ -38,8 +40,6 @@ function Tooltip:update()
   self.prevCursorY = self.cursorY
   self.cursorX = math.lerp(self.cursorX, mx, 8 * tickRate)
   self.cursorY = math.lerp(self.cursorY, my, 8 * tickRate)
-
-  self:resize()
 end
 
 function Tooltip:draw()
@@ -178,11 +178,11 @@ end
 
 function Tooltip:resize()
   local u, v = self:getUV()
-  self.richOptions.title = Typo.font('mesmerize', .0375 * v)
+  self.richOptions.title = Typo.font('mesmerize', .0376 * v)
   self.richOptions.normal = Typo.font('mesmerize', .02 * v)
 end
 
 function Tooltip:getUV()
   if isa(ctx, Menu) then return ctx.u, ctx.v
-  elseif isa(ctx, Game) then return ctx.hud.u, ctx.hud.v end
+  elseif isa(ctx, Game) then return ctx.view.frame.width, ctx.view.frame.height end
 end
