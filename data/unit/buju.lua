@@ -138,7 +138,7 @@ Buju.upgrades = {
     maxLevel = 3,
     levelRequirement = 5,
     name = 'Empowered Strikes',
-    description = 'Critical strikes now give a chance to increase attack speed.',
+    description = 'Critical strikes now give a 40% chance to increase attack speed.',
     x = -1,
     y = 1,
     values = {
@@ -168,11 +168,11 @@ Buju.upgrades = {
     maxLevel = 1,
     levelRequirement = 20,
     name = 'Grim Reaper',
-    description = 'On death, Buju seeks revenge on his target for 5 seconds in his void form.',
+    description = 'On death, Buju seeks revenge on his target in his void form.',
     x = 1,
     y = 4,
     values = {
-      [1] = 'Buju becomes invincible and attacks after death for 5 seconds.'
+      [1] = 'Buju\'s void form lasts for 5 seconds.'
     }
   }
 }

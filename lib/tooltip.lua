@@ -184,5 +184,11 @@ end
 
 function Tooltip:getUV()
   if isa(ctx, Menu) then return ctx.u, ctx.v
-  elseif isa(ctx, Game) then return ctx.view.frame.width, ctx.view.frame.height end
+  elseif isa(ctx, Game) then
+    if ctx.hud then
+      return ctx.hud.u, ctx.hud.v
+    else
+      return ctx.view.frame.width, ctx.view.frame.height
+    end
+  end
 end
