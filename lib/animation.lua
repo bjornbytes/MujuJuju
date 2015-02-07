@@ -83,6 +83,8 @@ function Animation:set(name, options)
 end
 
 function Animation:contains(x, y)
+  do return false end
+
   table.each(self.spine.skeleton.slots, function(slot)
     slot:setAttachment(self.spine.skeleton:getAttachment(slot.data.name, slot.data.name .. '_bb'))
   end)

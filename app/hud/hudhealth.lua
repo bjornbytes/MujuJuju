@@ -196,10 +196,9 @@ function HudHealth:draw()
 
       for j = 1, #bin.units do
         local unit = bin.units[j]
-        local hover = unit:contains(ctx.view:worldMouseX(), ctx.view:worldMouseY())
 
         -- Frame
-        local alpha = (.5 + (hover and .5 or 0)) * unit.alpha
+        local alpha = (.5 + (false and .5 or 0)) * unit.alpha
         local framey = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], tickDelta / tickRate)
         g.setColor(255, 255, 255, 120 * alpha)
         g.draw(frame, xx, framey, 0, scale, scale)

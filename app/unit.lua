@@ -35,7 +35,6 @@ function Unit:activate()
         else
           self:attack()
         end
-        self.attackAnimationIndex = self.attackAnimationIndex + 1
       end
     elseif event.data.name == 'deathjuju' then
       if not self.died then
@@ -142,7 +141,6 @@ function Unit:activate()
   self.prev = {x = self.x, y = self.y, health = self.health, healthDisplay = self.healthDisplay, knockup = 0, glowScale = 1}
   self.alpha = 1
   self.glowScale = 1
-  self.attackAnimationIndex = 1
 
   local r = love.math.random(0, 20)
   self.y = self.y + r
@@ -203,10 +201,6 @@ function Unit:update()
     self.animation.speed = self.speed / self.class.speed
   else
     self.animation.speed = 1
-  end
-
-  if self:contains(love.mouse.getPosition()) then
-    ctx.cursor:hover()
   end
 end
 

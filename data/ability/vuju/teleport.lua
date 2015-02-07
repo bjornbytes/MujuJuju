@@ -12,7 +12,11 @@ Teleport.cooldown = 6
 function Teleport:activate()
   self.unit.animation:on('event', function(event)
     if event.data.name == 'teleport' then
-      self.unit.x = ctx.map.width - self.unit.x
+      if self.unit.x > ctx.map.width / 2 then
+        self.unit.x = (ctx.map.width - self.unit.x) / 2
+      else
+        self.unit.x = ctx.map.width - self.unit.x / 2
+      end
     end
   end)
 

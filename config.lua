@@ -148,7 +148,7 @@ return {
         types = {
           duju = 0,
           spuju = 500,
-          vuju = 5000
+          vuju = 600
         }
       },
       shrujuPatches = {300, 600},

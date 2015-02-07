@@ -17,9 +17,10 @@ end
 function VujuAttack:update()
   self.x = self.x + math.dx(self.speed * tickRate, 0) * self.direction
   if not self.target or math.abs(self.x - self.target.x) < self.width / 2 then
-    self.unit:attack({target = self.target, damage = self.unit.damage})
     if self.target.buffs then
-      self.target.buffs:add('vujuattackdot', {timer = 2, dot = self.unit.damage / 2})
+      self.target.buffs:add('vujuattackdot', {timer = 4, dot = self.unit.damage})
+    else
+      self.unit:attack({target = self.target, damage = self.unit.damage})
     end
     ctx.spells:remove(self)
   end
