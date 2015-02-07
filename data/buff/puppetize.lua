@@ -2,11 +2,15 @@ local Puppetize = extend(Buff)
 Puppetize.tags = {}
 
 function Puppetize:activate()
-  self.team = self.team == 0 and ctx.player.team or 0
+  self.unit.team = self.unit.team == 0 and ctx.player.team or 0
+  self.unit.target = nil
+  self.unit.animation:set('idle', {force = true})
 end
 
 function Puppetize:deactivate()
-  self.team = self.team == 0 and ctx.player.team or 0
+  self.unit.team = self.unit.team == 0 and ctx.player.team or 0
+  self.unit.target = nil
+  self.unit.animation:set('idle', {force = true})
 end
 
 return Puppetize

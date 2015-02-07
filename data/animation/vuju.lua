@@ -22,6 +22,12 @@ Vuju.states.walk = {
   speed = .92
 }
 
+Vuju.states.attack = {
+  priority = 1,
+  loop = true,
+  speed = 1.62
+}
+
 Vuju.states.attack1 = {
   priority = 1,
   loop = true,

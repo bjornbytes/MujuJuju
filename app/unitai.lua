@@ -83,15 +83,7 @@ function UnitAI:startAttacking(target)
   self.unit.target = target
   if self.unit.animation.state.name ~= 'attack' then self.unit.attackStart = tick end
   self.unit.animation.flipped = self.unit.x > target.x
-  if self.unit.class.attackAnimations then
-    local animations = self.unit.class.attackAnimations
-    local index = (self.unit.attackAnimationIndex % #animations) + 1
-    print(index)
-    local animation = animations[index]
-    self.unit.animation:set(animation)
-  else
-    self.unit.animation:set('attack')
-  end
+  self.unit.animation:set('attack')
 end
 
 function UnitAI:useAbilities()
