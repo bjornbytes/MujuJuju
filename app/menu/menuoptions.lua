@@ -344,6 +344,7 @@ function MenuOptions:setMode()
 
   local ps = love.window.getPixelScale()
 
+  print(ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps)
   if love.window.setMode(ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps, options) then
     love.window.setTitle('Muju Juju')
     love.window.setIcon(love.image.newImageData('media/graphics/icon.png'))
