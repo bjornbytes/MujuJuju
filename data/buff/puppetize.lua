@@ -1,4 +1,5 @@
 local Puppetize = extend(Buff)
+Puppetize.tags = {}
 
 function Puppetize:activate()
   self.team = self.team == 0 and ctx.player.team or 0

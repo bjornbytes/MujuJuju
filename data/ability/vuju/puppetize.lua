@@ -12,7 +12,7 @@ Puppetize.cooldown = 14
 function Puppetize:activate()
   self.unit.animation:on('event', function(event)
     if event.data.name == 'puppetize' then
-      local target = ctx.target:closest(self, 'enemy', 'unit')
+      local target = ctx.target:closest(self.unit, 'enemy', 'unit')
       if target and math.abs(self.unit.x - target.x) <= self.unit.range + self.unit.width / 2 + target.width / 2 then
         target.buffs:add('puppetize', {timer = 4})
       end
