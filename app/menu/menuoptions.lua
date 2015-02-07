@@ -334,7 +334,11 @@ function MenuOptions:toggle(force)
   self.active = not self.active
 end
 
-function MenuOptions:setMode()
+function MenuOptions:setMode(n)
+  n = n or 0
+  if n >= 2 then return end
+
+  local ps = love.window and love.window.getPixelScale() or 1
   local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'fsaa'})
   options.highdpi = true
 
@@ -342,12 +346,13 @@ function MenuOptions:setMode()
   local borderless = table.eq(ctx.options.resolution, {0, 0}) or (love.window and table.eq(ctx.options.resolution, {love.window.getDesktopDimensions()}))
   options.fullscreentype = borderless and 'desktop' or 'normal'
 
-  local ps = love.window and love.window.getPixelScale() or 1
 
   if love.window.setMode(ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps, options) then
     love.window.setTitle('Muju Juju')
     love.window.setIcon(love.image.newImageData('media/graphics/icon.png'))
     ctx:resize()
+
+    if love.window.getPixelScale() ~= ps then self:setMode(n + 1) end
   else
     print('There was a problem applying the requested window options... PANIC _>_>_>')
   end
