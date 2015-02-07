@@ -31,14 +31,7 @@ function UnitBuffs:postupdate()
   end)
 
   -- Apply Slows
-  local slows = self:buffsWithTag('slow')
-  table.each(slows, function(slow)
-    speed = speed * (1 - slow.slow)
-  end)
-
-  if self:feared() then speed = speed / 2 end
-
-  self.unit.speed = speed
+  self.unit.speed = speed * self:slowAmount()
 
   -- Apply Roots and Stuns
   if self:rooted() or self:stunned() then self.unit.speed = 0 end
@@ -209,6 +202,18 @@ end
 
 function UnitBuffs:slowed()
   return next(self:buffsWithTag('slow'))
+end
+
+function UnitBuffs:slowAmount()
+  local multiplier = 1
+  local slows = self:buffsWithTag('slow')
+  table.each(slows, function(slow)
+    multiplier = multiplier * (1 - slow.slow)
+  end)
+
+  if self:feared() then multiplier = multiplier / 2 end
+
+  return multiplier
 end
 
 function UnitBuffs:taunted()

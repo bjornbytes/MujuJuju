@@ -50,8 +50,8 @@ function FrozenOrb:update()
     if not self.damaged[target.viewId] then
       if target.buffs and unit:upgradeLevel('windchill') > 0 then
         local slow = .2 * unit:upgradeLevel('windchill')
-        target.buffs:add('frozenorbslow', {
-          slow = self.slow,
+        target.buffs:add('windchill', {
+          slow = slow,
           timer = self.duration
         })
       end

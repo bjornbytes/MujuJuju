@@ -45,7 +45,7 @@ Kuju.upgrades = {
     costs = {100, 200, 300, 400, 500},
     levelRequirement = 1,
     name = 'Frost',
-    description = 'Kuju\'s attacks slow their targets.',
+    description = 'Kuju\'s attacks slow their targets for 1 second.',
     x = 0,
     y = 0,
     connectedTo = {'shatter'},
@@ -149,14 +149,14 @@ Kuju.upgrades = {
     prerequisites = {shatter = 1},
     levelRequirement = 10,
     name = 'Brainfreeze',
-    description = 'Kuju\'s attack lower the attack speed of enemies for 3 seconds.',
+    description = 'Kuju\'s attacks lower the attack speed of enemies for 3 seconds.',
     x = 0,
     y = 2,
     connectedTo = {'shatter'},
     values = {
-      [1] = '20% attack speed reduction',
-      [2] = '40% attack speed reduction',
-      [3] = '60% attack speed reduction',
+      [1] = '15% attack speed reduction',
+      [2] = '30% attack speed reduction',
+      [3] = '45% attack speed reduction',
     }
   },
   frigidsplinters = {

@@ -29,7 +29,6 @@ function FrozenOrb:activate()
         range = self.range,
         radius = self.radius,
         speed = self.speed,
-        slow = self.slow,
         duration = self.duration
       })
     end

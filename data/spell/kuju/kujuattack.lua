@@ -15,13 +15,28 @@ function KujuAttack:deactivate()
 end
 
 function KujuAttack:update()
+  local unit = self.unit
   self.x = self.x + math.dx(self.speed * tickRate, 0) * self.direction
   if not self.target or math.abs(self.x - self.target.x) < self.width / 2 then
-    self.unit:attack({target = self.target, damage = self.unit.damage})
+    local damage = unit.damage
+    if self.target.buffs and unit:upgradeLevel('veinsofice') > 0 then
+      damage = damage * (1 + (1 - self.target.buffs:slowAmount()))
+    end
+    unit:attack({target = self.target, damage = unit.damage})
     if self.target.buffs then
-      self.target.buffs:add('kujuattackslow', {timer = 1, amount = .1})
-      local buff = self.target.buffs:get('kujuattackslow')
-      buff.slow = buff.stacks * .1
+      local frost, permafrost, brainfreeze = unit:upgradeLevel('frost'), unit:upgradeLevel('permafrost'), unit:upgradeLevel('brainfreeze')
+      if frost > 0 then self.target.buffs:add('frost', {timer = 1, amount = .1 * frost}) end
+      if permafrost > 0 then
+        self.target.buffs:add('permafrost', {timer = 3})
+        local buff = self.target.buffs:get('permafrost')
+        if buff and buff.stacks == 3 then
+          self.target.buffs:remove('permafrost')
+          self.target.buffs:add('permafrostroot', {timer = 2})
+        end
+      end
+      if brainfreeze > 0 then
+        self.target.buffs:add('brainfreeze', {timer = 3, exhaust = .15 * brainfreeze})
+      end
     end
     ctx.spells:remove(self)
   end
