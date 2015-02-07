@@ -207,6 +207,10 @@ function UnitBuffs:postattack(target, damage)
   table.with(self.list, 'postattack', target, damage)
 end
 
+function UnitBuffs:slowed()
+  return next(self:buffsWithTag('slow'))
+end
+
 function UnitBuffs:taunted()
   local taunt = next(self:buffsWithTag('taunt'))
   return taunt and taunt.target
