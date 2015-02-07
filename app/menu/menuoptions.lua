@@ -336,19 +336,16 @@ end
 
 function MenuOptions:setMode()
   local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'fsaa'})
-  local pixelScale = options.fullscreen and 1 or love.window.getPixelScale()
-  if love.window then
-    local dw, dh = love.window.getDesktopDimensions()
-    dw, dh = dw / pixelScale, dh / pixelScale
-    if not ctx.options.resolution then
-      ctx.options.resolution = {love.window.getDesktopDimensions()}
-    end
-    options.fullscreentype = (ctx.options.resolution[1] == dw and ctx.options.resolution[2] == dh) and 'desktop' or 'normal'
-  end
 
-  if love.window.setMode((ctx.options.resolution[1] or 0) / pixelScale, (ctx.options.resolution[2] or 0) / pixelScale, options) then
+  ctx.options.resolution = ctx.options.resolution or {0, 0}
+  local borderless = table.eq(ctx.options.resolution, {0, 0}) or (love.window and table.eq(ctx.options.resolution, {love.window.getDesktopDimensions()}))
+  options.fullscreentype = borderless and 'desktop' or 'normal'
+
+  if love.window.setMode(ctx.options.resolution[1], ctx.options.resolution[2], options) then
     love.window.setTitle('Muju Juju')
     love.window.setIcon(love.image.newImageData('media/graphics/icon.png'))
     ctx:resize()
+  else
+    print('There was a problem applying the requested window options... PANIC _>_>_>')
   end
 end
