@@ -25,14 +25,15 @@ function FrozenOrb:deactivate()
 end
 
 function FrozenOrb:update()
-  local direction = self.ability:getUnitDirection()
-  local inRange = math.abs(self.ability.unit.x - self.x) < self.ability.range
+  local ability, unit = self:getAbility(), self:getUnit()
+  local direction = ability:getUnitDirection()
+  local inRange = math.abs(unit.x - self.x) < ability.range
 
   self.prevx = self.x
   self.prevangle = self.angle
 
   if inRange and not self.returning then
-    self.x = self.x + direction * self.speed * tickRate * math.max(1 - math.abs(self.ability.unit.x - self.x) / self.ability.range, .6)
+    self.x = self.x + direction * self.speed * tickRate * math.max(1 - math.abs(unit.x - self.x) / ability.range, .6)
     self.angle = self.angle + self.angularVelocity * tickRate
   elseif not inRange or self.returning then
     if not self.returning then table.clear(self.damaged) end
@@ -41,14 +42,15 @@ function FrozenOrb:update()
     self.angle = self.angle - self.angularVelocity * tickRate
   end
 
-  if math.abs(self.x - self.ability.unit.x) <= self.ability.unit.width / 2 and self.returning then
+  if math.abs(self.x - unit.x) <= unit.width / 2 and self.returning then
     self:deactivate()
   end
 
   table.each(ctx.target:inRange(self, self.radius, 'enemy', 'unit', 'player'), function(target)
     if not self.damaged[target.viewId] then
-      if target.buffs then
-        target.buffs:add('slow', {
+      if target.buffs and unit:upgradeLevel('windchill') > 0 then
+        local slow = .2 * unit:upgradeLevel('windchill')
+        target.buffs:add('frozenorbslow', {
           slow = self.slow,
           timer = self.duration
         })

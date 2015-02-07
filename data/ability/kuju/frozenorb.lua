@@ -15,7 +15,6 @@ FrozenOrb.range = 210
 FrozenOrb.radius = 15
 FrozenOrb.speed = 400
 FrozenOrb.duration = 2
-FrozenOrb.slow = .5
 
 
 ----------------

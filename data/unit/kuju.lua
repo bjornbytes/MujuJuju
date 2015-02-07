@@ -32,7 +32,12 @@ Kuju.upgrades = {
       [3] = '30 damage',
       [4] = '40 damage',
       [5] = '50 damage'
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('frozenorb')
+      end
+    end
   },
   frost = {
     level = 0,
@@ -68,7 +73,12 @@ Kuju.upgrades = {
       [1] = '30 damage per second',
       [1] = '40 damage per second',
       [1] = '50 damage per second',
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('frostbite')
+      end
+    end
   },
   windchill = {
     level = 0,
