@@ -342,9 +342,9 @@ function MenuOptions:setMode()
   local borderless = table.eq(ctx.options.resolution, {0, 0}) or (love.window and table.eq(ctx.options.resolution, {love.window.getDesktopDimensions()}))
   options.fullscreentype = borderless and 'desktop' or 'normal'
 
-  local ps = love.window.getPixelScale()
+  local ps = love.window and love.window.getPixelScale() or 1
 
-  print(ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps)
+  print(ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps, ps)
   if love.window.setMode(ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps, options) then
     love.window.setTitle('Muju Juju')
     love.window.setIcon(love.image.newImageData('media/graphics/icon.png'))
