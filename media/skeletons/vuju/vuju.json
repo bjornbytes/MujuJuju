@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "gO/h2ap1PxfjU0PrjoivNq0bXaA", "spine": "2.1.09", "width": 468.77, "height": 349.08 },
+"skeleton": { "hash": "pH80UFIVIzs+FjhJmjbMzbqGn2o", "spine": "2.1.09", "width": 468.77, "height": 349.08 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "bone", "parent": "root", "length": 74.15, "x": -34.5, "y": 130.65, "rotation": 55.58 },
@@ -518,7 +518,10 @@
 					{ "time": 0.8333, "x": 1, "y": 1 }
 				]
 			}
-		}
+		},
+		"events": [
+			{ "time": 0.3666, "name": "attack" }
+		]
 	},
 	"attack1": {
 		"bones": {
