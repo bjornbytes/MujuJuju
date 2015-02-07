@@ -25,7 +25,7 @@ function KujuAttack:update()
     unit:attack({target = self.target, damage = unit.damage})
     if self.target.buffs then
       local frost, permafrost, brainfreeze = unit:upgradeLevel('frost'), unit:upgradeLevel('permafrost'), unit:upgradeLevel('brainfreeze')
-      if frost > 0 then self.target.buffs:add('frost', {timer = 1, amount = .1 * frost}) end
+      if frost > 0 then self.target.buffs:add('frost', {timer = 1, slow = .1 * frost}) end
       if permafrost > 0 then
         self.target.buffs:add('permafrost', {timer = 3})
         local buff = self.target.buffs:get('permafrost')

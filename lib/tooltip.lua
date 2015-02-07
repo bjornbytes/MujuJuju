@@ -125,10 +125,9 @@ function Tooltip:setShrujuTooltip(shruju)
 end
 
 function Tooltip:setMagicShrujuTooltip(shruju)
-  local effect = shruju.effect
   local pieces = {}
-  table.insert(pieces, '{purple}{title}' .. effect.name .. '{white}{normal}')
-  table.insert(pieces, '{purple}' .. effect.description)
+  table.insert(pieces, '{purple}{title}' .. shruju.name .. '{white}{normal}')
+  table.insert(pieces, '{purple}' .. shruju.description)
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

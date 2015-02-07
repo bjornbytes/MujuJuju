@@ -25,7 +25,6 @@ function FrozenOrb:activate()
     if event.data.name == 'frozenorb' then
       ctx.sound:play(data.media.sounds.kuju.frozenorb)
       self:createSpell('frozenorb', {
-        damage = self.unit.damage / 2,
         range = self.range,
         radius = self.radius,
         speed = self.speed,

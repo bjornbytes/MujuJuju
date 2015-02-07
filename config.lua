@@ -151,7 +151,7 @@ return {
           vuju = 5000
         }
       },
-      shrujuPatches = {1, 450},
+      shrujuPatches = {300, 600},
       runes = {
         maxLevel = 25
       },
@@ -203,7 +203,7 @@ return {
           vuju = 1300
         }
       },
-      shrujuPatches = {},
+      shrujuPatches = {300, 600},
       runes = {
         maxLevel = 25
       },
@@ -255,7 +255,7 @@ return {
           duju = 2400
         }
       },
-      shrujuPatches = {},
+      shrujuPatches = {300, 600},
       runes = {
         maxLevel = 75
       },
@@ -307,7 +307,7 @@ return {
           duju = 0
         }
       },
-      shrujuPatches = {},
+      shrujuPatches = {300, 600},
       runes = {
         maxLevel = 100
       },
