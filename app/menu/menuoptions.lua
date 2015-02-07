@@ -336,6 +336,7 @@ end
 
 function MenuOptions:setMode()
   local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'fsaa'})
+  options.highdpi = true
 
   ctx.options.resolution = ctx.options.resolution or {0, 0}
   local borderless = table.eq(ctx.options.resolution, {0, 0}) or (love.window and table.eq(ctx.options.resolution, {love.window.getDesktopDimensions()}))
