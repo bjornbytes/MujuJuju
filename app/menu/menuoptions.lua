@@ -335,17 +335,19 @@ function MenuOptions:toggle(force)
 end
 
 function MenuOptions:setMode()
+  local lw = love.window
   local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'fsaa'})
   options.highdpi = true
 
   ctx.options.resolution = ctx.options.resolution or {0, 0}
-  local borderless = table.eq(ctx.options.resolution, {0, 0}) or (love.window and table.eq(ctx.options.resolution, {love.window.getDesktopDimensions()}))
+  local borderless = table.eq(ctx.options.resolution, {0, 0}) or (lw and table.eq(ctx.options.resolution, {lw.getDesktopDimensions()}))
   options.fullscreentype = borderless and 'desktop' or 'normal'
 
-  local ps = love.window and love.window.getPixelScale() or 1
-
-  print(ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps, ps, love.window and love.window.getDesktopDimensions())
-  if love.window.setMode(ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps, options) then
+  local ps = lw and lw.getPixelScale() or 1
+  local w, h = ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps
+  w, h = math.min(w, lw and lw.getWidth() or w), math.min(h, lw and lw.getHeight() or h)
+  print(w, h, ps, lw and lw.getDesktopDimensions())
+  if love.window.setMode(w, h, options) then
     love.window.setTitle('Muju Juju')
     love.window.setIcon(love.image.newImageData('media/graphics/icon.png'))
     ctx:resize()
