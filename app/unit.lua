@@ -35,6 +35,7 @@ function Unit:activate()
         else
           self:attack()
         end
+        self.attackAnimationIndex = self.attackAnimationIndex + 1
       end
     elseif event.data.name == 'deathjuju' then
       if not self.died then
@@ -78,7 +79,7 @@ function Unit:activate()
       self.animation:set('idle', {force = true})
     elseif self.casting then
       self.casting = false
-    elseif data.state.name == 'attack' then
+    elseif data.state.name:match('attack') then
       self:aiCall('useAbilities')
     end
 
@@ -141,6 +142,7 @@ function Unit:activate()
   self.prev = {x = self.x, y = self.y, health = self.health, healthDisplay = self.healthDisplay, knockup = 0, glowScale = 1}
   self.alpha = 1
   self.glowScale = 1
+  self.attackAnimationIndex = 1
 
   local r = love.math.random(0, 20)
   self.y = self.y + r
