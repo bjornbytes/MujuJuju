@@ -87,7 +87,6 @@ function MenuOptions:init()
   }
 
   self:setMode()
-  self:setMode()
 
   local resolutions = love.window.getFullscreenModes()
   table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
