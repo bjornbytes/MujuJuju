@@ -10,54 +10,30 @@ Frostbite.description = 'Kuju curses an area and makes it pretty darn cold for $
 ----------------
 -- Data
 ----------------
-Frostbite.cooldown = 18
-Frostbite.target = 'location'
-Frostbite.range = 150
+Frostbite.cooldown = 10
 Frostbite.width = 100
-Frostbite.duration = 3
-Frostbite.slow = .2
-Frostbite.dps = 20
-Frostbite.rootDuration = 1.5
-Frostbite.rootThreshold = 2
 
 
 ----------------
 -- Behavior
 ----------------
-function Frostbite:use(target)
-  local width, duration = self.width, self.rootDuration
-
-  if self:hasUpgrade('tundra') then
-    width = width + width * self.upgrades.tundra.widthIncrease
-  end
-
-  if self:hasUpgrade('frigidprison') then
-    duration = self.upgrades.frigidprison.rootDuration
-  end
-
-  self:createSpell({
-    x = target,
-    width = width,
-    rootDuration = duration
-  })
+function Frostbite:activate()
+  self.unit.animation:on('event', function(event)
+    if event.data.name == 'frostbite' then
+      local target = ctx.target:closest(self.unit, 'enemy', 'unit')
+      if target and math.abs(self.unit.x - target.x) <= self.unit.range + self.unit.width / 2 + target.width / 2 then
+        self:createSpell({x = target.x})
+      end
+    end
+  end)
 end
 
-
-----------------
--- Upgrades
-----------------
-local Tundra = {}
-Tundra.code = 'tundra'
-Tundra.name = 'Tundra'
-Tundra.description = 'The size of the zone is increased by %widthIncrease.'
-Tundra.widthIncrease = .5
-
-local FrigidPrison = {}
-FrigidPrison.code = 'frigidprison'
-FrigidPrison.name = 'Frigid Prison'
-FrigidPrison.description = 'The root duration is increased to $rootDuration second$s.'
-FrigidPrison.rootDuration = 3
-
-Frostbite.upgrades = {Tundra, FrigidPrison}
+function Frostbite:use(target)
+  if self.unit.target and isa(self.unit.target, Unit) then
+    self.unit.animation:set('frostbite')
+    self.unit.casting = true
+    self.timer = self.cooldown
+  end
+end
 
 return Frostbite
