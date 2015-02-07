@@ -225,6 +225,7 @@ function MenuMain:draw()
   if not self.active then return end
 
   local u, v = ctx.u, ctx.v
+  local ps = love.window.getPixelScale()
   local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
   local biomes = self.geometry.biomes
   for i = 1, #biomes do
@@ -338,7 +339,7 @@ function MenuMain:draw()
       for k, v in pairs(ctx.animationTransforms[code]) do
         lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
       end
-      g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
+      g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale * ps, lerpd.scale * ps, cw / 2, ch / 2)
     end
   end
 
@@ -366,7 +367,7 @@ function MenuMain:draw()
       end
 
       g.setColor(255, 255, 255)
-      g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
+      g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale * ps, lerpd.scale * ps, cw / 2, ch / 2)
     end
 
     for j = 1, #runes do
