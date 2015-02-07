@@ -6,11 +6,8 @@ Tooltip = class()
 Tooltip.maxWidth = .3
 function Tooltip:init()
   self.richOptions = {
-    title = g.setFont('mesmerize', 24),
-    bold = g.setFont('mesmerizeb', 14),
-    normal = g.setFont('mesmerize', 14),
-    white = {255, 255, 255},
     whoCares = {225, 225, 225},
+    white = {255, 255, 255},
     red = {255, 100, 100},
     green = {100, 255, 100},
     purple = {147, 96, 200}
@@ -19,20 +16,30 @@ function Tooltip:init()
   self.active = false
   self.tooltip = nil
   self.tooltipText = nil
+
   self.cursorX, self.cursorY = love.mouse.getPosition()
   self.prevCursorX = self.cursorX
   self.prevCursorY = self.cursorY
+
+  self:resize()
 end
 
 function Tooltip:update()
+  local mx, my
+
+  if ctx.view then
+    mx = ctx.view:frameMouseX()
+    my = ctx.view:frameMouseY()
+  else
+    mx, my = love.mouse.getPosition()
+  end
+
   self.active = false
 
   self.prevCursorX = self.cursorX
   self.prevCursorY = self.cursorY
-  self.cursorX = math.lerp(self.cursorX, love.mouse.getX(), 8 * tickRate)
-  self.cursorY = math.lerp(self.cursorY, love.mouse.getY(), 8 * tickRate)
-
-  if not self.richOptions then self:resize() end
+  self.cursorX = math.lerp(self.cursorX, mx, 8 * tickRate)
+  self.cursorY = math.lerp(self.cursorY, my, 8 * tickRate)
 end
 
 function Tooltip:draw()
@@ -170,15 +177,17 @@ end
 
 function Tooltip:resize()
   local u, v = self:getUV()
-  self.richOptions = {}
-  self.richOptions.white = {255, 255, 255}
-  self.richOptions.red = {255, 100, 100}
-  self.richOptions.green = {100, 255, 100}
-  self.richOptions.title = Typo.font('mesmerize', .04 * v)
-  self.richOptions.normal = Typo.font('mesmerize', .023 * v)
+  self.richOptions.title = Typo.font('mesmerize', .0376 * v)
+  self.richOptions.normal = Typo.font('mesmerize', .02 * v)
 end
 
 function Tooltip:getUV()
   if isa(ctx, Menu) then return ctx.u, ctx.v
-  elseif isa(ctx, Game) then return ctx.hud.u, ctx.hud.v end
+  elseif isa(ctx, Game) then
+    if ctx.hud then
+      return ctx.hud.u, ctx.hud.v
+    else
+      return ctx.view.frame.width, ctx.view.frame.height
+    end
+  end
 end
