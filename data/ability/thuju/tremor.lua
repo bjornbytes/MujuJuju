@@ -6,6 +6,8 @@ function Tremor:activate()
       self:fire()
     end
   end)
+
+  if self.unit:upgradeLevel('staggeringentry') > 0 then self:fire() end
 end
 
 function Tremor:use()

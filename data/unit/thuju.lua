@@ -25,7 +25,7 @@ Thuju.upgrades = {
     costs = {200, 400, 600},
     levelRequirement = 1,
     name = 'Inspire',
-    description = 'Thuju inspires allies, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
+    description = 'Thuju inspires allies when he spawns, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
     x = -1,
     y = 0,
     values = {
@@ -163,23 +163,20 @@ Thuju.upgrades = {
       [3] = '20% armor per stack',
     }
   },
-  alacrity = {
+  staggeringentry = {
     level = 0,
     maxLevel = 1,
     costs = {1000},
+    prerequisites = {fissure = 1},
     levelRequirement = 15,
-    name = 'Alacrity',
-    description = 'Each time Thuju is damaged by a spell or attack, the cooldown of Tremor and Inspire is reduced by 1 second.',
+    name = 'Staggering Entry',
+    description = 'Tremor is cast when Thuju spawns.',
     x = 1,
     y = 2,
+    connectedTo = {'fissure'},
     values = {
-      [1] = '1s per attack',
-    },
-    apply = function(self, unit)
-      if self.level > 0 then
-        unit:addAbility('alacrity')
-      end
-    end
+      [1] = '100% awesomeness',
+    }
   },
   infusedcarapace = {
     level = 0,
@@ -216,27 +213,7 @@ Thuju.upgrades = {
         unit:addAbility('taunt')
       end
     end
-  },
-  staggeringentry = {
-    level = 0,
-    maxLevel = 1,
-    costs = {1000},
-    prerequisites = {alacrity = 1},
-    levelRequirement = 20,
-    name = 'Staggering Entry',
-    description = 'When Thuju is summoned, he casts Tremor (cooldowns are not triggered).',
-    x = 1,
-    y = 3,
-    connectedTo = {'alacrity'},
-    values = {
-      [1] = '100% awesomeness',
-    },
-    apply = function(self, unit)
-      if self.level > 0 then
-        unit:addAbility('staggeringentry')
-      end
-    end
-  },
+  }
 }
 
 return Thuju
