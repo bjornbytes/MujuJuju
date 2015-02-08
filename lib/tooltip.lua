@@ -179,6 +179,7 @@ function Tooltip:resize()
   local u, v = self:getUV()
   self.richOptions.title = Typo.font('mesmerize', .0376 * v)
   self.richOptions.normal = Typo.font('mesmerize', .02 * v)
+  self.richOptions.bold = Typo.font('mesmerizeb', .02 * v)
 end
 
 function Tooltip:getUV()
