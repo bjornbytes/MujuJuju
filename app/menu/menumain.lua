@@ -1,5 +1,4 @@
 local g = love.graphics
-local tween = require 'lib/deps/tween/tween'
 MenuMain = class()
 
 local function lerpAnimation(code, key, val)
@@ -86,32 +85,13 @@ function MenuMain:init()
       return res
     end,
 
-    biomes = function()
+    map = function()
       local u, v = love.graphics.getDimensions()
-      local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
-      local width = .3 * v
-      local height = width * .75
-      local inc = width + .1 * v
+      local width = .4 * v
+      local height = width * (10 / 16)
       local x = u * .8
-      local y = .25 * v
-      local res = {}
-      for i = 1, #config.biomeOrder do
-        local offset = (inc * (biomeDisplay - i))
-        local yoffset = (inc * (biomeDisplay - i) ^ 4)
-        table.insert(res, {x - width / 2 - offset, y + yoffset, width, height})
-      end
-      return res
-    end,
-
-    biomeArrows = function()
-      local u, v = love.graphics.getDimensions()
-      local image = data.media.graphics.menu.arrow
-      local scale = v * .04 / image:getWidth()
-      local w = .3 * v
-      local h = w * .75
-      local x = u * .8 - w / 2
-      local y = .25 * v
-      return {{x - v * .06, y + h / 2}, {x + w + v * .06, y + h / 2}}
+      local y = .22 * v
+      return {x - width / 2, y, width, height}
     end,
 
     play = function()
@@ -124,16 +104,13 @@ function MenuMain:init()
   }
 
   self.selectedBiome = selectedBiome or 1
-  self.biomeDisplay = self.selectedBiome
-  self.prevBiomeDisplay = self.biomeDisplay
-  self.biomeArrowScales = {}
-  self.prevBiomeArrowScales = {}
 
   self.play = ctx.gooey:add(Button, 'menu.main.play')
   self.play.geometry = function() return self.geometry.play end
   self.play:on('click', function() ctx.animations.muju:set('death') end)
   self.play.text = 'Play'
 
+  self.map = MenuMap()
   self.drag = MenuDrag()
 end
 
@@ -144,10 +121,6 @@ function MenuMain:update()
 
   local mx, my = love.mouse.getPosition()
   local u, v = ctx.u, ctx.v
-
-  self.prevBiomeDisplay = self.biomeDisplay
-  self.biomeDisplay = math.lerp(self.biomeDisplay, self.selectedBiome, math.min(10 * tickRate, 1))
-  if math.abs(self.biomeDisplay - self.selectedBiome) > .001 then self.geometry.biomes = nil end
 
   local deck = self.geometry.deck
   for i = 1, #deck do
@@ -209,15 +182,6 @@ function MenuMain:update()
     end
   end
 
-  local image = data.media.graphics.menu.arrow
-  local w = v * .04
-  for i = 1, 2 do
-    self.prevBiomeArrowScales[i] = self.biomeArrowScales[i] or 1
-    local x, y = unpack(self.geometry.biomeArrows[i])
-    local hover = math.inside(mx, my, x - w / 2, y - w / 2, w, w)
-    self.biomeArrowScales[i] = math.lerp(self.biomeArrowScales[i] or 1, hover and 1.5 or 1, 10 * tickRate)
-  end
-
   self.drag:update()
 end
 
@@ -226,70 +190,37 @@ function MenuMain:draw()
 
   local u, v = ctx.u, ctx.v
   local ps = love.window.getPixelScale()
-  local biomeDisplay = math.lerp(self.prevBiomeDisplay, self.biomeDisplay, tickDelta / tickRate)
-  local biomes = self.geometry.biomes
-  for i = 1, #biomes do
-    local biome = config.biomeOrder[i]
-    local unlocked = table.has(ctx.user.biomes, config.biomeOrder[i])
-    local x, y, w, h = unpack(biomes[i])
-    local alpha = 255 - (math.min(math.abs(biomeDisplay - i), 1.35) * (255 / 1.35))
-    if not unlocked then alpha = alpha * .5 end
-    if self.selectedBiome == i then g.setColor(255, 255, 255, alpha)
-    else g.setColor(255, 255, 255, alpha) end
-    local image = data.media.graphics.menu[config.biomeOrder[i]]
-    local scale = w / image:getWidth()
-    g.draw(image, x, y, 0, scale, scale)
 
-    if not unlocked then
-      local lockImage = data.media.graphics.menu.lock
-      local lockX = x + (w / 2) - (lockImage:getWidth() * scale) / 2
-      local lockY = y + (h / 2) - (lockImage:getHeight() * scale) / 2
-      if self.selectedBiome == i then g.setColor(255, 255, 255, 255)
-      else g.setColor(255, 255, 255, alpha) end
-      g.draw(data.media.graphics.menu.lock, lockX, lockY, 0, scale, scale)
-    end
+  local detailsAlpha = 255
+  local biome = config.biomeOrder[self.selectedBiome]
+  local x, y, w, h = unpack(self.geometry.map)
+  g.setFont('mesmerize', .06 * v)
+  g.setColor(0, 0, 0, detailsAlpha)
+  g.printCenter(config.biomes[biome].name, x + w / 2 + 1, .15 * v + 1)
+  g.setColor(255, 255, 255, detailsAlpha)
+  g.printCenter(config.biomes[biome].name, x + w / 2, .15 * v)
 
-    local detailsAlpha = 255 - (math.min(math.abs(biomeDisplay - i), 1) * (255 / 1))
-    if detailsAlpha > 1 then
-      g.setFont('mesmerize', .06 * v)
-      g.setColor(0, 0, 0, detailsAlpha)
-      g.printCenter(config.biomes[biome].name, x + w / 2 + 1, .15 * v + 1)
-      g.setColor(255, 255, 255, detailsAlpha)
-      g.printCenter(config.biomes[biome].name, x + w / 2, .15 * v)
-
-      local medalSize = v * .03
-      local medalInc = (medalSize * 2 + (v * .02))
-      local medalX = x + w / 2 - medalInc * (3 - 1) / 2
-      local medalY = y + h + medalSize + (v * .05)
-      for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
-        local achieved = ctx.user.highscores[biome] >= config.biomes[biome].benchmarks[benchmark]
-        g.setColor(255, 255, 255, (achieved and 1 or .4) * detailsAlpha)
-        local image = data.media.graphics.menu[benchmark]
-        local scale = medalSize * 2 / image:getWidth() * (achieved and 1 or .8)
-        g.draw(image, medalX, medalY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-        medalX = medalX + medalInc
-      end
-
-      local minutes = math.floor((ctx.user.highscores[biome] or 0) / 60)
-      local seconds = ctx.user.highscores[biome] % 60
-      local time = string.format('%02d:%02d', minutes, seconds)
-      g.setFont('mesmerize', .04 * v)
-      g.setColor(0, 0, 0, detailsAlpha)
-      g.printf('Best Time ' .. time, x + w / 2 - 100 + 1, medalY + medalSize + v * .04 + 1, 200, 'center')
-      g.setColor(255, 255, 255, detailsAlpha)
-      g.printf('Best Time ' .. time, x + w / 2 - 100, medalY + medalSize + v * .04, 200, 'center')
-    end
+  local medalSize = v * .03
+  local medalInc = (medalSize * 2 + (v * .02))
+  local medalX = x + w / 2 - medalInc * (3 - 1) / 2
+  local medalY = y + h + medalSize + (v * .05)
+  for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
+    local achieved = ctx.user.highscores[biome] >= config.biomes[biome].benchmarks[benchmark]
+    g.setColor(255, 255, 255, (achieved and 1 or .4) * detailsAlpha)
+    local image = data.media.graphics.menu[benchmark]
+    local scale = medalSize * 2 / image:getWidth() * (achieved and 1 or .8)
+    g.draw(image, medalX, medalY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    medalX = medalX + medalInc
   end
 
-  local biomeArrows = self.geometry.biomeArrows
-  local image = data.media.graphics.menu.arrow
-  local scale = .04 * v / image:getWidth()
-  for i = 1, 2 do
-    local x, y = unpack(biomeArrows[i])
-    local factor = math.lerp(self.prevBiomeArrowScales[i], self.biomeArrowScales[i], tickDelta / tickRate)
-    g.setColor(255, 255, 255)
-    g.draw(image, x, y, 0, scale * (i == 2 and -1 or 1) * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
-  end
+  local minutes = math.floor((ctx.user.highscores[biome] or 0) / 60)
+  local seconds = ctx.user.highscores[biome] % 60
+  local time = string.format('%02d:%02d', minutes, seconds)
+  g.setFont('mesmerize', .04 * v)
+  g.setColor(0, 0, 0, detailsAlpha)
+  g.printf('Best Time ' .. time, x + w / 2 - 100 + 1, medalY + medalSize + v * .04 + 1, 200, 'center')
+  g.setColor(255, 255, 255, detailsAlpha)
+  g.printf('Best Time ' .. time, x + w / 2 - 100, medalY + medalSize + v * .04, 200, 'center')
 
   g.setColor(0, 0, 0, 100)
   g.rectangle('fill', unpack(self.geometry.gutterRunesFrame))
@@ -399,7 +330,7 @@ function MenuMain:draw()
   end
 
   self.play:draw()
-
+  self.map:draw()
   self.drag:draw()
 end
 
@@ -409,6 +340,8 @@ function MenuMain:keypressed(key)
     ctx.animations.muju:set('death')
   elseif key == 'left' then self:previousBiome()
   elseif key == 'right' then self:nextBiome() end
+
+  if key == 'z' then self.map:toggle() end
 end
 
 function MenuMain:mousepressed(mx, my, b)
@@ -419,18 +352,6 @@ end
 function MenuMain:mousereleased(mx, my, b)
   if not self.active then return end
   if ctx.optionsPane.active then return end
-
-  if b == 'l' then
-    for i = 1, 2 do
-      local width = ctx.v * .04
-      local x, y = unpack(self.geometry.biomeArrows[i])
-      if math.inside(mx, my, x - width / 2, y - width / 2, width, width) then
-        if i == 1 then self:previousBiome()
-        elseif i == 2 then self:nextBiome() end
-      end
-    end
-  end
-
   self.drag:mousereleased(mx, my, b)
 end
 
