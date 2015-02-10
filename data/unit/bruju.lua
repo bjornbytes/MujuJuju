@@ -5,11 +5,10 @@ Bruju.description = 'A treant with spiritual powers.  Specializes in dealing hig
 ----------------
 -- Stats
 ----------------
-Bruju.width = 45
-Bruju.height = 60
+Bruju.width = 48
 Bruju.health = 85
 Bruju.damage = 18
-Bruju.range = 0
+Bruju.range = 12
 Bruju.attackSpeed = 1
 Bruju.speed = 45
 Bruju.cost = 5

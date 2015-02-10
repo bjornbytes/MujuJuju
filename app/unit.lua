@@ -84,7 +84,7 @@ function Unit:activate()
 
   -- Depth
   local r = love.math.random(0, 20)
-  --self.y = self.y + r
+  self.y = self.y + r
   self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
 
   -- AI
@@ -119,7 +119,7 @@ function Unit:update()
     self.animation:set('death', {force = true})
     self.animation.speed = 1
     self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * tickRate, 1))
-    self.buffs:update()
+    self.buffs:postupdate()
     return
   end
 
@@ -205,9 +205,6 @@ function Unit:draw()
   g.setColor(255, 255, 255, 255 * self.alpha)
   g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
   self.animation:setPosition(x, y - (lerpd.knockup or 0))
-  self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
-
-  g.rectangle('line', self.x - self.width / 2, self.y, self.width, self.height)
 
   -- Fear icon
   if self.buffs:feared() then

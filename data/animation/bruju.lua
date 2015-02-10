@@ -1,7 +1,7 @@
 local Bruju = extend(Animation)
 
 Bruju.scale = .5
-Bruju.offsety = 56
+Bruju.offsety = 48
 Bruju.default = 'spawn'
 Bruju.states = {}
 
