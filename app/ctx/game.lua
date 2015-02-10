@@ -1,6 +1,6 @@
 Game = class()
 
-function Game:load(user, biome, options)
+function Game:load(user, options, biome, tutorial)
   self.options = options
 
   if self.options.textureSmoothing then
@@ -40,6 +40,8 @@ function Game:load(user, biome, options)
   self.target = Target()
   self.sound = Sound()
   self.effects = Effects()
+
+  if tutorial then self.tutorial = Tutorial() end
 
   Upgrades.clear()
 

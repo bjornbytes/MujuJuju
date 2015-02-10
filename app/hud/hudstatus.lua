@@ -71,6 +71,8 @@ function HudStatus:update()
 end
 
 function HudStatus:draw()
+  if ctx.tutorial then return end
+
   local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.player
   local mx, my = love.mouse.getPosition()

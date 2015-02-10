@@ -32,6 +32,8 @@ function HudExperience:update()
 end
 
 function HudExperience:draw()
+  if ctx.ded or ctx.tutorial then return end
+
   local u, v = ctx.hud.u, ctx.hud.v
   local height = .01 * v
   local display = math.lerp(self.prevDisplay, self.display, tickDelta / tickRate)

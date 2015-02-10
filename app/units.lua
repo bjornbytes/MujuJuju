@@ -41,10 +41,12 @@ function Units:createEnemy()
 end
 
 function Units:update()
-  self.enemyCount = table.count(self:filter(function(u) return u.team == 0 end))
-  self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
+  if not ctx.tutorial then
+    self.enemyCount = table.count(self:filter(function(u) return u.team == 0 end))
+    self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
-  self.level = self.level + (tickRate / 15) * config.biomes[ctx.biome].units.levelScale
+    self.level = self.level + (tickRate / 15) * config.biomes[ctx.biome].units.levelScale
+  end
 
   return Manager.update(self)
 end

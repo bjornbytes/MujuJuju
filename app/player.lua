@@ -125,7 +125,7 @@ function Player:update()
   end)
 
   -- Health decay
-  self:hurt(self.maxHealth * .033 * tickRate)
+  if not ctx.tutorial then self:hurt(self.maxHealth * .033 * tickRate) end
 
   -- Lerp healthbar
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))

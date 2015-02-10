@@ -134,8 +134,7 @@ function Menu:keypressed(key)
     Context:remove(ctx)
     Context:add(Menu)
   elseif key == 't' then
-    Context:remove(ctx)
-    Context:add(Tutorial)
+    self:startGame({tutorial = true})
   end
 end
 
@@ -198,11 +197,11 @@ function Menu:resize()
   self:refreshBackground()
 end
 
-function Menu:startGame()
+function Menu:startGame(options)
   if #self.user.deck.minions == 0 then return end
   if self.menuSounds then self.menuSounds:stop() end
   Context:remove(ctx)
-  Context:add(Game, self.user, config.biomeOrder[self.main.selectedBiome], self.options)
+  Context:add(Game, self.user, self.options, config.biomeOrder[self.main.selectedBiome], options and options.tutorial)
 end
 
 function Menu:refreshBackground()

@@ -158,7 +158,7 @@ function HudHealth:debin(unit)
 end
 
 function HudHealth:draw()
-  if ctx.ending then return end
+  if ctx.tutorial then return end
 
   local p = ctx.player
 
