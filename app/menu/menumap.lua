@@ -57,6 +57,21 @@ function MenuMap:init()
     volcanoTitle = function()
       local x, y, w, h = unpack(self.geometry.frame)
       return {x + .204 * w, y + .225 * h}
+    end,
+
+    trail1 = function()
+      local x, y, w, h = unpack(self.geometry.frame)
+      return {x + .444 * w, y + .830 * h}
+    end,
+
+    trail2 = function()
+      local x, y, w, h = unpack(self.geometry.frame)
+      return {x + .782 * w, y + .509 * h}
+    end,
+
+    trail3 = function()
+      local x, y, w, h = unpack(self.geometry.frame)
+      return {x + .439 * w, y + .469 * h}
     end
   }
 
@@ -115,18 +130,32 @@ function MenuMap:draw()
   end
 
   for k, v in ipairs(config.biomeOrder) do
+    local has = table.has(ctx.user.biomes, v)
+    if k >= 2 then
+      local x, y = unpack(self.geometry['trail' .. (k - 1)])
+      local image = data.media.graphics.worldmap['trail' .. (k - 1)]
+      g.setColor(has and {255, 255, 255} or {255, 255, 255, 100})
+      g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
+    end
+
     local x, y, r = unpack(self.geometry[v])
     local image = data.media.graphics.worldmap.circle
     local scale = r * 2 / image:getWidth()
     scale = scale * math.lerp(self.prevScales[v], self.scales[v], tickDelta / tickRate)
     if ctx.main.selectedBiome == k then g.setColor(255, 255, 255)
-    else g.setColor(255, 255, 255, 200) end
+    else g.setColor(255, 255, 255, 100) end
     g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
     if self.active then
       local image = data.media.graphics.worldmap[v]
       local x, y = unpack(self.geometry[v .. 'Title'])
       g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
+
+      if not has then
+        local image = data.media.graphics.menu.lock
+        g.setColor(255, 255, 255, 200)
+        g.draw(image, x, y, 0, xscale / 2, yscale / 2, image:getWidth() / 2, image:getHeight() / 2)
+      end
     end
   end
 end
@@ -139,7 +168,7 @@ function MenuMap:mousepressed(mx, my, b)
   if b ~= 'l' then return end
 
   for k, v in ipairs(config.biomeOrder) do
-    if math.insideCircle(mx, my, unpack(self.geometry[v])) then
+    if math.insideCircle(mx, my, unpack(self.geometry[v])) and table.has(ctx.user.biomes, v) then
       ctx.main:setBiome(k)
       self.scales[v] = 1.5
       return
