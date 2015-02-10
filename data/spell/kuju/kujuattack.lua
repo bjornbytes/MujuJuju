@@ -3,7 +3,7 @@ local KujuAttack = extend(Spell)
 function KujuAttack:activate()
   self.direction = math.sign(self.target.x - self.unit.x)
   self.x = self.unit.x + self.unit.width / 2 * self.direction
-  self.y = self.unit.y - self.unit.height / 3
+  self.y = self.unit.y - self.unit.height / 4
   self.team = self.unit.team
   self.angle = -self.direction * math.pi
   self.speed = 300

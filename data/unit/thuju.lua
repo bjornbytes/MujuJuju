@@ -5,10 +5,11 @@ Thuju.description = 'A bramble golem.  Exceptional at soaking up and reflecting 
 ----------------
 -- Stats
 ----------------
-Thuju.height = 64
+Thuju.width = 60
+Thuju.height = 120
 Thuju.health = 150
 Thuju.damage = 14
-Thuju.range = 12
+Thuju.range = 0
 Thuju.attackSpeed = 1.15
 Thuju.speed = 35
 Thuju.cost = 5

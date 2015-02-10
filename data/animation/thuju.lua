@@ -1,7 +1,7 @@
 local Thuju = extend(Animation)
 
 Thuju.scale = .35
-Thuju.offsety = 64
+Thuju.offsety = 120
 Thuju.default = 'spawn'
 Thuju.states = {}
 

@@ -145,6 +145,9 @@ function Player:draw()
     love.graphics.setColor(255, 255, 255)
     self.animation:draw(x, y)
   end
+
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.rectangle('line', self.x - self.width / 2, self.y, self.width, self.height)
 end
 
 function Player:keypressed(key)

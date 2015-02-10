@@ -1,7 +1,7 @@
 local Duju = extend(Animation)
 
 Duju.scale = 1
-Duju.offsety = 10
+Duju.offsety = 20
 Duju.default = 'spawn'
 Duju.backwards = true
 Duju.states = {}

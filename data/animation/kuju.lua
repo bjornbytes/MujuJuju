@@ -1,7 +1,7 @@
 local Kuju = extend(Animation)
 
-Kuju.scale = .35
-Kuju.offsety = 64
+Kuju.scale = .325
+Kuju.offsety = 100
 Kuju.backwards = true
 Kuju.default = 'spawn'
 Kuju.states = {}
