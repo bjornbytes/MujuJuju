@@ -117,7 +117,8 @@ end
 function MenuMain:update()
   self.active = ctx.page == 'main'
 
-  if not self.active then return end
+  self.map:update()
+  if not self.active or self.map.active then return end
 
   local mx, my = love.mouse.getPosition()
   local u, v = ctx.u, ctx.v
@@ -335,28 +336,32 @@ function MenuMain:draw()
 end
 
 function MenuMain:keypressed(key)
-  if not self.active then return end
+  self.map:keypressed(key)
+
+  if not self.active or self.map.active then return end
+
   if key == 'return' and table.has(ctx.user.biomes, config.biomeOrder[self.selectedBiome]) then
     ctx.animations.muju:set('death')
   elseif key == 'left' then self:previousBiome()
   elseif key == 'right' then self:nextBiome() end
-
-  if key == 'z' then self.map:toggle() end
 end
 
 function MenuMain:mousepressed(mx, my, b)
-  if not self.active then return end
+  self.map:mousepressed(mx, my, b)
+
+  if not self.active or self.map.active then return end
+
   self.drag:mousepressed(mx, my, b)
 end
 
 function MenuMain:mousereleased(mx, my, b)
-  if not self.active then return end
+  if not self.active or self.map.active then return end
   if ctx.optionsPane.active then return end
   self.drag:mousereleased(mx, my, b)
 end
 
 function MenuMain:gamepadpressed(gamepad, button)
-  if not self.active then return end
+  if not self.active or self.map.active then return end
   if button == 'dpleft' then self:previousBiome()
   elseif button == 'dpright' then self:nextBiome()
   elseif button == 'start' then ctx.animations.muju:set('death')
@@ -368,17 +373,21 @@ function MenuMain:gamepadpressed(gamepad, button)
 end
 
 function MenuMain:resize()
+  self.map:resize()
   table.clear(self.geometry)
 end
 
 function MenuMain:previousBiome()
-  self.selectedBiome = self.selectedBiome - 1
-  if self.selectedBiome <= 0 then self.selectedBiome = #config.biomeOrder end
-  ctx:refreshBackground()
+  self:setBiome(self.selectedBiome - 1)
 end
 
 function MenuMain:nextBiome()
-  self.selectedBiome = self.selectedBiome + 1
-  if self.selectedBiome >= #config.biomeOrder + 1 then self.selectedBiome = 1 end
+  self:setBiome(self.selectedBiome + 1)
+end
+
+function MenuMain:setBiome(index)
+  if index == 0 then index = #config.biomeOrder
+  elseif index > #config.biomeOrder then index = 1 end
+  self.selectedBiome = index
   ctx:refreshBackground()
 end
