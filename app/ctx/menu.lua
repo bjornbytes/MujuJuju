@@ -133,6 +133,9 @@ function Menu:keypressed(key)
     Menu.started = false
     Context:remove(ctx)
     Context:add(Menu)
+  elseif key == 't' then
+    Context:remove(ctx)
+    Context:add(Tutorial)
   end
 end
 
