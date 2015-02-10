@@ -104,6 +104,7 @@ function Game:keypressed(key)
   end
   self.hud:keypressed(key)
   self.players:keypressed(key)
+  if self.tutorial then self.tutorial:keypressed(key) end
 end
 
 function Game:keyreleased(...)

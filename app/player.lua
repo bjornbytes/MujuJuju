@@ -244,7 +244,7 @@ function Player:summon()
   local animation = self.animation.state.name
 
   -- Check if we can summon
-  if not (cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(0)) then
+  if not (ctx.tutorial == nil and cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(0)) then
     return ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
   end
 
