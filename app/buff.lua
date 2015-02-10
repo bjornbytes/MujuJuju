@@ -1,11 +1,8 @@
 Buff = class()
 
-Buff.preupdate = f.empty
-Buff.update = f.empty
-Buff.postupdate = f.empty
-
 Buff.activate = f.empty
 Buff.deactivate = f.empty
+Buff.update = f.empty
 
 function Buff:rot()
   if self.timer then

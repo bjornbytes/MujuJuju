@@ -154,7 +154,7 @@ function MenuMap:draw()
       if not has then
         local image = data.media.graphics.menu.lock
         g.setColor(255, 255, 255, 200)
-        g.draw(image, x, y, 0, xscale / 2, yscale / 2, image:getWidth() / 2, image:getHeight() / 2)
+        g.draw(image, x, y, 0, xscale * .75, yscale * .75, image:getWidth() / 2, image:getHeight() / 2)
       end
     end
   end

@@ -11,13 +11,8 @@ function UnitBuffs:init(unit)
   self:applyRunes('haste')
 end
 
-function UnitBuffs:preupdate()
-  table.with(self.list, 'preupdate')
-end
-
-function UnitBuffs:postupdate()
+function UnitBuffs:update()
   table.with(self.list, 'rot')
-  table.with(self.list, 'postupdate')
   table.with(self.list, 'update')
 
   self.unit.speed = self:getBaseSpeed()
