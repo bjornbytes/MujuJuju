@@ -13,3 +13,6 @@
 [submodule "lib/deps/sha1"]
 	path = lib/deps/sha1
 	url = https://github.com/kikito/sha1.lua.git
+[submodule "lib/deps/popo"]
+	path = lib/deps/popo
+	url = https://github.com/adonaac/popo
