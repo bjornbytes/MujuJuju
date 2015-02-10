@@ -119,7 +119,7 @@ function Unit:update()
     self.animation:set('death', {force = true})
     self.animation.speed = 1
     self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * tickRate, 1))
-    self.buffs:postupdate()
+    self.buffs:update()
     return
   end
 
@@ -193,18 +193,12 @@ function Unit:draw()
   end
   g.setShader()
 
-  -- Draw animation over blurred silhouette on canvas
-  g.setColor(255, 255, 255)
-  self.canvas:renderTo(function()
-    g.pop()
-    self.animation:draw(200, 200, {noupdate = true})
-    ctx.view:worldPush()
-  end)
-
-  -- Draw canvas
+  -- Draw blurred outline
   g.setColor(255, 255, 255, 255 * self.alpha)
   g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
-  self.animation:setPosition(x, y - (lerpd.knockup or 0))
+
+  -- Draw animation
+  self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
 
   -- Fear icon
   if self.buffs:feared() then
