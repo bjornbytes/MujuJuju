@@ -91,7 +91,7 @@ return {
     globalCooldown = 3,
     baseJuju = 30,
     jujuRate = 1,
-    basePopulation = 1,
+    basePopulation = 3,
     maxPopulation = 10,
     colors = {
       purple = {.5, 0, 1},
@@ -137,18 +137,18 @@ return {
         }
       },
       units = {
-        minEnemyRate = 14,
-        maxEnemyRate = 17,
-        minEnemyRateDecay = .05,
-        maxEnemyRateDecay = .05,
+        minEnemyRate = 10,
+        maxEnemyRate = 12,
+        minEnemyRateDecay = .08,
+        maxEnemyRateDecay = .08,
         maxEnemiesCoefficient = .2,
         levelScale = .75,
         upgradeCostIncrease = 1,
         maxElites = 1,
         types = {
-          duju = 0,
-          spuju = 500,
-          vuju = 600
+          duju = 50,
+          spuju = 0,
+          vuju = 50
         }
       },
       shrujuPatches = {300, 600},

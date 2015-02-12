@@ -49,13 +49,12 @@ function SpujuSkull:update()
       ctx.particles:emit('spujuskulltrail', self.x, self.y, 1)
     end
 
-		if self.y + image:getWidth() >= love.graphics.getHeight() - ctx.map.groundHeight then
+		if self.y + image:getWidth() >= ctx.map.height - ctx.map.groundHeight then
 			self.health = self.maxHealth
       local targets = ctx.target:inRange(self, self.radius, 'enemy', 'player', 'unit', 'shrine')
       local damage = self.unit.damage
       table.each(targets, function(target)
         self.unit:attack({target = target, damage = damage, nosound = true})
-        damage = math.max(damage * .5, self.unit.damage * .25)
       end)
       if next(targets) then
         ctx.sound:play(data.media.sounds.spuju.attackHit, function(sound)

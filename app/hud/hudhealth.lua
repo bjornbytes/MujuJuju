@@ -57,6 +57,7 @@ function HudHealth:update()
     minx[code] = math.min(minx[code] or math.huge, unit.x)
     maxx[code] = math.max(maxx[code] or -math.huge, unit.x)
     touched[unit] = true
+    print(tick, code)
   end)
 
   ctx.units:each(function(unit)
@@ -183,7 +184,6 @@ function HudHealth:draw()
       local meanx = totalx / (#bin.units == 0 and 1 or #bin.units)
       local x, y = ctx.view:screenPoint(meanx, ctx.map.height - ctx.map.groundHeight - 150)
       local width = 80 * ctx.view.scale
-      local color = (p and bin.units[1] and bin.units[1].team == p.team) and green or red
       local frame = data.media.graphics.healthbarFrame
       local w, h = frame:getDimensions()
       local scale = width / w
@@ -196,6 +196,7 @@ function HudHealth:draw()
 
       for j = 1, #bin.units do
         local unit = bin.units[j]
+        local color = (bin.units[j].team == p.team) and green or red
 
         -- Frame
         local alpha = (.5 + (false and .5 or 0)) * unit.alpha

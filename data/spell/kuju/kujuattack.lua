@@ -18,7 +18,7 @@ end
 function KujuAttack:update()
   local unit = self.unit
   self.x = self.x + math.dx(self.speed * tickRate, 0) * self.direction
-  if not self.target or math.abs(self.x - self.target.x) < self.width / 2 then
+  if not self.target or math.abs(self.x - self.target.x) < self.width / 2 or math.sign(self.target.x - self.x) ~= self.direction then
     self:hit(self.target, true)
 
     if unit:upgradeLevel('shatter') > 0 then
