@@ -62,6 +62,7 @@ function UnitBuffs:update()
 end
 
 function UnitBuffs:add(code, vars)
+  if not self:shouldApply(code) then return end
   if self:isCrowdControl(code) and self:ccImmunity() == 1 then return end
   if self:get(code) then return self:reapply(code, vars) end
   local buff = data.buff[code]()
@@ -111,6 +112,16 @@ function UnitBuffs:isCrowdControl(buff)
   local tags = buff.tags
   local function t(s) return table.has(tags, s) end
   return t('slow') or t('root') or t('stun') or t('silence') or t('knockback') or t('taunt')
+end
+
+function UnitBuffs:shouldApply(code)
+  for buff in pairs(self.list) do
+    if buff.shouldApplyBuff and buff:shouldApplyBuff(code) == false then
+      return false
+    end
+  end
+
+  return true
 end
 
 function UnitBuffs:applyRunes(stat)

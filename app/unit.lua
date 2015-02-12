@@ -242,6 +242,11 @@ function Unit:attack(options) -- Called when attack animation event is fired
   self:abilityCall('postattack', target, amount)
   self.buffs:postattack(target, amount)
 
+  -- Kill event
+  if target.dying then
+    self.abilityCall('kill', target)
+  end
+
   -- Play sound
   if not options.nosound then
     ctx.sound:play(data.media.sounds[self.class.code].attackHit, function(sound)

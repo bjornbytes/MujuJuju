@@ -26,7 +26,12 @@ Buju.upgrades = {
     y = 0,
     values = {
       [1] = 'Vanish and attack.'
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('ambush')
+      end
+    end
   },
   rend = {
     level = 0,
@@ -37,9 +42,14 @@ Buju.upgrades = {
     x = 0,
     y = 0,
     values = {
-      [1] = '75 base damage and 35 Damage every second for 3 seconds.',
-      [2] = '125 base damage and 45 damage every second for 3 seconds.'
-    }
+      [1] = '100% base damage and 5 Damage every second for 3 seconds.',
+      [2] = '150% base damage and 10 damage every second for 3 seconds.'
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('rend')
+      end
+    end
   },
   darkrend = {
     level = 0,
@@ -86,7 +96,12 @@ Buju.upgrades = {
       [3] = '60% chance to resist slows and stuns.',
       [4] = '80% chance to resist slows and stuns.',
       [5] = '100% chance to resist slows and stuns.'
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit.buffs:add('ghostarmor')
+      end
+    end
   },
   voidmetal = {
     level = 0,
@@ -101,7 +116,12 @@ Buju.upgrades = {
     values = {
       [1] = 'Absorbs 25% of incoming damage.',
       [2] = 'Absorbs 40% of incoming damage.'
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit.buffs:add('voidmetal')
+      end
+    end
   },
   temperedbastion = {
     level = 0,
@@ -131,21 +151,31 @@ Buju.upgrades = {
       [1] = 'Speed increased by 10% for 5 seconds.',
       [2] = 'Speed increased by 20% for 5 seconds.',
       [3] = 'Speed increased by 40% for 5 seconds.'
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('victoryrush')
+      end
+    end
   },
   empoweredstrikes = {
     level = 0,
     maxLevel = 3,
     levelRequirement = 5,
     name = 'Empowered Strikes',
-    description = 'Critical strikes now give a 40% chance to increase attack speed.',
+    description = 'Buju increases his attack speed with each strike.',
     x = -1,
     y = 1,
     values = {
-      [1] = '20% faster attack speed for 2 seconds.',
-      [2] = '30% faster attack speed for 2 seconds.',
-      [3] = '40% faster attack speed for 2 seconds.'
-    }
+      [1] = '10% faster attack speed. Up to 2 stacks.',
+      [2] = '15% faster attack speed. Up to 3 stacks.',
+      [3] = '20% faster attack speed. Up to 4 stacks.'
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('empoweredstrikes')
+      end
+    end
   },
   deathwish = {
     level = 0,
@@ -161,7 +191,12 @@ Buju.upgrades = {
       [1] = '40% chance to execute the target.',
       [2] = '60% chance to execute the target.',
       [3] = '80% chance to execute the target.'
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('deathwish')
+      end
+    end
   },
   grimreaper = {
     level = 0,
@@ -173,7 +208,12 @@ Buju.upgrades = {
     y = 4,
     values = {
       [1] = 'Buju\'s void form lasts for 5 seconds.'
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('grimreaper')
+      end
+    end
   }
 }
 
