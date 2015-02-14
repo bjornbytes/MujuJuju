@@ -49,7 +49,7 @@ function HudShrujuPatch:init(patch)
       local size = v * .08
       local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
       local patchx, patchy = ctx.view:screenPoint(self.patch.x, self.patch.y)
-      return {patchx - size / 2, math.lerp(patchy, v - size - .04 * v, growingFactor), size, size}
+      return {patchx - size / 2, math.lerp(patchy, v - size - .06 * v, growingFactor), size, size}
     end
   }
 end

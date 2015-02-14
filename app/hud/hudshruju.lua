@@ -14,7 +14,7 @@ function HudShruju:init()
       local size = .08 * v
       local inc = size + .02 * v
       local x = u * .5 - (inc * (#p.shruju - 1) / 2)
-      local y = v - (size / 2) - .02 * v
+      local y = v - (size / 2) - .04 * v
       local res = {}
       for i = 1, #p.shruju do
         table.insert(res, {x - size / 2, y - size / 2, size, size})
