@@ -35,12 +35,19 @@ function HudExperience:draw()
   if ctx.ded or ctx.tutorial then return end
 
   local u, v = ctx.hud.u, ctx.hud.v
-  local height = .01 * v
+  local p = ctx.player
+  local height = .02 * v
   local display = math.lerp(self.prevDisplay, self.display, tickDelta / tickRate)
   g.setBlendMode('additive')
   g.setColor(150, 255, 0, 100)
   g.rectangle('fill', 0, v - height, display * u, height)
   g.setBlendMode('alpha')
+
+  if p.nextLevels[p.level] then
+    g.setFont('mesmerize', .02 * v - 4)
+    g.setColor(255, 255, 255)
+    g.printShadow(p.experience .. ' / ' .. p.nextLevels[p.level], u * .5, v - height / 2, true)
+  end
 
   if self.dingTimer > 0 then
     g.setFont('mesmerize', .08 * v)

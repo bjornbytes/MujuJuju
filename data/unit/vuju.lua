@@ -7,8 +7,8 @@ Vuju.description = 'Yay Vuju.'
 ----------------
 Vuju.health = 65
 Vuju.damage = 8
-Vuju.range = 145
-Vuju.attackSpeed = 1
+Vuju.range = 125
+Vuju.attackSpeed = 1.4
 Vuju.speed = 40
 
 Vuju.healthScaling = {7, 1}

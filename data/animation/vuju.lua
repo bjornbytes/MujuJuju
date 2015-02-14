@@ -42,11 +42,12 @@ Vuju.states.attack2 = {
 
 Vuju.states.teleport = {
   priority = 3,
-  speed = 1
+  speed = .7
 }
 
 Vuju.states.puppetize = {
   priority = 3,
+  loop = true,
   speed = 1
 }
 

@@ -16,7 +16,7 @@ end
 
 function VujuAttack:update()
   self.x = self.x + math.dx(self.speed * tickRate, 0) * self.direction
-  if not self.target or math.abs(self.x - self.target.x) < self.width / 2 then
+  if not self.target or math.abs(self.x - self.target.x) < self.width / 2 or math.sign(self.target.x - self.x) ~= self.direction then
     if self.target.buffs then
       self.target.buffs:add('vujuattackdot', {timer = 4, dot = self.unit.damage})
     else
@@ -29,10 +29,8 @@ end
 function VujuAttack:draw()
   if not self.target then return end
   local g = love.graphics
-  g.setColor(255, 255, 255, 255 * (self.target.alpha or 1))
-  local image = data.media.graphics.spell.kujuattack
-  local scale = self.width / image:getWidth()
-  g.draw(image, self.x, self.y, 0, -self.direction * scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+  g.setColor(255, 0, 0, 255 * (self.target.alpha or 1))
+  g.circle('fill', self.x, self.y, 7)
 end
 
 return VujuAttack

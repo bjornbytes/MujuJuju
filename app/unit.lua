@@ -386,6 +386,7 @@ function Unit:initAnimation()
     elseif event.data.name == 'deathjuju' then
       if not self.died then
         self:abilityCall('die')
+        self.buffs:die()
 
         if not self.player then
           local juju = config.biomes[ctx.biome].juju

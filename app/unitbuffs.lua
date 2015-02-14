@@ -206,6 +206,11 @@ function UnitBuffs:postattack(target, damage)
   table.with(self.list, 'postattack', target, damage)
 end
 
+function UnitBuffs:die()
+  table.with(self.list, 'die')
+  table.with(self.list, 'deactivate')
+end
+
 function UnitBuffs:slowed()
   return next(self:buffsWithTag('slow'))
 end

@@ -90,7 +90,7 @@ return {
     minCooldown = .75,
     globalCooldown = 3,
     baseJuju = 30,
-    jujuRate = 1,
+    jujuRate = 0,
     basePopulation = 3,
     maxPopulation = 10,
     colors = {
@@ -146,9 +146,9 @@ return {
         upgradeCostIncrease = 1,
         maxElites = 1,
         types = {
-          duju = 50,
-          spuju = 0,
-          vuju = 50
+          duju = 500,
+          spuju = 500,
+          vuju = 0
         }
       },
       shrujuPatches = {300, 600},
