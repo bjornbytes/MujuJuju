@@ -20,13 +20,13 @@ function MenuMain:init()
     deck = function()
       local u, v = love.graphics.getDimensions()
       local size = .2 * v
-      local inc = size + .1 * v
-      local runeSize = .06 * v
+      local inc = size + .15 * v
+      local runeSize = .08 * v
       local runeInc = runeSize + .02 * v
       local frame = self.geometry.gutterRunesFrame
       local x = frame[1] + frame[3] / 2 - inc * ((#ctx.user.deck.minions - 1) / 2)
       local y = .45 * v
-      local runey = y - .2 * v
+      local runey = y - .18 * v
       local res = {}
       for i = 1, #ctx.user.deck.minions do
         table.insert(res, {x, y, size / 2, {}})
@@ -77,7 +77,7 @@ function MenuMain:init()
       local inc = (r * 2) + .02 * v
       local frame = self.geometry.gutterRunesFrame
       local x = frame[1] + frame[3] / 2 - inc * ((#ctx.user.minions - 1) / 2)
-      local y = .12 * v
+      local y = .15 * v
       local res = {}
       for i = 1, #ctx.user.minions do
         table.insert(res, {x, y, r})
@@ -131,7 +131,7 @@ function MenuMain:update()
     if not self.drag:isDragging('minion', i) then
       local code = ctx.user.deck.minions[i]
 
-      lerpAnimation(code, 'scale', 1)
+      lerpAnimation(code, 'scale', .9)
       lerpAnimation(code, 'x', x)
       lerpAnimation(code, 'y', y)
 
@@ -256,6 +256,11 @@ function MenuMain:draw()
   g.setFont('mesmerize', v * .04)
   local x, y = unpack(self.geometry.gutterRunesLabel)
   g.print('Runes', x, y)
+
+  local frame = self.geometry.gutterRunesFrame
+  g.setFont('mesmerize', .016 * v)
+  g.setColor(#ctx.user.deck.minions < ctx.user.deckSlots and {255, 255, 255} or {255, 150, 150})
+  g.printShadow(#ctx.user.deck.minions .. ' / ' .. ctx.user.deckSlots, frame[1] + frame[3] / 2, v * .04, true)
 
   local gutterMinions = self.geometry.gutterMinions
   for i = 1, #gutterMinions do
