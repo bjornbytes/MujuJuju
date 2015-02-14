@@ -146,9 +146,8 @@ return {
         upgradeCostIncrease = 1,
         maxElites = 1,
         types = {
-          duju = 500,
-          spuju = 500,
-          vuju = 0
+          duju = 0,
+          spuju = 600
         }
       },
       shrujuPatches = {300, 600},
@@ -199,8 +198,7 @@ return {
         maxElites = 1,
         types = {
           spuju = 0,
-          duju = 1100,
-          vuju = 1300
+          vuju = 600
         }
       },
       shrujuPatches = {300, 600},
@@ -251,8 +249,8 @@ return {
         maxElites = 2,
         types = {
           vuju = 0,
-          spuju = 2100,
-          duju = 2400
+          spuju = 0,
+          duju = 0
         }
       },
       shrujuPatches = {300, 600},
