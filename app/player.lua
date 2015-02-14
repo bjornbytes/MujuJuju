@@ -6,7 +6,7 @@ Player.depth = 0
 Player.walkSpeed = 65
 
 -- Experience table
-Player.nextLevels = {175}
+Player.nextLevels = {125}
 for i = 2, 30 do
   local prev = Player.nextLevels[i - 1]
   local diff = prev - (Player.nextLevels[i - 2] or 0)
@@ -56,7 +56,7 @@ function Player:init()
 
   -- Summoning, selection, and population
   self.summonSelect = 1
-  self.maxPopulation = config.player.basePopulation
+  self.maxPopulation = config.player.basePopulation * 10
   self.totalSummoned = 0
 
   -- Buffs
