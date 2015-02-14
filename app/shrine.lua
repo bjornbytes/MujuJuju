@@ -6,7 +6,7 @@ Shrine.height = 144
 
 Shrine.maxHealth = 5000
 
-Shrine.depth = 5
+Shrine.depth = -3.47
 
 function Shrine:init()
   self.x = ctx.map.width / 2

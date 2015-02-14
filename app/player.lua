@@ -2,7 +2,7 @@ Player = class()
 
 Player.width = 45
 Player.height = 90
-Player.depth = 0
+Player.depth = -3.5
 Player.walkSpeed = 65
 
 -- Experience table
