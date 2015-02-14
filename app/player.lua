@@ -48,7 +48,7 @@ function Player:init()
   -- Experience
   self.experience = 0
   self.level = 1
-  self.skillPoints = 100
+  self.skillPoints = 0
   self.attributePoints = 0
 
   -- List of magic shruju effects
