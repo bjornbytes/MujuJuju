@@ -146,9 +146,8 @@ return {
         upgradeCostIncrease = 1,
         maxElites = 1,
         types = {
-          duju = 50,
-          spuju = 0,
-          vuju = 50
+          duju = 0,
+          spuju = 50
         }
       },
       shrujuPatches = {300, 600},

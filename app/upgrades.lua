@@ -5,7 +5,7 @@ Upgrades.clear = function()
     local p = ctx.player
 		local upgrade = data.unit[who].upgrades[what]
     if p.skillPoints == 0 then return false end
-		if not upgrade.costs[upgrade.level + 1] then return false end
+    if upgrade.level >= upgrade.maxLevel then return false end
 		return Upgrades.checkPrerequisites(who, what)
 	end
 

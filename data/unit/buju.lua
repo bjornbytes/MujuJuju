@@ -29,7 +29,7 @@ Buju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit:addAbility('ambush')
+        unit.buffs:add('ambush')
       end
     end
   },
@@ -211,7 +211,7 @@ Buju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit:addAbility('grimreaper')
+        unit.buffs:add('grimreaper')
       end
     end
   }
