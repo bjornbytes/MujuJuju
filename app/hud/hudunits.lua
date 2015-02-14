@@ -158,6 +158,13 @@ function HudUnits:draw()
   g.setColor(0, 0, 0, 80 * math.clamp(upgradeFactor, 0, 1))
   g.rectangle('fill', 0, 0, ctx.view.frame.width, ctx.view.frame.height)
 
+  if t > 0 then
+    g.setFont('pixel', 8)
+    g.setColor(255, 255, 255)
+    g.printShadow(p.skillPoints .. ' skill points', .01 * v, .01 * v)
+    g.printShadow(p.attributePoints .. ' attribute points', .01 * v, .01 * v + g.getFont():getHeight())
+  end
+
   for i = 1, self.count do
     local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
     local bg = data.media.graphics.hud.minion
