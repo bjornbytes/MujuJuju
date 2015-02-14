@@ -57,7 +57,6 @@ function HudHealth:update()
     minx[code] = math.min(minx[code] or math.huge, unit.x)
     maxx[code] = math.max(maxx[code] or -math.huge, unit.x)
     touched[unit] = true
-    print(tick, code)
   end)
 
   ctx.units:each(function(unit)
