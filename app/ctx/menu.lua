@@ -31,6 +31,8 @@ function Menu:load(selectedBiome, options)
   end
   local str = love.filesystem.read('save/user.json')
   self.user = json.decode(str)
+  self.user.deckSlots = 3
+  saveUser(self.user)
 
   self.cursor = Cursor()
   self.sound = Sound()

@@ -19,14 +19,14 @@ function MenuMain:init()
   self.geometryFunctions = {
     deck = function()
       local u, v = love.graphics.getDimensions()
-      local size = .25 * v
-      local inc = size + .2 * v
-      local runeSize = .08 * v
+      local size = .2 * v
+      local inc = size + .1 * v
+      local runeSize = .06 * v
       local runeInc = runeSize + .02 * v
       local frame = self.geometry.gutterRunesFrame
       local x = frame[1] + frame[3] / 2 - inc * ((#ctx.user.deck.minions - 1) / 2)
-      local y = .35 * v
-      local runey = y - .225 * v
+      local y = .45 * v
+      local runey = y - .2 * v
       local res = {}
       for i = 1, #ctx.user.deck.minions do
         table.insert(res, {x, y, size / 2, {}})
@@ -75,12 +75,13 @@ function MenuMain:init()
       local u, v = love.graphics.getDimensions()
       local r = .06 * v
       local inc = (r * 2) + .02 * v
-      local x = u * .09
-      local y = inc
+      local frame = self.geometry.gutterRunesFrame
+      local x = frame[1] + frame[3] / 2 - inc * ((#ctx.user.minions - 1) / 2)
+      local y = .12 * v
       local res = {}
       for i = 1, #ctx.user.minions do
         table.insert(res, {x, y, r})
-        y = y + inc
+        x = x + inc
       end
       return res
     end,

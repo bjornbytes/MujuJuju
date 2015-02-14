@@ -1,6 +1,6 @@
 local g = love.graphics
 MenuDrag = class()
-MenuDrag.gutterThreshold = .18
+MenuDrag.gutterThreshold = .2
 
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
@@ -22,7 +22,7 @@ function MenuDrag:update()
   if self.active then
     if self.dragging == 'minion' or self.dragging == 'gutterMinion' then
       local code = self.dragging == 'minion' and ctx.user.deck.minions[self.draggingIndex] or ctx.user.minions[self.draggingIndex]
-      lerpAnimation(code, 'scale', love.mouse.getX() < self.gutterThreshold * ctx.u and .75 or 1.2)
+      lerpAnimation(code, 'scale', love.mouse.getY() < self.gutterThreshold * ctx.v and .75 or 1.2)
       lerpAnimation(code, 'x', love.mouse.getX())
       lerpAnimation(code, 'y', love.mouse.getY())
     elseif self.dragging == 'rune' or self.dragging == 'gutterRune' then
@@ -166,7 +166,7 @@ function MenuDrag:mousereleased(mx, my, b)
       end
     end
   elseif self.dragging == 'minion' then
-    if b == 'r' or mx < self.gutterThreshold * ctx.u then
+    if b == 'r' or my < self.gutterThreshold * ctx.v then
       local index = self.draggingIndex
       local code = ctx.user.deck.minions[index]
       table.insert(ctx.user.minions, code)
@@ -179,20 +179,20 @@ function MenuDrag:mousereleased(mx, my, b)
       dirty = true
     end
   elseif self.dragging == 'gutterMinion' then
-    if b == 'r' or mx > self.gutterThreshold * ctx.u then
+    if b == 'r' or my > self.gutterThreshold * ctx.v then
       local index = self.draggingIndex
       local code = ctx.user.minions[index]
       ctx.animations[code]:set('spawn')
       table.insert(ctx.user.deck.minions, code)
       table.remove(ctx.user.minions, index)
-      if #ctx.user.deck.minions > 1 then
-        table.insert(ctx.user.minions, ctx.user.deck.minions[1])
-        table.remove(ctx.user.deck.minions, 1)
+      if #ctx.user.deck.minions > ctx.user.deckSlots then
+        table.insert(ctx.user.minions, ctx.user.deck.minions[#ctx.user.deck.minions])
+        table.remove(ctx.user.deck.minions, index)
       end
-      table.each(ctx.user.deck.runes[1], function(rune, j)
-        if rune.unit and rune.unit ~= ctx.user.deck.minions[1] then
+      table.each(ctx.user.deck.runes[index], function(rune, j)
+        if rune.unit and rune.unit ~= ctx.user.deck.minions[index] then
           table.insert(ctx.user.runes, rune)
-          ctx.user.deck.runes[1][j] = nil
+          ctx.user.deck.runes[index][j] = nil
         end
       end)
       dirty = true
