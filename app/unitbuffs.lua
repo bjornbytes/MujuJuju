@@ -208,10 +208,7 @@ end
 
 function UnitBuffs:die()
   table.with(self.list, 'die')
-<<<<<<< HEAD
   table.with(self.list, 'deactivate')
-=======
->>>>>>> 274002b2a6057e1dfb58e010ca2c34fe78885621
 end
 
 function UnitBuffs:slowed()
