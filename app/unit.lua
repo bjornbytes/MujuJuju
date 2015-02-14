@@ -148,6 +148,9 @@ function Unit:update()
   else
     self.animation.speed = 1
   end
+
+  -- Health decay
+  if self.player then self:hurt(self.maxHealth * .02 * tickRate) end
 end
 
 function Unit:draw()
