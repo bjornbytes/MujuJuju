@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "vjQI6I+czrmKNbtWfzvUOvq+HLs", "spine": "2.1.09", "width": 280.99, "height": 359.01 },
+"skeleton": { "hash": "Uc/8a2/67jATDRnBH3BaBUstp7c", "spine": "2.1.10", "width": 280.99, "height": 359.01 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "bone", "parent": "root", "x": 0.58, "y": 150.79 },
@@ -64,7 +64,8 @@
 	"attack": {},
 	"deathjuju": {},
 	"stepone": {},
-	"steptwo": {}
+	"steptwo": {},
+	"vanish": {}
 },
 "animations": {
 	"attack": {
@@ -1263,6 +1264,83 @@
 		]
 	},
 	"spawn": {},
+	"vanish": {
+		"slots": {
+			"chest": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			},
+			"head": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			},
+			"left arm lower": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			},
+			"left arm upper": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			},
+			"left leg": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			},
+			"leftblade": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			},
+			"right arm lower": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			},
+			"right arm upper": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			},
+			"right leg": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			},
+			"rightblade": {
+				"color": [
+					{ "time": 0, "color": "ffffffff" },
+					{ "time": 0.2333, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 0.3333, "color": "ffffff00" }
+				]
+			}
+		},
+		"events": [
+			{ "time": 0.2333, "name": "vanish" }
+		]
+	},
 	"walk": {
 		"bones": {
 			"bone": {
