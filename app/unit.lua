@@ -6,7 +6,7 @@ Unit.classStats = {'width', 'height', 'health', 'damage', 'range', 'attackSpeed'
 
 Unit.width = 64
 Unit.height = 64
-Unit.depth = -3
+Unit.depth = -3.5
 
 ----------------
 -- Core
@@ -16,6 +16,17 @@ function Unit:activate()
   -- Static canvas variable is shared by all units for outline drawing
   Unit.canvas = Unit.canvas or g.newCanvas(400, 400)
   Unit.backCanvas = Unit.backCanvas or g.newCanvas(400, 400)
+
+  -- Position
+  self.y = ctx.map.height - ctx.map.groundHeight - self.height
+
+  -- Depth
+  local r = love.math.random(-30, 30)
+  self.y = self.y - r / 1.5
+  self.depth = self.depth + r / 30
+
+  -- Scale
+  self.scale = 1 - r / 300
 
   -- Initialize subsystems
   self:initAnimation()
@@ -44,7 +55,6 @@ function Unit:activate()
   end
 
   -- Basic data
-  self.y = ctx.map.height - ctx.map.groundHeight - self.height
   self.team = self.player and self.player.team or 0
   self.dying = false
   self.died = false
@@ -81,11 +91,6 @@ function Unit:activate()
   self.alpha = 1
   self.glowScale = 1
   self.knockup = 0
-
-  -- Depth
-  local r = love.math.random(0, 20)
-  self.y = self.y + r
-  self.depth = self.depth - r / 30 + love.math.random() * (1 / 30)
 
   -- AI
   self.ai = (data.ai[self.class.code] or UnitAI)()
@@ -366,7 +371,7 @@ end
 
 function Unit:initAnimation()
   self.animation = data.animation[self.class.code]({
-    scale = data.animation[self.class.code].scale * (self.elite and config.elites.scale or 1)
+    scale = data.animation[self.class.code].scale * (self.elite and config.elites.scale or 1) * self.scale
   })
 
   if self.player then
