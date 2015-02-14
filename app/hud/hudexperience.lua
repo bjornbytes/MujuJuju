@@ -50,8 +50,6 @@ function HudExperience:draw()
     g.printShadow(math.round(p.experience) .. ' / ' .. p.nextLevels[p.level], u * .5, v - height / 2, true)
   end
 
-  g.printShadow('Level ' .. p.level, v * .01, v - height - v * .01 - g.getFont():getHeight())
-
   if self.dingTimer > 0 then
     g.setFont('mesmerize', .08 * v)
     g.setColor(255, 255, 255, math.min(self.dingTimer / .2, 1) * 255)

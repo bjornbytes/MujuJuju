@@ -100,7 +100,7 @@ function HudStatus:draw()
   -- Juju Text
   g.setFont('mesmerize', height * .4)
   g.setColor(255, 255, 255)
-  local str = p.skillPoints .. ', ' .. p.attributePoints
+  local str = p.level
   g.print(str, xx + (v * .03), (height * .5) - g.getFont():getHeight() / 2 + 1)
   local hitboxWidth = (xx + (v * .03) + g.getFont():getWidth(str)) - hitboxX
   self.hitboxes.juju[1] = hitboxX

@@ -125,9 +125,6 @@ function Player:update()
     end)
   end)
 
-  -- Health decay
-  if not ctx.tutorial then self:hurt(self.maxHealth * .033 * tickRate) end
-
   -- Lerp healthbar
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
 
@@ -278,8 +275,8 @@ function Player:addJuju(amount)
     self.level = self.level + 1
     self.skillPoints = self.skillPoints + 1
     self.attributePoints = self.attributePoints + 2
-    self.maxHealth = self.maxHealth + 50
-    self:heal(50)
+    self.maxHealth = self.maxHealth + 25
+    self:heal(25)
     self.lives = self.lives + 3
   end
 
