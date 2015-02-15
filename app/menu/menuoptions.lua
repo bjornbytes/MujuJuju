@@ -358,7 +358,7 @@ function MenuOptions:setMode(n)
     local resolutions = love.window.getFullscreenModes()
     table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
     ctx.options.resolution = {resolutions[1].width, resolutions[1].height}
-    borderless = true
+    borderless = false
   elseif table.eq(ctx.options.resolution, {love.window.getDesktopDimensions()}) then
     borderless = true
   end
