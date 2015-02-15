@@ -34,8 +34,6 @@ function Tooltip:update()
     mx, my = love.mouse.getPosition()
   end
 
-  self.active = false
-
   self.prevCursorX = self.cursorX
   self.prevCursorY = self.cursorY
   self.cursorX = math.lerp(self.cursorX, mx, 8 * tickRate)
@@ -43,30 +41,28 @@ function Tooltip:update()
 end
 
 function Tooltip:draw()
-  if self.active then
-    local u, v = self:getUV()
-    local mx = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate)
-    local my = math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
-    local raw = self.tooltipText:gsub('{%a+}', '')
-    local normalFont = self.richOptions.normal
-    local titleFont = self.richOptions.title
-    g.setFont(self.richOptions.normal)
-    local titleLine = raw:sub(1, raw:find('\n'))
-    local normalText = raw:sub(raw:find('\n') + 1) -- TODO memoize in :setTooltip
-    local textWidth, lines = normalFont:getWrap(normalText, u * self.maxWidth)
-    local titleWidth, titleLines = titleFont:getWrap(titleLine, u * self.maxWidth)
-    textWidth = math.max(textWidth, titleWidth)
-    textHeight = titleLines * titleFont:getHeight() + lines * normalFont:getHeight()
-    local xx = math.min(mx + 8, u - textWidth - 24)
-    local yy = math.min(my + 8, v - (textHeight + 20))
-    g.setColor(30, 50, 70, 240)
-    g.rectangle('fill', xx, yy, textWidth + 14, textHeight + 9)
-    g.setColor(10, 30, 50, 255)
-    g.rectangle('line', xx + .5, yy + .5, textWidth + 14, textHeight + 9)
-    self.tooltip:draw(xx + 8, yy + 4)
-  else
-    self.tooltipText = nil
-  end
+  if not self.active then self.tooltipText = nil return end
+
+  local u, v = self:getUV()
+  local mx = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate)
+  local my = math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
+  local raw = self.tooltipText:gsub('{%a+}', '')
+  local normalFont = self.richOptions.normal
+  local titleFont = self.richOptions.title
+  g.setFont(self.richOptions.normal)
+  local titleLine = raw:sub(1, raw:find('\n'))
+  local normalText = raw:sub(raw:find('\n') + 1) -- TODO memoize in :setTooltip
+  local textWidth, lines = normalFont:getWrap(normalText, u * self.maxWidth)
+  local titleWidth, titleLines = titleFont:getWrap(titleLine, u * self.maxWidth)
+  textWidth = math.max(textWidth, titleWidth)
+  textHeight = titleLines * titleFont:getHeight() + lines * normalFont:getHeight()
+  local xx = math.min(mx + 8, u - textWidth - 24)
+  local yy = math.min(my + 8, v - (textHeight + 20))
+  g.setColor(30, 50, 70, 240)
+  g.rectangle('fill', xx, yy, textWidth + 14, textHeight + 9)
+  g.setColor(10, 30, 50, 255)
+  g.rectangle('line', xx + .5, yy + .5, textWidth + 14, textHeight + 9)
+  self.tooltip:draw(xx + 8, yy + 4)
 end
 
 function Tooltip:setTooltip(str)
@@ -180,6 +176,10 @@ function Tooltip:resize()
   self.richOptions.title = Typo.font('mesmerize', .0376 * v)
   self.richOptions.normal = Typo.font('mesmerize', .02 * v)
   self.richOptions.bold = Typo.font('mesmerizeb', .02 * v)
+end
+
+function Tooltip:dirty()
+  self.active = false
 end
 
 function Tooltip:getUV()

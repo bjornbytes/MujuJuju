@@ -87,8 +87,8 @@ function Unit:activate()
   -- Display-related variables
   self.maxHealth = self.health
   self.healthDisplay = self.health
-  self.prev = {x = self.x, y = self.y, health = self.health, healthDisplay = self.healthDisplay, knockup = 0, glowScale = 1}
-  self.alpha = 1
+  self.prev = {x = self.x, y = self.y, health = self.health, healthDisplay = self.healthDisplay, knockup = 0, glowScale = 1, alpha = 0}
+  self.alpha = 0
   self.glowScale = 1
   self.knockup = 0
 
@@ -115,6 +115,7 @@ function Unit:update()
   self.prev.healthDisplay = self.healthDisplay
   self.prev.knockup = self.knockup
   self.prev.glowScale = self.glowScale
+  self.prev.alpha = self.alpha
 
   -- Dying behavior
   if self.dying then
@@ -124,6 +125,7 @@ function Unit:update()
     self.animation:set('death', {force = true})
     self.animation.speed = 1
     self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * tickRate, 1))
+    self.alpha = math.lerp(self.alpha, 0, math.min(6 * tickRate, 1))
     self.buffs:update()
     return
   end
@@ -143,6 +145,7 @@ function Unit:update()
   -- Lerps
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
   self.glowScale = math.lerp(self.glowScale, 1, math.min(6 * tickRate, 1))
+  self.alpha = math.lerp(self.alpha, 1, math.min(6 * tickRate, 1))
 
   -- Update animation speed
   if self.animation.state.name == 'attack' then
@@ -169,7 +172,7 @@ function Unit:draw()
 
   self.canvas:clear(r, gg, b, 0)
   self.backCanvas:clear(r, gg, b, 0)
-  g.setColor(r, gg, b, 255 * self.alpha)
+  g.setColor(r, gg, b)
 
   -- Render colored silhouette of unit to canvas
   local shader = data.media.shaders.colorize
@@ -202,7 +205,7 @@ function Unit:draw()
   g.setShader()
 
   -- Draw blurred outline
-  g.setColor(255, 255, 255, 255 * self.alpha)
+  g.setColor(255, 255, 255, 255 * lerpd.alpha)
   g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
 
   -- Draw animation
@@ -210,7 +213,7 @@ function Unit:draw()
 
   -- Fear icon
   if self.buffs:feared() then
-    g.setColor(255, 255, 255, 150 * self.alpha)
+    g.setColor(255, 255, 255, 150 * lerpd.alpha)
     local image = data.media.graphics.fear
     local scale = (40 / image:getHeight()) * (1 + math.cos(math.sin(tick) / 3) / 5)
     g.draw(image, self.x, self.y - self.height - 35, math.cos(tick / 3) / 6, scale, scale, 53, 83)

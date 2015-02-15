@@ -5,12 +5,12 @@ function love.load()
 
   function saveUser(user)
     love.filesystem.createDirectory('save')
-    love.filesystem.write('save/user.json', json.encode(user))
+    love.filesystem.write('save/user.json', json.encode(user, {indent = true}))
   end
 
   function saveOptions(options)
     love.filesystem.createDirectory('save')
-    love.filesystem.write('save/options.json', json.encode(options))
+    love.filesystem.write('save/options.json', json.encode(options, {indent = true}))
   end
 
 	Context:add(Menu)

@@ -46,7 +46,7 @@ function MenuOptions:init()
   self.controlGroups = {'graphics', 'sound', 'gameplay'}
 
   self.controls = {
-    graphics = {'resolution', 'fullscreen', 'display', 'vsync', 'fsaa', 'textureSmoothing', 'postprocessing', 'particles'},
+    graphics = {'resolution', 'fullscreen', 'display', 'vsync', 'msaa', 'textureSmoothing', 'postprocessing', 'particles'},
     sound = {'mute', 'master', 'music', 'sound'},
     gameplay = {'colorblind'}
   }
@@ -56,7 +56,7 @@ function MenuOptions:init()
     fullscreen = Checkbox,
     display = Dropdown,
     vsync = Checkbox,
-    fsaa = Checkbox,
+    msaa = Checkbox,
     textureSmoothing = Checkbox,
     postprocessing = Checkbox,
     particles = Checkbox,
@@ -69,7 +69,7 @@ function MenuOptions:init()
 
   self.controlLabels = {
     display = 'Monitor',
-    fsaa = 'Antialiasing',
+    msaa = 'Antialiasing',
     textureSmoothing = 'Texture Smoothing',
     colorblind = 'Colorblind Mode'
   }
@@ -95,7 +95,7 @@ function MenuOptions:init()
   end
 
   for i = 1, love.window.getDisplayCount() do
-    table.insert(self.dropdownChoices.display, i)
+    table.insert(self.dropdownChoices.display, love.window.getDisplayName(i))
   end
 
   -- Called at load and when an option is changed externally so components can refresh their state.
@@ -105,7 +105,10 @@ function MenuOptions:init()
         if t then return t[1] .. ' x ' .. t[2] end
         return self.dropdownChoices.resolution[1]
       end,
-      fsaa = function(x) return x > 0 end
+      display = function(index)
+        return love.window.getDisplayName(index)
+      end,
+      msaa = function(x) return x and x > 0 or false end
     }
 
     table.each(self.controlGroups, function(group)
@@ -125,14 +128,21 @@ function MenuOptions:init()
         local w, h = str:match('(%d+)%sx%s(%d+)')
         return {w, h}
       end,
-      fsaa = function(value)
+      display = function(str)
+        for i = 1, love.window.getDisplayCount() do
+          if love.window.getDisplayName(i) == str then return i end
+        end
+
+        return 1
+      end,
+      msaa = function(value)
         return value and 4 or 0
       end
     }
 
     ctx.options[keyChanged] = translators[keyChanged] and translators[keyChanged](value) or value
 
-    if keyChanged == 'resolution' or keyChanged == 'fullscreen' or keyChanged == 'display' or keyChanged == 'vsync' or keyChanged == 'fsaa' then
+    if keyChanged == 'resolution' or keyChanged == 'fullscreen' or keyChanged == 'display' or keyChanged == 'vsync' or keyChanged == 'msaa' then
       self:setMode()
     elseif keyChanged == 'mute' then
       ctx.sound:setMute(value)
@@ -339,10 +349,15 @@ function MenuOptions:setMode(n)
   if n >= 2 then return end
 
   local ps = love.window and love.window.getPixelScale() or 1
-  local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'fsaa'})
+  local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'msaa'})
   options.highdpi = true
 
-  ctx.options.resolution = ctx.options.resolution or {0, 0}
+  if not ctx.options.resolution then
+    local resolutions = love.window.getFullscreenModes()
+    table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
+    ctx.options.resolution = {resolutions[1].width, resolutions[1].height}
+  end
+
   local borderless = table.eq(ctx.options.resolution, {0, 0}) or (love.window and table.eq(ctx.options.resolution, {love.window.getDesktopDimensions()}))
   options.fullscreentype = borderless and 'desktop' or 'normal'
 

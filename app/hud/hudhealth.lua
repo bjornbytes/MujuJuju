@@ -48,6 +48,8 @@ function HudHealth:init()
 end
 
 function HudHealth:update()
+  if ctx.units:count() == 0 then return end
+
   local minx = {}
   local maxx = {}
   local touched = {}

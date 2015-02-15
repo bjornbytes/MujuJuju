@@ -2,7 +2,7 @@ function love.run()
 	if love.math then love.math.setRandomSeed(os.time(), os.time() % 19) end
 	love.math.random() love.math.random()
 
-	tickRate = .02
+	tickRate = .03
 	tickDelta = 0
 
 	love.load(arg)

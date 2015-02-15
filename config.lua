@@ -421,7 +421,7 @@ return {
     fullscreen = true,
     display = 1,
     vsync = false,
-    fsaa = 4,
+    msaa = 4,
     textureSmoothing = true,
     postprocessing = true,
     particles = true,

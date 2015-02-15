@@ -33,13 +33,11 @@ function HudShruju:update()
     self.geometry.shruju = nil
   end
 
+  if #self.geometry.shruju == 0 then return end
+
   local shruju = self.geometry.shruju
   for i = 1, #shruju do
     local x, y, w, h = unpack(self.geometry.shruju[i])
-    if p.shruju[i] and math.inside(mx, my, x, y, w, h) then
-      ctx.hud.tooltip:setMagicShrujuTooltip(p.shruju[i])
-    end
-
     if love.math.random() < 4 * tickRate then
       ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
     end
@@ -47,6 +45,8 @@ function HudShruju:update()
 end
 
 function HudShruju:draw()
+  if #self.geometry.shruju == 0 then return end
+
   local p = ctx.player
   local shruju = self.geometry.shruju
   local u, v = ctx.hud.u, ctx.hud.v
@@ -78,5 +78,17 @@ function HudShruju:draw()
 
     g.setColor(0, 0, 0, 100)
     g.polygon('fill', points)
+  end
+end
+
+function HudShruju:mousemoved(mx, my)
+  local p = ctx.player
+  local shruju = self.geometry.shruju
+  for i = 1, #shruju do
+    local x, y, w, h = unpack(self.geometry.shruju[i])
+    if p.shruju[i] and math.inside(mx, my, x, y, w, h) then
+      ctx.hud.tooltip:setMagicShrujuTooltip(p.shruju[i])
+      return
+    end
   end
 end

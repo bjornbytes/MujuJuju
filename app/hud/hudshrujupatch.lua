@@ -57,7 +57,6 @@ end
 function HudShrujuPatch:update()
   if not self.patch then return end
   local p = ctx.player
-  local mx, my = love.mouse.getPosition()
 
   if self.patch and #self.patch.types ~= self.geometry.types then self.geometry.types = nil end
 
@@ -67,23 +66,8 @@ function HudShrujuPatch:update()
     self.active = true
   end
 
-  if self.active then
-    local types = self.geometry.types
-    for i = 1, #types do
-      local shruju = data.shruju[self.patch.types[i]]
-      local x, y, w, h = unpack(types[i])
-      if math.inside(mx, my, x, y, w, h) then
-        ctx.hud.tooltip:setShrujuTooltip(shruju)
-      end
-    end
-  end
-
   if (self.patch.growing or self.patch.slot) then
     local x, y, w, h = unpack(self.geometry.slot)
-    if math.inside(mx, my, x, y, w, h) then
-      ctx.hud.tooltip:setShrujuTooltip(data.shruju[self.patch.growing] or self.patch.slot)
-    end
-
     if self.patch.slot and self.patch.slot.effect and love.math.random() < 4 * tickRate then
       ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
     end
@@ -105,80 +89,80 @@ function HudShrujuPatch:update()
 end
 
 function HudShrujuPatch:draw()
+  if not self.patch then return end
+
   local u, v = ctx.hud.u, ctx.hud.v
   local mx, my = love.mouse.getPosition()
 
-  if self.patch then
+  g.setFont('pixel', 8)
+
+  local factor, t = self:getFactor()
+  local alphaFactor = ((t / self.maxTime) ^ 4) * .7
+  local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
+
+  if t < 1 or (self.growingFactor > .01 and self.growingFactor < .99) then table.clear(self.geometry)
+  elseif t == 0 then return end
+
+  local types = self.geometry.types
+
+  for i = 1, #types do
+    local shruju = data.shruju[self.patch.types[i]]
+    local x, y, w, h = unpack(types[i])
+
+    g.setColor(255, 255, 255, alphaFactor * 200)
+    local image = data.media.graphics.hud.frame
+    local scale = w / 125
+    g.draw(image, x, y, 0, scale, scale)
+
+    local image = data.media.graphics.shruju[self.patch.types[i]] or data.media.graphics.shruju.juju
+    local scale = (h - .02 * v) / image:getHeight()
+    g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
+    local image = data.media.graphics.hud.title
+    local scale = (w + 5) / 125
+    g.draw(image, x + (w / 2), y + (120 * scale), 0, scale, scale, image:getWidth() / 2)
+
     g.setFont('pixel', 8)
+    g.setColor(255, 255, 255, alphaFactor * 200)
+    g.printShadow(i, x + 6, y + 2)
 
-    local factor, t = self:getFactor()
-    local alphaFactor = ((t / self.maxTime) ^ 4) * .7
-    local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
+    g.setFont('mesmerize', image:getHeight() * scale - 7)
+    g.printCenter(shruju.name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
+  end
 
-    if t < 1 or (self.growingFactor > .01 and self.growingFactor < .99) then table.clear(self.geometry)
-    elseif t == 0 then return end
+  if self.growingFactor > 0 then
+    g.setColor(255, 255, 255, (self.patch.slot and 200 or 120) * growingFactor)
 
-    local types = self.geometry.types
+    local code = (self.patch.growing or self.patch.slot) and (self.patch.growing or self.patch.slot.code) or nil
 
-    for i = 1, #types do
-      local shruju = data.shruju[self.patch.types[i]]
-      local x, y, w, h = unpack(types[i])
+    local x, y, w, h = unpack(self.geometry.slot)
+    local image = data.media.graphics.hud.frame
+    local frameWidth = image:getWidth()
+    local slotScale = math.lerp(self.prevSlotScale, self.slotScale, tickDelta / tickRate)
+    local scale = (w / frameWidth) * slotScale
+    g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
-      g.setColor(255, 255, 255, alphaFactor * 200)
-      local image = data.media.graphics.hud.frame
-      local scale = w / 125
-      g.draw(image, x, y, 0, scale, scale)
-
-      local image = data.media.graphics.shruju[self.patch.types[i]] or data.media.graphics.shruju.juju
-      local scale = (h - .02 * v) / image:getHeight()
+    if code then
+      local image = data.media.graphics.shruju[code] or data.media.graphics.shruju.juju
+      local scale = (h - .02 * v) / image:getHeight() * slotScale
       g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
       local image = data.media.graphics.hud.title
-      local scale = (w + 5) / 125
-      g.draw(image, x + (w / 2), y + (120 * scale), 0, scale, scale, image:getWidth() / 2)
+      local scale = (w + 5) / data.media.graphics.hud.frame:getWidth()
+      g.setColor(255, 255, 255, (self.patch.growing and 80 or 255) * growingFactor)
+      g.draw(image, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
 
-      g.setFont('pixel', 8)
-      g.setColor(255, 255, 255, alphaFactor * 200)
-      g.printShadow(i, x + 6, y + 2)
+      if self.patch.growing then
+        g.setColor(255, 255, 255 * growingFactor)
+        g.draw(image, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / self.patch:getGrowTime(self.patch.growing))), scale)
+      end
 
       g.setFont('mesmerize', image:getHeight() * scale - 7)
-      g.printCenter(shruju.name, x + (image:getWidth() * (w / 125)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
-    end
-
-    if self.growingFactor > 0 then
-      g.setColor(255, 255, 255, (self.patch.slot and 200 or 120) * growingFactor)
-
-      local code = (self.patch.growing or self.patch.slot) and (self.patch.growing or self.patch.slot.code) or nil
-
-      local x, y, w, h = unpack(self.geometry.slot)
-      local image = data.media.graphics.hud.frame
-      local frameWidth = image:getWidth()
-      local slotScale = math.lerp(self.prevSlotScale, self.slotScale, tickDelta / tickRate)
-      local scale = (w / frameWidth) * slotScale
-      g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-
-      if code then
-        local image = data.media.graphics.shruju[code] or data.media.graphics.shruju.juju
-        local scale = (h - .02 * v) / image:getHeight() * slotScale
-        g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-
-        local image = data.media.graphics.hud.title
-        local scale = (w + 5) / data.media.graphics.hud.frame:getWidth()
-        g.setColor(255, 255, 255, (self.patch.growing and 80 or 255) * growingFactor)
-        g.draw(image, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), 0, scale, scale)
-
-        if self.patch.growing then
-          g.setColor(255, 255, 255 * growingFactor)
-          g.draw(image, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / self.patch:getGrowTime(self.patch.growing))), scale)
-        end
-
-        g.setFont('mesmerize', image:getHeight() * scale - 7)
-        local str = data.shruju[code].name
-        if math.inside(mx, my, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), image:getWidth() * scale, image:getHeight() * scale) then
-          str = string.format('%.2f', self.patch.timer)
-        end
-        g.printCenter(str, x + (image:getWidth() * (w / frameWidth)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
+      local str = data.shruju[code].name
+      if math.inside(mx, my, x - (scale - (w / frameWidth)) * image:getWidth() / 2, y + (120 * scale), image:getWidth() * scale, image:getHeight() * scale) then
+        str = string.format('%.2f', self.patch.timer)
       end
+      g.printCenter(str, x + (image:getWidth() * (w / frameWidth)) / 2, y + (120 * scale) + (image:getHeight() * scale) / 2)
     end
   end
 end
@@ -237,6 +221,30 @@ function HudShrujuPatch:mousepressed(x, y, b)
       shruju:eat()
       ctx.sound:play('nomnom')
       self.active = true
+    end
+  end
+end
+
+function HudShrujuPatch:mousemoved(mx, my)
+  if not self.patch then return end
+
+  if self.active then
+    local types = self.geometry.types
+    for i = 1, #types do
+      local shruju = data.shruju[self.patch.types[i]]
+      local x, y, w, h = unpack(types[i])
+      if math.inside(mx, my, x, y, w, h) then
+        ctx.hud.tooltip:setShrujuTooltip(shruju)
+        return
+      end
+    end
+  end
+
+  if (self.patch.growing or self.patch.slot) then
+    local x, y, w, h = unpack(self.geometry.slot)
+    if math.inside(mx, my, x, y, w, h) then
+      ctx.hud.tooltip:setShrujuTooltip(data.shruju[self.patch.growing] or self.patch.slot)
+      return
     end
   end
 end

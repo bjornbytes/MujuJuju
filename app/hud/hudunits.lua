@@ -71,71 +71,16 @@ end
 
 function HudUnits:update()
   local p = ctx.player
-  local mx, my = ctx.view:frameMouseX(), ctx.view:frameMouseY()
-
-  local attributes = self.geometry.attributes
-  for i = 1, #attributes do
-    for j = 1, #attributes[i] do
-      local attribute = config.attributes.list[j]
-      local x, y, w, h = unpack(attributes[i][j])
-      if math.inside(mx, my, x, y, w, h) then
-        ctx.hud.tooltip:setAttributeTooltip(attribute, p.deck[i].code)
-        ctx.cursor:hover()
-      end
-    end
-  end
-
-  local upgrades = self.geometry.upgrades
-  for i = 1, #upgrades do
-    for j = 1, #upgrades[i] do
-      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
-      local x, y, w, h = unpack(upgrades[i][j])
-      if math.inside(mx, my, x, y, w, h) then
-        ctx.hud.tooltip:setUpgradeTooltip(who, what)
-        ctx.cursor:hover()
-      end
-    end
-  end
 
 	for i = 1, #self.selectFactor do
     self.prevSelectFactor[i] = self.selectFactor[i]
-		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.deck[i].selected and 1 or (p.summonSelect == i and .5 or 0), 8 * tickRate)
+		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.deck[i].selected and 1 or (p.summonSelect == i and .5 or 0), math.min(8 * tickRate, 1))
 	end
 
 	for i = 1, #self.cooldownPop do
     self.prevCooldownPop[i] = self.cooldownPop[i]
-		self.cooldownPop[i] = math.lerp(self.cooldownPop[i], 0, 12 * tickRate)
+		self.cooldownPop[i] = math.lerp(self.cooldownPop[i], 0, math.min(12 * tickRate, 1))
 	end
-
-  -- TODO clean up rune tooltips
-  local u, v = ctx.hud.u, ctx.hud.v
-  local ct = self.count
-  local upgradeFactor, t = ctx.hud.upgrades:getFactor()
-  local inc = u * (.2 + (.075 * upgradeFactor))
-  local xx = .5 * u - (inc * (ct - 1) / 2)
-  ctx.view:guiPush()
-  for i = 1, ct do
-    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
-    local bg = data.media.graphics.hud.minion
-    local w, h = bg:getDimensions()
-    local scale = 1 + .6 * upgradeFactor
-    local imageScale = (.2 * scale * v) / h
-    local yy = v * .005
-    local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
-    local runeSize = v * .0385 * imageScale
-    local runeInc = runeSize * 3
-    local runex = xx - (runeInc * (runeCount - 1) / 2)
-    local runey = yy + .174 * v * scale
-    for j = 1, runeCount do
-      if math.insideCircle(mx, my, runex, runey, runeSize) then
-        ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
-        ctx.cursor:hover()
-      end
-      runex = runex + runeInc
-    end
-    xx = xx + inc
-  end
-  g.pop()
 end
 
 function HudUnits:draw()
@@ -161,15 +106,15 @@ function HudUnits:draw()
   if t > 0 then
     g.setFont('pixel', 8)
     g.setColor(255, 255, 255)
-    g.printShadow(p.skillPoints .. ' skill points', .01 * v, .01 * v)
-    g.printShadow(p.attributePoints .. ' attribute points', .01 * v, .01 * v + g.getFont():getHeight())
+    g.printShadow(p.skillPoints .. ' skill points', .01 * v, .1 * v)
+    g.printShadow(p.attributePoints .. ' attribute points', .01 * v, .1 * v + g.getFont():getHeight())
   end
 
   for i = 1, self.count do
     local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
     local bg = data.media.graphics.hud.minion
     local w, h = bg:getDimensions()
-    local scale = 1 + .6 * upgradeFactor
+    local scale = 1 + .6 * upgradeFactor + .1 * selectFactor
     local imageScale = (.2 * scale * v) / h
     local yy = v * .005
     local alpha = .45 + selectFactor * .35
@@ -205,7 +150,7 @@ function HudUnits:draw()
     local unit = data.unit[p.deck[i].code]
     local font = g.setFont('mesmerize', math.round(.02 * scale * v))
     local str = unit.name
-    if math.inside(mx, my, titlex, yy + (10 * scale), title:getWidth() * scale, title:getHeight() * scale) then
+    if math.inside(mx, my, titlex, yy + (10 * imageScale), title:getWidth() * imageScale, title:getHeight() * imageScale) then
       str = string.format('%.2f', p.deck[i].cooldown)
     end
     g.setColor(255, 255, 255)
@@ -237,71 +182,74 @@ function HudUnits:draw()
     xx = xx + inc
   end
 
-  -- Attributes
-  local attributes = self.geometry.attributes
-  for i = 1, #attributes do
-    for j = 1, #attributes[i] do
-      local x, y, w, h = unpack(attributes[i][j])
-      local image = data.media.graphics.hud.frame
-      local scale = w / image:getWidth()
-      g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
-      g.draw(image, x, y, 0, scale, scale)
+  if t > 0 then
 
-      local level = data.unit[p.deck[i].code].attributes[config.attributes.list[j]]
-      g.setFont('mesmerize', math.round(.0175 * v))
-      g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-      g.printShadow(level, x + .01 * v, y + .01 * v)
-    end
-  end
+    -- Attributes
+    local attributes = self.geometry.attributes
+    for i = 1, #attributes do
+      for j = 1, #attributes[i] do
+        local x, y, w, h = unpack(attributes[i][j])
+        local image = data.media.graphics.hud.frame
+        local scale = w / image:getWidth()
+        g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
+        g.draw(image, x, y, 0, scale, scale)
 
-  -- Upgrade Connectors
-  local upgrades = self.geometry.upgrades
-  g.setLineWidth(2)
-  for i = 1, #upgrades do
-    for j = 1, #upgrades[i] do
-      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
-      local _, _, _, _, line = unpack(upgrades[i][j])
-      local upgrade = data.unit[who].upgrades[what]
-
-      if line and #line > 0 then
-        table.each(line, function(points, k)
-          local other = data.unit[p.deck[i].code].upgrades[upgrade.connectedTo[k]]
-          if other.level >= upgrade.prerequisites[other.code] then
-            g.setColor(0, 200, 0, 200 * upgradeAlphaFactor)
-          else
-            g.setColor(200, 0, 0, 200 * upgradeAlphaFactor)
-          end
-          g.setLineWidth(.005 * v)
-          g.line(points)
-        end)
+        local level = data.unit[p.deck[i].code].attributes[config.attributes.list[j]]
+        g.setFont('mesmerize', math.round(.0175 * v))
+        g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
+        g.printShadow(level, x + .01 * v, y + .01 * v)
       end
     end
-  end
-  g.setLineWidth(1)
 
-  -- Upgrades
-  local upgrades = self.geometry.upgrades
-  for i = 1, #upgrades do
-    for j = 1, #upgrades[i] do
-      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
-      local x, y, w, h = unpack(upgrades[i][j])
-      local image = data.media.graphics.hud.frame
-      local scale = w / image:getWidth()
-      local upgrade = data.unit[who].upgrades[what]
-      local val = upgrade.level > 0 and 255 or 150
-      g.setColor(val, val, val, 255 * upgradeAlphaFactor)
-      g.draw(image, x, y, 0, scale, scale)
+    -- Upgrade Connectors
+    local upgrades = self.geometry.upgrades
+    g.setLineWidth(2)
+    for i = 1, #upgrades do
+      for j = 1, #upgrades[i] do
+        local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
+        local _, _, _, _, line = unpack(upgrades[i][j])
+        local upgrade = data.unit[who].upgrades[what]
 
-      local image = data.media.graphics.hud.icons[what]
-      if image then
-        local scale = math.min((w - (v * .02)) / image:getWidth(), (h - (v * .02)) / image:getHeight())
-        g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+        if line and #line > 0 then
+          table.each(line, function(points, k)
+            local other = data.unit[p.deck[i].code].upgrades[upgrade.connectedTo[k]]
+            if other.level >= upgrade.prerequisites[other.code] then
+              g.setColor(0, 200, 0, 200 * upgradeAlphaFactor ^ 2)
+            else
+              g.setColor(200, 0, 0, 200 * upgradeAlphaFactor ^ 2)
+            end
+            g.setLineWidth(.005 * v)
+            g.line(points)
+          end)
+        end
       end
+    end
+    g.setLineWidth(1)
 
-      local str = upgrade.level .. '/' .. upgrade.maxLevel
-      g.setFont('mesmerize', .0175 * v)
-      g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-      g.printShadow(str, x + .01 * v, y + .01 * v)
+    -- Upgrades
+    local upgrades = self.geometry.upgrades
+    for i = 1, #upgrades do
+      for j = 1, #upgrades[i] do
+        local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
+        local x, y, w, h = unpack(upgrades[i][j])
+        local image = data.media.graphics.hud.frame
+        local scale = w / image:getWidth()
+        local upgrade = data.unit[who].upgrades[what]
+        local val = upgrade.level > 0 and 255 or 150
+        g.setColor(val, val, val, 255 * upgradeAlphaFactor)
+        g.draw(image, x, y, 0, scale, scale)
+
+        local image = data.media.graphics.hud.icons[what]
+        if image then
+          local scale = math.min((w - (v * .02)) / image:getWidth(), (h - (v * .02)) / image:getHeight())
+          g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+        end
+
+        local str = upgrade.level .. '/' .. upgrade.maxLevel
+        g.setFont('mesmerize', .0175 * v)
+        g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
+        g.printShadow(str, x + .01 * v, y + .01 * v)
+      end
     end
   end
 end
@@ -350,6 +298,67 @@ function HudUnits:mousereleased(mx, my, b)
   end
 end
 
+function HudUnits:mousemoved(mx, my)
+  local p = ctx.player
+
+  local attributes = self.geometry.attributes
+  for i = 1, #attributes do
+    for j = 1, #attributes[i] do
+      local attribute = config.attributes.list[j]
+      local x, y, w, h = unpack(attributes[i][j])
+      if math.inside(mx, my, x, y, w, h) then
+        ctx.hud.tooltip:setAttributeTooltip(attribute, p.deck[i].code)
+        ctx.cursor:hover()
+        return
+      end
+    end
+  end
+
+  local upgrades = self.geometry.upgrades
+  for i = 1, #upgrades do
+    for j = 1, #upgrades[i] do
+      local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
+      local x, y, w, h = unpack(upgrades[i][j])
+      if math.inside(mx, my, x, y, w, h) then
+        ctx.hud.tooltip:setUpgradeTooltip(who, what)
+        ctx.cursor:hover()
+        return
+      end
+    end
+  end
+
+  -- TODO clean up rune tooltips
+  local u, v = ctx.hud.u, ctx.hud.v
+  local ct = self.count
+  local upgradeFactor, t = ctx.hud.upgrades:getFactor()
+  local inc = u * (.2 + (.075 * upgradeFactor))
+  local xx = .5 * u - (inc * (ct - 1) / 2)
+  ctx.view:guiPush()
+  for i = 1, ct do
+    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
+    local bg = data.media.graphics.hud.minion
+    local w, h = bg:getDimensions()
+    local scale = 1 + .6 * upgradeFactor
+    local imageScale = (.2 * scale * v) / h
+    local yy = v * .005
+    local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
+    local runeSize = v * .0385 * imageScale
+    local runeInc = runeSize * 3
+    local runex = xx - (runeInc * (runeCount - 1) / 2)
+    local runey = yy + .174 * v * scale
+    for j = 1, runeCount do
+      if math.insideCircle(mx, my, runex, runey, runeSize) then
+        ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
+        ctx.cursor:hover()
+        return
+      end
+      runex = runex + runeInc
+    end
+    xx = xx + inc
+  end
+  g.pop()
+end
+
 function HudUnits:ready()
   local p = ctx.player
 
@@ -371,7 +380,7 @@ function HudUnits:ready()
   local animationOffsets = {
     bruju = 0,
     thuju = -14,
-    buju = 0,
+    buju = -16,
     kuju = -16
   }
 

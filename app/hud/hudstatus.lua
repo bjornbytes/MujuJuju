@@ -51,21 +51,6 @@ function HudStatus:update()
     return .5
   end)
 
-  local mx, my = love.mouse.getPosition()
-  if math.inside(mx, my, unpack(self.hitboxes.juju)) then
-    ctx.hud.tooltip:setTooltip('{white}{title}Juju{normal}\n{whoCares}Use it to summon minions and purchase upgrades.  Collect it in the juju realm.\n\n{green}' .. p.totalJuju .. ' {white}total juju ({green}' .. self.jjpm .. ' {white}per minute)')
-  elseif math.inside(mx, my, unpack(self.hitboxes.population)) then
-    ctx.hud.tooltip:setTooltip('{white}{title}Population{normal}\n{whoCares}The maximum number of minions you may summon at once.\n\n{green}' .. p.totalSummoned .. ' {white}minion' .. (p.totalSummoned == 1 and '' or 's') .. ' summoned.')
-  elseif math.inside(mx, my, unpack(self.hitboxes.timer)) then
-    local str = ''
-    local benchmarks = config.biomes[ctx.biome].benchmarks
-    local time = ctx.timer * tickRate
-    str = str .. 'Bronze: ' .. (time >= benchmarks.bronze and '{green}' or '{red}') .. toTime(benchmarks.bronze) .. '{white}\n'
-    str = str .. 'Silver: ' .. (time >= benchmarks.silver and '{green}' or '{red}') .. toTime(benchmarks.silver) .. '{white}\n'
-    str = str .. 'Gold: ' .. (time >= benchmarks.gold and '{green}' or '{red}') .. toTime(benchmarks.gold) .. '{white}\n'
-    ctx.hud.tooltip:setTooltip('{white}{title}Timer{normal}\n{whoCares}How long you\'ve lasted.  Survive for a long time to unlock rewards!\n\n' .. str)
-  end
-
   self.jujuDisplay = math.lerp(self.jujuDisplay, p.juju, 10 * tickRate)
   if math.abs(self.jujuDisplay - p.juju) < 1 then self.jujuDisplay = p.juju end
 end
@@ -156,16 +141,21 @@ function HudStatus:draw()
   self.hitboxes.timer[2] = 0
   self.hitboxes.timer[3] = hitboxWidth
   self.hitboxes.timer[4] = height
+end
 
-  -- Enemy spawn debug text
-  --[[g.setFont('pixel', 8)
-  g.setColor(255, 255, 255)
-  local str = math.round(ctx.units.level / .1) * .1 .. '\n' .. math.round(ctx.units.minEnemyRate / .1) * .1 .. ' - ' .. math.round(ctx.units.maxEnemyRate / .1) * .1 .. '\n' .. 1 + math.floor(ctx.units.level * config.biomes[ctx.biome].units.maxEnemiesCoefficient)
-  g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)]]
-
-  -- Experience debug text
-  --[[g.setFont('pixel', 8)
-  g.setColor(255, 255, 255)
-  local str = 'Level ' .. p.level .. '\n' .. math.floor(p.experience) .. ' / ' .. p.nextLevels[p.level] .. '\n' .. p.skillPoints .. ' skill points'
-  g.print(str, u - g.getFont():getWidth(str) - 4, height + 4)]]
+function HudStatus:mousemoved(mx, my)
+  local p = ctx.player
+  if math.inside(mx, my, unpack(self.hitboxes.juju)) then
+    ctx.hud.tooltip:setTooltip('{white}{title}Juju{normal}\n{whoCares}Use it to summon minions and purchase upgrades.  Collect it in the juju realm.\n\n{green}' .. p.totalJuju .. ' {white}total juju ({green}' .. self.jjpm .. ' {white}per minute)')
+  elseif math.inside(mx, my, unpack(self.hitboxes.population)) then
+    ctx.hud.tooltip:setTooltip('{white}{title}Population{normal}\n{whoCares}The maximum number of minions you may summon at once.\n\n{green}' .. p.totalSummoned .. ' {white}minion' .. (p.totalSummoned == 1 and '' or 's') .. ' summoned.')
+  elseif math.inside(mx, my, unpack(self.hitboxes.timer)) then
+    local str = ''
+    local benchmarks = config.biomes[ctx.biome].benchmarks
+    local time = ctx.timer * tickRate
+    str = str .. 'Bronze: ' .. (time >= benchmarks.bronze and '{green}' or '{red}') .. toTime(benchmarks.bronze) .. '{white}\n'
+    str = str .. 'Silver: ' .. (time >= benchmarks.silver and '{green}' or '{red}') .. toTime(benchmarks.silver) .. '{white}\n'
+    str = str .. 'Gold: ' .. (time >= benchmarks.gold and '{green}' or '{red}') .. toTime(benchmarks.gold) .. '{white}\n'
+    ctx.hud.tooltip:setTooltip('{white}{title}Timer{normal}\n{whoCares}How long you\'ve lasted.  Survive for a long time to unlock rewards!\n\n' .. str)
+  end
 end

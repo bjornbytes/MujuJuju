@@ -12,7 +12,6 @@ function Hud:init()
   self.u, self.v = ctx.view.frame.width, ctx.view.frame.height
   self.health = HudHealth()
   self.experience = HudExperience()
-  self.portrait = HudPortrait()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
   self.dead = HudDead()
@@ -38,7 +37,6 @@ function Hud:update()
   self.status:update()
   self.health:update()
   self.experience:update()
-  self.portrait:update()
   self.upgrades:update()
   self.shruju:update()
   self.units:update()
@@ -61,7 +59,6 @@ function Hud:gui()
     self.status:draw()
     self.health:draw()
     self.experience:draw()
-    self.portrait:draw()
     table.with(self.shrujuPatches, 'draw')
     self.shruju:draw()
 
@@ -86,7 +83,6 @@ end
 function Hud:keypressed(key)
   table.with(self.shrujuPatches, 'keypressed', key)
   self.upgrades:keypressed(key)
-  self.portrait:keypressed(key)
   self.dead:keypressed(key)
 end
 
@@ -123,6 +119,14 @@ function Hud:mousereleased(x, y, b)
 			Context:remove(ctx)
 		end
 	end
+end
+
+function Hud:mousemoved(...)
+  self.tooltip:dirty()
+  self.status:mousemoved(...)
+  self.units:mousemoved(...)
+  table.with(self.shrujuPatches, 'mousemoved', ...)
+  self.shruju:mousemoved(...)
 end
 
 function Hud:textinput(char)
