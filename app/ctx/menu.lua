@@ -74,7 +74,6 @@ function Menu:load(selectedBiome, options)
   self.main.selectedBiome = selectedBiome or self.main.selectedBiome
 
   love.keyboard.setKeyRepeat(true)
-
 end
 
 function Menu:update()

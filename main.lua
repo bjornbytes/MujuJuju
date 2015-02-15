@@ -14,7 +14,7 @@ function love.load()
   end
 
 	Context:add(Menu)
-  Context:add(Patcher)
+  --Context:add(Patcher)
 end
 
 love.update = Context.update
