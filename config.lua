@@ -93,6 +93,8 @@ return {
     jujuRate = 0,
     basePopulation = 3,
     maxPopulation = 10,
+    startingLives = 3,
+    livesPerLevel = 3,
     colors = {
       purple = {.5, 0, 1},
       red = {1, 0, 0},

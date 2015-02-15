@@ -33,7 +33,7 @@ function Player:init()
   self.healthDisplay = self.health
   self.prevHealthDisplay = self.healthDisplay
   self.prevHealth = self.health
-  self.lives = 3
+  self.lives = config.player.startingLives
 
   -- Dead
   self.dead = false
@@ -277,7 +277,7 @@ function Player:addJuju(amount)
     self.attributePoints = self.attributePoints + 2
     self.maxHealth = self.maxHealth + 25
     self:heal(25)
-    self.lives = self.lives + 3
+    self.lives = self.lives + config.player.livesPerLevel
   end
 
   self.totalJuju = self.totalJuju + amount

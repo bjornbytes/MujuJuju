@@ -104,7 +104,7 @@ end
 
 function Animation:initSpine(name)
 	local json = spine.SkeletonJson.new()
-  json.scale = self.scale
+  --json.scale = self.scale
 
 	local skeletonData = json:readSkeletonDataFile('media/skeletons/' .. name .. '/' .. name .. '.json')
 
@@ -112,7 +112,15 @@ function Animation:initSpine(name)
 	skeleton.createImage = function(_, attachment)
 		return love.graphics and love.graphics.newImage('media/skeletons/' .. name .. '/' .. attachment.name .. '.png')
 	end
+
 	skeleton:setToSetupPose()
+  local root = skeleton:getRootBone()
+  if root then
+    root.scaleX = self.scale
+    root.scaleY = self.scale
+  end
+  skeleton:updateWorldTransform()
+
   local skeletonBounds = spine.SkeletonBounds.new()
   local animationStateData = spine.AnimationStateData.new(skeletonData)
   local animationState = spine.AnimationState.new(animationStateData)
