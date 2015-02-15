@@ -12,5 +12,6 @@ JujuSex.options.speed = {100, 200}
 JujuSex.options.direction = -math.pi / 2
 JujuSex.options.spread = math.pi / 4
 JujuSex.options.linearAcceleration = {0, 300, 0, 400}
+JujuSex.options.linearDamping = {0, 0}
 
 return JujuSex

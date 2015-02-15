@@ -3,7 +3,7 @@ Jujus.depth = -6
 
 function Jujus:init()
 	self.jujus = {}
-  ctx.event:emit('view.register', {object = self})
+  if not ctx.effects:get('vignette') then ctx.event:emit('view.register', {object = self}) end
 end
 
 function Jujus:update()

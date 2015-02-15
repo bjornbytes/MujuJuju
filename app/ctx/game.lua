@@ -35,11 +35,11 @@ function Game:load(user, options, biome, tutorial)
   self.shrine = self.shrines:add(Shrine, {x = ctx.map.width / 2, team = 1})
   self.units = Units()
   self.spells = Spells()
-  self.jujus = Jujus()
   self.particles = Particles()
   self.target = Target()
   self.sound = Sound()
   self.effects = Effects()
+  self.jujus = Jujus()
 
   if tutorial then self.tutorial = Tutorial() end
 

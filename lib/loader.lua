@@ -98,6 +98,21 @@ data.load = function()
   end)
   load('data/spell', 'spell')
   load('data/animation', 'animation', function(animation)
+
+    -- Set up lazy loading for images
+    local code = animation.code
+    animation.graphics = setmetatable({_path = 'media/skeletons/' .. code}, {
+      __index = lookup({'.png', '.dds'}, love.graphics and love.graphics.newImage or f.empty)
+    })
+
+    -- Set up static spine data structures
+    local s = {}
+    s.__index = s
+    s.json = spine.SkeletonJson.new()
+    s.skeletonData = s.json:readSkeletonDataFile('media/skeletons/' .. code .. '/' .. code .. '.json')
+    s.animationStateData = spine.AnimationStateData.new(s.skeletonData)
+
+    -- Reverse-index keys (sorted for consistent order)
     local keys = table.keys(animation.states)
     table.sort(keys)
 
@@ -108,8 +123,23 @@ data.load = function()
       state.name = keys[i]
     end
 
+    -- Set mixes
+    for i = 1, #animation.states do
+      table.each(animation.states, function(state)
+        if state.index ~= i then
+          s.animationStateData:setMix(animation.states[i].name, state.name, Animation.defaultMix)
+        end
+      end)
+
+      table.each(animation.states[i].mix, function(time, to)
+        s.animationStateData:setMix(animation.states[i].name, to, time)
+      end)
+    end
+
+    animation.spine = s
+
     -- If it's an animation for a unit, make sure all required animations are supplied.
-    if data.unit[animation.code] then
+    --[[if data.unit[animation.code] then
       local instance = animation()
 
       local function check(name)
@@ -126,7 +156,7 @@ data.load = function()
       check('walk')
       check('attack')
       check('death')
-    end
+    end]]
 
     return animation
   end)

@@ -46,11 +46,12 @@ function Juju:update()
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 	if self.vy > -.1 then
-		self.y = self.y - 12 * tickRate
+		self.y = self.y - 10 * tickRate
 	end
 
   if love.math.random() < 3 * tickRate then
-    ctx.particles:emit('jujusex', self.x, self.y, 1, {speed = {60, 80}})
+    local sizes = love.math.random() < .5 and {.2, 0} or {.2, .4}
+    ctx.particles:emit('jujudrop', self.x, self.y, 1, {sizes = sizes})
   end
 
 	if p.deathTimer > 0 then
@@ -88,9 +89,4 @@ function Juju:draw()
 
 	g.setColor(255, 255, 255, 255 * self.alpha)
 	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)
-
-	g.setBlendMode('additive')
-	g.setColor(255, 255, 255, 40 * self.alpha)
-	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale * (1.5 + wave / 12), self.scale * (1.5 + wave / 12), image:getWidth() / 2, image:getHeight() / 2)
-	g.setBlendMode('alpha')
 end

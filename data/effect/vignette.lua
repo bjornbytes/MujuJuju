@@ -22,13 +22,10 @@ function Vignette:applyEffect(source, target)
   g.setCanvas(target)
   g.draw(source)
   g.setShader()
-  local p = ctx.player
-	if p.dead then
-    ctx.view:worldPush()
-		p.ghost:draw()
-		table.each(ctx.jujus.jujus, function(juju) juju:draw() end)
-    g.pop()
-	end
+  ctx.view:worldPush()
+  if ctx.player.ghost then ctx.player.ghost:draw() end
+  ctx.jujus:draw()
+  g.pop()
 end
 
 function Vignette:resize()
