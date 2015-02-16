@@ -247,6 +247,7 @@ function Player:summon()
   for i = 1, 15 do
     ctx.spells:add('dirt', {x = self.x, y = self.y + self.height})
   end
+  ctx.hud.units.animations[self.summonSelect]:set('spawn')
 end
 
 function Player:animate()
