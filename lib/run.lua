@@ -29,7 +29,7 @@ function love.run()
     end
 
     while love.timer.getTime() - lastFrame < (1 / framerateCap) do
-      love.timer.sleep(.001)
+      love.timer.sleep(.0005)
     end
 
     lastFrame = love.timer.getTime()
