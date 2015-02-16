@@ -14,8 +14,8 @@ Unit.depth = -3.5
 function Unit:activate()
 
   -- Static canvas variable is shared by all units for outline drawing
-  Unit.canvas = Unit.canvas or g.newCanvas(400, 400)
-  Unit.backCanvas = Unit.backCanvas or g.newCanvas(400, 400)
+  Unit.canvas = Unit.canvas or g.newCanvas(800, 400)
+  Unit.quad = Unit.quad or g.newQuad(0, 0, 400, 400, 800, 400)
 
   -- Position
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
@@ -170,20 +170,16 @@ function Unit:draw()
   local r, gg, b = 0, 0, 0
   r = self.team == ctx.player.team and 0 or 255
   gg = self.team == ctx.player.team and 255 or 0
-
-  self.canvas:clear(r, gg, b, 0)
-  self.backCanvas:clear(r, gg, b, 0)
   g.setColor(r, gg, b)
 
   -- Render colored silhouette of unit to canvas
   local shader = data.media.shaders.colorize
-  self.canvas:renderTo(function()
-    g.setShader(shader)
-    g.pop()
-    self.animation:draw(200, 200)
-    ctx.view:worldPush()
-    g.setShader()
-  end)
+  local canvas = g.getCanvas()
+  g.setCanvas(self.canvas)
+  self.canvas:clear(r, gg, b, 0)
+  g.setShader(shader)
+  g.pop()
+  self.animation:draw(200, 200)
 
   -- Blur canvas
   data.media.shaders.horizontalBlur:send('amount', .0005 * lerpd.glowScale)
@@ -191,23 +187,18 @@ function Unit:draw()
   g.setColor(255, 255, 255)
   for i = 1, 3 do
     g.setShader(data.media.shaders.horizontalBlur)
-    self.backCanvas:renderTo(function()
-      g.pop()
-      g.draw(self.canvas)
-      ctx.view:worldPush()
-    end)
+    g.draw(self.canvas, self.quad, 400)
     g.setShader(data.media.shaders.verticalBlur)
-    self.canvas:renderTo(function()
-      g.pop()
-      g.draw(self.backCanvas)
-      ctx.view:worldPush()
-    end)
+    g.draw(self.canvas)
   end
+
   g.setShader()
+  ctx.view:worldPush()
+  g.setCanvas(canvas)
 
   -- Draw blurred outline
   g.setColor(255, 255, 255, 255 * lerpd.alpha)
-  g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
+  g.draw(self.canvas, self.quad, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
 
   -- Draw animation
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
