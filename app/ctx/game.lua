@@ -79,7 +79,6 @@ function Game:update()
   self.view:update()
   self.hud:update()
   self.effects:update()
-  self.particles:update()
   self.shrujuPatches:update()
 end
 
