@@ -70,7 +70,7 @@ function SpujuSkull:draw()
 	if self.health then
 		g.setColor(80, 230, 80, 200 * self.health / self.maxHealth)
     local image = data.media.graphics.spell.burst
-		g.draw(image, self.x, g.getHeight() - ctx.map.groundHeight, self.angle, self.burstScale + .25, self.burstScale + .25, image:getWidth() / 2, image:getHeight() / 2)
+		g.draw(image, self.x, ctx.map.height - ctx.map.groundHeight, self.angle, self.burstScale + .25, self.burstScale + .25, image:getWidth() / 2, image:getHeight() / 2)
 	else
 		g.setColor(255, 255, 255)
     local image = data.media.graphics.spujuSkull
