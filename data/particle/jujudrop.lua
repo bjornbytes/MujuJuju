@@ -5,7 +5,7 @@ JujuDrop.blendMode = 'additive'
 
 JujuDrop.options = {}
 JujuDrop.options.particleLifetime = {.5, 1.5}
-JujuDrop.options.colors = {{100, 200, 0}, {100, 200, 0, 0}}
+JujuDrop.options.colors = {{100, 200, 0, 150}, {100, 200, 0, 0}}
 JujuDrop.options.sizes = {.25, 0}
 JujuDrop.options.sizeVariation = .75
 JujuDrop.options.speed = {40, 60}
