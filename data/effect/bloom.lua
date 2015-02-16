@@ -24,8 +24,6 @@ function Bloom:applyEffect(source, target)
     return
   end
 
-  self.canvas:clear()
-  self.working:clear()
   g.setColor(255, 255, 255)
   g.setCanvas(self.canvas)
 
@@ -52,8 +50,6 @@ function Bloom:applyEffect(source, target)
   g.setBlendMode('additive')
 	g.draw(self.canvas, 0, 0, 0, 4, 4)
   g.setBlendMode('alpha')
-
-  g.setCanvas()
 end
 
 function Bloom:resize()
