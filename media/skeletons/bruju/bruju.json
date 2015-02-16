@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "lYNSOXn84tHFXOlZ1IhmvWxPBa8", "spine": "2.1.09", "width": 111.01, "height": 119.01 },
+"skeleton": { "hash": "lYNSOXn84tHFXOlZ1IhmvWxPBa8", "spine": "2.1.10", "width": 111.01, "height": 119.01 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "chest", "parent": "root", "length": 53.15, "y": 72, "rotation": -94.08 },

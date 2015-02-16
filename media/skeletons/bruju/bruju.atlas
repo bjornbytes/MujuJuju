@@ -1,0 +1,48 @@
+
+bruju.png
+size: 256,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+chest
+  rotate: false
+  xy: 2, 35
+  size: 61, 91
+  orig: 61, 91
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 65, 69
+  size: 48, 57
+  orig: 48, 57
+  offset: 0, 0
+  index: -1
+leftarmlower
+  rotate: true
+  xy: 179, 88
+  size: 38, 58
+  orig: 38, 58
+  offset: 0, 0
+  index: -1
+leftarmupper
+  rotate: true
+  xy: 2, 2
+  size: 31, 67
+  orig: 31, 67
+  offset: 0, 0
+  index: -1
+rightarmlower
+  rotate: true
+  xy: 115, 53
+  size: 36, 55
+  orig: 36, 55
+  offset: 0, 0
+  index: -1
+rightarmupper
+  rotate: true
+  xy: 115, 91
+  size: 35, 62
+  orig: 35, 62
+  offset: 0, 0
+  index: -1
