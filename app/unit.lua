@@ -22,6 +22,7 @@ function Unit:activate()
 
   -- Depth
   local r = love.math.random(-30, 30)
+  if ctx.player.totalSummoned == 0 then r = 0 end
   self.y = self.y - r / 1.5
   self.depth = self.depth + r / 30
 
