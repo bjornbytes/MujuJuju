@@ -1,6 +1,7 @@
 local Dirt = extend(Spell)
 
 function Dirt:activate()
+  self.image = data.media.graphics.particles.linering
   self.prevx = self.x
   self.prevy = self.y
 	self.vx = love.math.random(-150, 150)
@@ -46,8 +47,9 @@ end
 function Dirt:draw()
 	local g = love.graphics
   local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  local scale = self.size * 3 / self.image:getWidth()
 	g.setColor(self.r, self.g, self.b, 255 * self.alpha)
-	g.circle('fill', x, y, self.size)
+	g.draw(self.image, x, y, 0, scale, scale, self.image:getWidth() / 2, self.image:getHeight() / 2)
 end
 
 function Dirt:paused()
