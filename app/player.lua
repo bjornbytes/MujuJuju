@@ -248,6 +248,9 @@ function Player:summon()
     ctx.spells:add('dirt', {x = self.x, y = self.y + self.height})
   end
   ctx.hud.units.animations[self.summonSelect]:set('spawn')
+  for i = 1, 20 do
+    ctx.particles:emit('jujudrop', self.x + love.math.randomNormal(20), self.y + love.math.randomNormal(20) + self.height / 2, 1)
+  end
 end
 
 function Player:animate()

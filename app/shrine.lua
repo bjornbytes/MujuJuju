@@ -15,7 +15,6 @@ function Shrine:init()
   self.healthDisplay = self.health
   self.lastHurt = -math.huge
   self.hurtFactor = 0
-	self.color = {255, 255, 255}
 	self.highlight = 0
   self.regen = 0
 
@@ -25,13 +24,10 @@ end
 function Shrine:update()
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(2 * tickRate, 1))
 
-  self.hurtFactor = math.lerp(self.hurtFactor, (tick - self.lastHurt) * tickRate < 5 and 1 or 0, math.min(4 * tickRate, 1))
 
-  if ctx.id then
-    local p = ctx.player
-    --self.color = table.interpolate(self.color, p.dead and {160, 100, 225} or {255, 255, 255}, math.min(.6 * tickRate, 1))
-    self.highlight = math.lerp(self.highlight, p:atShrine() and 100 or 0, math.min(5 * tickRate, 1))
-  end
+  local p = ctx.player
+  self.highlight = math.lerp(self.highlight, p:atShrine() and 1 or 0, math.min(5 * tickRate, 1))
+  self.hurtFactor = math.lerp(self.hurtFactor, (tick - self.lastHurt) * tickRate < 5 and 1 or 0, math.min(4 * tickRate, 1))
 
   self.health = math.min(self.health + math.max(self.regen, 0) * tickRate, self.maxHealth)
 end
@@ -41,11 +37,11 @@ function Shrine:draw()
   local image = data.media.graphics.shrine
 
 	local scale = self.height / image:getHeight()
-	g.setColor(self.color)
+	g.setColor(255, 255, 255)
 	g.draw(image, self.x + 10, self.y + self.height + 16, 0, scale, scale, image:getWidth() / 2, image:getHeight())
 
 	g.setBlendMode('additive')
-	g.setColor(255, 255, 255, self.highlight)
+	g.setColor(255, 255, 255, self.highlight * 100)
 	g.draw(image, self.x + 10, self.y + self.height + 16, 0, scale, scale, image:getWidth() / 2, image:getHeight())
 	g.setColor(255, 255, 255, 255)
 	g.setBlendMode('alpha')
