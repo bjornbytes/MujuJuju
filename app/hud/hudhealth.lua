@@ -34,10 +34,6 @@ local function bar(x, y, hard, soft, color, width, height)
     g.setColor(color[1], color[2], color[3], 50)
     g.draw(data.media.graphics.healthbarBar, xx, yy, 0, soft * math.round(width - 6 * scale), scale)
   end
-
-  g.setBlendMode('additive')
-  g.setColor(255, 255, 255, 180)
-  g.setBlendMode('alpha')
 end
 
 function HudHealth:init()

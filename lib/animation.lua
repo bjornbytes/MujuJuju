@@ -7,16 +7,6 @@ function Animation:init(vars)
 
   self:initSpine(self.code)
 
-  for i = 1, #self.states do
-    table.each(self.states, function(state)
-      if state.index ~= i then self.spine.animationStateData:setMix(self.states[i].name, state.name, self.defaultMix) end
-    end)
-
-    table.each(self.states[i].mix, function(time, to)
-      self.spine.animationStateData:setMix(self.states[i].name, to, time)
-    end)
-  end
-
   self.event = Event()
   self.spine.animationState.onComplete = function() self.event:emit('complete', {state = self.state}) end
   self.spine.animationState.onEvent = function(_, data) self.event:emit('event', data) end
@@ -34,6 +24,11 @@ function Animation:draw(x, y, options)
   if self.backwards then skeleton.flipX = not skeleton.flipX end
   if not options.noupdate then self:tick(delta) end
   animationState:apply(skeleton)
+  local root = skeleton:getRootBone()
+  if root then
+    root.scaleX = self.scale
+    root.scaleY = self.scale
+  end
   skeleton:updateWorldTransform()
   skeleton:draw()
 
@@ -102,29 +97,19 @@ function Animation:contains(x, y)
   return contains
 end
 
-function Animation:initSpine(name)
-	local json = spine.SkeletonJson.new()
-  json.scale = self.scale
+function Animation:initSpine()
+  local s = setmetatable({}, data.animation[self.code].spine)
 
-	local skeletonData = json:readSkeletonDataFile('media/skeletons/' .. name .. '/' .. name .. '.json')
+  s.skeleton = spine.Skeleton.new(s.skeletonData)
+  s.skeletonBounds = spine.SkeletonBounds.new()
+  s.animationState = spine.AnimationState.new(s.animationStateData)
 
-	local skeleton = spine.Skeleton.new(skeletonData)
-	skeleton.createImage = function(_, attachment)
-		return love.graphics and love.graphics.newImage('media/skeletons/' .. name .. '/' .. attachment.name .. '.png')
-	end
-	skeleton:setToSetupPose()
-  local skeletonBounds = spine.SkeletonBounds.new()
-  local animationStateData = spine.AnimationStateData.new(skeletonData)
-  local animationState = spine.AnimationState.new(animationStateData)
+	s.skeleton:setToSetupPose()
+  s.skeleton.createImage = function(_, attachment)
+    return self.graphics[attachment.name]
+  end
 
-  self.spine = {
-    json = json,
-    skeletonData = skeletonData,
-    skeleton = skeleton,
-    skeletonBounds = skeletonBounds,
-    animationStateData = animationStateData,
-    animationState = animationState
-  }
+  self.spine = s
 end
 
 function Animation:on(...)

@@ -1,11 +1,13 @@
 require 'love.filesystem'
+require 'love.timer'
 local sha1 = require 'lib/deps/sha1/sha1'
 
 local out = love.thread.getChannel('hasher.out')
 
+local sleep = .001
 local hashes = {}
-
 local ignore = {'.git', '.DS_Store', 'error.log', '.swp', '.swo', 'playedBefore', 'user.json', 'patch.zip'}
+
 local function halp(base)
   for _, file in ipairs(love.filesystem.getDirectoryItems(base)) do
     local path = base .. '/' .. file
@@ -24,6 +26,8 @@ local function halp(base)
         out:push(entry)
       end
     end
+
+    love.timer.sleep(sleep)
   end
 end
 

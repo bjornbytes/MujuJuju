@@ -11,6 +11,7 @@ function Bloom:update()
   local p = ctx.player
   local alphas = config.biomes[ctx.biome].effects.bloom.alpha
   self.alpha = math.lerp(self.alpha, p.dead and alphas[2] or alphas[1], 5 * tickRate)
+  self.active = self.alpha > 5
 end
 
 function Bloom:applyEffect(source, target)
@@ -18,14 +19,6 @@ function Bloom:applyEffect(source, target)
   local w, h = g.getWidth(), g.getHeight()
   local threshold = data.media.shaders.threshold
 
-  if self.alpha < 5 then
-    g.setCanvas(target)
-    g.draw(source)
-    return
-  end
-
-  self.canvas:clear()
-  self.working:clear()
   g.setColor(255, 255, 255)
   g.setCanvas(self.canvas)
 
@@ -52,8 +45,6 @@ function Bloom:applyEffect(source, target)
   g.setBlendMode('additive')
 	g.draw(self.canvas, 0, 0, 0, 4, 4)
   g.setBlendMode('alpha')
-
-  g.setCanvas()
 end
 
 function Bloom:resize()

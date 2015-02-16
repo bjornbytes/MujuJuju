@@ -93,6 +93,8 @@ return {
     jujuRate = 0,
     basePopulation = 3,
     maxPopulation = 10,
+    startingLives = 3,
+    livesPerLevel = 3,
     colors = {
       purple = {.5, 0, 1},
       red = {1, 0, 0},
@@ -145,6 +147,7 @@ return {
         levelScale = .75,
         upgradeCostIncrease = 1,
         maxElites = 1,
+        eliteBuffCount = 1,
         types = {
           duju = 0,
           spuju = 600
@@ -160,7 +163,7 @@ return {
           radius = {.85, .65}
         },
         bloom = {
-          alpha = {0, 80}
+          alpha = {0, 255}
         }
       }
     },
@@ -196,6 +199,7 @@ return {
         levelScale = .85,
         upgradeCostIncrease = 1,
         maxElites = 1,
+        eliteBuffCount = 2,
         types = {
           spuju = 0,
           vuju = 600
@@ -247,6 +251,7 @@ return {
         levelScale = .95,
         upgradeCostIncrease = 1,
         maxElites = 2,
+        eliteBuffCount = 3,
         types = {
           vuju = 0,
           spuju = 0,
@@ -299,6 +304,7 @@ return {
         levelScale = 1.05,
         upgradeCostIncrease = 1,
         maxElites = 3,
+        eliteBuffCount = 4,
         types = {
           vuju = 0,
           spuju = 0,

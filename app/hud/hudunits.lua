@@ -138,13 +138,13 @@ function HudUnits:draw()
     g.setBlendMode('alpha')
 
     -- Animation
-    self.canvas[i]:clear(0, 0, 0, 0)
-    g.setCanvas(self.canvas[i])
+    g.setCanvas(self.canvas)
+    self.canvas:clear(0, 0, 0, 0)
     g.pop()
     self.animations[i]:draw(100, 100)
     ctx.view:guiPush()
     g.setCanvas()
-    g.draw(self.canvas[i], xx, yy + .1 * scale * v, 0, imageScale, imageScale, 100, 100)
+    g.draw(self.canvas, xx, yy + .1 * scale * v, 0, imageScale, imageScale, 100, 100)
 
     -- Text
     local unit = data.unit[p.deck[i].code]
@@ -368,7 +368,7 @@ function HudUnits:ready()
   self.cooldownPop = {}
   self.prevCooldownPop = {}
   self.animations = {}
-  self.canvas = {}
+  self.canvas = g.newCanvas(200, 200)
 
   local animationScaleFactors = {
     bruju = 1.5,
@@ -394,7 +394,6 @@ function HudUnits:ready()
     local scale = animation.scale * animationScaleFactors[code]
     local offsety = animation.offsety + animationOffsets[code]
     self.animations[i] = data.animation[p.deck[i].code]({scale = scale, offsety = offsety})
-    self.canvas[i] = love.graphics.newCanvas(200, 200)
     self.animations[i]:on('complete', function()
       self.animations[i]:set('idle', {force = true})
     end)

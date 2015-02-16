@@ -27,8 +27,11 @@ function Units:createEnemy()
 
     if isElite then
       local buffs = table.keys(config.elites.buffs)
-      local buff = buffs[love.math.random(1, #buffs)]
-      unit.buffs:add(buff, config.elites.buffs[buff])
+      table.shuffle(buffs)
+      for i = 1, conf.units.eliteBuffCount do
+        local buff = buffs[i]
+        unit.buffs:add(buff, config.elites.buffs[buff])
+      end
     end
 
     self.minEnemyRate = math.max(self.minEnemyRate - conf.units.minEnemyRateDecay * math.clamp((1.5 + self.minEnemyRate) / 10, .2, 1) ^ 1.5, 1.5)

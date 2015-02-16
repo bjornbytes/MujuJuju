@@ -33,7 +33,7 @@ function Player:init()
   self.healthDisplay = self.health
   self.prevHealthDisplay = self.healthDisplay
   self.prevHealth = self.health
-  self.lives = 3
+  self.lives = config.player.startingLives
 
   -- Dead
   self.dead = false
@@ -247,6 +247,10 @@ function Player:summon()
   for i = 1, 15 do
     ctx.spells:add('dirt', {x = self.x, y = self.y + self.height})
   end
+  ctx.hud.units.animations[self.summonSelect]:set('spawn')
+  for i = 1, 20 do
+    ctx.particles:emit('jujudrop', self.x + love.math.randomNormal(20), self.y + love.math.randomNormal(20) + self.height / 2, 1)
+  end
 end
 
 function Player:animate()
@@ -277,7 +281,7 @@ function Player:addJuju(amount)
     self.attributePoints = self.attributePoints + 2
     self.maxHealth = self.maxHealth + 25
     self:heal(25)
-    self.lives = self.lives + 3
+    self.lives = self.lives + config.player.livesPerLevel
   end
 
   self.totalJuju = self.totalJuju + amount

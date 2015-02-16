@@ -22,6 +22,7 @@ function Unit:activate()
 
   -- Depth
   local r = love.math.random(-30, 30)
+  if ctx.player.totalSummoned == 0 then r = 0 end
   self.y = self.y - r / 1.5
   self.depth = self.depth + r / 30
 
@@ -169,40 +170,33 @@ function Unit:draw()
   local r, gg, b = 0, 0, 0
   r = self.team == ctx.player.team and 0 or 255
   gg = self.team == ctx.player.team and 255 or 0
-
-  self.canvas:clear(r, gg, b, 0)
-  self.backCanvas:clear(r, gg, b, 0)
   g.setColor(r, gg, b)
 
   -- Render colored silhouette of unit to canvas
   local shader = data.media.shaders.colorize
-  self.canvas:renderTo(function()
-    g.setShader(shader)
-    g.pop()
-    self.animation:draw(200, 200)
-    ctx.view:worldPush()
-    g.setShader()
-  end)
+  local canvas = g.getCanvas()
+  g.setCanvas(self.canvas)
+  self.canvas:clear(r, gg, b, 0)
+  g.setShader(shader)
+  g.pop()
+  self.animation:draw(200, 200)
 
   -- Blur canvas
   data.media.shaders.horizontalBlur:send('amount', .0005 * lerpd.glowScale)
   data.media.shaders.verticalBlur:send('amount', .0005 * lerpd.glowScale)
   g.setColor(255, 255, 255)
   for i = 1, 3 do
+    g.setCanvas(self.backCanvas)
     g.setShader(data.media.shaders.horizontalBlur)
-    self.backCanvas:renderTo(function()
-      g.pop()
-      g.draw(self.canvas)
-      ctx.view:worldPush()
-    end)
+    g.draw(self.canvas)
+    g.setCanvas(self.canvas)
     g.setShader(data.media.shaders.verticalBlur)
-    self.canvas:renderTo(function()
-      g.pop()
-      g.draw(self.backCanvas)
-      ctx.view:worldPush()
-    end)
+    g.draw(self.canvas)
   end
+
   g.setShader()
+  ctx.view:worldPush()
+  g.setCanvas(canvas)
 
   -- Draw blurred outline
   g.setColor(255, 255, 255, 255 * lerpd.alpha)

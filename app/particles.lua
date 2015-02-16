@@ -25,15 +25,11 @@ function Particles:init()
   ctx.event:emit('view.register', {object = self, mode = 'gui'})
 end
 
-function Particles:update()
-  if not self.active then return end
-  table.with(self.systems, 'update', tickRate)
-end
-
 function Particles:draw()
   if ctx.ded or not self.active then return end
   g.setColor(255, 255, 255)
   table.each(self.modes.draw, function(system, code)
+    system:update(delta)
     g.setBlendMode(data.particle[code].blendMode or 'alpha')
     g.draw(system)
     g.setBlendMode('alpha')
@@ -44,6 +40,7 @@ function Particles:gui()
   if ctx.ded or not self.active then return end
   g.setColor(255, 255, 255)
   table.each(self.modes.gui, function(system, code)
+    system:update(delta)
     g.setBlendMode(data.particle[code].blendMode or 'alpha')
     g.draw(system)
     g.setBlendMode('alpha')

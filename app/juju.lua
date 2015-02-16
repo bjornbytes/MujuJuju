@@ -35,9 +35,13 @@ function Juju:update()
       p:addJuju(self.amount)
 			ctx.hud.status.jujuScale = 2
       ctx.hud.status.jujuAngle = 0
-      ctx.particles:emit('jujusex', self.x, self.y, 30, {speed = {80, 100}})
+      ctx.particles:emit('jujusex', self.x, self.y, 50)
 		end
-    ctx.particles:emit('jujusex', self.x, self.y, 3)
+    local dis, dir = math.vector(self.x, self.y, self.prevx, self.prevy)
+    for i = 1, 8 do
+      local d = love.math.random() * dis
+      ctx.particles:emit('jujudrop', self.x + math.dx(d, dir), self.y + math.dy(d, dir), 1)
+    end
 		return
 	end
 
@@ -46,11 +50,12 @@ function Juju:update()
 	self.x = self.x + self.vx * tickRate
 	self.y = self.y + self.vy * tickRate
 	if self.vy > -.1 then
-		self.y = self.y - 12 * tickRate
+		self.y = self.y - 10 * tickRate
 	end
 
   if love.math.random() < 3 * tickRate then
-    ctx.particles:emit('jujusex', self.x, self.y, 1, {speed = {60, 80}})
+    local sizes = love.math.random() < .5 and {.2, 0} or {.2, .4}
+    ctx.particles:emit('jujudrop', self.x, self.y, 1, {sizes = sizes})
   end
 
 	if p.deathTimer > 0 then
@@ -88,9 +93,4 @@ function Juju:draw()
 
 	g.setColor(255, 255, 255, 255 * self.alpha)
 	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)
-
-	g.setBlendMode('additive')
-	g.setColor(255, 255, 255, 40 * self.alpha)
-	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale * (1.5 + wave / 12), self.scale * (1.5 + wave / 12), image:getWidth() / 2, image:getHeight() / 2)
-	g.setBlendMode('alpha')
 end
