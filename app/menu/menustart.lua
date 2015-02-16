@@ -91,9 +91,6 @@ end
 
 function MenuStart:keypressed(key)
   if not self.active then return end
-  if key == 'return' then
-    self:continue()
-  end
 end
 
 function MenuStart:mousepressed(mx, my, b)

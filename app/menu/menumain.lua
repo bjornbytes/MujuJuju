@@ -345,11 +345,6 @@ function MenuMain:keypressed(key)
   self.map:keypressed(key)
 
   if not self.active or self.map.active then return end
-
-  if key == 'return' and table.has(ctx.user.biomes, config.biomeOrder[self.selectedBiome]) then
-    ctx.animations.muju:set('death')
-  elseif key == 'left' then self:previousBiome()
-  elseif key == 'right' then self:nextBiome() end
 end
 
 function MenuMain:mousepressed(mx, my, b)

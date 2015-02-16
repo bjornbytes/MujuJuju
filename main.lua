@@ -14,6 +14,7 @@ function love.load()
   end
 
 	Context:add(Menu)
+  Context:add(Konami)
   --Context:add(Patcher)
 end
 
