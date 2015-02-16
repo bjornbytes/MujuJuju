@@ -163,7 +163,7 @@ return {
           radius = {.85, .65}
         },
         bloom = {
-          alpha = {0, 80}
+          alpha = {0, 255}
         }
       }
     },

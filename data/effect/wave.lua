@@ -14,6 +14,7 @@ function Wave:update()
 	self.strength[2] = math.lerp(self.strength[2], p.dead and (.0025 * ratio) or 0, 3 * tickRate)
 	self.shader:send('time', tick * .04)
 	self.shader:send('strength', self.strength)
+  self.active = self.strength[1] > .0001
 end
 
 function Wave:resize()

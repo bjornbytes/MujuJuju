@@ -97,8 +97,6 @@ function View:draw()
 
   self:worldPush()
 
-  source:clear()
-  target:clear()
   g.setCanvas(source)
   for i = 1, #self.draws do self.draws[i]:draw() end
   g.setCanvas()
@@ -106,19 +104,21 @@ function View:draw()
 
   for i = 1, #self.effects do
     local effect = self.effects[i]
-    g.setColor(255, 255, 255)
-    if effect.applyEffect then
-      effect:applyEffect(source, target)
-    else
-      g.setShader(effect.shader)
-      g.setCanvas(target)
-      g.draw(source)
+    if effect.active then
+      g.setColor(255, 255, 255)
+      if effect.applyEffect then
+        effect:applyEffect(source, target)
+      else
+        g.setShader(effect.shader)
+        g.setCanvas(target)
+        g.draw(source)
+      end
+      g.setShader()
+      source, target = target, source
     end
-    g.setCanvas()
-    g.setShader()
-    source, target = target, source
   end
 
+  g.setCanvas()
   g.setColor(255, 255, 255)
   g.draw(source)
 

@@ -14,8 +14,8 @@ Unit.depth = -3.5
 function Unit:activate()
 
   -- Static canvas variable is shared by all units for outline drawing
-  Unit.canvas = Unit.canvas or g.newCanvas(800, 400)
-  Unit.quad = Unit.quad or g.newQuad(0, 0, 400, 400, 800, 400)
+  Unit.canvas = Unit.canvas or g.newCanvas(400, 400)
+  Unit.backCanvas = Unit.backCanvas or g.newCanvas(400, 400)
 
   -- Position
   self.y = ctx.map.height - ctx.map.groundHeight - self.height
@@ -186,8 +186,10 @@ function Unit:draw()
   data.media.shaders.verticalBlur:send('amount', .0005 * lerpd.glowScale)
   g.setColor(255, 255, 255)
   for i = 1, 3 do
+    g.setCanvas(self.backCanvas)
     g.setShader(data.media.shaders.horizontalBlur)
-    g.draw(self.canvas, self.quad, 400)
+    g.draw(self.canvas)
+    g.setCanvas(self.canvas)
     g.setShader(data.media.shaders.verticalBlur)
     g.draw(self.canvas)
   end
@@ -198,7 +200,7 @@ function Unit:draw()
 
   -- Draw blurred outline
   g.setColor(255, 255, 255, 255 * lerpd.alpha)
-  g.draw(self.canvas, self.quad, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
+  g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
 
   -- Draw animation
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})

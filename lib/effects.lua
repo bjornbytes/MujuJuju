@@ -22,6 +22,7 @@ end
 function Effects:add(kind)
   if not self.active then return end
   local effect = new(data.effect[kind])
+  effect.active = true
   f.exe(effect.activate, effect)
   table.insert(self.effects, effect)
   self.effects[kind] = effect
