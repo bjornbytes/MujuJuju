@@ -352,6 +352,7 @@ function MenuOptions:setMode(n)
   if n >= 2 then return end
 
   local ps = love.window and love.window.getPixelScale() or 1
+  local dw, dh = love.window.getDesktopDimensions()
   local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'msaa'})
   options.highdpi = true
 
@@ -362,7 +363,7 @@ function MenuOptions:setMode(n)
     table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
     ctx.options.resolution = {resolutions[1].width / ps, resolutions[1].height / ps}
     borderless = false
-  elseif table.eq(ctx.options.resolution, {love.window.getDesktopDimensions()}) then
+  elseif tonumber(ctx.options.resolution[1]) == dw and tonumber(ctx.options.resolution[2]) == dh then
     borderless = true
   end
 
