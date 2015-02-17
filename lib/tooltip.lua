@@ -16,6 +16,9 @@ function Tooltip:init()
   self.active = false
   self.tooltip = nil
   self.tooltipText = nil
+
+  self.textWidth = 0
+  self.textHeight = 0
   self.blurCanvas = g.newCanvas(400, 300)
   self.blurBackCanvas = g.newCanvas(400, 300)
 
@@ -48,24 +51,14 @@ function Tooltip:draw()
   local u, v = self:getUV()
   local mx = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate)
   local my = math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
-  local raw = self.tooltipText:gsub('{%a+}', '')
-  local normalFont = self.richOptions.normal
-  local titleFont = self.richOptions.title
-  g.setFont(self.richOptions.normal)
-  local titleLine = raw:sub(1, raw:find('\n'))
-  local normalText = raw:sub(raw:find('\n') + 1) -- TODO memoize in :setTooltip
-  local textWidth, lines = normalFont:getWrap(normalText, u * self.maxWidth)
-  local titleWidth, titleLines = titleFont:getWrap(titleLine, u * self.maxWidth)
-  textWidth = math.max(textWidth, titleWidth)
-  textHeight = titleLines * titleFont:getHeight() + lines * normalFont:getHeight()
-  local xx = math.min(mx + 16, u - textWidth - 14)
-  local yy = math.min(my + 16, v - (textHeight + 9))
+  local xx = math.min(mx + 16, u - self.textWidth - 14)
+  local yy = math.min(my + 16, v - (self.textHeight + 9))
   g.setColor(255, 255, 255, 100)
   g.draw(self.blurCanvas, xx - 96, yy - 96, 0, 2, 2)
   g.setColor(30, 50, 70, 240)
-  g.rectangle('fill', xx, yy, textWidth + 14, textHeight + 9)
+  g.rectangle('fill', xx, yy, self.textWidth + 14, self.textHeight + 9)
   g.setColor(10, 30, 50, 255)
-  g.rectangle('line', xx + .5, yy + .5, textWidth + 14, textHeight + 9)
+  g.rectangle('line', xx + .5, yy + .5, self.textWidth + 14, self.textHeight + 9)
   self.tooltip:draw(xx + 8, yy + 4)
 end
 
@@ -85,13 +78,14 @@ function Tooltip:setTooltip(str)
     local normalText = raw:sub(raw:find('\n') + 1) -- TODO memoize in :setTooltip
     local textWidth, lines = normalFont:getWrap(normalText, u * self.maxWidth)
     local titleWidth, titleLines = titleFont:getWrap(titleLine, u * self.maxWidth)
-    textWidth = math.max(textWidth, titleWidth)
-    textHeight = titleLines * titleFont:getHeight() + lines * normalFont:getHeight()
+    self.textWidth = math.max(textWidth, titleWidth)
+    self.textHeight = titleLines * titleFont:getHeight() + lines * normalFont:getHeight()
+
     g.setCanvas(self.blurCanvas)
     self.blurCanvas:clear(0, 0, 0, 0)
     self.blurBackCanvas:clear(0, 0, 0, 0)
     g.setColor(0, 0, 0)
-    g.rectangle('fill', 50, 50, (textWidth + 14) / 2, (textHeight + 9) / 2)
+    g.rectangle('fill', 50, 50, (self.textWidth + 14) / 2, (self.textHeight + 9) / 2)
 
     g.setColor(255, 255, 255)
     for i = 1, 3 do
@@ -104,6 +98,7 @@ function Tooltip:setTooltip(str)
       g.setShader(data.media.shaders.verticalBlur)
       g.draw(self.blurBackCanvas)
     end
+
     g.setCanvas()
     g.setShader()
   end
