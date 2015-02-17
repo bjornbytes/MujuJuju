@@ -55,7 +55,17 @@ function Button:render()
   local bgy = y + h
   local yscale = h / button:getHeight()
   g.setColor(255, 255, 255)
-  g.draw(image, x, bgy, 0, w, yscale, 0, image:getHeight())
+  --g.draw(image, x, bgy, 0, w, yscale, 0, image:getHeight())
+  g.setColor(255, 255, 255, 40)
+  g.rectangle('fill', x, y, w, h)
+
+  local fade = math.lerp(self.prevHoverFade, self.hoverFade, tickDelta / tickRate)
+  g.setColor(0, 0, 0, 200)
+  --g.rectangle('line', math.round(x) + .5, math.round(y) + .5, w, h)
+  local xx, yy = math.round(x) + .5, math.round(y) + .5
+  w, h = math.floor(w), math.floor(h)
+  g.line(xx, yy + h, xx + w, yy + h)
+  g.line(xx + w, yy, xx + w, yy + h)
 
   if hover then
     if not self.hoverActive then
@@ -67,13 +77,12 @@ function Button:render()
 
     g.setColor(255, 255, 255)
     g.setStencil(function()
-      local y = active and y + diff * yscale or y
-      local h = active and h - diff * yscale or h - diff * yscale
+      --local y = active and y + diff * yscale or y
+      --local h = active and h - diff * yscale or h - diff * yscale
       g.rectangle('fill', x, y, w, h)
     end)
 
     local factor = math.lerp(self.prevHoverFactor, self.hoverFactor, tickDelta / tickRate)
-    local fade = math.lerp(self.prevHoverFade, self.hoverFade, tickDelta / tickRate)
     g.setColor(255, 255, 255, 20 * (1 - fade))
     g.setBlendMode('additive')
     g.circle('fill', self.hoverX, self.hoverY, factor * self.hoverDistance)
@@ -92,12 +101,15 @@ function Button:render()
   end
 
   -- Text
-  if active then y = y + diff * yscale end
+  --if active then y = y + diff * yscale end
+  if active then y = y + 2 end
   g.setFont('mesmerize', h * .55)
   g.setColor(0, 0, 0, 100)
-  g.printCenter(text, x + w / 2 + 1, y + (h - diff * yscale) / 2 + 1)
+  --g.printCenter(text, x + w / 2 + 1, y + (h - diff * yscale) / 2 + 1)
+  g.printCenter(text, x + w / 2 + 1, y + h / 2 + 1)
   g.setColor(255, 255, 255)
-  g.printCenter(text, x + w / 2, y + (h - diff * yscale) / 2)
+  --g.printCenter(text, x + w / 2, y + (h - diff * yscale) / 2)
+  g.printCenter(text, x + w / 2, y + h / 2)
 end
 
 function Button:contains(x, y)
