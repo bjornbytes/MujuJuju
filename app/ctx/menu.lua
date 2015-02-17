@@ -116,10 +116,12 @@ function Menu:draw()
 end
 
 function Menu:keypressed(key)
+  local consumed = self.main:keypressed(key)
   self.start:keypressed(key)
   self.choose:keypressed(key)
-  self.main:keypressed(key)
   self.optionsPane:keypressed(key)
+
+  if consumed then return end
 
   if key == 'm' then
     self.options.mute = not self.options.mute
@@ -137,6 +139,10 @@ function Menu:keypressed(key)
   elseif key == 't' then
     self:startGame({tutorial = true})
   end
+end
+
+function Menu:mousemoved(mx, my)
+  self.tooltip:dirty()
 end
 
 function Menu:mousepressed(mx, my, b)

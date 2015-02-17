@@ -161,7 +161,11 @@ function MenuMap:draw()
 end
 
 function MenuMap:keypressed(key)
-  if key == 'z' then self:toggle() end
+  if key == 'z' then self:toggle()
+  elseif key == 'escape' and self.active then
+    self:toggle()
+    return true
+  end
 end
 
 function MenuMap:mousepressed(mx, my, b)
