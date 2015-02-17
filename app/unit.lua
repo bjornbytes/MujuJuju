@@ -175,6 +175,7 @@ function Unit:draw()
   -- Render colored silhouette of unit to canvas
   local shader = data.media.shaders.colorize
   local canvas = g.getCanvas()
+  self.backCanvas:clear(r, gg, b, 0)
   g.setCanvas(self.canvas)
   self.canvas:clear(r, gg, b, 0)
   g.setShader(shader)
@@ -191,7 +192,7 @@ function Unit:draw()
     g.draw(self.canvas)
     g.setCanvas(self.canvas)
     g.setShader(data.media.shaders.verticalBlur)
-    g.draw(self.canvas)
+    g.draw(self.backCanvas)
   end
 
   g.setShader()
