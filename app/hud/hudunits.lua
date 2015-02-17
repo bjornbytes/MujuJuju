@@ -236,20 +236,22 @@ function HudUnits:draw()
         local image = data.media.graphics.hud.frame
         local scale = w / image:getWidth()
         local upgrade = data.unit[who].upgrades[what]
-        local val = upgrade.level > 0 and 255 or 150
+        local val = (upgrade.level > 0 or ctx.upgrades.canBuy(who, what)) and 255 or 150
         g.setColor(val, val, val, 255 * upgradeAlphaFactor)
-        g.draw(image, x, y, 0, scale, scale)
+        g.draw(image, math.round(x), math.round(y), 0, scale, scale)
+        if upgrade.level > 0 then
+          g.setColor(upgrade.level < upgrade.maxLevel and {0, 255, 0, 100} or {0, 150, 0, 100})
+          g.rectangle('line', math.round(x) + .5, math.round(y) + .5, w - 1, h - 1)
+        end
+
+        local val = (upgrade.level > 0 or ctx.upgrades.canBuy(who, what)) and 255 or 200
+        g.setColor(val, val, val, 255 * upgradeAlphaFactor)
 
         local image = data.media.graphics.hud.icons[what]
         if image then
           local scale = math.min((w - (v * .02)) / image:getWidth(), (h - (v * .02)) / image:getHeight())
           g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
         end
-
-        local str = upgrade.level .. '/' .. upgrade.maxLevel
-        g.setFont('mesmerize', .0175 * v)
-        g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-        g.printShadow(str, x + .01 * v, y + .01 * v)
       end
     end
   end
