@@ -195,6 +195,12 @@ function HudUnits:draw()
         g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
         g.draw(image, x, y, 0, scale, scale)
 
+        local image = data.media.graphics.hud.icons[config.attributes.list[j]]
+        if image then
+          local scale = math.min((w - (v * .03)) / image:getWidth(), (h - (v * .03)) / image:getHeight())
+          g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+        end
+
         local level = data.unit[p.deck[i].code].attributes[config.attributes.list[j]]
         g.setFont('mesmerize', math.round(.0175 * v))
         g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
