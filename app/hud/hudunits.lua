@@ -313,6 +313,8 @@ end
 function HudUnits:mousemoved(mx, my)
   local p = ctx.player
 
+  mx, my = ctx.view:frameMouseX(), ctx.view:frameMouseY()
+
   local attributes = self.geometry.attributes
   for i = 1, #attributes do
     for j = 1, #attributes[i] do
