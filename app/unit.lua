@@ -174,7 +174,7 @@ function Unit:draw()
 
   -- Render colored silhouette of unit to canvas
   local shader = data.media.shaders.colorize
-  local canvas = g.getCanvas()
+  --[[local canvas = g.getCanvas()
   self.backCanvas:clear(r, gg, b, 0)
   g.setCanvas(self.canvas)
   self.canvas:clear(r, gg, b, 0)
@@ -197,14 +197,14 @@ function Unit:draw()
 
   g.setShader()
   ctx.view:worldPush()
-  g.setCanvas(canvas)
+  g.setCanvas(canvas)]]
 
   -- Draw blurred outline
   g.setColor(255, 255, 255, 255 * lerpd.alpha)
   g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
 
   -- Draw animation
-  self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = true})
+  self.animation:draw(x, y - (lerpd.knockup or 0))
 
   -- Fear icon
   if self.buffs:feared() then
