@@ -1,0 +1,69 @@
+
+muju.png
+size: 128,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+front_bracer
+  rotate: false
+  xy: 93, 100
+  size: 33, 37
+  orig: 33, 37
+  offset: 0, 0
+  index: -1
+front_fist
+  rotate: false
+  xy: 70, 15
+  size: 21, 19
+  orig: 21, 19
+  offset: 0, 0
+  index: -1
+front_upper_arm
+  rotate: false
+  xy: 70, 36
+  size: 31, 43
+  orig: 31, 43
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 27
+  size: 34, 72
+  orig: 34, 72
+  offset: 0, 0
+  index: -1
+rear_bracer
+  rotate: false
+  xy: 2, 2
+  size: 27, 23
+  orig: 27, 23
+  offset: 0, 0
+  index: -1
+rear_fist
+  rotate: false
+  xy: 2, 101
+  size: 44, 145
+  orig: 44, 145
+  offset: 0, 0
+  index: -1
+rear_upper_arm
+  rotate: false
+  xy: 38, 31
+  size: 30, 48
+  orig: 30, 48
+  offset: 0, 0
+  index: -1
+robebottom
+  rotate: false
+  xy: 48, 139
+  size: 77, 107
+  orig: 77, 107
+  offset: 0, 0
+  index: -1
+torso
+  rotate: false
+  xy: 48, 81
+  size: 43, 56
+  orig: 43, 56
+  offset: 0, 0
+  index: -1

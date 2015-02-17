@@ -1,0 +1,76 @@
+
+buju.png
+size: 512,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+chest
+  rotate: false
+  xy: 2, 100
+  size: 127, 154
+  orig: 127, 154
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 5
+  size: 85, 93
+  orig: 85, 93
+  offset: 0, 0
+  index: -1
+left arm lower
+  rotate: false
+  xy: 89, 2
+  size: 78, 79
+  orig: 78, 79
+  offset: 0, 0
+  index: -1
+left arm upper
+  rotate: false
+  xy: 431, 5
+  size: 47, 73
+  orig: 47, 73
+  offset: 0, 0
+  index: -1
+left leg
+  rotate: false
+  xy: 444, 80
+  size: 41, 174
+  orig: 41, 174
+  offset: 0, 0
+  index: -1
+leftblade
+  rotate: false
+  xy: 351, 110
+  size: 91, 144
+  orig: 91, 144
+  offset: 0, 0
+  index: -1
+right arm lower
+  rotate: false
+  xy: 351, 28
+  size: 78, 80
+  orig: 78, 80
+  offset: 0, 0
+  index: -1
+right arm upper
+  rotate: false
+  xy: 169, 31
+  size: 52, 73
+  orig: 52, 73
+  offset: 0, 0
+  index: -1
+right leg
+  rotate: false
+  xy: 246, 83
+  size: 103, 171
+  orig: 103, 171
+  offset: 0, 0
+  index: -1
+rightblade
+  rotate: false
+  xy: 131, 106
+  size: 113, 148
+  orig: 113, 148
+  offset: 0, 0
+  index: -1

@@ -294,6 +294,10 @@ end
 function MenuOptions:keypressed(key)
   if key == ' ' then
     self:toggle()
+    return true
+  elseif key == 'escape' and self.active then
+    self:toggle()
+    return true
   end
 end
 
@@ -307,6 +311,8 @@ function MenuOptions:mousepressed(mx, my, b)
     elseif b == 'wu' then
       self:scrollPane(-1)
     end
+
+    return true
   end
 end
 

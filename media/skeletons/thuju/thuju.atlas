@@ -1,0 +1,90 @@
+
+thuju.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+chest
+  rotate: false
+  xy: 2, 224
+  size: 233, 268
+  orig: 233, 268
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 237, 368
+  size: 105, 124
+  orig: 105, 124
+  offset: 0, 0
+  index: -1
+leftarmlower
+  rotate: false
+  xy: 113, 111
+  size: 116, 111
+  orig: 116, 111
+  offset: 0, 0
+  index: -1
+leftarmupper
+  rotate: false
+  xy: 237, 246
+  size: 94, 120
+  orig: 94, 120
+  offset: 0, 0
+  index: -1
+lefthand
+  rotate: false
+  xy: 237, 153
+  size: 95, 91
+  orig: 95, 91
+  offset: 0, 0
+  index: -1
+leftleglower
+  rotate: false
+  xy: 463, 436
+  size: 43, 56
+  orig: 43, 56
+  offset: 0, 0
+  index: -1
+leftlegupper
+  rotate: false
+  xy: 306, 65
+  size: 62, 86
+  orig: 62, 86
+  offset: 0, 0
+  index: -1
+rightarmlower
+  rotate: false
+  xy: 2, 95
+  size: 109, 127
+  orig: 109, 127
+  offset: 0, 0
+  index: -1
+rightarmupper
+  rotate: false
+  xy: 344, 384
+  size: 117, 108
+  orig: 117, 108
+  offset: 0, 0
+  index: -1
+righthand
+  rotate: false
+  xy: 2, 2
+  size: 98, 91
+  orig: 98, 91
+  offset: 0, 0
+  index: -1
+rightleglower
+  rotate: false
+  xy: 113, 51
+  size: 54, 58
+  orig: 54, 58
+  offset: 0, 0
+  index: -1
+rightlegupper
+  rotate: false
+  xy: 231, 59
+  size: 73, 92
+  orig: 73, 92
+  offset: 0, 0
+  index: -1

@@ -9,6 +9,7 @@ function Button:activate()
   self.hoverX = nil
   self.hoverY = nil
   self.hoverDistance = 0
+  self.disabled = false
 end
 
 function Button:update()
@@ -22,13 +23,13 @@ function Button:update()
 end
 
 function Button:mousepressed(mx, my, b)
-  if b == 'l' and self:contains(mx, my) then
+  if b == 'l' and self:contains(mx, my) and not self.disabled then
     self.gooey.hot = self
   end
 end
 
 function Button:mousereleased(mx, my, b)
-  if b == 'l' and self.gooey.hot == self and self:contains(mx, my) then
+  if b == 'l' and self.gooey.hot == self and self:contains(mx, my) and not self.disabled then
     self:emit('click')
   end
 end
@@ -93,5 +94,5 @@ function Button:render()
 end
 
 function Button:contains(x, y)
-  return math.inside(x, y, unpack(self.geometry()))
+  return math.inside(x, y, unpack(self.geometry())) and not self.disabled
 end
