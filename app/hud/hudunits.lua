@@ -144,6 +144,7 @@ function HudUnits:draw()
     self.animations[i]:draw(100, 100)
     ctx.view:guiPush()
     g.setCanvas()
+    g.setColor(255, 255, 255)
     g.draw(self.canvas, xx, yy + .1 * scale * v, 0, imageScale, imageScale, 100, 100)
 
     -- Text

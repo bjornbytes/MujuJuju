@@ -108,7 +108,11 @@ data.load = function()
     -- Set up static spine data structures
     local s = {}
     s.__index = s
-    s.json = spine.SkeletonJson.new()
+    if love.filesystem.exists('media/skeletons/' .. code .. '/' .. code .. '.atlas') then
+      s.atlas = spine.Atlas.new('media/skeletons/' .. code .. '/' .. code .. '.atlas')
+      s.atlasAttachmentLoader = spine.AtlasAttachmentLoader.new(s.atlas)
+    end
+    s.json = spine.SkeletonJson.new(s.atlasAttachmentLoader)
     s.skeletonData = s.json:readSkeletonDataFile('media/skeletons/' .. code .. '/' .. code .. '.json')
     s.animationStateData = spine.AnimationStateData.new(s.skeletonData)
 

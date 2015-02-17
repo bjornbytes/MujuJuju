@@ -108,6 +108,9 @@ function Animation:initSpine()
   s.skeleton.createImage = function(_, attachment)
     return self.graphics[attachment.name]
   end
+  s.skeleton.createAtlasImage = function(_, page)
+    return self.graphics[page.name:gsub('.png', '')]
+  end
 
   self.spine = s
 end
