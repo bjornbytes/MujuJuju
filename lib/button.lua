@@ -6,18 +6,25 @@ function Button:activate()
   self.hoverActive = false
   self.hoverFactor = 0
   self.prevHoverFactor = 0
+  self.prevHoverFade = 0
   self.hoverX = nil
   self.hoverY = nil
   self.hoverDistance = 0
+  self.hoverFade = 0
   self.disabled = false
 end
 
 function Button:update()
   self.prevHoverFactor = self.hoverFactor
+  self.prevHoverFade = self.hoverFade
   if self.hoverActive then
     self.hoverFactor = math.lerp(self.hoverFactor, 1, math.min(8 * tickRate, 1))
+    if self.hoverFactor > .999 then
+      self.hoverFade = math.min(self.hoverFade + tickRate, 1)
+    end
   else
     self.hoverFactor = 0
+    self.hoverFade = 0
   end
 end
 
@@ -66,15 +73,16 @@ function Button:render()
     end)
 
     local factor = math.lerp(self.prevHoverFactor, self.hoverFactor, tickDelta / tickRate)
-    g.setColor(255, 255, 255, 20)
+    local fade = math.lerp(self.prevHoverFade, self.hoverFade, tickDelta / tickRate)
+    g.setColor(255, 255, 255, 20 * (1 - fade))
     g.setBlendMode('additive')
     g.circle('fill', self.hoverX, self.hoverY, factor * self.hoverDistance)
     g.setBlendMode('alpha')
 
-    g.setColor(255, 255, 255, 10)
+    --[[g.setColor(255, 255, 255, 10)
     g.setBlendMode('subtractive')
     g.circle('fill', self.hoverX, self.hoverY, (factor ^ 2) * self.hoverDistance)
-    g.setBlendMode('alpha')
+    g.setBlendMode('alpha')]]
 
     g.setStencil()
 
