@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "Au/95m+vvGX7ezzHDBJRbQRT384", "spine": "2.1.07", "width": 192.09, "height": 141.18 },
+"skeleton": { "hash": "Au/95m+vvGX7ezzHDBJRbQRT384", "spine": "2.1.10", "width": 118, "height": 117 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "chest", "parent": "root", "length": 25.01, "x": -1.01, "y": 69.88, "rotation": -95.39 },

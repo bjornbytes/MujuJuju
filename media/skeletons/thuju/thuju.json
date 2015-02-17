@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "UZvBKTpGz9N2YZSH4/dJjgQff+c", "spine": "2.1.07", "width": 369, "height": 331.02 },
+"skeleton": { "hash": "UZvBKTpGz9N2YZSH4/dJjgQff+c", "spine": "2.1.10", "width": 367.12, "height": 331.02 },
 "bones": [
 	{ "name": "root", "x": -0.01, "scaleX": 0.953, "scaleY": 0.953 },
 	{ "name": "waist", "parent": "root", "x": -7.52, "y": 131.97 },

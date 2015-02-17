@@ -1,0 +1,27 @@
+
+shrujupatch.png
+size: 256,64
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+left
+  rotate: false
+  xy: 2, 11
+  size: 86, 42
+  orig: 86, 42
+  offset: 0, 0
+  index: -1
+middle
+  rotate: false
+  xy: 90, 2
+  size: 56, 51
+  orig: 56, 51
+  offset: 0, 0
+  index: -1
+right
+  rotate: false
+  xy: 148, 21
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1

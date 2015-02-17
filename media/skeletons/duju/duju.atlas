@@ -1,0 +1,41 @@
+
+duju.png
+size: 128,64
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+chest
+  rotate: false
+  xy: 2, 28
+  size: 80, 32
+  orig: 80, 32
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2, 2
+  size: 27, 24
+  orig: 27, 24
+  offset: 0, 0
+  index: -1
+jaw
+  rotate: false
+  xy: 104, 36
+  size: 19, 24
+  orig: 19, 24
+  offset: 0, 0
+  index: -1
+leftarm
+  rotate: false
+  xy: 84, 31
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: -1
+rightarm
+  rotate: false
+  xy: 31, 4
+  size: 25, 22
+  orig: 25, 22
+  offset: 0, 0
+  index: -1

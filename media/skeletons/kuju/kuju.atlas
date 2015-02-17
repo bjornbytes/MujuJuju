@@ -1,0 +1,104 @@
+
+kuju.png
+size: 1024,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+chest
+  rotate: false
+  xy: 159, 33
+  size: 72, 89
+  orig: 72, 89
+  offset: 0, 0
+  index: -1
+face
+  rotate: false
+  xy: 701, 73
+  size: 38, 49
+  orig: 38, 49
+  offset: 0, 0
+  index: -1
+hair
+  rotate: false
+  xy: 2, 2
+  size: 155, 120
+  orig: 155, 120
+  offset: 0, 0
+  index: -1
+leftforearm
+  rotate: false
+  xy: 601, 79
+  size: 51, 43
+  orig: 51, 43
+  offset: 0, 0
+  index: -1
+lefthand
+  rotate: false
+  xy: 741, 75
+  size: 35, 47
+  orig: 35, 47
+  offset: 0, 0
+  index: -1
+leftshin
+  rotate: false
+  xy: 377, 36
+  size: 32, 86
+  orig: 32, 86
+  offset: 0, 0
+  index: -1
+leftthigh
+  rotate: false
+  xy: 292, 29
+  size: 44, 93
+  orig: 44, 93
+  offset: 0, 0
+  index: -1
+leftupperarm
+  rotate: false
+  xy: 654, 62
+  size: 45, 60
+  orig: 45, 60
+  offset: 0, 0
+  index: -1
+neck
+  rotate: false
+  xy: 778, 91
+  size: 22, 31
+  orig: 22, 31
+  offset: 0, 0
+  index: -1
+rightforearm
+  rotate: false
+  xy: 543, 84
+  size: 56, 38
+  orig: 56, 38
+  offset: 0, 0
+  index: -1
+righthand
+  rotate: false
+  xy: 411, 61
+  size: 55, 61
+  orig: 55, 61
+  offset: 0, 0
+  index: -1
+rightshin
+  rotate: false
+  xy: 233, 29
+  size: 57, 93
+  orig: 57, 93
+  offset: 0, 0
+  index: -1
+rightthigh
+  rotate: false
+  xy: 338, 31
+  size: 37, 91
+  orig: 37, 91
+  offset: 0, 0
+  index: -1
+rightupperarm
+  rotate: false
+  xy: 468, 85
+  size: 73, 37
+  orig: 73, 37
+  offset: 0, 0
+  index: -1
