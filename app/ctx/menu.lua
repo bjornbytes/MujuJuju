@@ -17,6 +17,7 @@ function Menu:load(selectedBiome, options)
   self.options = self.options or table.copy(config.defaultOptions)
 
   self.virtualCursor = VirtualCursor()
+  self.cursor = Cursor()
   self.gooey = Gooey()
   self.start = MenuStart()
   self.choose = MenuChoose()
@@ -34,7 +35,6 @@ function Menu:load(selectedBiome, options)
   self.user.deckSlots = 3
   saveUser(self.user)
 
-  self.cursor = Cursor()
   self.sound = Sound()
   self.menuSounds = self.sound:loop('riteOfPassage')
   if ctx.options and ctx.options.mute then self.sound:setMute(ctx.options.mute) end
@@ -196,6 +196,7 @@ function Menu:resize()
   self.unitCanvas = g.newCanvas(400, 400)
   self.screenCanvas = g.newCanvas(self.u, self.v)
 
+  self.cursor:resize()
   self.gooey:resize()
   self.start:resize()
   self.choose:resize()
