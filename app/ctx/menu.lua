@@ -120,12 +120,10 @@ function Menu:draw()
 end
 
 function Menu:keypressed(key)
-  local consumed = self.main:keypressed(key)
+  if self.main:keypressed(key) then return end
+  if self.optionsPane:keypressed(key) then return end
   self.start:keypressed(key)
   self.choose:keypressed(key)
-  self.optionsPane:keypressed(key)
-
-  if consumed then return end
 
   if key == 'm' then
     self.options.mute = not self.options.mute
