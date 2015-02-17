@@ -292,10 +292,7 @@ function MenuOptions:draw()
 end
 
 function MenuOptions:keypressed(key)
-  if key == ' ' then
-    self:toggle()
-    return true
-  elseif key == 'escape' and self.active then
+  if key == 'escape' and self.active then
     self:toggle()
     return true
   end
