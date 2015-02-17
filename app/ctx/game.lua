@@ -28,7 +28,6 @@ function Game:load(user, options, biome, tutorial)
   self.players = Players()
   self.player = ctx.players:add(1)
   self.shrujuPatches = ShrujuPatches()
-  self.cursor = Cursor()
   self.hud = Hud()
   self.upgrades = Upgrades
   self.shrines = Manager()
@@ -57,8 +56,6 @@ function Game:load(user, options, biome, tutorial)
 end
 
 function Game:update()
-  self.cursor:update()
-
   if self.hud.upgrading or self.paused or self.ded then
     self.hud:update()
     if self.ded and self.effects:get('deathblur') then self.effects:get('deathblur'):update() end

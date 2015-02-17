@@ -17,7 +17,6 @@ function Menu:load(selectedBiome, options)
   self.options = self.options or table.copy(config.defaultOptions)
 
   self.virtualCursor = VirtualCursor()
-  self.cursor = Cursor()
   self.gooey = Gooey()
   self.start = MenuStart()
   self.choose = MenuChoose()
@@ -81,7 +80,6 @@ function Menu:update()
   if self.optionsPane.active then self.main.play.disabled = true
   else self.main.play.disabled = false end
 
-  self.cursor:update()
   self.tooltip:update()
   self.gooey:update()
 
@@ -196,7 +194,7 @@ function Menu:resize()
   self.unitCanvas = g.newCanvas(400, 400)
   self.screenCanvas = g.newCanvas(self.u, self.v)
 
-  self.cursor:resize()
+  love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor' .. ((love.window.getPixelScale() == 2) and 'x2' or '') .. '.png'))
   self.gooey:resize()
   self.start:resize()
   self.choose:resize()

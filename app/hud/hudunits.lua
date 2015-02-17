@@ -317,7 +317,6 @@ function HudUnits:mousemoved(mx, my)
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
         ctx.hud.tooltip:setAttributeTooltip(attribute, p.deck[i].code)
-        ctx.cursor:hover()
         return
       end
     end
@@ -330,7 +329,6 @@ function HudUnits:mousemoved(mx, my)
       local x, y, w, h = unpack(upgrades[i][j])
       if math.inside(mx, my, x, y, w, h) then
         ctx.hud.tooltip:setUpgradeTooltip(who, what)
-        ctx.cursor:hover()
         return
       end
     end
@@ -358,7 +356,6 @@ function HudUnits:mousemoved(mx, my)
     for j = 1, runeCount do
       if math.insideCircle(mx, my, runex, runey, runeSize) then
         ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
-        ctx.cursor:hover()
         return
       end
       runex = runex + runeInc
