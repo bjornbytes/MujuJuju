@@ -343,9 +343,7 @@ function MenuMain:draw()
 end
 
 function MenuMain:keypressed(key)
-  self.map:keypressed(key)
-
-  if not self.active or self.map.active then return end
+  return self.map:keypressed(key)
 end
 
 function MenuMain:mousepressed(mx, my, b)
