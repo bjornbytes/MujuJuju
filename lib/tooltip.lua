@@ -36,8 +36,8 @@ function Tooltip:update()
 
   self.prevCursorX = self.cursorX
   self.prevCursorY = self.cursorY
-  self.cursorX = math.lerp(self.cursorX, mx, 8 * tickRate)
-  self.cursorY = math.lerp(self.cursorY, my, 8 * tickRate)
+  self.cursorX = math.lerp(self.cursorX, mx, 12 * tickRate)
+  self.cursorY = math.lerp(self.cursorY, my, 12 * tickRate)
 end
 
 function Tooltip:draw()
