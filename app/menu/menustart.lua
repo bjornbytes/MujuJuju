@@ -58,6 +58,11 @@ function MenuStart:init()
   self.quit.geometry = function() return self.geometry.quit end
   self.quit:on('click', function() love.event.quit() end)
   self.quit.text = 'Quit'
+
+  self.offsetX = 0
+  self.offsetY = 0
+  self.prevOffsetX = self.offsetX
+  self.prevOffsetY = self.offsetY
 end
 
 function MenuStart:update()
@@ -65,6 +70,14 @@ function MenuStart:update()
   if not self.active then
     self.alpha = math.max(self.alpha - tickRate, 0)
   end
+
+  self.prevOffsetX = self.offsetX
+  self.prevOffsetY = self.offsetY
+  local u, v = ctx.u, ctx.v
+  local image = data.media.graphics.menu.titlescreen
+  local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
+  self.offsetX = math.lerp(self.offsetX, (.5 - (love.mouse.getX() / u)) * (u * .02), 2 * tickRate)
+  self.offsetY = math.lerp(self.offsetY, (.5 - (love.mouse.getY() / v)) * (v * .02), 2 * tickRate)
 end
 
 function MenuStart:draw()
@@ -75,13 +88,20 @@ function MenuStart:draw()
     local factor = self.scale
 
     g.setColor(255, 255, 255)
+    data.media.shaders.vignette:send('frame', {0, 0, u, v})
+    data.media.shaders.vignette:send('blur', .45)
+    data.media.shaders.vignette:send('radius', .85)
+    g.setShader(data.media.shaders.vignette)
     local image = data.media.graphics.menu.titlescreen
-    local scale = math.max(u / image:getWidth(), v / image:getHeight())
-    g.draw(image, u / 2, v / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
+    local offsetX = math.lerp(self.prevOffsetX, self.offsetX, tickDelta / tickRate)
+    local offsetY = math.lerp(self.prevOffsetY, self.offsetY, tickDelta / tickRate)
+    g.draw(image, u / 2 + offsetX, v / 2 + offsetY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    g.setShader()
 
     local image = data.media.graphics.menu.title
     local scale = v * .45 / image:getHeight()
-    g.draw(image, u * .5, v * .3, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
+    g.draw(image, u * .5 + offsetX / 2, v * .3 + offsetY / 2, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
 
     self.start:draw()
     self.options:draw()
