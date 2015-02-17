@@ -77,6 +77,10 @@ function Menu:load(selectedBiome, options)
 end
 
 function Menu:update()
+  -- Ensure that "Play" can't be clicked while options is open
+  if self.optionsPane.active then self.main.play.disabled = true
+  else self.main.play.disabled = false end
+
   self.cursor:update()
   self.tooltip:update()
   self.gooey:update()
@@ -147,10 +151,10 @@ end
 
 function Menu:mousepressed(mx, my, b)
   self.gooey:mousepressed(mx, my, b)
+  if self.optionsPane:mousepressed(mx, my, b) then return end
   self.start:mousepressed(mx, my, b)
   self.choose:mousepressed(mx, my, b)
   self.main:mousepressed(mx, my, b)
-  self.optionsPane:mousepressed(mx, my, b)
 end
 
 function Menu:mousereleased(mx, my, b)

@@ -307,6 +307,8 @@ function MenuOptions:mousepressed(mx, my, b)
     elseif b == 'wu' then
       self:scrollPane(-1)
     end
+
+    return true
   end
 end
 

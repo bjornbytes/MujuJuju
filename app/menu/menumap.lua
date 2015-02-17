@@ -122,7 +122,7 @@ function MenuMap:draw()
   g.setColor(255, 255, 255)
   g.draw(image, x, y, 0, xscale, yscale)
 
-  if not self.active and math.inside(mx, my, x, y, w, h) then
+  if not self.active and math.inside(mx, my, x, y, w, h) and not ctx.optionsPane.active then
     g.setColor(255, 255, 255, 20)
     g.setBlendMode('additive')
     g.draw(image, x, y, 0, xscale, yscale)
