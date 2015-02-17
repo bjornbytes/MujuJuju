@@ -81,6 +81,9 @@ function HudUnits:update()
     self.prevCooldownPop[i] = self.cooldownPop[i]
 		self.cooldownPop[i] = math.lerp(self.cooldownPop[i], 0, math.min(12 * tickRate, 1))
 	end
+
+  local _, t = ctx.hud.upgrades:getFactor()
+  if t ~= 0 and t ~= 1 then ctx:mousemoved(love.mouse.getPosition()) end
 end
 
 function HudUnits:draw()
