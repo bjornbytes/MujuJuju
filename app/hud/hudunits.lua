@@ -87,7 +87,7 @@ function HudUnits:update()
 end
 
 function HudUnits:draw()
-  if ctx.ded or ctx.tutorial then return end
+  if ctx.ded then return end
 
   local p = ctx.player
   if not p then return end

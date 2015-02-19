@@ -78,6 +78,7 @@ function Game:update()
   self.hud:update()
   self.effects:update()
   self.shrujuPatches:update()
+  if self.tutorial then self.tutorial:update() end
 end
 
 function Game:unload()
