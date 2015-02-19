@@ -39,6 +39,7 @@ function Game:load(user, options, biome, tutorial)
   self.sound = Sound()
   self.effects = Effects()
   self.jujus = Jujus()
+  self.achievements = Achievements()
 
   if tutorial then self.tutorial = Tutorial() end
 
