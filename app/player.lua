@@ -244,9 +244,9 @@ function Player:summon()
   self.animation:set('summon')
   local summonSound = love.math.random(1, 3)
   ctx.sound:play('summon' .. summonSound)
-  for i = 1, 15 do
+  --[[for i = 1, 15 do
     ctx.spells:add('dirt', {x = self.x, y = self.y + self.height})
-  end
+  end]]
   ctx.hud.units.animations[self.summonSelect]:set('spawn')
   for i = 1, 20 do
     ctx.particles:emit('jujudrop', self.x + love.math.randomNormal(20), self.y + love.math.randomNormal(20) + self.height / 2, 1)
