@@ -238,6 +238,9 @@ function Player:summon()
     end
   end
 
+  -- Achievement: Mini Arsenal
+  ctx.event:emit('achievement', {name = 'miniarsenal'})
+
   -- Aftermath, juice, animations, etc.
   self.totalSummoned = self.totalSummoned + 1
   self.invincible = 0
