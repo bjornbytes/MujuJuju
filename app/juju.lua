@@ -28,8 +28,8 @@ function Juju:update()
 
 	if self.dead then
 		local tx, ty = 866, 18
-		self.x, self.y = math.lerp(self.x, tx, 10 * tickRate), math.lerp(self.y, ty, 10 * tickRate)
-		self.scale = math.lerp(self.scale, .1, 5 * tickRate)
+		self.x, self.y = math.lerp(self.x, tx, 10 * ls.tickrate), math.lerp(self.y, ty, 10 * ls.tickrate)
+		self.scale = math.lerp(self.scale, .1, 5 * ls.tickrate)
 		if math.distance(self.x, self.y, tx, ty) < 16 then
 			ctx.jujus:remove(self)
       p:addJuju(self.amount)
@@ -45,15 +45,15 @@ function Juju:update()
 		return
 	end
 
-	self.vx = math.lerp(self.vx, 0, tickRate)
-	self.vy = math.lerp(self.vy, 0, 2 * tickRate)
-	self.x = self.x + self.vx * tickRate
-	self.y = self.y + self.vy * tickRate
+	self.vx = math.lerp(self.vx, 0, ls.tickrate)
+	self.vy = math.lerp(self.vy, 0, 2 * ls.tickrate)
+	self.x = self.x + self.vx * ls.tickrate
+	self.y = self.y + self.vy * ls.tickrate
 	if self.vy > -.1 then
-		self.y = self.y - 10 * tickRate
+		self.y = self.y - 10 * ls.tickrate
 	end
 
-  if love.math.random() < 3 * tickRate then
+  if love.math.random() < 3 * ls.tickrate then
     local sizes = love.math.random() < .5 and {.2, 0} or {.2, .4}
     ctx.particles:emit('jujudrop', self.x, self.y, 1, {sizes = sizes})
   end
@@ -64,7 +64,7 @@ function Juju:update()
     local distance, direction = math.vector(self.x, self.y, ghost.x, ghost.y)
     local threshold = self.amount + 90
     local factor = math.clamp((threshold - distance) / threshold, 0, 1)
-    local speed = threshold * (factor ^ .1) * tickRate * 4
+    local speed = threshold * (factor ^ .1) * ls.tickrate * 4
     self.x = self.x + math.dx(speed, direction)
     self.y = self.y + math.dy(speed, direction)
 
@@ -78,9 +78,9 @@ function Juju:update()
 		ctx.jujus:remove(self)
 	end
 
-	self.angle = self.angle + (math.sin(tick * tickRate) * math.cos(tick * tickRate)) / love.math.random(9, 11)
-	self.scale = math.lerp(self.scale, .15 + (math.min(self.amount, 200) / 200), 2 * tickRate)
-	self.alpha = math.lerp(self.alpha, p.ded and 1 or .5, 10 * tickRate)
+	self.angle = self.angle + (math.sin(tick * ls.tickrate) * math.cos(tick * ls.tickrate)) / love.math.random(9, 11)
+	self.scale = math.lerp(self.scale, .15 + (math.min(self.amount, 200) / 200), 2 * ls.tickrate)
+	self.alpha = math.lerp(self.alpha, p.ded and 1 or .5, 10 * ls.tickrate)
 
 	self.x = math.clamp(self.x, self.amount * 2, love.graphics.getWidth() - self.amount * 2)
 end
@@ -88,8 +88,8 @@ end
 function Juju:draw()
 	local g = love.graphics
   local image = data.media.graphics.juju
-	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
-	local wave = math.sin(tick * tickRate * 4)
+	local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+	local wave = math.sin(tick * ls.tickrate * 4)
 
 	g.setColor(255, 255, 255, 255 * self.alpha)
 	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)

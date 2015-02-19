@@ -28,7 +28,7 @@ function HudExperience:update()
   if not p.nextLevels[p.level] then target = 0
   else target = (p.experience - prev) / (p.nextLevels[p.level] - prev) end
 
-  self.display = math.lerp(self.display, target, math.min(10 * tickRate, 1))
+  self.display = math.lerp(self.display, target, math.min(10 * ls.tickrate, 1))
 end
 
 function HudExperience:draw()
@@ -37,7 +37,7 @@ function HudExperience:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.player
   local height = .025 * v
-  local display = math.lerp(self.prevDisplay, self.display, tickDelta / tickRate)
+  local display = math.lerp(self.prevDisplay, self.display, ls.accum / ls.tickrate)
   g.setBlendMode('additive')
   g.setColor(150, 255, 0, 100)
   g.rectangle('fill', 0, v - height, display * u, height)

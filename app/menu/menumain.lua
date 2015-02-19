@@ -3,12 +3,12 @@ MenuMain = class()
 
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
-  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * tickRate, 1))
+  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 local function lerpRune(rune, key, val)
   ctx.prevRuneTransforms[rune][key] = ctx.runeTransforms[rune][key]
-  ctx.runeTransforms[rune][key] = math.lerp(ctx.runeTransforms[rune][key] or val, val, math.min(10 * tickRate, 1))
+  ctx.runeTransforms[rune][key] = math.lerp(ctx.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuMain:init()
@@ -246,7 +246,7 @@ function MenuMain:draw()
     if rune and not self.drag:isDragging('gutterRune', i) then
       local lerpd = {}
       for k, v in pairs(ctx.runeTransforms[rune]) do
-        lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, tickDelta / tickRate)
+        lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
       g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .04 * v)
     end
@@ -275,7 +275,7 @@ function MenuMain:draw()
       end)
       local lerpd = {}
       for k, v in pairs(ctx.animationTransforms[code]) do
-        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, ls.accum / ls.tickrate)
       end
       g.setColor(255, 255, 255)
       g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale * ps, lerpd.scale * ps, cw / 2, ch / 2)
@@ -302,7 +302,7 @@ function MenuMain:draw()
       end)
       local lerpd = {}
       for k, v in pairs(ctx.animationTransforms[code]) do
-        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, ls.accum / ls.tickrate)
       end
 
       g.setColor(255, 255, 255)
@@ -329,7 +329,7 @@ function MenuMain:draw()
         local rune = ctx.user.deck.runes[i][j]
         local lerpd = {}
         for k, v in pairs(ctx.runeTransforms[rune]) do
-          lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, tickDelta / tickRate)
+          lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
 
         g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .04 * v)

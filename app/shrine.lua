@@ -22,14 +22,14 @@ function Shrine:init()
 end
 
 function Shrine:update()
-  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(2 * tickRate, 1))
+  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(2 * ls.tickrate, 1))
 
 
   local p = ctx.player
-  self.highlight = math.lerp(self.highlight, p:atShrine() and 1 or 0, math.min(5 * tickRate, 1))
-  self.hurtFactor = math.lerp(self.hurtFactor, (tick - self.lastHurt) * tickRate < 5 and 1 or 0, math.min(4 * tickRate, 1))
+  self.highlight = math.lerp(self.highlight, p:atShrine() and 1 or 0, math.min(5 * ls.tickrate, 1))
+  self.hurtFactor = math.lerp(self.hurtFactor, (tick - self.lastHurt) * ls.tickrate < 5 and 1 or 0, math.min(4 * ls.tickrate, 1))
 
-  self.health = math.min(self.health + math.max(self.regen, 0) * tickRate, self.maxHealth)
+  self.health = math.min(self.health + math.max(self.regen, 0) * ls.tickrate, self.maxHealth)
 end
 
 function Shrine:draw()

@@ -10,6 +10,7 @@ local function load(dir)
 end
 
 json = require 'lib/deps/dkjson'
+ls = require 'lib/deps/lovestep/lovestep'
 
 require 'lib/deps/lutil/util'
 require 'lib/deps/spine/love/spine'

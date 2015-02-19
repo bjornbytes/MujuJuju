@@ -19,17 +19,17 @@ function Checkbox:update()
   mx, my = mx + ox, my + oy
 
   local hover = self:contains(mx, my)
-  self.scale = math.lerp(self.scale, hover and 1.15 or 1, math.min(16 * tickRate, 1))
+  self.scale = math.lerp(self.scale, hover and 1.15 or 1, math.min(16 * ls.tickrate, 1))
 
-  self.factor = math.lerp(self.factor, self.value and 1 or 0, math.min(16 * tickRate, 1))
+  self.factor = math.lerp(self.factor, self.value and 1 or 0, math.min(16 * ls.tickrate, 1))
 end
 
 function Checkbox:render()
   local u, v = ctx.u, ctx.v
   local x, y, r = unpack(self.geometry())
 
-  local factor = math.lerp(self.prevFactor, self.factor, tickDelta / tickRate)
-  local scale = math.lerp(self.prevScale, self.scale, tickDelta / tickRate)
+  local factor = math.lerp(self.prevFactor, self.factor, ls.accum / ls.tickrate)
+  local scale = math.lerp(self.prevScale, self.scale, ls.accum / ls.tickrate)
   local radius = scale * r
 
   if self.value then g.setColor(0, 0, 0, 200)

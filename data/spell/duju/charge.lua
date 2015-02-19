@@ -16,7 +16,7 @@ function Charge:update()
   local charging = math.abs(self.startx - self.unit.x) < self.ability.range
 
   if charging then
-    self.unit.x = self.unit.x + direction * self.speed * tickRate
+    self.unit.x = self.unit.x + direction * self.speed * ls.tickrate
     table.each(ctx.target:inRange(self.unit, 1, 'enemy', 'unit'), function(target)
       if not self.damaged[target.id] then
         target:hurt(self.damage)

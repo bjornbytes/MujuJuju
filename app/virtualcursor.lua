@@ -22,12 +22,12 @@ function VirtualCursor:update()
       if len < .2 then len = 0 end
 
       local vx, vy = xx / len, yy / len
-      self.cursorSpeed = math.lerp(self.cursorSpeed, len > 0 and cursorSpeed or 0, 18 * tickRate)
+      self.cursorSpeed = math.lerp(self.cursorSpeed, len > 0 and cursorSpeed or 0, 18 * ls.tickrate)
       vx = math.clamp(vx, -1, 1)
       vy = math.clamp(vy, -1, 1)
       vx = vx * self.cursorSpeed * len
       vy = vy * self.cursorSpeed * len
-      love.mouse.setPosition(x + vx * tickRate, y + vy * tickRate)
+      love.mouse.setPosition(x + vx * ls.tickrate, y + vy * ls.tickrate)
     end)
   end
 end

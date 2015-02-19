@@ -47,7 +47,7 @@ function HudShrujuPatch:init(patch)
     slot = function()
       local u, v = ctx.hud.u, ctx.hud.v
       local size = v * .08
-      local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
+      local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, ls.accum / ls.tickrate)
       local patchx, patchy = ctx.view:screenPoint(self.patch.x, self.patch.y)
       return {patchx - size / 2, math.lerp(patchy, v - size - .06 * v, growingFactor), size, size}
     end
@@ -68,24 +68,24 @@ function HudShrujuPatch:update()
 
   if (self.patch.growing or self.patch.slot) then
     local x, y, w, h = unpack(self.geometry.slot)
-    if self.patch.slot and self.patch.slot.effect and love.math.random() < 4 * tickRate then
+    if self.patch.slot and self.patch.slot.effect and love.math.random() < 4 * ls.tickrate then
       ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
     end
 
-    if self.patch.growing and self.patch.timer < 2 * tickRate then
+    if self.patch.growing and self.patch.timer < 2 * ls.tickrate then
       self.slotScale = 1.4
     end
   end
 
   self.prevTime = self.time
-  if self.active then self.time = math.min(self.time + tickRate, self.maxTime)
-  else self.time = math.max(self.time - tickRate, 0) end
+  if self.active then self.time = math.min(self.time + ls.tickrate, self.maxTime)
+  else self.time = math.max(self.time - ls.tickrate, 0) end
 
   self.prevGrowingFactor = self.growingFactor
-  self.growingFactor = math.lerp(self.growingFactor, (self.patch.growing or self.patch.slot) and 1 or 0, math.min(8 * tickRate, 1))
+  self.growingFactor = math.lerp(self.growingFactor, (self.patch.growing or self.patch.slot) and 1 or 0, math.min(8 * ls.tickrate, 1))
 
   self.prevSlotScale = self.slotScale
-  self.slotScale = math.lerp(self.slotScale, 1, math.min(10 * tickRate, 1))
+  self.slotScale = math.lerp(self.slotScale, 1, math.min(10 * ls.tickrate, 1))
 end
 
 function HudShrujuPatch:draw()
@@ -98,7 +98,7 @@ function HudShrujuPatch:draw()
 
   local factor, t = self:getFactor()
   local alphaFactor = ((t / self.maxTime) ^ 4) * .7
-  local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, tickDelta / tickRate)
+  local growingFactor = math.lerp(self.prevGrowingFactor, self.growingFactor, ls.accum / ls.tickrate)
 
   if t < 1 or (self.growingFactor > .01 and self.growingFactor < .99) then table.clear(self.geometry)
   elseif t == 0 then return end
@@ -138,7 +138,7 @@ function HudShrujuPatch:draw()
     local x, y, w, h = unpack(self.geometry.slot)
     local image = data.media.graphics.hud.frame
     local frameWidth = image:getWidth()
-    local slotScale = math.lerp(self.prevSlotScale, self.slotScale, tickDelta / tickRate)
+    local slotScale = math.lerp(self.prevSlotScale, self.slotScale, ls.accum / ls.tickrate)
     local scale = (w / frameWidth) * slotScale
     g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
@@ -194,7 +194,7 @@ end
 
 function HudShrujuPatch:keyreleased(key)
   if self.patch and key == 'tab' or key == 'e' or key == 'escape' then
-    if (tick - self.lastPress) * tickRate > self.maxTime then
+    if (tick - self.lastPress) * ls.tickrate > self.maxTime then
       self.active = false
     end
   end
@@ -254,7 +254,7 @@ function HudShrujuPatch:playerNearby()
 end
 
 function HudShrujuPatch:getFactor()
-  local t = math.lerp(self.prevTime, self.time, tickDelta / tickRate)
+  local t = math.lerp(self.prevTime, self.time, ls.accum / ls.tickrate)
   self.tween:set(t)
   return self.factor.value, t
 end

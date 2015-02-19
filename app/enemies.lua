@@ -29,12 +29,12 @@ function Enemies:update()
 	end)
 
 	if not next(self.enemies) and self.level > 1 then
-		self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, .75 * tickRate))
+		self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, .75 * ls.tickrate))
 	end
 
 	table.with(self.enemies, 'update')
 
-	self.level = self.level + tickRate / (16 + self.level / 2)
+	self.level = self.level + ls.tickrate / (16 + self.level / 2)
 end
 
 function Enemies:add(kind, data)

@@ -84,7 +84,7 @@ function Menu:update()
   self.gooey:update()
 
   self.prevBackgroundAlpha = self.backgroundAlpha
-  self.backgroundAlpha = math.lerp(self.backgroundAlpha, 1, math.min(8 * tickRate, 1))
+  self.backgroundAlpha = math.lerp(self.backgroundAlpha, 1, math.min(8 * ls.tickrate, 1))
 
   self.start:update()
   self.choose:update()
@@ -95,10 +95,8 @@ function Menu:update()
 end
 
 function Menu:draw()
-  self.frameIndex = self.frameIndex or 0
-  self.frameIndex = self.frameIndex + 1
-  if self.frameIndex < 3 then
-    delta = 0
+  if ls.frame < 3 then
+    ls.dt = 0
   end
 
   self.screenCanvas:clear(0, 0, 0, 0)
@@ -250,7 +248,7 @@ end
 
 function Menu:drawBackground()
   local u, v = self.u, self.v
-  local backgroundAlpha = math.lerp(self.prevBackgroundAlpha, self.backgroundAlpha, tickDelta / tickRate)
+  local backgroundAlpha = math.lerp(self.prevBackgroundAlpha, self.backgroundAlpha, ls.accum / ls.tickrate)
   g.setColor(255, 255, 255)
   g.draw(self.background2, 0, 0)
   g.setColor(255, 255, 255, backgroundAlpha * 255)

@@ -16,8 +16,8 @@ function HudUpgrades:update()
   self.prevTime = self.time
   local p = ctx.player
   if not p:atShrine() or p.dead then self.active = false end
-  if self.active then self.time = math.min(self.time + tickRate, self.maxTime)
-  else self.time = math.max(self.time - tickRate, 0) end
+  if self.active then self.time = math.min(self.time + ls.tickrate, self.maxTime)
+  else self.time = math.max(self.time - ls.tickrate, 0) end
 end
 
 function HudUpgrades:keypressed(key)
@@ -30,7 +30,7 @@ end
 
 function HudUpgrades:keyreleased(key)
   if key == 'tab' or key == 'e' or key == 'escape' then
-    if (tick - self.lastPress) * tickRate > self.maxTime then
+    if (tick - self.lastPress) * ls.tickrate > self.maxTime then
       self.active = false
     end
   end
@@ -49,7 +49,7 @@ function HudUpgrades:gamepadreleased(gamepad, button)
 end
 
 function HudUpgrades:getFactor()
-  local t = math.lerp(self.prevTime, self.time, tickDelta / tickRate)
+  local t = math.lerp(self.prevTime, self.time, ls.accum / ls.tickrate)
   self.tween:set(t)
   return self.factor.value, t
 end

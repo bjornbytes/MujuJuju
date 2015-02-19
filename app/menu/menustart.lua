@@ -68,7 +68,7 @@ end
 function MenuStart:update()
   self.active = (ctx.page == 'start')
   if not self.active then
-    self.alpha = math.max(self.alpha - tickRate, 0)
+    self.alpha = math.max(self.alpha - ls.tickrate, 0)
   end
 
   self.prevOffsetX = self.offsetX
@@ -76,15 +76,15 @@ function MenuStart:update()
   local u, v = ctx.u, ctx.v
   local image = data.media.graphics.menu.titlescreen
   local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
-  self.offsetX = math.lerp(self.offsetX, (.5 - (love.mouse.getX() / u)) * (u * .02), 2 * tickRate)
-  self.offsetY = math.lerp(self.offsetY, (.5 - (love.mouse.getY() / v)) * (v * .02), 2 * tickRate)
+  self.offsetX = math.lerp(self.offsetX, (.5 - (love.mouse.getX() / u)) * (u * .02), 2 * ls.tickrate)
+  self.offsetY = math.lerp(self.offsetY, (.5 - (love.mouse.getY() / v)) * (v * .02), 2 * ls.tickrate)
 end
 
 function MenuStart:draw()
   if self.alpha > 0 then
     local u, v = ctx.u, ctx.v
 
-    self.tween:update(delta)
+    self.tween:update(ls.dt)
     local factor = self.scale
 
     g.setColor(255, 255, 255)
@@ -94,8 +94,8 @@ function MenuStart:draw()
     g.setShader(data.media.shaders.vignette)
     local image = data.media.graphics.menu.titlescreen
     local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
-    local offsetX = math.lerp(self.prevOffsetX, self.offsetX, tickDelta / tickRate)
-    local offsetY = math.lerp(self.prevOffsetY, self.offsetY, tickDelta / tickRate)
+    local offsetX = math.lerp(self.prevOffsetX, self.offsetX, ls.accum / ls.tickrate)
+    local offsetY = math.lerp(self.prevOffsetY, self.offsetY, ls.accum / ls.tickrate)
     g.draw(image, u / 2 + offsetX, v / 2 + offsetY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     g.setShader()
 

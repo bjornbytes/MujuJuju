@@ -23,10 +23,10 @@ end
 function Dirt:update()
   self.prevx = self.x
   self.prevy = self.y
-	self.x = self.x + self.vx * tickRate
+	self.x = self.x + self.vx * ls.tickrate
 	if self.vy ~= math.huge then
-		self.y = self.y + self.vy * tickRate
-		self.vy = self.vy + 1000 * tickRate
+		self.y = self.y + self.vy * ls.tickrate
+		self.vy = self.vy + 1000 * ls.tickrate
 		if self.y > self.targety and self.vy > 0 then
 			if self.bounced then
 				self.vy = math.huge
@@ -36,9 +36,9 @@ function Dirt:update()
 			end
 		end
 	else
-		self.vx = math.lerp(self.vx, 0, 8 * tickRate)
+		self.vx = math.lerp(self.vx, 0, 8 * ls.tickrate)
 		if self.vx < 10 then
-			self.alpha = math.lerp(self.alpha, 0, 2 * tickRate)
+			self.alpha = math.lerp(self.alpha, 0, 2 * ls.tickrate)
 			if self.alpha < .05 then ctx.spells:remove(self) end
 		end
 	end
@@ -46,7 +46,7 @@ end
 
 function Dirt:draw()
 	local g = love.graphics
-  local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
   local scale = self.size * 3 / self.image:getWidth()
 	g.setColor(self.r, self.g, self.b, 255 * self.alpha)
 	g.draw(self.image, x, y, 0, scale, scale, self.image:getWidth() / 2, self.image:getHeight() / 2)

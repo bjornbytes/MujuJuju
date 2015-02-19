@@ -10,7 +10,7 @@ end
 function Bloom:update()
   local p = ctx.player
   local alphas = config.biomes[ctx.biome].effects.bloom.alpha
-  self.alpha = math.lerp(self.alpha, p.dead and alphas[2] or alphas[1], 5 * tickRate)
+  self.alpha = math.lerp(self.alpha, p.dead and alphas[2] or alphas[1], 5 * ls.tickrate)
   self.active = self.alpha > 5
 end
 

@@ -19,15 +19,15 @@ end
 
 function ArcadeText:update()
   self.prevx, self.prevy = self.x, self.y
-  self.x = self.x + self.vx * tickRate
-  self.y = self.y + self.vy * tickRate
-  self.alpha = self.alpha - math.min(self.alpha, tickRate)
+  self.x = self.x + self.vx * ls.tickrate
+  self.y = self.y + self.vy * ls.tickrate
+  self.alpha = self.alpha - math.min(self.alpha, ls.tickrate)
   if self.alpha <= 0 then ctx.spells:remove(self) end
 end
 
 function ArcadeText:draw()
   local alpha = math.clamp(self.alpha, 0, 1) * 255
-  local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
   g.setFont('pixel', 8)
   g.setColor(255, 255, 255, alpha)
   g.printShadow(self.text, x, y, true)

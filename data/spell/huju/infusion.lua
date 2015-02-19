@@ -27,20 +27,20 @@ function Infusion:update()
   end)
 
   table.each(ctx.target:inRange(self, ability.range, 'ally', 'unit'), function(ally)
-    ally:heal(ally.maxHealth * ability.maxHealthHeal / ability.duration * tickRate, unit)
+    ally:heal(ally.maxHealth * ability.maxHealthHeal / ability.duration * ls.tickrate, unit)
 
     if ability:hasUpgrade('distortion') then
-      ally.buffs:add('distortionhaste', {timer = tickRate, haste = ability.upgrades.distortion.haste})
+      ally.buffs:add('distortionhaste', {timer = ls.tickrate, haste = ability.upgrades.distortion.haste})
     end
 
     if ability:hasUpgrade('resilience') then
-      ally.buffs:add('resilience', {timer = tickRate})
+      ally.buffs:add('resilience', {timer = ls.tickrate})
     end
   end)
 
   if ability:hasUpgrade('distortion') then
     table.each(ctx.target:inRange(self, ability.range, 'enemy', 'unit'), function(enemy)
-      enemy.buffs:add('distortionslow', {timer = tickRate, slow = ability.upgrades.distortion.slow})
+      enemy.buffs:add('distortionslow', {timer = ls.tickrate, slow = ability.upgrades.distortion.slow})
     end)
   end
 end

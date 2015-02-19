@@ -38,14 +38,14 @@ function SpujuSkull:update()
   local image = data.media.graphics.spujuSkull
 	if self.health then
 		self.health = timer.rot(self.health, function() ctx.spells:remove(self) end)
-		self.burstScale = math.lerp(self.burstScale, self.radius / data.media.graphics.spell.burst:getWidth(), 20 * tickRate)
+		self.burstScale = math.lerp(self.burstScale, self.radius / data.media.graphics.spell.burst:getWidth(), 20 * ls.tickrate)
 	else
-		self.x = self.x + self.vx * tickRate
-		self.y = self.y + self.vy * tickRate
-		self.vy = self.vy + self.gravity * tickRate
-		self.angle = self.angle + math.sign(self.vx) * tickRate
+		self.x = self.x + self.vx * ls.tickrate
+		self.y = self.y + self.vy * ls.tickrate
+		self.vy = self.vy + self.gravity * ls.tickrate
+		self.angle = self.angle + math.sign(self.vx) * ls.tickrate
 
-    if love.math.random() < 30 * tickRate then
+    if love.math.random() < 30 * ls.tickrate then
       ctx.particles:emit('spujuskulltrail', self.x, self.y, 1)
     end
 

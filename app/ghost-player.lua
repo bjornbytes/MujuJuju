@@ -43,30 +43,30 @@ function GhostPlayer:update()
 	end
 
 	if gx ~= 0 or gy ~= 0 then
-		self.vx = math.lerp(self.vx, speed * gx, 8 * tickRate)
-		self.vy = math.lerp(self.vy, speed * gy, 8 * tickRate)
+		self.vx = math.lerp(self.vx, speed * gx, 8 * ls.tickrate)
+		self.vy = math.lerp(self.vy, speed * gy, 8 * ls.tickrate)
 		if gx < 0 then
-			self.angle = math.anglerp(self.angle, -math.pi / 2 - (math.pi / 7 * (self.vx / -speed)), 12 * tickRate)
+			self.angle = math.anglerp(self.angle, -math.pi / 2 - (math.pi / 7 * (self.vx / -speed)), 12 * ls.tickrate)
 		elseif gx > 0 then
-			self.angle = math.anglerp(self.angle, -math.pi / 2 + (math.pi / 7 * (self.vx / speed)), 12 * tickRate)
+			self.angle = math.anglerp(self.angle, -math.pi / 2 + (math.pi / 7 * (self.vx / speed)), 12 * ls.tickrate)
 		end
 	else
 		if love.keyboard.isDown('left', 'a') then
-			self.vx = math.lerp(self.vx, -speed, 8 * tickRate)
-			self.angle = math.anglerp(self.angle, -math.pi / 2 - (math.pi / 7 * (self.vx / -speed)), 12 * tickRate)
+			self.vx = math.lerp(self.vx, -speed, 8 * ls.tickrate)
+			self.angle = math.anglerp(self.angle, -math.pi / 2 - (math.pi / 7 * (self.vx / -speed)), 12 * ls.tickrate)
 		elseif love.keyboard.isDown('right', 'd') then
-			self.vx = math.lerp(self.vx, speed, 8 * tickRate)
-			self.angle = math.anglerp(self.angle, -math.pi / 2 + (math.pi / 7 * (self.vx / speed)), 12 * tickRate)
+			self.vx = math.lerp(self.vx, speed, 8 * ls.tickrate)
+			self.angle = math.anglerp(self.angle, -math.pi / 2 + (math.pi / 7 * (self.vx / speed)), 12 * ls.tickrate)
 		else
-			self.vx = math.lerp(self.vx, 0, 2 * tickRate)
+			self.vx = math.lerp(self.vx, 0, 2 * ls.tickrate)
 		end
 
 		if love.keyboard.isDown('up', 'w') then
-			self.vy = math.lerp(self.vy, -speed, 8 * tickRate)
+			self.vy = math.lerp(self.vy, -speed, 8 * ls.tickrate)
 		elseif love.keyboard.isDown('down', 's') then
-			self.vy = math.lerp(self.vy, speed, 8 * tickRate)
+			self.vy = math.lerp(self.vy, speed, 8 * ls.tickrate)
 		else
-			self.vy = math.lerp(self.vy, 0, 2 * tickRate)
+			self.vy = math.lerp(self.vy, 0, 2 * ls.tickrate)
 		end
 	end
 
@@ -76,8 +76,8 @@ function GhostPlayer:update()
 		self.vy = (self.vy / len) * math.min(len, speed)
 	end
 
-	self.x = self.x + self.vx * tickRate
-	self.y = self.y + self.vy * tickRate
+	self.x = self.x + self.vx * ls.tickrate
+	self.y = self.y + self.vy * ls.tickrate
 
 	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.deathTimer / self.owner.deathDuration)) ^ 5)
 	if math.distance(self.x, self.y, px, py) + self.radius > self.maxDis then
@@ -95,7 +95,7 @@ function GhostPlayer:update()
 	end
 	scale = .4 + scale * .4
 	self.radius = 40 * scale
-  self.alpha = math.min(self.alpha + tickRate, 1)
+  self.alpha = math.min(self.alpha + ls.tickrate, 1)
 
   ctx.particles:emit('ghosttrail', self.x, self.y, math.round(2 * love.math.random()), {
     linearAcceleration = {-self.vx * 1, -self.vy * 1, -self.vx * 1.5, -self.vy * 1.5}
@@ -109,8 +109,8 @@ end
 
 function GhostPlayer:draw()
 	local g = love.graphics
-	local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
-  local alpha = math.lerp(self.prevalpha, self.alpha, tickDelta / tickRate)
+	local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+  local alpha = math.lerp(self.prevalpha, self.alpha, ls.accum / ls.tickrate)
 
 	local scale = math.min(self.owner.deathTimer, 2) / 2
 	if self.owner.deathDuration - self.owner.deathTimer < 1 then

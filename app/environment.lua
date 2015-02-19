@@ -11,7 +11,7 @@ function Environment:init()
 end
 
 function Environment:update()
-	self.spiritAlpha = math.lerp(self.spiritAlpha, ctx.player.dead and 1 or 0, .6 * tickRate)
+	self.spiritAlpha = math.lerp(self.spiritAlpha, ctx.player.dead and 1 or 0, .6 * ls.tickrate)
 end
 
 function Environment:draw()

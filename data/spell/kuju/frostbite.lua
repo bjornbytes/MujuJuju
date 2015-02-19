@@ -27,9 +27,9 @@ function Frostbite:update()
 
   local targets = ctx.target:inRange(self, self.width / 2, 'enemy', 'unit')
   table.each(targets, function(target)
-    local damage = 10 * unit:upgradeLevel('frostbite') * tickRate
+    local damage = 10 * unit:upgradeLevel('frostbite') * ls.tickrate
     if unit:upgradeLevel('coldfeet') > 0 and target.buffs and target.buffs:slowed() then damage = damage * 2 end
-    target:hurt(ability.dps * tickRate, unit, {'spell'})
+    target:hurt(ability.dps * ls.tickrate, unit, {'spell'})
   end)
 end
 

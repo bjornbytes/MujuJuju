@@ -19,14 +19,14 @@ function Dropdown:update()
   mx, my = mx + ox, my + oy
   self.prevFactor = self.factor
   self.prevHoverFactor = self.hoverFactor
-  self.factor = math.lerp(self.factor, self:focused() and 1 or 0, math.min(16 * tickRate, 1))
-  self.hoverFactor = math.lerp(self.hoverFactor, (self:focused() or self:contains(mx, my)) and 1 or 0, math.min(16 * tickRate, 1))
+  self.factor = math.lerp(self.factor, self:focused() and 1 or 0, math.min(16 * ls.tickrate, 1))
+  self.hoverFactor = math.lerp(self.hoverFactor, (self:focused() or self:contains(mx, my)) and 1 or 0, math.min(16 * ls.tickrate, 1))
   if self:focused() then
     local hoverIndex = self:contains(mx, my)
     local hoverAmount = 1 + (love.mouse.isDown('l') and .5 or 0)
     for i = 1, #self.choices do
       self.prevChoiceHoverFactors[i] = self.choiceHoverFactors[i] or 0
-      self.choiceHoverFactors[i] = math.lerp(self.prevChoiceHoverFactors[i], i == hoverIndex and hoverAmount or 0, math.min(16 * tickRate, 1))
+      self.choiceHoverFactors[i] = math.lerp(self.prevChoiceHoverFactors[i], i == hoverIndex and hoverAmount or 0, math.min(16 * ls.tickrate, 1))
     end
   end
 end
@@ -38,9 +38,9 @@ function Dropdown:render()
   local ox, oy = self:getOffset()
   mx, my = mx + ox, my + oy
   local hoverIndex = self:contains(mx, my)
-  local choiceHoverFactors = table.interpolate(self.prevChoiceHoverFactors, self.choiceHoverFactors, tickDelta / tickRate)
-  local hoverFactor = math.lerp(self.prevHoverFactor, self.hoverFactor, tickDelta / tickRate)
-  local factor = math.lerp(self.prevFactor, self.factor, tickDelta / tickRate)
+  local choiceHoverFactors = table.interpolate(self.prevChoiceHoverFactors, self.choiceHoverFactors, ls.accum / ls.tickrate)
+  local hoverFactor = math.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
+  local factor = math.lerp(self.prevFactor, self.factor, ls.accum / ls.tickrate)
   local dropdownHeight = self:getDropdownHeight() * factor
   local font = g.setFont('mesmerize', h - .02 * v)
 

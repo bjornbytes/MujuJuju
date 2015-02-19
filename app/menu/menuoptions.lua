@@ -192,8 +192,8 @@ function MenuOptions:update()
   self.prevScroll = self.scroll
   local joysticks = love.joystick.getJoysticks()
   if #joysticks == 0 then
-    if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(12 * tickRate, 1))
-    elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(12 * tickRate, 1)) end
+    if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(12 * ls.tickrate, 1))
+    elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(12 * ls.tickrate, 1)) end
   else
     if self.targetScroll < 0 then self.targetScroll = 0
     elseif self.targetScroll > self.height -v then self.targetScroll = self.height - v end
@@ -201,7 +201,7 @@ function MenuOptions:update()
 end
 
 function MenuOptions:draw()
-  self.offsetTween:update(delta)
+  self.offsetTween:update(ls.dt)
 
   local u, v = ctx.u, ctx.v
 
@@ -210,7 +210,7 @@ function MenuOptions:draw()
     table.clear(self.geometry)
     self.height = self.geometry.options.height
   end
-  self.scroll = math.lerp(self.scroll, self.targetScroll, 8 * delta)
+  self.scroll = math.lerp(self.scroll, self.targetScroll, 8 * ls.dt)
   local scroll = self.scroll
 
   local x1 = u + self.offset

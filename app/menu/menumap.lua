@@ -90,17 +90,17 @@ function MenuMap:update()
   local mx, my = love.mouse.getPosition()
 
   self.prevAlpha = self.alpha
-  self.alpha = math.lerp(self.alpha, self.active and 1 or 0, math.min(6 * tickRate, 1))
+  self.alpha = math.lerp(self.alpha, self.active and 1 or 0, math.min(6 * ls.tickrate, 1))
 
   for k, v in ipairs(config.biomeOrder) do
     local hover = math.insideCircle(mx, my, unpack(self.geometry[v]))
     self.prevScales[v] = self.scales[v] or 1
-    self.scales[v] = math.lerp(self.scales[v] or 1, (hover or ctx.main.selectedBiome == k) and 1.15 or .9, math.min(16 * tickRate, 1))
+    self.scales[v] = math.lerp(self.scales[v] or 1, (hover or ctx.main.selectedBiome == k) and 1.15 or .9, math.min(16 * ls.tickrate, 1))
   end
 end
 
 function MenuMap:draw()
-  self.tween:update(delta)
+  self.tween:update(ls.dt)
 
   local u, v = ctx.u, ctx.v
   local mx, my = love.mouse.getPosition()
@@ -109,7 +109,7 @@ function MenuMap:draw()
     table.clear(self.geometry)
   end
 
-  local alpha = math.lerp(self.prevAlpha, self.alpha, tickDelta / tickRate)
+  local alpha = math.lerp(self.prevAlpha, self.alpha, ls.accum / ls.tickrate)
 
   -- Fade out background
   g.setColor(0, 0, 0, 100 * alpha)
@@ -141,7 +141,7 @@ function MenuMap:draw()
     local x, y, r = unpack(self.geometry[v])
     local image = data.media.graphics.worldmap.circle
     local scale = r * 2 / image:getWidth()
-    scale = scale * math.lerp(self.prevScales[v], self.scales[v], tickDelta / tickRate)
+    scale = scale * math.lerp(self.prevScales[v], self.scales[v], ls.accum / ls.tickrate)
     if ctx.main.selectedBiome == k then g.setColor(255, 255, 255)
     else g.setColor(255, 255, 255, 100) end
     g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)

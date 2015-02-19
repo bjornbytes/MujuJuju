@@ -57,12 +57,12 @@ function View:update()
     self.vx = 1000
   end
 
-  self.x = self.x + self.vx * tickRate
-  self.y = self.y + self.vy * tickRate
+  self.x = self.x + self.vx * ls.tickrate
+  self.y = self.y + self.vy * ls.tickrate
 
   self:contain()
 
-  self.shake = math.lerp(self.shake, 0, 8 * tickRate)
+  self.shake = math.lerp(self.shake, 0, 8 * ls.tickrate)
 
   while #self.toRemove > 0 do
     local x = self.toRemove[1]
@@ -192,7 +192,7 @@ function View:convertZ(z)
 end
 
 function View:three(x, y, z)
-  local sx, sy = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  local sx, sy = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
   z = self:convertZ(z)
   return x - (z * ((sx + self.width / 2 - x) / 500)), y - (z * ((sy + self.height / 2 - y) / 500))
 end
@@ -213,7 +213,7 @@ function View:worldPoint(x, y)
 end
 
 function View:screenPoint(x, y)
-  local vx, vy = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  local vx, vy = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
   x = (x - vx) * self.scale
   if y then y = (y - vy) * self.scale end
   return x, y
@@ -241,9 +241,9 @@ function View:screenshake(amount)
 end
 
 function View:worldPush()
-  local x, y, s = unpack(table.interpolate({self.prevx, self.prevy, self.prevscale}, {self.x, self.y, self.scale}, tickDelta / tickRate))
-  local shakex = 1 - (2 * love.math.noise(self.shake + x + tickDelta))
-  local shakey = 1 - (2 * love.math.noise(self.shake + y + tickDelta))
+  local x, y, s = unpack(table.interpolate({self.prevx, self.prevy, self.prevscale}, {self.x, self.y, self.scale}, ls.accum / ls.tickrate))
+  local shakex = 1 - (2 * love.math.noise(self.shake + x + ls.accum))
+  local shakey = 1 - (2 * love.math.noise(self.shake + y + ls.accum))
   x = x + (shakex * self.shake)
   y = y + (shakey * self.shake)
 

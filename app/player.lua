@@ -110,7 +110,7 @@ function Player:update()
 
   for i = 1, #self.deck do
     if self.deck[i].cooldown > 0 then
-      self.deck[i].cooldown = self.deck[i].cooldown - tickRate * self.cooldownSpeed
+      self.deck[i].cooldown = self.deck[i].cooldown - ls.tickrate * self.cooldownSpeed
       if self.deck[i].cooldown <= 0 then
         ctx.hud.units.cooldownPop[i] = 1
         self.deck[i].cooldown = 0
@@ -126,7 +126,7 @@ function Player:update()
   end)
 
   -- Lerp healthbar
-  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
+  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * ls.tickrate, 1))
 
   -- Juju trickle
   self.jujuTimer = timer.rot(self.jujuTimer, function()
@@ -139,7 +139,7 @@ function Player:draw()
 
   -- Flash when invincible
   if math.floor(self.invincible * 5) % 2 == 0 then
-    local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+    local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
     love.graphics.setColor(255, 255, 255)
     self.animation:draw(x, y)
   end
@@ -199,15 +199,15 @@ function Player:move()
   local maxSpeed = self.walkSpeed
 
   if love.keyboard.isDown('left', 'a') or (self.joystick and self.joystick:getGamepadAxis('leftx') < -.5) then
-    self.speed = math.lerp(self.speed, -maxSpeed, math.min(10 * tickRate, 1))
+    self.speed = math.lerp(self.speed, -maxSpeed, math.min(10 * ls.tickrate, 1))
   elseif love.keyboard.isDown('right', 'd') or (self.joystick and self.joystick:getGamepadAxis('leftx') > .5) then
-    self.speed = math.lerp(self.speed, maxSpeed, math.min(10 * tickRate, 1))
+    self.speed = math.lerp(self.speed, maxSpeed, math.min(10 * ls.tickrate, 1))
   else
-    self.speed = math.lerp(self.speed, 0, math.min(10 * tickRate, 1))
+    self.speed = math.lerp(self.speed, 0, math.min(10 * ls.tickrate, 1))
   end
 
   -- Actually move
-  self.x = self.x + self.speed * tickRate
+  self.x = self.x + self.speed * ls.tickrate
   self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
 
   -- Don't go outside map
@@ -330,10 +330,10 @@ end
 -- Helper
 ----------------
 function Player:getHealthbar()
-  local x = math.lerp(self.prevx, self.x, tickDelta / tickRate)
-  local y = math.lerp(self.prevy, self.y, tickDelta / tickRate)
-  local healthDisplay = math.lerp(self.prevHealthDisplay, self.healthDisplay, tickDelta / tickRate)
-  local health = math.lerp(self.prevHealth, self.health, tickDelta / tickRate)
+  local x = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate)
+  local y = math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+  local healthDisplay = math.lerp(self.prevHealthDisplay, self.healthDisplay, ls.accum / ls.tickrate)
+  local health = math.lerp(self.prevHealth, self.health, ls.accum / ls.tickrate)
   return x, y, health / self.maxHealth, healthDisplay / self.maxHealth
 end
 

@@ -54,7 +54,7 @@ function Tremor:update()
 
   if self.activeSpike then
     local spike = self.spikes[self.activeSpike]
-    spike.y = math.max(spike.y - 650 * tickRate, self.spikeTargetY)
+    spike.y = math.max(spike.y - 650 * ls.tickrate, self.spikeTargetY)
     spike.alpha = 1 - ((spike.y - self.spikeTargetY) / (spike.starty - self.spikeTargetY))
     if spike.y == self.spikeTargetY then
       self.activeSpike = self.activeSpike + 1

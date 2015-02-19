@@ -11,7 +11,7 @@ function ShrujuPatches:update()
   table.with(self.objects, 'update')
 
   local conf = config.biomes[ctx.biome]
-  if conf.shrujuPatches[self.index] and ctx.timer * tickRate > conf.shrujuPatches[self.index] then
+  if conf.shrujuPatches[self.index] and ctx.timer * ls.tickrate > conf.shrujuPatches[self.index] then
     self:add()
   end
 end

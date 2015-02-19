@@ -30,28 +30,28 @@ function HudStatus:update()
 
   local p = ctx.player
   local maxPop = p:getPopulation() >= p.maxPopulation
-	self.jujuScale = math.lerp(self.jujuScale, 1, 10 * tickRate)
-  self.populationScale = math.lerp(self.populationScale, 1, 10 * tickRate)
-  self.clockScale = math.lerp(self.clockScale, 1, 10 * tickRate)
-  self.maxPopFactor = math.lerp(self.maxPopFactor, maxPop and 1 or 0, 10 * tickRate)
-  self.jujuAngle = math.lerp(self.jujuAngle, 2 * math.pi, math.min(3 * tickRate, 1))
+	self.jujuScale = math.lerp(self.jujuScale, 1, 10 * ls.tickrate)
+  self.populationScale = math.lerp(self.populationScale, 1, 10 * ls.tickrate)
+  self.clockScale = math.lerp(self.clockScale, 1, 10 * ls.tickrate)
+  self.maxPopFactor = math.lerp(self.maxPopFactor, maxPop and 1 or 0, 10 * ls.tickrate)
+  self.jujuAngle = math.lerp(self.jujuAngle, 2 * math.pi, math.min(3 * ls.tickrate, 1))
 
   local benchmark = 'Blue'
   local old = self.clockIcon
-  if math.floor(ctx.timer * tickRate) >= config.biomes[ctx.biome].benchmarks.gold then benchmark = 'Gold'
-  elseif math.floor(ctx.timer * tickRate) >= config.biomes[ctx.biome].benchmarks.silver then benchmark = 'Silver'
-  elseif math.floor(ctx.timer * tickRate) >= config.biomes[ctx.biome].benchmarks.bronze then benchmark = 'Bronze' end
+  if math.floor(ctx.timer * ls.tickrate) >= config.biomes[ctx.biome].benchmarks.gold then benchmark = 'Gold'
+  elseif math.floor(ctx.timer * ls.tickrate) >= config.biomes[ctx.biome].benchmarks.silver then benchmark = 'Silver'
+  elseif math.floor(ctx.timer * ls.tickrate) >= config.biomes[ctx.biome].benchmarks.bronze then benchmark = 'Bronze' end
   self.clockIcon = data.media.graphics.hud['clock' .. benchmark]
   if self.clockIcon ~= old then
     self.clockScale = 2
   end
 
   self.jjpmTimer = timer.rot(self.jjpmTimer, function()
-    self.jjpm = math.round((p.totalJuju / (ctx.timer * tickRate / 60)) / .1) * .1
+    self.jjpm = math.round((p.totalJuju / (ctx.timer * ls.tickrate / 60)) / .1) * .1
     return .5
   end)
 
-  self.jujuDisplay = math.lerp(self.jujuDisplay, p.juju, 10 * tickRate)
+  self.jujuDisplay = math.lerp(self.jujuDisplay, p.juju, 10 * ls.tickrate)
   if math.abs(self.jujuDisplay - p.juju) < 1 then self.jujuDisplay = p.juju end
 end
 
@@ -64,7 +64,7 @@ function HudStatus:draw()
 
   local lerpd = {}
   for k in pairs(self.prev) do
-    lerpd[k] = math.lerp(self.prev[k], self[k], tickDelta / tickRate)
+    lerpd[k] = math.lerp(self.prev[k], self[k], ls.accum / ls.tickrate)
   end
 
   -- Status bar
@@ -132,7 +132,7 @@ function HudStatus:draw()
   g.draw(image, xx, height / 2, 0, s, s, image:getWidth() / 2, image:getHeight() / 2)
 
   -- Timer Text
-  local str = toTime(ctx.timer * tickRate, true)
+  local str = toTime(ctx.timer * ls.tickrate, true)
 
   g.setColor(255, 255, 255)
   g.print(str, xx + (.025 * v), (height * .5) - g.getFont():getHeight() / 2 + 1)
@@ -152,7 +152,7 @@ function HudStatus:mousemoved(mx, my)
   elseif math.inside(mx, my, unpack(self.hitboxes.timer)) then
     local str = ''
     local benchmarks = config.biomes[ctx.biome].benchmarks
-    local time = ctx.timer * tickRate
+    local time = ctx.timer * ls.tickrate
     str = str .. 'Bronze: ' .. (time >= benchmarks.bronze and '{green}' or '{red}') .. toTime(benchmarks.bronze) .. '{white}\n'
     str = str .. 'Silver: ' .. (time >= benchmarks.silver and '{green}' or '{red}') .. toTime(benchmarks.silver) .. '{white}\n'
     str = str .. 'Gold: ' .. (time >= benchmarks.gold and '{green}' or '{red}') .. toTime(benchmarks.gold) .. '{white}\n'

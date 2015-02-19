@@ -4,12 +4,12 @@ MenuDrag.gutterThreshold = .2
 
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
-  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * tickRate, 1))
+  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 local function lerpRune(rune, key, val)
   ctx.prevRuneTransforms[rune][key] = ctx.runeTransforms[rune][key]
-  ctx.runeTransforms[rune][key] = math.lerp(ctx.runeTransforms[rune][key] or val, val, math.min(10 * tickRate, 1))
+  ctx.runeTransforms[rune][key] = math.lerp(ctx.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuDrag:init()
@@ -45,7 +45,7 @@ function MenuDrag:draw()
       local rune = self.dragging == 'rune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
       local lerpd = {}
       for k, v in pairs(ctx.runeTransforms[rune]) do
-        lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, tickDelta / tickRate)
+        lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
       g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .04 * ctx.v)
     elseif self.dragging == 'minion' or self.dragging == 'gutterMinion' then
@@ -58,7 +58,7 @@ function MenuDrag:draw()
       end)
       local lerpd = {}
       for k, v in pairs(ctx.animationTransforms[code]) do
-        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, tickDelta / tickRate)
+        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, ls.accum / ls.tickrate)
       end
 
       g.setColor(255, 255, 255)

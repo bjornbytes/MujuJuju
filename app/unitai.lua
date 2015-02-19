@@ -60,13 +60,13 @@ function UnitAI:moveTowards(target)
     return
   end
 
-  self.unit.x = self.unit.x + math.min(self.unit.speed * tickRate, math.abs(targetx - self.unit.x)) * math.sign(targetx - self.unit.x)
+  self.unit.x = self.unit.x + math.min(self.unit.speed * ls.tickrate, math.abs(targetx - self.unit.x)) * math.sign(targetx - self.unit.x)
   self.unit.animation:set('walk')
   self.unit.animation.flipped = self.unit.x > targetx
 end
 
 function UnitAI:runFrom(target)
-  self.unit.x = self.unit.x - self.unit.speed * math.sign(target.x - self.unit.x) * tickRate
+  self.unit.x = self.unit.x - self.unit.speed * math.sign(target.x - self.unit.x) * ls.tickrate
   self.unit.animation:set('walk')
   self.unit.animation.flipped = self.unit.x < target.x
 end

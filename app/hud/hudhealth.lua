@@ -136,7 +136,7 @@ function HudHealth:update()
     local targetY = math.round(yy - (binIndex - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + .5))
     targetY = targetY - (self.bins[unit.class.code][self.unitBins[unit]].offsetY or 0)
     self.unitBarPrevY[unit] = self.unitBarY[unit] or startY
-    self.unitBarY[unit] = self.unitBarY[unit] and math.lerp(self.unitBarY[unit], targetY, math.min(20 * tickRate, 1)) or startY
+    self.unitBarY[unit] = self.unitBarY[unit] and math.lerp(self.unitBarY[unit], targetY, math.min(20 * ls.tickrate, 1)) or startY
   end)
 end
 
@@ -197,7 +197,7 @@ function HudHealth:draw()
 
         -- Frame
         local alpha = (.5 + (false and .5 or 0)) * unit.alpha
-        local framey = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], tickDelta / tickRate)
+        local framey = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], ls.accum / ls.tickrate)
         g.setColor(255, 255, 255, 120 * alpha)
         g.draw(frame, xx, framey, 0, scale, scale)
 

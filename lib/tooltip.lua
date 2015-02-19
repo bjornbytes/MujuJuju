@@ -41,16 +41,16 @@ function Tooltip:update()
 
   self.prevCursorX = self.cursorX
   self.prevCursorY = self.cursorY
-  self.cursorX = math.lerp(self.cursorX, mx, 12 * tickRate)
-  self.cursorY = math.lerp(self.cursorY, my, 12 * tickRate)
+  self.cursorX = math.lerp(self.cursorX, mx, 12 * ls.tickrate)
+  self.cursorY = math.lerp(self.cursorY, my, 12 * ls.tickrate)
 end
 
 function Tooltip:draw()
   if not self.active then self.tooltipText = nil return end
 
   local u, v = self:getUV()
-  local mx = math.lerp(self.prevCursorX, self.cursorX, tickDelta / tickRate)
-  local my = math.lerp(self.prevCursorY, self.cursorY, tickDelta / tickRate)
+  local mx = math.lerp(self.prevCursorX, self.cursorX, ls.accum / ls.tickrate)
+  local my = math.lerp(self.prevCursorY, self.cursorY, ls.accum / ls.tickrate)
   local xx = math.min(mx + 16, u - self.textWidth - 14)
   local yy = math.min(my + 16, v - (self.textHeight + 9))
   g.setColor(255, 255, 255, 100)

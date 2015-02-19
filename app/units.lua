@@ -14,7 +14,7 @@ function Units:createEnemy()
   if self.enemyCount < 1 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
     local choices = {}
     table.each(conf.units.types, function(time, code)
-      if ctx.timer * tickRate >= time then table.insert(choices, code) end
+      if ctx.timer * ls.tickrate >= time then table.insert(choices, code) end
     end)
     local enemyType = choices[love.math.random(1, #choices)]
     local x = love.math.random() < .5 and Unit.width / 2 or ctx.map.width - Unit.width / 2
@@ -40,7 +40,7 @@ function Units:createEnemy()
     return .5
   end
 
-  return math.max(love.math.randomNormal(self.maxEnemyRate - self.minEnemyRate, (self.minEnemyRate + self.maxEnemyRate) / 2), tickRate)
+  return math.max(love.math.randomNormal(self.maxEnemyRate - self.minEnemyRate, (self.minEnemyRate + self.maxEnemyRate) / 2), ls.tickrate)
 end
 
 function Units:update()
@@ -48,7 +48,7 @@ function Units:update()
     self.enemyCount = table.count(self:filter(function(u) return u.team == 0 end))
     self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
-    self.level = self.level + (tickRate / 15) * config.biomes[ctx.biome].units.levelScale
+    self.level = self.level + (ls.tickrate / 15) * config.biomes[ctx.biome].units.levelScale
   end
 
   return Manager.update(self)

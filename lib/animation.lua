@@ -22,7 +22,7 @@ function Animation:draw(x, y, options)
   self:setPosition(x, y)
   skeleton.flipX = self.flipped
   if self.backwards then skeleton.flipX = not skeleton.flipX end
-  if not options.noupdate then self:tick(delta) end
+  if not options.noupdate then self:tick(ls.dt) end
   animationState:apply(skeleton)
   local root = skeleton:getRootBone()
   if root then

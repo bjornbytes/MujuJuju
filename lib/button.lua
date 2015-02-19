@@ -18,9 +18,9 @@ function Button:update()
   self.prevHoverFactor = self.hoverFactor
   self.prevHoverFade = self.hoverFade
   if self.hoverActive then
-    self.hoverFactor = math.lerp(self.hoverFactor, 1, math.min(8 * tickRate, 1))
+    self.hoverFactor = math.lerp(self.hoverFactor, 1, math.min(8 * ls.tickrate, 1))
     if self.hoverFactor > .999 then
-      self.hoverFade = math.min(self.hoverFade + tickRate, 1)
+      self.hoverFade = math.min(self.hoverFade + ls.tickrate, 1)
     end
   else
     self.hoverFactor = 0
@@ -59,7 +59,7 @@ function Button:render()
   g.setColor(255, 255, 255, 40)
   g.rectangle('fill', x, y, w, h)
 
-  local fade = math.lerp(self.prevHoverFade, self.hoverFade, tickDelta / tickRate)
+  local fade = math.lerp(self.prevHoverFade, self.hoverFade, ls.accum / ls.tickrate)
   g.setColor(0, 0, 0, 200)
   --g.rectangle('line', math.round(x) + .5, math.round(y) + .5, w, h)
   local xx, yy = math.round(x) + .5, math.round(y) + .5
@@ -82,7 +82,7 @@ function Button:render()
       g.rectangle('fill', x, y, w, h)
     end)
 
-    local factor = math.lerp(self.prevHoverFactor, self.hoverFactor, tickDelta / tickRate)
+    local factor = math.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
     g.setColor(255, 255, 255, 20 * (1 - fade))
     g.setBlendMode('additive')
     g.circle('fill', self.hoverX, self.hoverY, factor * self.hoverDistance)

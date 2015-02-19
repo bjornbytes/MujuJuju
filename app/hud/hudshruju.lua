@@ -38,7 +38,7 @@ function HudShruju:update()
   local shruju = self.geometry.shruju
   for i = 1, #shruju do
     local x, y, w, h = unpack(self.geometry.shruju[i])
-    if love.math.random() < 4 * tickRate then
+    if love.math.random() < 4 * ls.tickrate then
       ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
     end
   end

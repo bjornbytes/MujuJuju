@@ -16,7 +16,7 @@ end
 
 function HudDead:update()
   if not ctx.ded then return end
-  self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * tickRate)
+  self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * ls.tickrate)
 end
 
 function HudDead:draw()

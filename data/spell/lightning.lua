@@ -57,7 +57,7 @@ end
 
 function Lightning:draw()
 	local g = love.graphics
-	local hp = math.lerp(self.prevHealth, self.health, tickDelta / tickRate)
+	local hp = math.lerp(self.prevHealth, self.health, ls.accum / ls.tickrate)
 	local dis = self.distance * (1 - math.max((hp / self.maxHealth) - .5, 0) * 2)
 
 	for i = 1, #self.path - 2, 2 do

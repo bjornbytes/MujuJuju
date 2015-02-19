@@ -143,7 +143,7 @@ function Game:distribute()
   -- So the hud can draw them
   self.rewards = {runes = {}, biomes = {}, minions = {}}
 
-  local time = math.floor(self.timer * tickRate)
+  local time = math.floor(self.timer * ls.tickrate)
   local bronze = time >= config.biomes[self.biome].benchmarks.bronze
   local silver = time >= config.biomes[self.biome].benchmarks.silver
   local gold = time >= config.biomes[self.biome].benchmarks.gold

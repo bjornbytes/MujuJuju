@@ -7,7 +7,7 @@ end
 
 function Headbutt:update()
   local sign = math.sign(self.offset)
-  local knockbackFactor = math.max(math.abs(self.offset) / self.base, .5) * 600 * tickRate
+  local knockbackFactor = math.max(math.abs(self.offset) / self.base, .5) * 600 * ls.tickrate
   local amount = knockbackFactor
 
   self.unit.x = self.unit.x + amount * sign

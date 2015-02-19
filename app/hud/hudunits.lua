@@ -74,12 +74,12 @@ function HudUnits:update()
 
 	for i = 1, #self.selectFactor do
     self.prevSelectFactor[i] = self.selectFactor[i]
-		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.deck[i].selected and 1 or (p.summonSelect == i and .5 or 0), math.min(8 * tickRate, 1))
+		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.deck[i].selected and 1 or (p.summonSelect == i and .5 or 0), math.min(8 * ls.tickrate, 1))
 	end
 
 	for i = 1, #self.cooldownPop do
     self.prevCooldownPop[i] = self.cooldownPop[i]
-		self.cooldownPop[i] = math.lerp(self.cooldownPop[i], 0, math.min(12 * tickRate, 1))
+		self.cooldownPop[i] = math.lerp(self.cooldownPop[i], 0, math.min(12 * ls.tickrate, 1))
 	end
 
   local _, t = ctx.hud.upgrades:getFactor()
@@ -114,7 +114,7 @@ function HudUnits:draw()
   end
 
   for i = 1, self.count do
-    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
+    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
     local bg = data.media.graphics.hud.minion
     local w, h = bg:getDimensions()
     local scale = 1 + .6 * upgradeFactor + .1 * selectFactor
@@ -134,7 +134,7 @@ function HudUnits:draw()
     g.setColor(255, 255, 255, 255 * alpha)
     g.draw(title, titlex, yy + (10 * imageScale), 0, imageScale * (1 - (p.deck[i].cooldown / p.deck[i].maxCooldown)), imageScale)
 
-    local cooldownPop = math.lerp(self.prevCooldownPop[i], self.cooldownPop[i], tickDelta / tickRate)
+    local cooldownPop = math.lerp(self.prevCooldownPop[i], self.cooldownPop[i], ls.accum / ls.tickrate)
     g.setBlendMode('additive')
     g.setColor(255, 255, 255, 200 * cooldownPop)
     g.draw(title, xx, yy + (10 * imageScale), 0, imageScale, imageScale, title:getWidth() / 2, 0)
@@ -347,7 +347,7 @@ function HudUnits:mousemoved(mx, my)
   local xx = .5 * u - (inc * (ct - 1) / 2)
   ctx.view:guiPush()
   for i = 1, ct do
-    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], tickDelta / tickRate)
+    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
     local bg = data.media.graphics.hud.minion
     local w, h = bg:getDimensions()
     local scale = 1 + .6 * upgradeFactor

@@ -6,7 +6,7 @@ Buff.update = f.empty
 
 function Buff:rot()
   if self.timer then
-    local rate = tickRate
+    local rate = ls.tickrate
 
     if self.unit.buffs:isCrowdControl(self.code) then
       local immunity = self.unit.buffs:ccImmunity()

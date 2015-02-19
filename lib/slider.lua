@@ -27,23 +27,23 @@ function Slider:update()
   end
 
   self.prevFactor = self.factor
-  self.factor = math.lerp(self.factor, (self.value - self.min) / (self.max - self.min), math.min(16 * tickRate, 1))
+  self.factor = math.lerp(self.factor, (self.value - self.min) / (self.max - self.min), math.min(16 * ls.tickrate, 1))
 
   self.prevScale = self.scale
-  self.scale = math.lerp(self.scale, self.gooey.hot == self and 1.15 or 1, math.min(16 * tickRate, 1))
+  self.scale = math.lerp(self.scale, self.gooey.hot == self and 1.15 or 1, math.min(16 * ls.tickrate, 1))
 
   self.prevHoverFactor = self.hoverFactor
   local hover = (not self.gooey.hot and self:containsBar(mx, my)) or self.gooey.hot == self
-  self.hoverFactor = math.lerp(self.prevHoverFactor, hover and 1 or 0, math.min(16 * tickRate, 1))
+  self.hoverFactor = math.lerp(self.prevHoverFactor, hover and 1 or 0, math.min(16 * ls.tickrate, 1))
 end
 
 function Slider:render()
   local u, v = ctx.u, ctx.v
   local x, y, w, r = unpack(self.geometry())
 
-  local factor = math.lerp(self.prevFactor, self.factor, tickDelta / tickRate)
-  local hoverFactor = math.lerp(self.prevHoverFactor, self.hoverFactor, tickDelta / tickRate)
-  local scale = math.lerp(self.prevScale, self.scale, tickDelta / tickRate)
+  local factor = math.lerp(self.prevFactor, self.factor, ls.accum / ls.tickrate)
+  local hoverFactor = math.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
+  local scale = math.lerp(self.prevScale, self.scale, ls.accum / ls.tickrate)
   local radius = scale * r
 
   g.setFont('mesmerize', r * 1.4)

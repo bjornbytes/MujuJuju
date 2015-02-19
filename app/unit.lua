@@ -51,8 +51,8 @@ function Unit:activate()
     scale('health')
     scale('damage')
   else
-    self.health = self.health + config.units.baseHealthScaling * (ctx.timer * tickRate / 60)
-    self.damage = self.damage + config.units.baseDamageScaling * (ctx.timer * tickRate / 60)
+    self.health = self.health + config.units.baseHealthScaling * (ctx.timer * ls.tickrate / 60)
+    self.damage = self.damage + config.units.baseDamageScaling * (ctx.timer * ls.tickrate / 60)
   end
 
   -- Basic data
@@ -125,8 +125,8 @@ function Unit:update()
     self.casting = false
     self.animation:set('death', {force = true})
     self.animation.speed = 1
-    self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * tickRate, 1))
-    self.alpha = math.lerp(self.alpha, 0, math.min(6 * tickRate, 1))
+    self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * ls.tickrate, 1))
+    self.alpha = math.lerp(self.alpha, 0, math.min(6 * ls.tickrate, 1))
     self.buffs:update()
     return
   end
@@ -144,9 +144,9 @@ function Unit:update()
   end
 
   -- Lerps
-  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * tickRate, 1))
-  self.glowScale = math.lerp(self.glowScale, 1, math.min(6 * tickRate, 1))
-  self.alpha = math.lerp(self.alpha, 1, math.min(6 * tickRate, 1))
+  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * ls.tickrate, 1))
+  self.glowScale = math.lerp(self.glowScale, 1, math.min(6 * ls.tickrate, 1))
+  self.alpha = math.lerp(self.alpha, 1, math.min(6 * ls.tickrate, 1))
 
   -- Update animation speed
   if self.animation.state.name == 'attack' then
@@ -159,11 +159,11 @@ function Unit:update()
   end
 
   -- Health decay
-  if self.player then self:hurt(self.maxHealth * .02 * tickRate) end
+  if self.player then self:hurt(self.maxHealth * .02 * ls.tickrate) end
 end
 
 function Unit:draw()
-  local lerpd = table.interpolate(self.prev, self, tickDelta / tickRate)
+  local lerpd = table.interpolate(self.prev, self, ls.accum / ls.tickrate)
   local x, y, health = lerpd.x, lerpd.y, lerpd.health
 
   -- Decide on color
@@ -216,7 +216,7 @@ function Unit:draw()
 end
 
 function Unit:getHealthbar()
-  local lerpd = table.interpolate(self.prev, self, tickDelta / tickRate)
+  local lerpd = table.interpolate(self.prev, self, ls.accum / ls.tickrate)
   return lerpd.x, lerpd.y, lerpd.health / self.maxHealth, lerpd.healthDisplay / self.maxHealth
 end
 
@@ -381,7 +381,7 @@ function Unit:initAnimation()
 
   self.animation:on('event', function(event)
     if event.data.name == 'attack' then
-      if self.target and (tick - self.attackStart) * tickRate > self.attackSpeed * .25 then
+      if self.target and (tick - self.attackStart) * ls.tickrate > self.attackSpeed * .25 then
         if self.class.attackSpell then
           ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.target})
           ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
