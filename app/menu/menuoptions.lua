@@ -48,7 +48,7 @@ function MenuOptions:init()
   self.controls = {
     graphics = {'resolution', 'fullscreen', 'display', 'vsync', 'msaa', 'textureSmoothing', 'postprocessing', 'particles'},
     sound = {'mute', 'master', 'music', 'sound'},
-    gameplay = {'colorblind'}
+    gameplay = {'colorblind', 'powersave'}
   }
 
   self.controlTypes = {
@@ -64,14 +64,16 @@ function MenuOptions:init()
     master = Slider,
     music = Slider,
     sound = Slider,
-    colorblind = Checkbox
+    colorblind = Checkbox,
+    powersave = Checkbox
   }
 
   self.controlLabels = {
     display = 'Monitor',
     msaa = 'Antialiasing',
     textureSmoothing = 'Texture Smoothing',
-    colorblind = 'Colorblind Mode'
+    colorblind = 'Colorblind Mode',
+    powersave = 'Power Saving'
   }
 
   self.sliderData = {

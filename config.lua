@@ -435,6 +435,7 @@ return {
     master = 1.0,
     music = 1.0,
     sound = .75,
-    colorblind = false
+    colorblind = false,
+    powersave = true
   }
 }
