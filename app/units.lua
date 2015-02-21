@@ -4,7 +4,7 @@ Units.manages = 'unit'
 function Units:init()
   Manager.init(self)
   self.level = self.level or 0
-  self.nextEnemy = 50
+  self.nextEnemy = 5
   self.enemyCount = 0
   table.merge(config.biomes[ctx.biome].units, self)
 end

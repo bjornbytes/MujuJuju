@@ -250,7 +250,7 @@ function HudUnits:drawBackground()
           table.each(line, function(points, k)
             local other = data.unit[p.deck[i].code].upgrades[upgrade.connectedTo[k]]
             if other.level >= upgrade.prerequisites[other.code] then
-              g.setColor(0, 200, 0, 200 * upgradeAlphaFactor ^ 2)
+              g.setColor(0, ctx.options.colorblind and 0 or 200, ctx.options.colorblind and 200 or 0, 200 * upgradeAlphaFactor ^ 2)
             else
               g.setColor(200, 0, 0, 200 * upgradeAlphaFactor ^ 2)
             end
@@ -374,7 +374,7 @@ function HudUnits:drawForeground()
         if upgrade.level > 0 then
           local x, y, w, h = unpack(upgrades[i][j])
           x, y = math.round(x), math.round(y)
-          g.setColor(upgrade.level < upgrade.maxLevel and {0, 255, 0, 100} or {0, 150, 0, 100})
+          g.setColor(upgrade.level < upgrade.maxLevel and (ctx.options.colorblind and {0, 0, 255, 100} or {0, 255, 0, 100}) or {0, 150, 0, 100})
           g.rectangle('line', x + .5, y + .5, w - 1, h - 1)
         end
       end

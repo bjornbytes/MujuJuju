@@ -4,6 +4,7 @@ local g = love.graphics
 
 local green = {50, 230, 50}
 local red = {255, 0, 0}
+local blue = {30, 30, 250}
 local purple = {200, 80, 255}
 local orange = {255, 185, 40}
 
@@ -162,12 +163,12 @@ function HudHealth:draw()
 
   ctx.players:each(function(player)
     local x, y, hard, soft = player:getHealthbar()
-    local color = (p and player.team == p.team) and green or red
+    local color = (p and player.team == p.team) and (ctx.options.colorblind and blue or green) or red
     bar(x, y - 20, hard, soft, color, 100, 3)
   end)
 
   ctx.shrines:each(function(shrine)
-    local color = (p and shrine.team == p.team) and green or red
+    local color = (p and shrine.team == p.team) and (ctx.options.colorblind and blue or green) or red
     local x, y, hard, soft = shrine:getHealthbar()
     local w, h = 120 + (60 * (shrine.hurtFactor)), 4 + (1 * shrine.hurtFactor)
     bar(x, y - 25, hard, soft, color, w, h)
@@ -193,7 +194,7 @@ function HudHealth:draw()
 
       for j = 1, #bin.units do
         local unit = bin.units[j]
-        local color = (bin.units[j].team == p.team) and green or red
+        local color = (bin.units[j].team == p.team) and (ctx.options.colorblind and blue or green) or red
 
         -- Frame
         local alpha = (.5 + (false and .5 or 0)) * unit.alpha
