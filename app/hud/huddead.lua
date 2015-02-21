@@ -108,7 +108,7 @@ function HudDead:keypressed(key)
       for i = 1, #config.biomeOrder do
         if config.biomeOrder[i] == ctx.biome then biomeIndex = i break end
       end
-      Context:add(Menu, biomeIndex, ctx.options)
+      Context:add(Menu, {biome = biomeIndex, page = 'main', user = ctx.user}, ctx.options)
     elseif key == 'backspace' then
       self.deadName = self.deadName:sub(1, -2)
     elseif key == 'return' then
@@ -121,7 +121,7 @@ function HudDead:keypressed(key)
         if config.biomeOrder[i] == ctx.biome then biomeIndex = i end
       end
 
-      Context:add(Menu, biomeIndex, ctx.options)
+      Context:add(Menu, {biome = biomeIndex, page = 'main', user = ctx.user}, ctx.options)
       Context:remove(ctx)
     end
   end
@@ -152,7 +152,7 @@ function HudDead:mousereleased(x, y, b)
           if config.biomeOrder[i] == ctx.biome then biomeIndex = i end
         end
 
-        Context:add(Menu, biomeIndex, ctx.options)
+        Context:add(Menu, {biome = biomeIndex, page = 'main', user = ctx.user}, ctx.options)
         Context:remove(ctx)
       end
     end

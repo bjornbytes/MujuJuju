@@ -33,16 +33,8 @@ function MenuStart:init()
     end
   }
 
-  if not Menu.started then
-    self.active = true
-    self.alpha = 1
-    self.scale = 0
-    self.tween = tween.new(.5, self, {scale = 1}, 'outBack')
-  else
-    self.active = false
-    self.alpha = 0
-    self.scale = 1
-  end
+  self.scale = 0
+  self.tween = tween.new(.5, self, {scale = 1}, 'outBack')
 
   self.start = ctx.gooey:add(Button, 'menu.start.start')
   self.start.geometry = function() return self.geometry.start end
@@ -66,10 +58,7 @@ function MenuStart:init()
 end
 
 function MenuStart:update()
-  self.active = (ctx.page == 'start')
-  if not self.active then
-    self.alpha = math.max(self.alpha - ls.tickrate, 0)
-  end
+  if not self.active then return end
 
   self.prevOffsetX = self.offsetX
   self.prevOffsetY = self.offsetY
@@ -81,32 +70,32 @@ function MenuStart:update()
 end
 
 function MenuStart:draw()
-  if self.alpha > 0 then
-    local u, v = ctx.u, ctx.v
+  if not self.active then return end
 
-    self.tween:update(ls.dt)
-    local factor = self.scale
+  local u, v = ctx.u, ctx.v
 
-    g.setColor(255, 255, 255)
-    data.media.shaders.vignette:send('frame', {0, 0, u, v})
-    data.media.shaders.vignette:send('blur', .45)
-    data.media.shaders.vignette:send('radius', .85)
-    g.setShader(data.media.shaders.vignette)
-    local image = data.media.graphics.menu.titlescreen
-    local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
-    local offsetX = math.lerp(self.prevOffsetX, self.offsetX, ls.accum / ls.tickrate)
-    local offsetY = math.lerp(self.prevOffsetY, self.offsetY, ls.accum / ls.tickrate)
-    g.draw(image, u / 2 + offsetX, v / 2 + offsetY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-    g.setShader()
+  self.tween:update(ls.dt)
+  local factor = self.scale
 
-    local image = data.media.graphics.menu.title
-    local scale = v * .45 / image:getHeight()
-    g.draw(image, u * .5 + offsetX / 2, v * .3 + offsetY / 2, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
+  g.setColor(255, 255, 255)
+  data.media.shaders.vignette:send('frame', {0, 0, u, v})
+  data.media.shaders.vignette:send('blur', .45)
+  data.media.shaders.vignette:send('radius', .85)
+  g.setShader(data.media.shaders.vignette)
+  local image = data.media.graphics.menu.titlescreen
+  local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
+  local offsetX = math.lerp(self.prevOffsetX, self.offsetX, ls.accum / ls.tickrate)
+  local offsetY = math.lerp(self.prevOffsetY, self.offsetY, ls.accum / ls.tickrate)
+  g.draw(image, u / 2 + offsetX, v / 2 + offsetY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+  g.setShader()
 
-    self.start:draw()
-    self.options:draw()
-    self.quit:draw()
-  end
+  local image = data.media.graphics.menu.title
+  local scale = v * .45 / image:getHeight()
+  g.draw(image, u * .5 + offsetX / 2, v * .3 + offsetY / 2, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
+
+  self.start:draw()
+  self.options:draw()
+  self.quit:draw()
 end
 
 function MenuStart:keypressed(key)
@@ -135,11 +124,5 @@ end
 
 function MenuStart:continue()
   ctx:refreshBackground()
-  self.active = false
-
-  if not ctx.user.deck or (#ctx.user.deck.minions == 0 and #ctx.user.minions == 0) then
-    ctx.page = 'choose'
-  else
-    ctx.page = 'main'
-  end
+  ctx:goto('select')
 end

@@ -2,10 +2,19 @@ local tween = require 'lib/deps/tween/tween'
 local g = love.graphics
 
 Menu = class()
-Menu.started = false
 
-function Menu:load(selectedBiome, options)
+function Menu:load(options, systemOptions)
   data.load()
+
+  -- Initialize UI
+  self.virtualCursor = VirtualCursor()
+  self.gooey = Gooey()
+
+  -- Initialize pages
+  self.start = MenuStart()
+  self.select = MenuUser()
+  self.choose = MenuChoose()
+  self.main = MenuMain()
 
   -- Initialize options
   if not love.filesystem.exists('save/options.json') then
@@ -13,49 +22,22 @@ function Menu:load(selectedBiome, options)
     love.filesystem.write('save/options.json', json.encode(config.defaultOptions))
   end
   local str = love.filesystem.read('save/options.json')
-  self.options = options or json.decode(str)
+  self.options = systemOptions or json.decode(str)
   self.options = self.options or table.copy(config.defaultOptions)
-
-  self.virtualCursor = VirtualCursor()
-  self.gooey = Gooey()
-  self.start = MenuStart()
-  self.choose = MenuChoose()
-  self.main = MenuMain()
   self.optionsPane = MenuOptions()
 
-  -- Initialize user
-  if not love.filesystem.exists('save/user.json') then
-    love.filesystem.createDirectory('save')
-    love.filesystem.write('save/user.json', json.encode(config.defaultUser))
-    self.page = 'choose'
-  end
-  local str = love.filesystem.read('save/user.json')
-  self.user = json.decode(str)
-  self.user.deckSlots = 3
-  saveUser(self.user)
-
+  -- Initialize sound
   self.sound = Sound()
   self.menuSounds = self.sound:loop('riteOfPassage')
   if ctx.options and ctx.options.mute then self.sound:setMute(ctx.options.mute) end
 
+  -- Initialize uv and tooltip
   self.u, self.v = love.graphics.getDimensions()
   self.tooltip = Tooltip()
 
   self:initAnimations()
 
-  self.runeTransforms = {}
-  self.prevRuneTransforms = {}
-  table.each(self.user.runes, function(rune)
-    self.runeTransforms[rune] = {}
-    self.prevRuneTransforms[rune] = {}
-  end)
-  table.each(self.user.deck.runes, function(runes)
-    table.each(runes, function(rune)
-      self.runeTransforms[rune] = {}
-      self.prevRuneTransforms[rune] = {}
-    end)
-  end)
-
+  -- Initialize backgrounds and canvases
   self.backgroundAlpha = 0
   self.prevBackgroundAlpha = self.backgroundAlpha
   self.background1 = g.newCanvas(self.u, self.v)
@@ -64,13 +46,13 @@ function Menu:load(selectedBiome, options)
   self.unitCanvas = g.newCanvas(400, 400)
   self.screenCanvas = g.newCanvas(self.u, self.v)
 
-  self.page = self.page or (Menu.started and 'main' or 'start')
+  self.main.selectedBiome = options and options.biome or self.main.selectedBiome
+  self.user = options and options.user
+  self.page = options and options.page or 'start'
+
+  self:goto(self.page)
 
   if self.page ~= 'start' then self:refreshBackground() end
-
-  Menu.started = true
-
-  self.main.selectedBiome = selectedBiome or self.main.selectedBiome
 
   love.keyboard.setKeyRepeat(true)
 end
@@ -87,6 +69,7 @@ function Menu:update()
   self.backgroundAlpha = math.lerp(self.backgroundAlpha, 1, math.min(8 * ls.tickrate, 1))
 
   self.start:update()
+  self.select:update()
   self.choose:update()
   self.main:update()
   self.optionsPane:update()
@@ -103,6 +86,7 @@ function Menu:draw()
   self.screenCanvas:renderTo(function()
     self.start:draw()
     if self.page ~= 'start' then self:drawBackground() end
+    self.select:draw()
     self.choose:draw()
     self.main:draw()
   end)
@@ -111,15 +95,15 @@ function Menu:draw()
   g.draw(self.screenCanvas)
 
   self.optionsPane:draw()
-
   self.tooltip:draw()
 end
 
 function Menu:keypressed(key)
   if self.main:keypressed(key) then return end
   if self.optionsPane:keypressed(key) then return end
-  self.start:keypressed(key)
-  self.choose:keypressed(key)
+  if self.select:keypressed(key) then return end
+  if self.choose:keypressed(key) then return end
+  if self.start:keypressed(key) then return end
 
   if key == 'm' then
     self.options.mute = not self.options.mute
@@ -129,9 +113,8 @@ function Menu:keypressed(key)
   elseif key == 'escape' then love.event.quit()
   elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
     love.filesystem.remove('save/user.json')
-    love.filesystem.remove('save/options.json')
+    love.filesystem.remove('save/' .. ctx.user.name .. '/options.json')
     if ctx.menuSounds then ctx.menuSounds:stop() end
-    Menu.started = false
     Context:remove(ctx)
     Context:add(Menu)
   elseif key == 't' then
@@ -154,7 +137,6 @@ end
 function Menu:mousereleased(mx, my, b)
   self.gooey:mousereleased(mx, my, b)
   self.start:mousereleased(mx, my, b)
-  self.choose:mousereleased(mx, my, b)
   self.main:mousereleased(mx, my, b)
 end
 
@@ -197,6 +179,7 @@ function Menu:resize()
   self.start:resize()
   self.choose:resize()
   self.main:resize()
+  self.select:resize()
   if self.optionsPane then self.optionsPane:resize() end
   self.canvas = g.newCanvas(u, v)
   self.workingCanvas = g.newCanvas(u, v)
@@ -256,15 +239,6 @@ function Menu:drawBackground()
 
   g.setColor(0, 0, 0, 50)
   g.rectangle('fill', 0, 0, u, v)
-
-  if self.page ~= 'start' then
-    g.setColor(255, 255, 255)
-    self.animations.muju:draw(u * .08, v * .75)
-    for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
-      local slot = self.animations.muju.spine.skeleton:findSlot(slot)
-      slot.r, slot.g, slot.b = unpack(config.player.colors[self.user.color])
-    end
-  end
 end
 
 function Menu:initAnimations()
@@ -297,4 +271,15 @@ function Menu:initAnimations()
     self.animationTransforms[code] = {}
     self.prevAnimationTransforms[code] = {}
   end
+end
+
+function Menu:goto(page)
+  -- Deactivate the old page
+  ctx[ctx.page].active = false
+  f.exe(ctx[ctx.page].deactivate, ctx[ctx.page])
+
+  -- Activate the new page
+  ctx.page = page
+  ctx[page].active = true
+  f.exe(ctx[page].activate, ctx[page])
 end

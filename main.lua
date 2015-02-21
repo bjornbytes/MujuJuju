@@ -5,7 +5,8 @@ function love.load()
 
   function saveUser(user)
     love.filesystem.createDirectory('save')
-    love.filesystem.write('save/user.json', json.encode(user, {indent = true}))
+    love.filesystem.createDirectory('save/' .. user.name)
+    love.filesystem.write('save/' .. user.name ..'/user.json', json.encode(user, {indent = true}))
   end
 
   function saveOptions(options)
@@ -16,6 +17,8 @@ function love.load()
 	Context:add(Menu)
   Context:add(Konami)
   Context:add(Patcher)
+
+  Context.started = true
 end
 
 love.update = Context.update

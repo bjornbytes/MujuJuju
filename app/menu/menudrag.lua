@@ -8,62 +8,63 @@ local function lerpAnimation(code, key, val)
 end
 
 local function lerpRune(rune, key, val)
-  ctx.prevRuneTransforms[rune][key] = ctx.runeTransforms[rune][key]
-  ctx.runeTransforms[rune][key] = math.lerp(ctx.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.main.prevRuneTransforms[rune][key] = ctx.main.runeTransforms[rune][key]
+  ctx.main.runeTransforms[rune][key] = math.lerp(ctx.main.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuDrag:init()
   self.active = false
+  self.focused = false
   self.dragging = nil
   self.draggingIndex = nil
 end
 
 function MenuDrag:update()
-  if self.active then
-    if self.dragging == 'minion' or self.dragging == 'gutterMinion' then
-      local code = self.dragging == 'minion' and ctx.user.deck.minions[self.draggingIndex] or ctx.user.minions[self.draggingIndex]
-      lerpAnimation(code, 'scale', love.mouse.getY() < self.gutterThreshold * ctx.v and .75 or 1.2)
-      lerpAnimation(code, 'x', love.mouse.getX())
-      lerpAnimation(code, 'y', love.mouse.getY())
-    elseif self.dragging == 'rune' or self.dragging == 'gutterRune' then
-      local rune = self.dragging == 'rune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
-      lerpRune(rune, 'x', love.mouse.getX())
-      lerpRune(rune, 'y', love.mouse.getY())
-    end
+  if not self.active then return end
+
+  if self.dragging == 'minion' or self.dragging == 'gutterMinion' then
+    local code = self.dragging == 'minion' and ctx.user.deck.minions[self.draggingIndex] or ctx.user.minions[self.draggingIndex]
+    lerpAnimation(code, 'scale', love.mouse.getY() < self.gutterThreshold * ctx.v and .75 or 1.2)
+    lerpAnimation(code, 'x', love.mouse.getX())
+    lerpAnimation(code, 'y', love.mouse.getY())
+  elseif self.dragging == 'rune' or self.dragging == 'gutterRune' then
+    local rune = self.dragging == 'rune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
+    lerpRune(rune, 'x', love.mouse.getX())
+    lerpRune(rune, 'y', love.mouse.getY())
   end
 end
 
 function MenuDrag:draw()
-  if self.active then
-    if self.dragging == 'gutterRune' or self.dragging == 'rune' then
-      local x, y, w, h
-      if self.dragging == 'rune' then
-        x, y, w, h = unpack(ctx.main.geometry.deck[self.draggingIndex[1]][4][self.draggingIndex[2]])
-      else
-        x, y, w, h = unpack(ctx.main.geometry.gutterRunes[self.draggingIndex])
-      end
-      local rune = self.dragging == 'rune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
-      local lerpd = {}
-      for k, v in pairs(ctx.runeTransforms[rune]) do
-        lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
-      end
-      g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .04 * ctx.v)
-    elseif self.dragging == 'minion' or self.dragging == 'gutterMinion' then
-      local index = self.draggingIndex
-      local code = self.dragging == 'minion' and ctx.user.deck.minions[index] or ctx.user.minions[index]
-      local cw, ch = ctx.unitCanvas:getDimensions()
-      ctx.unitCanvas:clear(0, 0, 0, 0)
-      ctx.unitCanvas:renderTo(function()
-        ctx.animations[code]:draw(cw / 2, ch / 2)
-      end)
-      local lerpd = {}
-      for k, v in pairs(ctx.animationTransforms[code]) do
-        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, ls.accum / ls.tickrate)
-      end
+  if not self.active then return end
 
-      g.setColor(255, 255, 255)
-      g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
+  if self.dragging == 'gutterRune' or self.dragging == 'rune' then
+    local x, y, w, h
+    if self.dragging == 'rune' then
+      x, y, w, h = unpack(ctx.main.geometry.deck[self.draggingIndex[1]][4][self.draggingIndex[2]])
+    else
+      x, y, w, h = unpack(ctx.main.geometry.gutterRunes[self.draggingIndex])
     end
+    local rune = self.dragging == 'rune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
+    local lerpd = {}
+    for k, v in pairs(ctx.main.runeTransforms[rune]) do
+      lerpd[k] = math.lerp(ctx.main.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+    end
+    g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .04 * ctx.v)
+  elseif self.dragging == 'minion' or self.dragging == 'gutterMinion' then
+    local index = self.draggingIndex
+    local code = self.dragging == 'minion' and ctx.user.deck.minions[index] or ctx.user.minions[index]
+    local cw, ch = ctx.unitCanvas:getDimensions()
+    ctx.unitCanvas:clear(0, 0, 0, 0)
+    ctx.unitCanvas:renderTo(function()
+      ctx.animations[code]:draw(cw / 2, ch / 2)
+    end)
+    local lerpd = {}
+    for k, v in pairs(ctx.animationTransforms[code]) do
+      lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, ls.accum / ls.tickrate)
+    end
+
+    g.setColor(255, 255, 255)
+    g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale, lerpd.scale, cw / 2, ch / 2)
   end
 end
 
@@ -73,7 +74,7 @@ function MenuDrag:mousepressed(mx, my, b)
     for i = 1, #gutterRunes do
       local x, y, w, h = unpack(gutterRunes[i])
       if ctx.user.runes[i] and math.inside(mx, my, x, y, w, h) then
-        self.active = true
+        self.focused = true
         self.dragging = 'gutterRune'
         self.draggingIndex = i
         break
@@ -86,7 +87,7 @@ function MenuDrag:mousepressed(mx, my, b)
     local x, y, r = unpack(gutterMinions[i])
     if #ctx.user.deck.minions < ctx.user.deckSlots then
       if math.insideCircle(mx, my, x, y, r) then
-        self.active = true
+        self.focused = true
         self.dragging = 'gutterMinion'
         self.draggingIndex = i
         break
@@ -100,7 +101,7 @@ function MenuDrag:mousepressed(mx, my, b)
   for i = 1, #deck do
     local x, y, r, runes = unpack(deck[i])
     if math.insideCircle(mx, my, x, y, r) then
-      self.active = true
+      self.focused = true
       self.dragging = 'minion'
       self.draggingIndex = i
       break
@@ -109,7 +110,7 @@ function MenuDrag:mousepressed(mx, my, b)
     for j = 1, #runes do
       local x, y, w, h = unpack(runes[j])
       if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and math.inside(mx, my, x, y, w, h) then
-        self.active = true
+        self.focused = true
         self.dragging = 'rune'
         self.draggingIndex = {i, j}
       end
@@ -208,11 +209,11 @@ function MenuDrag:mousereleased(mx, my, b)
     table.clear(ctx.main.geometry)
   end
 
-  self.active = false
+  self.focused = false
   self.dragging = nil
   self.draggingIndex = nil
 end
 
 function MenuDrag:isDragging(kind, index1, index2)
-  return self.active and self.dragging == kind and (self.draggingIndex == index1 or (type(self.draggingIndex) == 'table' and self.draggingIndex[1] == index1 and self.draggingIndex[2] == index2))
+  return self.focused and self.dragging == kind and (self.draggingIndex == index1 or (type(self.draggingIndex) == 'table' and self.draggingIndex[1] == index1 and self.draggingIndex[2] == index2))
 end

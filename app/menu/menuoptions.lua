@@ -397,21 +397,23 @@ function MenuOptions:toggle(force)
   self.active = not self.active
 end
 
-function MenuOptions:setMode(n)
-  n = n or 0
-  if n >= 2 then return end
+function MenuOptions:setMode()
+  if Context.started and not self.active then
+    ctx:resize()
+    return
+  end
 
-  local ps = love.window and love.window.getPixelScale() or 1
+  MenuOptions.pixelScale = MenuOptions.pixelScale or (love.window and love.window.getPixelScale()) or 1
   local dw, dh = love.window.getDesktopDimensions()
   local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'msaa'})
-  options.highdpi = true
+  -- options.highdpi = true -- The problem child for our retina screens. It is incompatible with fullscreentype:normal.
 
   local borderless = false
 
   if not ctx.options.resolution then
     local resolutions = love.window.getFullscreenModes()
     table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
-    ctx.options.resolution = {resolutions[1].width / ps, resolutions[1].height / ps}
+    ctx.options.resolution = {resolutions[1].width, resolutions[1].height}
     borderless = true
   elseif tonumber(ctx.options.resolution[1]) == dw and tonumber(ctx.options.resolution[2]) == dh then
     borderless = true
@@ -419,12 +421,10 @@ function MenuOptions:setMode(n)
 
   options.fullscreentype = borderless and 'desktop' or 'normal'
 
-  if love.window.setMode(ctx.options.resolution[1] / ps, ctx.options.resolution[2] / ps, options) then
+  if love.window.setMode(ctx.options.resolution[1] / MenuOptions.pixelScale, ctx.options.resolution[2] / MenuOptions.pixelScale, options) then
     love.window.setTitle('Muju Juju')
     love.window.setIcon(love.image.newImageData('media/graphics/icon.png'))
     ctx:resize()
-
-    if love.window.getPixelScale() ~= ps then self:setMode(n + 1) end
   else
     print('There was a problem applying the requested window options... PANIC _>_>_>')
   end

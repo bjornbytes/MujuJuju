@@ -19,7 +19,6 @@ Achievements.achievements = {
     description = 'Summon 10 minions in a single game.',
     apply = function(self)
       self.value = self.value + 1
-      print('Summoned ' .. self.value .. '.')
 
       if self.value == 10 then
         return true

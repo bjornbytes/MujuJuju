@@ -39,6 +39,9 @@ function MenuChoose:init()
   }
 
   self.active = false
+
+  -- Initialize user
+  self.user = table.copy(config.defaultUser)
 end
 
 function MenuChoose:update()
@@ -62,15 +65,15 @@ function MenuChoose:draw()
   local u, v = ctx.u, ctx.v
   g.setFont('mesmerize', .04 * v)
 
-  if #ctx.user.name == 0 then g.setColor(255, 0, 0)
+  if #self.user.name == 0 then g.setColor(255, 0, 0)
   else g.setColor(255, 255, 255) end
   g.printCenter('Enter your name', u * .5, v * .06)
 
   g.setColor(255, 255, 255)
-  g.printCenter(ctx.user.name, u * .5, v * .12)
+  g.printCenter(self.user.name, u * .5, v * .12)
 
   local fontHeight = g.getFont():getHeight()
-  local lineX = u * .5 + g.getFont():getWidth(ctx.user.name) / 2 + 1
+  local lineX = u * .5 + g.getFont():getWidth(self.user.name) / 2 + 1
   g.line(lineX, v * .12 - fontHeight / 2, lineX, v * .12 + fontHeight / 2)
 
   g.printCenter('Pick your color', u * .5, v * .21)
@@ -81,7 +84,7 @@ function MenuChoose:draw()
     local color = config.player.colors[name]
     g.setColor(color[1] * 255, color[2] * 255, color[3] * 255)
     g.rectangle('fill', unpack(colors[i]))
-    if ctx.user.color == name then
+    if self.user.color == name then
       g.setColor(255, 255, 255)
       g.rectangle('line', unpack(colors[i]))
     end
@@ -106,28 +109,40 @@ function MenuChoose:draw()
     end)
     g.draw(ctx.unitCanvas, x, y, 0, 1, 1, cw / 2, ch / 2)
   end
+
+  g.setColor(255, 255, 255)
+  ctx.animations.muju:draw(u * .08, v * .75)
+  local color = self.user and self.user.color or 'purple'
+  for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
+    local slot = ctx.animations.muju.spine.skeleton:findSlot(slot)
+    slot.r, slot.g, slot.b = unpack(config.player.colors[color])
+  end
 end
 
 function MenuChoose:keypressed(key)
   if not self.active then return end
-  if key == 'backspace' then ctx.user.name = ctx.user.name:sub(1, -2) end
+  if key == 'backspace' then self.user.name = self.user.name:sub(1, -2) end
+
+  return self.active
 end
 
 function MenuChoose:mousepressed(mx, my, b)
   if not self.active then return end
-  if b == 'l' and #ctx.user.name > 0 then
+  if b == 'l' and #self.user.name > 0 then
     local minions = self.geometry.minions
     for i = 1, #minions do
       local x, y, r = unpack(minions[i])
       if math.distance(mx, my, x, y) < r then
-        for j = 1, #ctx.user.minions do
-          if ctx.user.minions[j] == config.starters[i] then table.remove(ctx.user.minions, j) break end
+        for j = 1, #self.user.minions do
+          if self.user.minions[j] == config.starters[i] then table.remove(self.user.minions, j) break end
         end
-        ctx.user.deck.minions = {config.starters[i]}
-        ctx.user.deck.runes[1] = {}
-        saveUser(ctx.user)
-        self.active = false
-        ctx.page = 'main'
+        self.user.deck.minions = {config.starters[i]}
+        self.user.deck.runes[1] = {}
+        saveUser(self.user)
+
+        ctx.user = self.user
+
+        ctx:goto('main')
         ctx.animations.muju:set('summon')
         ctx.sound:play('summon2')
       end
@@ -136,20 +151,16 @@ function MenuChoose:mousepressed(mx, my, b)
     local colors = self.geometry.colors
     for i = 1, #colors do
       if math.inside(mx, my, unpack(colors[i])) then
-        ctx.user.color = config.player.colorOrder[i]
+        self.user.color = config.player.colorOrder[i]
       end
     end
   end
 end
 
-function MenuChoose:mousereleased(mx, my, b)
-
-end
-
 function MenuChoose:textinput(char)
   if not self.active then return end
-  if #ctx.user.name < 16 and char:match('%a*%d*') then
-    ctx.user.name = ctx.user.name .. char
+  if #self.user.name < 16 and char:match('%a*%d*') then
+    self.user.name = self.user.name .. char
   end
 end
 

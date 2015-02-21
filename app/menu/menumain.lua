@@ -115,11 +115,36 @@ function MenuMain:init()
   self.drag = MenuDrag()
 end
 
+function MenuMain:activate()
+  table.clear(self.geometry)
+
+  -- Initialize runes
+  self.runeTransforms = {}
+  self.prevRuneTransforms = {}
+  table.each(ctx.user.runes, function(rune)
+    self.runeTransforms[rune] = {}
+    self.prevRuneTransforms[rune] = {}
+  end)
+  table.each(ctx.user.deck.runes, function(runes)
+    table.each(runes, function(rune)
+      self.runeTransforms[rune] = {}
+      self.prevRuneTransforms[rune] = {}
+    end)
+  end)
+
+  self.map.active = true
+  self.drag.active = true
+end
+
+function MenuMain:deactivate()
+  self.map.active = false
+  self.drag.active = false
+end
+
 function MenuMain:update()
-  self.active = ctx.page == 'main'
+  if not self.active then return end
 
   self.map:update()
-  if not self.active or self.map.active then return end
 
   local mx, my = love.mouse.getPosition()
   local u, v = ctx.u, ctx.v
@@ -337,6 +362,14 @@ function MenuMain:draw()
     end
   end
 
+  g.setColor(255, 255, 255)
+  ctx.animations.muju:draw(u * .08, v * .75)
+  local color = ctx.user and ctx.user.color or 'purple'
+  for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
+    local slot = ctx.animations.muju.spine.skeleton:findSlot(slot)
+    slot.r, slot.g, slot.b = unpack(config.player.colors[color])
+  end
+
   self.play:draw()
   self.map:draw()
   self.drag:draw()
@@ -349,26 +382,25 @@ end
 function MenuMain:mousepressed(mx, my, b)
   self.map:mousepressed(mx, my, b)
 
-  if not self.active or self.map.active then return end
+  if not self.active or self.map.focused then return end
 
   self.drag:mousepressed(mx, my, b)
 end
 
 function MenuMain:mousereleased(mx, my, b)
-  if not self.active or self.map.active then return end
+  if not self.active or self.map.focused then return end
   if ctx.optionsPane.active then return end
   self.drag:mousereleased(mx, my, b)
 end
 
 function MenuMain:gamepadpressed(gamepad, button)
-  if not self.active or self.map.active then return end
+  if not self.active or self.map.focused then return end
   if button == 'dpleft' then self:previousBiome()
   elseif button == 'dpright' then self:nextBiome()
   elseif button == 'start' then ctx.animations.muju:set('death')
   elseif button == 'b' then
     ctx.page = 'start'
     ctx.start.active = true
-    ctx.start.alpha = 1
   end
 end
 

@@ -1,5 +1,6 @@
 Context = {
   list = {},
+  started = false
 }
 
 function Context:add(obj, ...)

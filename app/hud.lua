@@ -115,7 +115,7 @@ function Hud:mousereleased(x, y, b)
 		if math.inside(x, y, u * .4, v * .4, u * .19375, v * .1) then
 			ctx.paused = not ctx.paused
 		elseif math.inside(x, y, u * .4, v * .51, u * .19375, v * .1) then
-			Context:add(Menu, nil, ctx.options)
+			Context:add(Menu, {page = 'main', user = ctx.user}, ctx.options)
 			Context:remove(ctx)
 		end
 	end

@@ -76,6 +76,7 @@ function MenuMap:init()
   }
 
   self.active = false
+  self.focused = false
   self.factor = 0
   self.tweenDuration = .6
   self.tweenMethod = 'outQuint'
@@ -87,10 +88,12 @@ function MenuMap:init()
 end
 
 function MenuMap:update()
+  if not self.active then return end
+
   local mx, my = love.mouse.getPosition()
 
   self.prevAlpha = self.alpha
-  self.alpha = math.lerp(self.alpha, self.active and 1 or 0, math.min(6 * ls.tickrate, 1))
+  self.alpha = math.lerp(self.alpha, self.focused and 1 or 0, math.min(6 * ls.tickrate, 1))
 
   for k, v in ipairs(config.biomeOrder) do
     local hover = math.insideCircle(mx, my, unpack(self.geometry[v]))
@@ -100,6 +103,8 @@ function MenuMap:update()
 end
 
 function MenuMap:draw()
+  if not self.active then return end
+
   self.tween:update(ls.dt)
 
   local u, v = ctx.u, ctx.v
@@ -122,7 +127,7 @@ function MenuMap:draw()
   g.setColor(255, 255, 255)
   g.draw(image, x, y, 0, xscale, yscale)
 
-  if not self.active and math.inside(mx, my, x, y, w, h) and not ctx.optionsPane.active then
+  if not self.focused and math.inside(mx, my, x, y, w, h) and not ctx.optionsPane.active then
     g.setColor(255, 255, 255, 20)
     g.setBlendMode('additive')
     g.draw(image, x, y, 0, xscale, yscale)
@@ -146,7 +151,7 @@ function MenuMap:draw()
     else g.setColor(255, 255, 255, 100) end
     g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
-    if self.active then
+    if self.focused then
       local image = data.media.graphics.worldmap[v]
       local x, y = unpack(self.geometry[v .. 'Title'])
       g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
@@ -162,7 +167,7 @@ end
 
 function MenuMap:keypressed(key)
   if key == 'z' then self:toggle()
-  elseif key == 'escape' and self.active then
+  elseif key == 'escape' and self.focused then
     self:toggle()
     return true
   end
@@ -180,8 +185,8 @@ function MenuMap:mousepressed(mx, my, b)
   end
 
   if math.inside(mx, my, unpack(self.geometry.frame)) then
-    if not self.active then self:toggle() end
-  elseif self.active then
+    if not self.focused then self:toggle() end
+  elseif self.focused then
     self:toggle()
   end
 end
@@ -192,10 +197,10 @@ end
 
 function MenuMap:toggle()
   if self.tween.clock < self.tweenDuration then return end
-  if self.active then
+  if self.focused then
     self.tween = tween.new(self.tweenDuration, self, {factor = 0}, self.tweenMethod)
   else
     self.tween = tween.new(self.tweenDuration, self, {factor = 1}, self.tweenMethod)
   end
-  self.active = not self.active
+  self.focused = not self.focused
 end
