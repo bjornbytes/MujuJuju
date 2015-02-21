@@ -24,12 +24,10 @@ function HudUnits:init()
         res[i] = {x = xx, y = yy}
 
         local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
-        res[i].selectFactor = selectFactor
-
         local scale = 1 + .6 * upgradeFactor + .1 * selectFactor
-        res[i].scale = scale
-
         local is = (.2 * scale * v) / h
+        res[i].selectFactor = selectFactor
+        res[i].scale = scale
         res[i].imageScale = is
 
         -- Background
