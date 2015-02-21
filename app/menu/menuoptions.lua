@@ -76,6 +76,13 @@ function MenuOptions:init()
     powersave = 'Power Saving'
   }
 
+  self.controlDescriptions = {
+    display = 'Which monitor Muju Juju runs on',
+    postprocessing = 'Cool effects like bloom and distortions',
+    textureSmoothing = 'Reduces rendering artifacts, especially on smaller screens',
+    powersave = 'If you are on a laptop, this will limit the framerate depending on whether or not it\'s plugged in so Muju Juju doesn\'t kill your battery or melt your laptop'
+  }
+
   self.sliderData = {
     master = {0.0, 1.0, 0.05},
     music = {0.0, 1.0, 0.05},
@@ -187,11 +194,17 @@ function MenuOptions:init()
   self.scroll = self.targetScroll
   self.height = 10000
   self.canvas = g.newCanvas((self.width + .05) * ctx.u, ctx.v)
+  self.tooltipFactor = 0
+  self.prevTooltipFactor = self.tooltipFactor
+  self.tooltipText = ''
 end
 
 function MenuOptions:update()
   local u, v = ctx.u, ctx.v
+  local mx, my = love.mouse.getPosition()
   self.prevScroll = self.scroll
+  self.prevTooltipFactor = self.tooltipFactor
+
   local joysticks = love.joystick.getJoysticks()
   if #joysticks == 0 then
     if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(12 * ls.tickrate, 1))
@@ -200,12 +213,30 @@ function MenuOptions:update()
     if self.targetScroll < 0 then self.targetScroll = 0
     elseif self.targetScroll > self.height -v then self.targetScroll = self.height - v end
   end
+
+  local dirty = false
+  table.each(self.controlGroups, function(group)
+    table.each(self.controls[group], function(control)
+      local ox, oy = self.components[control]:getOffset()
+      local mx, my = mx + ox, my + oy
+      if self.controlDescriptions[control] and self.components[control]:contains(mx, my) and ctx.gooey.focused ~= self.components[control] then
+        self.tooltipFactor = math.lerp(self.tooltipFactor, 1, math.min(4 * ls.tickrate, 1))
+        self.tooltipText = self.controlDescriptions[control]
+        dirty = true
+      end
+    end)
+  end)
+
+  if not dirty then
+    self.tooltipFactor = math.lerp(self.tooltipFactor, 0, math.min(1 * ls.tickrate, 1))
+  end
 end
 
 function MenuOptions:draw()
   self.offsetTween:update(ls.dt)
 
   local u, v = ctx.u, ctx.v
+  local mx, my = love.mouse.getPosition()
 
   if self.offset > -1 then return end
   if self.offsetTween.clock < self.tweenDuration or self.offset < self.width * u then
@@ -291,6 +322,23 @@ function MenuOptions:draw()
   end
 
   g.pop()
+
+  if self.tooltipFactor > .01 and self.tooltipText ~= '' then
+    local tooltipFactor = math.lerp(self.prevTooltipFactor, self.tooltipFactor, ls.accum / ls.tickrate)
+    tooltipFactor = math.clamp((tooltipFactor - .8) / .2, 0, 1)
+    local str = self.tooltipText
+    local font = g.setFont('mesmerize', .02 * v)
+    local width, lines = font:getWrap(str, .2 * u)
+    width = width + .02 * v
+    local height = (font:getHeight() * lines) + .02 * v
+    local x, y = mx + 8, my + 8
+    if x + width > u then x = u - width end
+    if y + height > v then y = v - height end
+    g.setColor(0, 0, 0, 200 * tooltipFactor)
+    g.rectangle('fill', x, y, width, height)
+    g.setColor(255, 255, 255, 255 * tooltipFactor)
+    g.printf(str, x + .01 * v, y + .01 * v, width)
+  end
 end
 
 function MenuOptions:keypressed(key)
