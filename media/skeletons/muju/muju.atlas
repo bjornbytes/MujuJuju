@@ -4,6 +4,34 @@ size: 128,512
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+beret
+  rotate: false
+  xy: 38, 342
+  size: 33, 19
+  orig: 33, 19
+  offset: 0, 0
+  index: -1
+crown
+  rotate: false
+  xy: 38, 297
+  size: 29, 18
+  orig: 29, 18
+  offset: 0, 0
+  index: -1
+ded
+  rotate: false
+  xy: 98, 365
+  size: 18, 7
+  orig: 18, 7
+  offset: 0, 0
+  index: -1
+eyepatch
+  rotate: false
+  xy: 67, 328
+  size: 26, 12
+  orig: 26, 12
+  offset: 0, 0
+  index: -1
 front_bracer
   rotate: false
   xy: 2, 2
@@ -13,7 +41,7 @@ front_bracer
   index: -1
 front_fist
   rotate: false
-  xy: 77, 382
+  xy: 73, 342
   size: 21, 19
   orig: 21, 19
   offset: 0, 0
@@ -32,6 +60,13 @@ head
   orig: 34, 72
   offset: 0, 0
   index: -1
+horns
+  rotate: false
+  xy: 98, 374
+  size: 28, 27
+  orig: 28, 27
+  offset: 0, 0
+  index: -1
 party
   rotate: false
   xy: 2, 136
@@ -41,7 +76,7 @@ party
   index: -1
 rear_bracer
   rotate: false
-  xy: 48, 378
+  xy: 38, 317
   size: 27, 23
   orig: 27, 23
   offset: 0, 0
@@ -79,5 +114,12 @@ torso
   xy: 2, 233
   size: 43, 56
   orig: 43, 56
+  offset: 0, 0
+  index: -1
+wizard
+  rotate: false
+  xy: 48, 363
+  size: 48, 38
+  orig: 48, 38
   offset: 0, 0
   index: -1
