@@ -12,28 +12,28 @@ local function makeBin()
   return {units = {}, offsety = 0}
 end
 
-local function bar(x, y, hard, soft, color, width, height)
+local function bar(self, x, y, hard, soft, color, width, height)
   x, y = ctx.view:screenPoint(x, y)
   width = width * ctx.view.scale
 
   g.setColor(255, 255, 255, 80)
-  local w, h = data.media.graphics.healthbarFrame:getDimensions()
+  local atlas = data.atlas.hud
+  local w, h = atlas:getDimensions('healthbarFrame')
   local scale = width / w
   local xx = math.round(x - width / 2)
   local yy = math.round(y)
 
-  g.draw(data.media.graphics.healthbarFrame, xx, yy, 0, scale, scale)
+  self.spriteBatch:add(atlas.quads.healthbarFrame, xx, yy, 0, scale, scale)
 
   xx = xx + math.round(3 * scale)
   yy = yy + math.round(3 * scale)
 
-  local barHeight = data.media.graphics.healthbarGradient:getHeight()
-  g.setColor(color[1], color[2], color[3], 100)
-  g.draw(data.media.graphics.healthbarBar, xx, yy, 0, hard * math.round(width - 6 * scale), scale)
+  self.spriteBatch:setColor(color[1], color[2], color[3], 100)
+  self.spriteBatch:add(atlas.quads.healthbarBar, xx, yy, 0, hard * math.round(width - 6 * scale), scale)
 
   if soft then
-    g.setColor(color[1], color[2], color[3], 50)
-    g.draw(data.media.graphics.healthbarBar, xx, yy, 0, soft * math.round(width - 6 * scale), scale)
+    self.spriteBatch:setColor(color[1], color[2], color[3], 50)
+    self.spriteBatch:add(atlas.quads.healthbarBar, xx, yy, 0, soft * math.round(width - 6 * scale), scale)
   end
 end
 
@@ -42,6 +42,7 @@ function HudHealth:init()
   self.unitBins = {}
   self.unitBarPrevY = setmetatable({}, {__mode = 'k'})
   self.unitBarY = setmetatable({}, {__mode = 'k'})
+  self.spriteBatch = g.newSpriteBatch(data.atlas.hud.texture, 512, 'stream')
 end
 
 function HudHealth:update()
@@ -160,18 +161,22 @@ function HudHealth:draw()
   if ctx.tutorial then return end
 
   local p = ctx.player
+  local atlas = data.atlas.hud
+
+  self.spriteBatch:bind()
+  self.spriteBatch:clear()
 
   ctx.players:each(function(player)
     local x, y, hard, soft = player:getHealthbar()
     local color = (p and player.team == p.team) and (ctx.options.colorblind and blue or green) or red
-    bar(x, y - 20, hard, soft, color, 100, 3)
+    bar(self, x, y - 20, hard, soft, color, 100, 3)
   end)
 
   ctx.shrines:each(function(shrine)
     local color = (p and shrine.team == p.team) and (ctx.options.colorblind and blue or green) or red
     local x, y, hard, soft = shrine:getHealthbar()
     local w, h = 120 + (60 * (shrine.hurtFactor)), 4 + (1 * shrine.hurtFactor)
-    bar(x, y - 25, hard, soft, color, w, h)
+    bar(self, x, y - 25, hard, soft, color, w, h)
   end)
 
   table.each(self.bins, function(binList)
@@ -199,17 +204,17 @@ function HudHealth:draw()
         -- Frame
         local alpha = (.5 + (false and .5 or 0)) * unit.alpha
         local framey = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], ls.accum / ls.tickrate)
-        g.setColor(255, 255, 255, 120 * alpha)
-        g.draw(frame, xx, framey, 0, scale, scale)
+        self.spriteBatch:setColor(255, 255, 255, 120 * alpha)
+        self.spriteBatch:add(atlas.quads.healthbarFrame, xx, framey, 0, scale, scale)
 
         -- Bar
         local y = self.unitBarY[unit] + math.round(3 * scale)
         local _, _, hard, soft = unit:getHealthbar()
-        g.setColor(color[1], color[2], color[3], 150 * alpha)
-        g.draw(data.media.graphics.healthbarBar, barx, y, 0, hard * barWidth, scale)
+        self.spriteBatch:setColor(color[1], color[2], color[3], 150 * alpha)
+        self.spriteBatch:add(atlas.quads.healthbarBar, barx, y, 0, hard * barWidth, scale)
         if soft then
-          g.setColor(color[1], color[2], color[3], 75 * alpha)
-          g.draw(data.media.graphics.healthbarBar, barx, y, 0, soft * barWidth, scale)
+          self.spriteBatch:setColor(color[1], color[2], color[3], 75 * alpha)
+          self.spriteBatch:add(atlas.quads.healthbarBar, barx, y, 0, soft * barWidth, scale)
         end
 
         -- Elite buffs
@@ -225,4 +230,7 @@ function HudHealth:draw()
       end
     end)
   end)
+
+  self.spriteBatch:unbind()
+  g.draw(self.spriteBatch)
 end
