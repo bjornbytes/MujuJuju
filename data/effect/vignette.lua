@@ -10,11 +10,12 @@ end
 
 function Vignette:update()
   local p = ctx.player
+  local upgradeFactor, t = ctx.hud.upgrades:getFactor()
   self.config = config.biomes[ctx.biome].effects.vignette
 	self.blur = math.lerp(self.blur, p.dead and self.config.blur[2] or self.config.blur[1], 2 * ls.tickrate)
 	self.radius = math.lerp(self.radius, p.dead and self.config.radius[2] or self.config.radius[1], 4 * ls.tickrate)
 	self.shader:send('blur', self.blur)
-	self.shader:send('radius', self.radius)
+	self.shader:send('radius', self.radius * (.9 + (1 - upgradeFactor) * .1))
 end
 
 function Vignette:applyEffect(source, target)

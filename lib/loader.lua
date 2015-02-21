@@ -169,5 +169,6 @@ data.load = function()
   load('data/gooey', 'gooey')
   load('data/shruju', 'shruju')
   load('data/ai', 'ai')
+  load('data/atlas', 'atlas')
 end
 

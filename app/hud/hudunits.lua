@@ -8,19 +8,88 @@ function HudUnits:init()
   end})
 
   self.geometryFunctions = {
+    units = function()
+      local u, v = ctx.hud.u, ctx.hud.v
+      local atlas = data.atlas.hud
+      local upgradeFactor, t = ctx.hud.upgrades:getFactor()
+      local inc = u * (.2 + (.075 * upgradeFactor))
+      local xx = .5 * u - (inc * (self.count - 1) / 2)
+      local p = ctx.player
+      local w, h = data.atlas.hud:getDimensions('minion')
+      local res = {scale = scale, imageScale = is}
+
+      for i = 1, self.count do
+        local deck = p.deck[i]
+        local yy = v * .005
+        res[i] = {x = xx, y = yy}
+
+        local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
+        res[i].selectFactor = selectFactor
+
+        local scale = 1 + .6 * upgradeFactor + .1 * selectFactor
+        res[i].scale = scale
+
+        local is = (.2 * scale * v) / h
+        res[i].imageScale = is
+
+        -- Background
+        res[i].bg = {xx, yy, 0, is, is, w / 2, 0}
+
+        -- Title bar
+        local w, h = atlas:getDimensions('title')
+        local tx = xx - (w / 2) * is
+        local ty = yy + (10 * is)
+        local xsc = is * (1 - (deck.cooldown / deck.maxCooldown))
+        res[i].title = {xx, ty, 0, is, is, w / 2, 0}
+
+        -- Runes
+        do
+          local runes = {}
+          local ct = p.deck[i].runes and #p.deck[i].runes or 0
+          local size = v * .0385 * is
+          local inc = size * 3
+          local xx = xx - (inc * (ct - 1) / 2)
+          local yy = yy + .174 * v * scale
+          for j = 1, ct do
+            local rune = p.deck[i].runes and p.deck[i].runes[j]
+
+            -- Stone
+            local w, h = atlas:getDimensions('bg' .. rune.background:capitalize())
+            local scale = size * 2 / h
+            self:batch(code, quad, x, y, 0, scale, scale, w / 2, y / 2)
+            runes[j].bg = {xx, yy, 0, scale, scale, w / 2, h / 2}
+
+            -- Rune
+            local w, h = atlas:getDimensions('rune' .. rune.image)
+            local scale = (size - .016 * v * is) / h
+            runes[j].rune = {xx, yy, 0, scale, scale, w / 2, h / 2}
+
+            xx = xx + inc
+          end
+
+          res[i].runes = runes
+        end
+
+        xx = xx + inc
+      end
+
+      return res
+    end,
+
     upgrades = function()
       local u, v = ctx.hud.u, ctx.hud.v
       local p = ctx.player
       local upgradeFactor, t = ctx.hud.upgrades:getFactor()
-      local minionInc = (.2 * u) + (.075 * upgradeFactor * u)
       local inc = .1 * upgradeFactor * v
-      local xx = .5 * u - (minionInc * (self.count - 1) / 2)
       local yy = (.15 * upgradeFactor) * v + (.35 * v)
       local size = math.max(.08 * v * upgradeFactor, .01)
+      local units = self.geometry.units
       local res = {}
 
       for i = 1, self.count do
         res[i] = {}
+
+        local xx = units[i].x
 
         for j, upgrade in ipairs(data.unit[p.deck[i].code].upgrades) do
           local line = {}
@@ -32,8 +101,6 @@ function HudUnits:init()
           end
           table.insert(res[i], {xx + (inc * upgrade.x) - size / 2, yy + (.1 * v * upgrade.y) - size / 2, size, size, line})
         end
-
-        xx = xx + minionInc
       end
 
       return res
@@ -41,25 +108,21 @@ function HudUnits:init()
 
     attributes = function()
       local u, v = ctx.hud.u, ctx.hud.v
-      local p = ctx.player
       local upgradeFactor, t = ctx.hud.upgrades:getFactor()
-      local minionInc = (.2 * u) + (.075 * upgradeFactor * u)
       local inc = .1 * upgradeFactor * v
-      local xx = .5 * u - (minionInc * (self.count - 1) / 2)
       local yy = (.15 * upgradeFactor) * v + (.25 * v)
       local size = math.max(.08 * v * upgradeFactor, .01)
+      local units = self.geometry.units
       local res = {}
 
       for i = 1, self.count do
         res[i] = {}
 
-        local x = xx - (inc * (4 - 1) / 2)
+        local x = units[i].x - (inc * (4 - 1) / 2)
         for j = 1, 4 do
           table.insert(res[i], {x - size / 2, yy - size / 2, size, size})
           x = x + inc
         end
-
-        xx = xx + minionInc
       end
 
       return res
@@ -89,101 +152,67 @@ end
 function HudUnits:draw()
   if ctx.ded then return end
 
-  local p = ctx.player
-  if not p then return end
-
   local u, v = ctx.hud.u, ctx.hud.v
-  local mx, my = love.mouse.getPosition()
-  local ct = self.count
-
   local upgradeFactor, t = ctx.hud.upgrades:getFactor()
-  local upgradeAlphaFactor = (t / ctx.hud.upgrades.maxTime) ^ 3
-  local inc = u * (.2 + (.075 * upgradeFactor))
-  local xx = .5 * u - (inc * (ct - 1) / 2)
 
-  if t < 1 then table.clear(self.geometry) end
-
-  g.setColor(0, 0, 0, 80 * math.clamp(upgradeFactor, 0, 1))
-  g.rectangle('fill', 0, 0, ctx.view.frame.width, ctx.view.frame.height)
+  if t > 0 and t < 1 then table.clear(self.geometry) end
 
   if t > 0 then
+    local p = ctx.player
     g.setFont('pixel', 8)
     g.setColor(255, 255, 255)
     g.printShadow(p.skillPoints .. ' skill points', .01 * v, .1 * v)
     g.printShadow(p.attributePoints .. ' attribute points', .01 * v, .1 * v + g.getFont():getHeight())
   end
 
-  for i = 1, self.count do
+  self:drawBackground()
+  self:drawForeground()
+end
+
+function HudUnits:drawBackground()
+  local u, v = ctx.hud.u, ctx.hud.v
+  local ct = self.count
+  local p = ctx.player
+
+  local upgradeFactor, t = ctx.hud.upgrades:getFactor()
+  local upgradeAlphaFactor = (t / ctx.hud.upgrades.maxTime) ^ 3
+
+  local units = self.geometry.units
+
+  self.spriteBatch:bind()
+
+  if upgradeFactor > 0 then
+    g.setColor(0, 0, 0, 80 * math.clamp(upgradeFactor, 0, 1))
+    g.rectangle('fill', 0, 0, u, v)
+  end
+
+  for i = 1, #units do
+    local unit = units[i]
+    local xx, yy = unit.x, unit.y
+    local deck = p.deck[i]
     local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
-    local bg = data.media.graphics.hud.minion
-    local w, h = bg:getDimensions()
-    local scale = 1 + .6 * upgradeFactor + .1 * selectFactor
-    local imageScale = (.2 * scale * v) / h
-    local yy = v * .005
     local alpha = .45 + selectFactor * .35
 
     -- Backdrop
     g.setColor(255, 255, 255, 255 * alpha)
-    g.draw(bg, xx, yy, 0, imageScale, imageScale, w / 2, 0)
+    self:batch('bg' .. i, 'minion', unpack(unit.bg))
 
     -- Cooldown
-    local title = data.media.graphics.hud.title
-    local titlex = xx - (title:getWidth() / 2) * imageScale
     g.setColor(255, 255, 255, 80 * alpha)
-    g.draw(title, xx, yy + (10 * imageScale), 0, imageScale, imageScale, title:getWidth() / 2, 0)
+    local x, y, a, sx, sy, ox, oy = unpack(unit.title)
+    self:batch('title' .. i, 'title', x, y, a, sx, sy, ox, oy)
+
     g.setColor(255, 255, 255, 255 * alpha)
-    g.draw(title, titlex, yy + (10 * imageScale), 0, imageScale * (1 - (p.deck[i].cooldown / p.deck[i].maxCooldown)), imageScale)
-
-    local cooldownPop = math.lerp(self.prevCooldownPop[i], self.cooldownPop[i], ls.accum / ls.tickrate)
-    g.setBlendMode('additive')
-    g.setColor(255, 255, 255, 200 * cooldownPop)
-    g.draw(title, xx, yy + (10 * imageScale), 0, imageScale, imageScale, title:getWidth() / 2, 0)
-    g.setBlendMode('alpha')
-
-    -- Animation
-    g.setCanvas(self.canvas)
-    self.canvas:clear(0, 0, 0, 0)
-    g.pop()
-    self.animations[i]:draw(100, 100)
-    ctx.view:guiPush()
-    g.setCanvas()
-    g.setColor(255, 255, 255)
-    g.draw(self.canvas, xx, yy + .1 * scale * v, 0, imageScale, imageScale, 100, 100)
-
-    -- Text
-    local unit = data.unit[p.deck[i].code]
-    local font = g.setFont('mesmerize', math.round(.02 * scale * v))
-    local str = unit.name
-    if math.inside(mx, my, titlex, yy + (10 * imageScale), title:getWidth() * imageScale, title:getHeight() * imageScale) then
-      str = string.format('%.2f', p.deck[i].cooldown)
-    end
-    g.setColor(255, 255, 255)
-    g.printCenter(str, math.round(xx), math.round(yy + (.025 * v * scale)))
-
-    g.setColor(0, 100, 0, 200)
-    g.printCenter(unit.cost, xx - (.09125 * v * scale) + 1, yy + (.0975 * v * scale) + 2)
-    g.setColor(255, 255, 255)
-    g.printCenter(unit.cost, xx - (.09125 * v * scale), yy + (.0975 * v * scale))
-
-    local count = table.count(ctx.units:filter(function(u) return u.class.code == p.deck[i].code end))
-    g.setColor(0, 100, 0, 200)
-    g.printCenter(count, xx + (.087 * v * scale) + 1, yy + (.1 * v * scale) + 2)
-    g.setColor(255, 255, 255)
-    g.printCenter(count, xx + (.087 * v * scale), yy + (.1 * v * scale))
+    local cd = 1 - (deck.cooldown / deck.maxCooldown)
+    self:batch('titleBar' .. i, 'title', x - ox * sx, y, a, sx * cd, sy)
 
     -- Runes
-    local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
-    local runeSize = v * .0385 * imageScale
-    local runeInc = runeSize * 3
-    local runex = xx - (runeInc * (runeCount - 1) / 2)
-    local runey = yy + .174 * v * scale
-    g.setColor(255, 255, 255, 255 * alpha)
-    for j = 1, runeCount do
-      local rune = p.deck[i].runes and p.deck[i].runes[j]
-      g.drawRune(rune, runex, runey, runeSize * 2, (runeSize - .016 * v * imageScale) * 2)
-      runex = runex + runeInc
+    for j = 1, #unit.runes do
+      g.setColor(255, 255, 255)
+      self:batch('runeBg' .. i .. j, unpack(unit.runes[j].bg))
+      g.setColor(config.runes.colors[rune.color])
+      self:batch('rune' .. i .. j, unpack(unit.runes[j].rune))
     end
-    xx = xx + inc
   end
 
   if t > 0 then
@@ -193,21 +222,18 @@ function HudUnits:draw()
     for i = 1, #attributes do
       for j = 1, #attributes[i] do
         local x, y, w, h = unpack(attributes[i][j])
+        local attribute = config.attributes.list[j]
         local image = data.media.graphics.hud.frame
         local scale = w / image:getWidth()
         g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
-        g.draw(image, x, y, 0, scale, scale)
+        self:batch('attributeFrame' .. i .. j, 'frame', x, y, 0, scale, scale)
 
-        local image = data.media.graphics.hud.icons[config.attributes.list[j]]
+        local image = data.media.graphics.hud.icons[attribute]
         if image then
           local scale = math.min((w - (v * .03)) / image:getWidth(), (h - (v * .03)) / image:getHeight())
-          g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+          local code = 'attributeIcon' .. i .. j
+          self:batch(code, attribute, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
         end
-
-        local level = data.unit[p.deck[i].code].attributes[config.attributes.list[j]]
-        g.setFont('mesmerize', math.round(.0175 * v))
-        g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-        g.printShadow(level, x + .01 * v, y + .01 * v)
       end
     end
 
@@ -246,20 +272,110 @@ function HudUnits:draw()
         local scale = w / image:getWidth()
         local upgrade = data.unit[who].upgrades[what]
         local val = (upgrade.level > 0 or ctx.upgrades.canBuy(who, what)) and 255 or 150
-        g.setColor(val, val, val, 255 * upgradeAlphaFactor)
-        g.draw(image, math.round(x), math.round(y), 0, scale, scale)
-        if upgrade.level > 0 then
-          g.setColor(upgrade.level < upgrade.maxLevel and {0, 255, 0, 100} or {0, 150, 0, 100})
-          g.rectangle('line', math.round(x) + .5, math.round(y) + .5, w - 1, h - 1)
-        end
+        x, y = math.round(x), math.round(y)
 
-        local val = (upgrade.level > 0 or ctx.upgrades.canBuy(who, what)) and 255 or 200
+        -- Frame
         g.setColor(val, val, val, 255 * upgradeAlphaFactor)
+        self:batch('upgradeFrame' .. i .. j, 'frame', x, y, 0, scale, scale)
 
+        -- Icon
         local image = data.media.graphics.hud.icons[what]
         if image then
+          local val = (upgrade.level > 0 or ctx.upgrades.canBuy(who, what)) and 255 or 200
           local scale = math.min((w - (v * .02)) / image:getWidth(), (h - (v * .02)) / image:getHeight())
-          g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+          local x, y = x + w / 2, y + h / 2
+          local ox, oy = image:getWidth() / 2, image:getHeight() / 2
+          local code = 'upgradeIcon' .. i .. j
+          g.setColor(val, val, val, 255 * upgradeAlphaFactor)
+          self:batch(code, what, x, y, 0, scale, scale, ox, oy)
+        end
+      end
+    end
+  end
+
+  self.spriteBatch:unbind()
+  g.draw(self.spriteBatch)
+end
+
+function HudUnits:drawForeground()
+  local u, v = ctx.hud.u, ctx.hud.v
+  local mx, my = love.mouse.getPosition()
+  local p = ctx.player
+  local atlas = data.atlas.hud
+
+  local upgradeFactor, t = ctx.hud.upgrades:getFactor()
+  local upgradeAlphaFactor = (t / ctx.hud.upgrades.maxTime) ^ 3
+  local units = self.geometry.units
+
+  for i = 1, #units do
+    local unit = units[i]
+    local xx, yy = unit.x, unit.y
+    local deck = p.deck[i]
+    local alpha = .45 + unit.selectFactor * .35
+    local scale = unit.scale
+    local imageScale = unit.imageScale
+
+    -- Cooldown
+    local cooldownPop = math.lerp(self.prevCooldownPop[i], self.cooldownPop[i], ls.accum / ls.tickrate)
+    g.setBlendMode('additive')
+    g.setColor(255, 255, 255, 200 * cooldownPop)
+    g.draw(atlas.texture, atlas.quads.title, unpack(unit.title))
+    g.setBlendMode('alpha')
+
+    -- Animation
+    g.setCanvas(self.canvas)
+    self.canvas:clear(0, 0, 0, 0)
+    g.pop()
+    self.animations[i]:draw(100, 100)
+    ctx.view:guiPush()
+    g.setCanvas()
+    g.setColor(255, 255, 255)
+    g.draw(self.canvas, xx, yy + .1 * scale * v, 0, imageScale, imageScale, 100, 100)
+
+    -- Text
+    local x, y, a, sx, sy, ox, oy = unpack(unit.title)
+    local w, h = data.atlas.hud:getDimensions('title')
+    local unit = data.unit[p.deck[i].code]
+    local font = g.setFont('mesmerize', math.round(.02 * scale * v))
+    local str = unit.name
+    if math.inside(mx, my, x - ox * sx, y, w * sx, h * sy) then
+      str = string.format('%.2f', p.deck[i].cooldown)
+    end
+    g.setColor(255, 255, 255)
+    g.printShadow(str, math.round(xx), math.round(yy + (.025 * v * scale)), true)
+    g.printShadow(unit.cost, xx - (.09125 * v * scale), yy + (.0975 * v * scale), true, {0, 100, 0, 200})
+
+    local count = table.count(ctx.units:filter(function(u) return u.class.code == p.deck[i].code end))
+    g.printShadow(count, xx + (.087 * v * scale), yy + (.1 * v * scale), true, {0, 100, 0, 200})
+  end
+
+  if t > 0 then
+
+    -- Attribute text
+    local attributes = self.geometry.attributes
+    for i = 1, #attributes do
+      for j = 1, #attributes[i] do
+        local x, y, w, h = unpack(attributes[i][j])
+        local attribute = config.attributes.list[j]
+        local level = data.unit[p.deck[i].code].attributes[attribute]
+        g.setFont('mesmerize', math.round(.0175 * v))
+        g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
+        g.printShadow(level, x + .01 * v, y + .01 * v)
+      end
+    end
+
+    -- Upgrade outlines
+    local upgrades = self.geometry.upgrades
+    for i = 1, #upgrades do
+      for j = 1, #upgrades[i] do
+        local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
+        local upgrade = data.unit[who].upgrades[what]
+
+        if upgrade.level > 0 then
+          local x, y, w, h = unpack(upgrades[i][j])
+          x, y = math.round(x), math.round(y)
+          g.setColor(upgrade.level < upgrade.maxLevel and {0, 255, 0, 100} or {0, 150, 0, 100})
+          g.rectangle('line', x + .5, y + .5, w - 1, h - 1)
         end
       end
     end
@@ -274,6 +390,7 @@ function HudUnits:mousereleased(mx, my, b)
 
   local p = ctx.player
 
+  -- Upgrade click
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
     for j = 1, #upgrades[i] do
@@ -292,6 +409,7 @@ function HudUnits:mousereleased(mx, my, b)
     end
   end
 
+  -- Attribute click
   local attributes = self.geometry.attributes
   for i = 1, #attributes do
     for j = 1, #attributes[i] do
@@ -315,6 +433,7 @@ function HudUnits:mousemoved(mx, my)
 
   mx, my = ctx.view:frameMouseX(), ctx.view:frameMouseY()
 
+  -- Attribute tooltips
   local attributes = self.geometry.attributes
   for i = 1, #attributes do
     for j = 1, #attributes[i] do
@@ -327,6 +446,7 @@ function HudUnits:mousemoved(mx, my)
     end
   end
 
+  -- Upgrade tooltips
   local upgrades = self.geometry.upgrades
   for i = 1, #upgrades do
     for j = 1, #upgrades[i] do
@@ -339,35 +459,20 @@ function HudUnits:mousemoved(mx, my)
     end
   end
 
-  -- TODO clean up rune tooltips
-  local u, v = ctx.hud.u, ctx.hud.v
-  local ct = self.count
-  local upgradeFactor, t = ctx.hud.upgrades:getFactor()
-  local inc = u * (.2 + (.075 * upgradeFactor))
-  local xx = .5 * u - (inc * (ct - 1) / 2)
-  ctx.view:guiPush()
-  for i = 1, ct do
-    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
-    local bg = data.media.graphics.hud.minion
-    local w, h = bg:getDimensions()
-    local scale = 1 + .6 * upgradeFactor
-    local imageScale = (.2 * scale * v) / h
-    local yy = v * .005
-    local runeCount = p.deck[i].runes and #p.deck[i].runes or 0
-    local runeSize = v * .0385 * imageScale
-    local runeInc = runeSize * 3
-    local runex = xx - (runeInc * (runeCount - 1) / 2)
-    local runey = yy + .174 * v * scale
-    for j = 1, runeCount do
-      if math.insideCircle(mx, my, runex, runey, runeSize) then
+  -- Rune tooltips
+  local units = self.geometry.units
+  for i = 1, #units do
+    local unit = units[i]
+    for j = 1, #unit.runes do
+      local rune = unit.runes[j]
+      local w, h = atlas:getDimensions('runeBgNormal')
+      local x, y, r = rune.bg[1], rune.bg[2], math.max(rune.bg[4] * w, rune.bg[5] * h)
+      if math.insideCircle(mx, my, x, y, r) then
         ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
         return
       end
-      runex = runex + runeInc
     end
-    xx = xx + inc
   end
-  g.pop()
 end
 
 function HudUnits:ready()
@@ -380,6 +485,8 @@ function HudUnits:ready()
   self.prevCooldownPop = {}
   self.animations = {}
   self.canvas = g.newCanvas(200, 200)
+  self.spriteBatch = g.newSpriteBatch(data.atlas.hud.texture, 512, 'stream')
+  self.spriteBatchMap = {}
 
   local animationScaleFactors = {
     bruju = 1.5,
@@ -408,5 +515,16 @@ function HudUnits:ready()
     self.animations[i]:on('complete', function()
       self.animations[i]:set('idle', {force = true})
     end)
+  end
+end
+
+function HudUnits:batch(code, quad, ...)
+  local id = self.spriteBatchMap[code]
+  self.spriteBatch:setColor(love.graphics.getColor())
+
+  if id then
+    self.spriteBatch:set(id, data.atlas.hud.quads[quad], ...)
+  else
+    self.spriteBatchMap[code] = self.spriteBatch:add(data.atlas.hud.quads[quad], ...)
   end
 end
