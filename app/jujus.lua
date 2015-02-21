@@ -1,8 +1,10 @@
+local g = love.graphics
 Jujus = class()
 Jujus.depth = -6
 
 function Jujus:init()
 	self.jujus = {}
+  self.spriteBatch = g.newSpriteBatch(data.media.graphics.juju, 256, 'stream')
   if not ctx.effects:get('vignette') then ctx.event:emit('view.register', {object = self}) end
 end
 
@@ -11,7 +13,11 @@ function Jujus:update()
 end
 
 function Jujus:draw()
+  self.spriteBatch:clear()
+  self.spriteBatch:bind()
   table.with(self.jujus, 'draw')
+  self.spriteBatch:unbind()
+  g.draw(self.spriteBatch)
 end
 
 function Jujus:add(data)

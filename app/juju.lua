@@ -92,5 +92,5 @@ function Juju:draw()
 	local wave = math.sin(tick * ls.tickrate * 4)
 
 	g.setColor(255, 255, 255, 255 * self.alpha)
-	g.draw(image, self.x, self.y + 5 * wave, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)
+  ctx.jujus.spriteBatch:add(self.x, self.y + 3 * wave, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)
 end
