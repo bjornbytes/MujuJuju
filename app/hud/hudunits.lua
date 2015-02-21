@@ -252,8 +252,10 @@ function HudUnits:drawBackground()
             else
               g.setColor(200, 0, 0, 200 * upgradeAlphaFactor ^ 2)
             end
-            g.setLineWidth(.005 * v)
-            g.line(points)
+            local xscale = .005 * v
+            local yscale = math.distance(unpack(points)) / 20
+            local angle = math.direction(unpack(points)) - math.pi / 2
+            self:batch('upgradeConector' .. i .. j .. k, 'healthbarBar', points[1], points[2], angle, xscale, yscale, .5, 0)
           end)
         end
       end
