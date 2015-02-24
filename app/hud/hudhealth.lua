@@ -16,7 +16,7 @@ local function bar(self, x, y, hard, soft, color, width, height)
   x, y = ctx.view:screenPoint(x, y)
   width = width * ctx.view.scale
 
-  g.setColor(255, 255, 255, 80)
+  self.spriteBatch:setColor(255, 255, 255, 80)
   local atlas = data.atlas.hud
   local w, h = atlas:getDimensions('healthbarFrame')
   local scale = width / w
@@ -81,8 +81,7 @@ function HudHealth:update()
     if not touched[unit] then self:debin(unit) end
   end)
 
-  local frame = data.media.graphics.healthbarFrame
-  local w, h = frame:getDimensions()
+  local w, h = data.atlas.hud:getDimensions('healthbarFrame')
   local scale = 80 / w
   local height = h * scale + 4
   table.each(self.bins, function(binList, code)
@@ -111,8 +110,7 @@ function HudHealth:update()
     end
   end)
 
-  local frame = data.media.graphics.healthbarFrame
-  local w, h = frame:getDimensions()
+  local w, h = data.atlas.hud:getDimensions('healthbarFrame')
   local scale = (80 * ctx.view.scale) / w
   ctx.units:each(function(unit)
     local _, yy = ctx.view:screenPoint(0, ctx.map.height - ctx.map.groundHeight - unit.height * 2)
@@ -135,7 +133,7 @@ function HudHealth:update()
     end
 
     local _, yy = ctx.view:screenPoint(0, ctx.map.height - ctx.map.groundHeight - unit.height * 2)
-    local targetY = math.round(yy - (binIndex - 1) * (data.media.graphics.healthbarFrame:getHeight() * scale + .5))
+    local targetY = math.round(yy - (binIndex - 1) * (h * scale + .5))
     targetY = targetY - (self.bins[unit.class.code][self.unitBins[unit]].offsetY or 0)
     self.unitBarPrevY[unit] = self.unitBarY[unit] or startY
     self.unitBarY[unit] = self.unitBarY[unit] and math.lerp(self.unitBarY[unit], targetY, math.min(20 * ls.tickrate, 1)) or startY
@@ -187,15 +185,14 @@ function HudHealth:draw()
       local meanx = totalx / (#bin.units == 0 and 1 or #bin.units)
       local x, y = ctx.view:screenPoint(meanx, ctx.map.height - ctx.map.groundHeight - 150)
       local width = 80 * ctx.view.scale
-      local frame = data.media.graphics.healthbarFrame
-      local w, h = frame:getDimensions()
+      local w, h = atlas:getDimensions('healthbarFrame')
       local scale = width / w
       local xx = math.round(x - width / 2)
       local yy = math.round(y)
       local barx = xx + math.round(3 * scale)
       local bary = yy + math.round(3 * scale)
       local barWidth = math.round(width - 6 * scale)
-      local barHeight = data.media.graphics.healthbarGradient:getHeight()
+      local _, barHeight = atlas:getDimensions('healthbarBar')
 
       for j = 1, #bin.units do
         local unit = bin.units[j]
@@ -223,7 +220,7 @@ function HudHealth:draw()
           local string = ''
           table.each(elitebuffs, function(buff) string = string .. buff.code:capitalize() .. ' ' end)
           g.setFont('pixel', 8)
-          local texty = y + data.media.graphics.healthbarBar:getHeight() * scale / 2 - g.getFont():getHeight() / 2
+          local texty = y + barHeight * scale / 2 - g.getFont():getHeight() / 2
           g.setColor(255, 255, 255)
           g.printShadow(string, x, texty, true)
         end

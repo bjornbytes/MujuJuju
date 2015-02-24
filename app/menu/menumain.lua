@@ -218,6 +218,8 @@ function MenuMain:draw()
   local u, v = ctx.u, ctx.v
   local ps = love.window.getPixelScale()
 
+  local atlas = data.atlas.hud
+
   local detailsAlpha = 255
   local biome = config.biomeOrder[self.selectedBiome]
   local x, y, w, h = unpack(self.geometry.map)
@@ -258,10 +260,9 @@ function MenuMain:draw()
   for i = 1, #gutterRunes do
     local x, y, w, h = unpack(gutterRunes[i])
     local rune = ctx.user.runes[i]
-    local image = data.media.graphics.hud.frame
-    local scale = w / image:getWidth()
+    local scale = w / atlas:getDimensions('frame')
     g.setColor(255, 255, 255)
-    g.draw(image, x, y, 0, scale, scale)
+    g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
   end
 
   -- Gutter runes
@@ -337,10 +338,9 @@ function MenuMain:draw()
     for j = 1, #runes do
       local x, y, w, h = unpack(runes[j])
       local rune = ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j]
-      local image = data.media.graphics.hud.frame
-      local scale = w / image:getWidth()
+      local scale = w / atlas:getDimensions('frame')
       g.setColor(255, 255, 255)
-      g.draw(image, x, y, 0, scale, scale)
+      g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
     end
   end
 

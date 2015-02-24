@@ -40,7 +40,7 @@ function Map:init()
   self.foreground = {
     depth = -50,
     draw = function()
-      local image = data.media.graphics.grass
+      local image = data.media.graphics.map.grass
       local scale = self.height / data.media.graphics.map[ctx.biome]:getHeight()
       local shearx = math.sin(tick / 100) * math.cos(tick / 60) ^ 2 * .08
       g.setColor(0, 0, 0, 80)
@@ -51,7 +51,7 @@ function Map:init()
       local p = ctx.player
       alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .5)
       g.setColor(200, 200, 200, alpha)
-      g.draw(data.media.graphics.spiritGrass, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight(), shearx)
+      g.draw(data.media.graphics.map.spiritGrass, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight(), shearx)
     end
   }
 

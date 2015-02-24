@@ -209,7 +209,7 @@ function Unit:draw()
   -- Fear icon
   if self.buffs:feared() then
     g.setColor(255, 255, 255, 150 * lerpd.alpha)
-    local image = data.media.graphics.fear
+    local image = data.media.graphics.spell.fear
     local scale = (40 / image:getHeight()) * (1 + math.cos(math.sin(tick) / 3) / 5)
     g.draw(image, self.x, self.y - self.height - 35, math.cos(tick / 3) / 6, scale, scale, 53, 83)
   end

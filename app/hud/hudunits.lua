@@ -221,8 +221,7 @@ function HudUnits:drawBackground()
       for j = 1, #attributes[i] do
         local x, y, w, h = unpack(attributes[i][j])
         local attribute = config.attributes.list[j]
-        local image = data.media.graphics.hud.frame
-        local scale = w / image:getWidth()
+        local scale = w / data.atlas.hud:getDimensions('frame')
         g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
         self:batch('attributeFrame' .. i .. j, 'frame', x, y, 0, scale, scale)
 
@@ -268,8 +267,7 @@ function HudUnits:drawBackground()
       for j = 1, #upgrades[i] do
         local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
         local x, y, w, h = unpack(upgrades[i][j])
-        local image = data.media.graphics.hud.frame
-        local scale = w / image:getWidth()
+        local scale = w / data.atlas.hud:getDimensions('frame')
         local upgrade = data.unit[who].upgrades[what]
         local val = (upgrade.level > 0 or ctx.upgrades.canBuy(who, what)) and 255 or 150
         x, y = math.round(x), math.round(y)

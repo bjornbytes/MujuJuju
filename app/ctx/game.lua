@@ -7,11 +7,12 @@ function Game:load(user, options, biome, tutorial)
     data.media.graphics.juju:setMipmapFilter('linear', 1)
     data.media.graphics.map.forest:setMipmapFilter('linear', 1)
     data.media.graphics.map.forestSpirit:setMipmapFilter('linear', 1)
-    for i = 1, 9 do
-      data.media.graphics.runes[i]:setMipmapFilter('linear', 1)
-    end
-    data.media.graphics.hud.minion:setMipmapFilter('linear', 1)
+    data.media.graphics.atlas.hud:setMipmapFilter('linear', 1)
     data.media.graphics.hud.population:setMipmapFilter('linear', 1)
+    data.media.graphics.hud.clockBlue:setMipmapFilter('linear', 1)
+    data.media.graphics.hud.clockBronze:setMipmapFilter('linear', 1)
+    data.media.graphics.hud.clockSilver:setMipmapFilter('linear', 1)
+    data.media.graphics.hud.clockGold:setMipmapFilter('linear', 1)
   end
 
   self.user = user

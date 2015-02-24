@@ -48,16 +48,20 @@ if love.graphics then
   function g.drawRune(rune, x, y, stoneSize, runeSize)
     if not rune then return end
 
+    local atlas = data.atlas.hud
+
     -- Stone
-    local image = data.media.graphics.runes['bg' .. rune.background:capitalize()]
-    local scale = stoneSize / image:getHeight()
+    local quad = 'bg' .. rune.background:capitalize()
+    local w, h = atlas:getDimensions(quad)
+    local scale = stoneSize / h
     g.setColor(255, 255, 255)
-    g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
 
     -- Rune
-    local image = data.media.graphics.runes[rune.image]
-    local scale = runeSize / image:getHeight()
+    local quad = 'rune' .. rune.image
+    local w, h = atlas:getDimensions(quad)
+    local scale = runeSize / h
     g.setColor(config.runes.colors[rune.color])
-    g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
   end
 end

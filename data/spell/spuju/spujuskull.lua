@@ -35,7 +35,7 @@ function SpujuSkull:deactivate()
 end
 
 function SpujuSkull:update()
-  local image = data.media.graphics.spujuSkull
+  local image = data.media.graphics.spell.spujuSkull
 	if self.health then
 		self.health = timer.rot(self.health, function() ctx.spells:remove(self) end)
 		self.burstScale = math.lerp(self.burstScale, self.radius / data.media.graphics.spell.burst:getWidth(), 20 * ls.tickrate)
@@ -73,7 +73,7 @@ function SpujuSkull:draw()
 		g.draw(image, self.x, ctx.map.height - ctx.map.groundHeight, self.angle, self.burstScale + .25, self.burstScale + .25, image:getWidth() / 2, image:getHeight() / 2)
 	else
 		g.setColor(255, 255, 255)
-    local image = data.media.graphics.spujuSkull
+    local image = data.media.graphics.spell.spujuSkull
 		g.draw(image, self.x, self.y, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)
 	end
 end
