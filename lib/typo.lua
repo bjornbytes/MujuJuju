@@ -6,6 +6,8 @@ Typo.font = function(name, size)
   if not love.graphics then return nil end
   size = math.round(size)
 
+  if name == 'mesmerize' then name = 'rawengulk' end
+
   if not name then
     Typo.fonts.default[size] = Typo.fonts.default[size] or love.graphics.newFont(size)
     return Typo.fonts.default[size]
