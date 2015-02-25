@@ -274,7 +274,7 @@ function MenuMain:draw()
       for k, v in pairs(ctx.main.runeTransforms[rune]) do
         lerpd[k] = math.lerp(ctx.main.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
-      g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .04 * v)
+      g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
     end
   end
 
@@ -357,7 +357,7 @@ function MenuMain:draw()
           lerpd[k] = math.lerp(ctx.main.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
 
-        g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .04 * v)
+        g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
       end
     end
   end

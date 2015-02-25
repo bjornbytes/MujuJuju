@@ -49,7 +49,7 @@ function MenuDrag:draw()
     for k, v in pairs(ctx.main.runeTransforms[rune]) do
       lerpd[k] = math.lerp(ctx.main.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
-    g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .04 * ctx.v)
+    g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .05 * ctx.v)
   elseif self.dragging == 'minion' or self.dragging == 'gutterMinion' then
     local index = self.draggingIndex
     local code = self.dragging == 'minion' and ctx.user.deck.minions[index] or ctx.user.minions[index]
