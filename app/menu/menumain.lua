@@ -7,8 +7,8 @@ local function lerpAnimation(code, key, val)
 end
 
 local function lerpRune(rune, key, val)
-  ctx.prevRuneTransforms[rune][key] = ctx.runeTransforms[rune][key]
-  ctx.runeTransforms[rune][key] = math.lerp(ctx.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.main.prevRuneTransforms[rune][key] = ctx.main.runeTransforms[rune][key]
+  ctx.main.runeTransforms[rune][key] = math.lerp(ctx.main.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuMain:init()
@@ -271,8 +271,8 @@ function MenuMain:draw()
     local rune = ctx.user.runes[i]
     if rune and not self.drag:isDragging('gutterRune', i) then
       local lerpd = {}
-      for k, v in pairs(ctx.runeTransforms[rune]) do
-        lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+      for k, v in pairs(ctx.main.runeTransforms[rune]) do
+        lerpd[k] = math.lerp(ctx.main.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
       g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .04 * v)
     end
@@ -353,8 +353,8 @@ function MenuMain:draw()
       if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and not self.drag:isDragging('rune', i, j) then
         local rune = ctx.user.deck.runes[i][j]
         local lerpd = {}
-        for k, v in pairs(ctx.runeTransforms[rune]) do
-          lerpd[k] = math.lerp(ctx.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+        for k, v in pairs(ctx.main.runeTransforms[rune]) do
+          lerpd[k] = math.lerp(ctx.main.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
 
         g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .04 * v)

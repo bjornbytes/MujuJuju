@@ -51,7 +51,7 @@ if love.graphics then
     local atlas = data.atlas.hud
 
     -- Stone
-    local quad = 'bg' .. rune.background:capitalize()
+    local quad = 'runeBg' .. rune.background:capitalize()
     local w, h = atlas:getDimensions(quad)
     local scale = stoneSize / h
     g.setColor(255, 255, 255)

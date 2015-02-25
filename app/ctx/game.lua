@@ -58,7 +58,7 @@ function Game:load(user, options, biome, tutorial)
 end
 
 function Game:update()
-  if self.hud.upgrading or self.paused or self.ded then
+  if self.hud.upgrades.active or self.paused or self.ded then
     self.hud:update()
     if self.ded and self.effects:get('deathblur') then self.effects:get('deathblur'):update() end
     self.players:paused()

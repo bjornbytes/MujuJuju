@@ -50,17 +50,17 @@ function HudUnits:init()
           local yy = yy + .174 * v * scale
           for j = 1, ct do
             local rune = p.deck[i].runes and p.deck[i].runes[j]
+            runes[j] = {}
 
             -- Stone
-            local w, h = atlas:getDimensions('bg' .. rune.background:capitalize())
+            local w, h = atlas:getDimensions('runeBg' .. rune.background:capitalize())
             local scale = size * 2 / h
-            self:batch(code, quad, x, y, 0, scale, scale, w / 2, y / 2)
-            runes[j].bg = {xx, yy, 0, scale, scale, w / 2, h / 2}
+            runes[j].bg = {'runeBg' .. rune.background:capitalize(), xx, yy, 0, scale, scale, w / 2, h / 2}
 
             -- Rune
             local w, h = atlas:getDimensions('rune' .. rune.image)
             local scale = (size - .016 * v * is) / h
-            runes[j].rune = {xx, yy, 0, scale, scale, w / 2, h / 2}
+            runes[j].rune = {'rune' .. rune.image, xx, yy, 0, scale, scale, w / 2, h / 2}
 
             xx = xx + inc
           end
@@ -208,7 +208,7 @@ function HudUnits:drawBackground()
     for j = 1, #unit.runes do
       g.setColor(255, 255, 255)
       self:batch('runeBg' .. i .. j, unpack(unit.runes[j].bg))
-      g.setColor(config.runes.colors[rune.color])
+      g.setColor(config.runes.colors[deck.runes[j].color])
       self:batch('rune' .. i .. j, unpack(unit.runes[j].rune))
     end
   end
@@ -463,9 +463,9 @@ function HudUnits:mousemoved(mx, my)
     local unit = units[i]
     for j = 1, #unit.runes do
       local rune = unit.runes[j]
-      local w, h = atlas:getDimensions('runeBgNormal')
-      local x, y, r = rune.bg[1], rune.bg[2], math.max(rune.bg[4] * w, rune.bg[5] * h)
-      if math.insideCircle(mx, my, x, y, r) then
+      local w, h = data.atlas.hud:getDimensions('runeBgNormal')
+      local x, y, w, h = rune.bg[2], rune.bg[3], rune.bg[5] * w, rune.bg[6] * h
+      if math.inside(mx, my, x - w / 2, y - h / 2, w, h) then
         ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
         return
       end
