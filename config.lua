@@ -415,7 +415,7 @@ return {
     minions = {'thuju', 'bruju', 'buju', 'kuju'},
     runes = {},
     deck = {minions = {}, runes = {}},
-    deckSlots = 3,
+    deckSlots = 2,
     biomes = {'forest'},
     highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0},
     name = 'Muju',
