@@ -47,20 +47,26 @@ end
 function HudShruju:draw()
   if #self.geometry.shruju == 0 then return end
 
+  local atlas = data.atlas.hud
   local p = ctx.player
   local shruju = self.geometry.shruju
   local u, v = ctx.hud.u, ctx.hud.v
   for i = 1, #shruju do
     local x, y, w, h = unpack(self.geometry.shruju[i])
 
-    local image = data.media.graphics.hud.frame
     local scale = w / 125
     g.setColor(255, 255, 255, 220)
-    g.draw(image, x, y, 0, scale, scale)
+    g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
 
-    local image = data.media.graphics.hud.icons[p.shruju[i].code] or data.media.graphics.shruju['juju']
-    local scale = math.min((w - (.02 * v)) / (image:getHeight() - 8), (h - (.02 * v)) / (image:getWidth() - 8))
-    g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    if atlas.quads[p.shruju[i].code] then
+      local qw, qh = atlas:getDimensions(p.shruju[i].code)
+      local scale = math.min((w - (.02 * v)) / (qh - 8), (h - (.02 * v)) / (qw - 8))
+      g.draw(atlas.texture, atlas.quads[p.shruju[i].code], x + w / 2, y + h / 2, 0, scale, scale, qw / 2, qh / 2)
+    else
+      local image = data.media.graphics.shruju['juju']
+      local scale = math.min((w - (.02 * v)) / (image:getHeight() - 8), (h - (.02 * v)) / (image:getWidth() - 8))
+      g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    end
 
     local cd = p.shruju[i].timer / config.shruju.magicDuration
     local points = {}
