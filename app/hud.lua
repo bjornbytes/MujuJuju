@@ -6,10 +6,9 @@ local g = love.graphics
 function Hud:init()
 	self.tooltip = nil
 	self.tooltipRaw = ''
-	self.pauseAlpha = 0
-	self.pauseScreen = data.media.graphics.pauseMenu
 
   self.u, self.v = ctx.view.frame.width, ctx.view.frame.height
+  self.gooey = Gooey()
   self.health = HudHealth()
   self.experience = HudExperience()
   self.upgrades = HudUpgrades()
@@ -19,7 +18,7 @@ function Hud:init()
   self.shruju = HudShruju()
   self.status = HudStatus()
   self.tooltip = Tooltip()
-  self.button = Button()
+  self.pause = HudPause(self)
 
 	love.filesystem.write('playedBefore', 'achievement unlocked.')
 	ctx.view:register(self, 'gui')
@@ -30,10 +29,8 @@ function Hud:update()
 
   local oldTitle = self.tooltip.tooltipText and self.tooltip.tooltipText:sub(1, self.tooltip.tooltipText:find('\n'))
 
-	self.pauseAlpha = math.lerp(self.pauseAlpha, ctx.paused and 1 or 0, 12 * ls.tickrate)
-
   self.tooltip:update()
-  self.button:update()
+  self.gooey:update()
   self.status:update()
   self.health:update()
   self.experience:update()
@@ -41,6 +38,7 @@ function Hud:update()
   self.shruju:update()
   self.units:update()
   self.dead:update()
+  self.pause:update()
 
   table.with(self.shrujuPatches, 'update')
 
@@ -55,29 +53,17 @@ function Hud:gui()
   local p = ctx.player
 
 	if not ctx.ded then
-
     self.status:draw()
     self.health:draw()
     self.experience:draw()
     table.with(self.shrujuPatches, 'draw')
     self.shruju:draw()
-
-		-- Pause Menu
-		if self.pauseAlpha > .01 then
-      local image = self.pauseScreen
-      local scale = .5 * v / image:getWidth()
-			g.setColor(0, 0, 0, 128 * self.pauseAlpha)
-			g.rectangle('fill', 0, 0, g.getDimensions())
-
-			g.setColor(255, 255, 255, 255 * self.pauseAlpha)
-			g.draw(self.pauseScreen, u * .5, v * .5, 0, scale, scale, self.pauseScreen:getWidth() / 2, self.pauseScreen:getHeight() / 2)
-		end
-
     self.units:draw()
   end
 
   self.dead:draw()
   self.tooltip:draw()
+  self.pause:draw()
 end
 
 function Hud:keypressed(key)
@@ -99,6 +85,7 @@ function Hud:gamepadpressed(gamepad, button)
 end
 
 function Hud:mousepressed(x, y, b)
+  self.gooey:mousepressed(x, y, b)
   table.with(self.shrujuPatches, 'mousepressed', x, y, b)
 end
 
@@ -108,17 +95,8 @@ function Hud:mousereleased(x, y, b)
     self.units:mousereleased(x, y, b)
   end
 
+  self.gooey:mousereleased(x, y, b)
   self.dead:mousereleased(x, y, b)
-
-	if b == 'l' and ctx.paused then
-    local u, v = ctx.hud.u, ctx.hud.v
-		if math.inside(x, y, u * .4, v * .4, u * .19375, v * .1) then
-			ctx.paused = not ctx.paused
-		elseif math.inside(x, y, u * .4, v * .51, u * .19375, v * .1) then
-			Context:add(Menu, {page = 'main', user = ctx.user}, ctx.options)
-			Context:remove(ctx)
-		end
-	end
 end
 
 function Hud:mousemoved(...)
