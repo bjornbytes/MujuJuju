@@ -124,7 +124,7 @@ function Tooltip:setUpgradeTooltip(who, what)
   local function getValue(level)
     local value = ''
     if upgrade.values and (type(upgrade.values) == 'function' or upgrade.values[level]) then
-      value = type(upgrade.values) == 'function' and upgrade.values(upgrade, level, data.unit[who]) or upgrade.values[upgrade.level]
+      value = type(upgrade.values) == 'function' and upgrade.values(upgrade, level, data.unit[who]) or upgrade.values[level]
       value = value or ''
     end
     return value == '' and value or '{normal}: ' .. value
@@ -133,7 +133,9 @@ function Tooltip:setUpgradeTooltip(who, what)
   if upgrade.level >= upgrade.maxLevel then
     table.insert(pieces, '{whoCares}{normal}Max Level')
   else
-    table.insert(pieces, '{white}{bold}Next Level{normal}: ' .. getValue(upgrade.level + 1))
+    local value = getValue(upgrade.level + 1)
+    if value == '' then value = '{normal}: Level ' .. upgrade.level + 1 end
+    table.insert(pieces, '{white}{bold}Next Level' .. value)
     local color = p.juju >= upgrade.costs[upgrade.level + 1] and '{green}' or '{red}'
     table.insert(pieces, color .. upgrade.costs[upgrade.level + 1] .. ' juju')
     if upgrade.prerequisites then
