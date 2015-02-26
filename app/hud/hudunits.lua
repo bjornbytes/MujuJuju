@@ -202,7 +202,7 @@ function HudUnits:drawBackground()
 
     -- Runes
     for j = 1, #unit.runes do
-      if deck.runes[j].color then
+      if deck.runes[j] then
         g.setColor(255, 255, 255)
         self:batch('runeBg' .. i .. j, unpack(unit.runes[j].bg))
         g.setColor(config.runes.colors[deck.runes[j].color])
