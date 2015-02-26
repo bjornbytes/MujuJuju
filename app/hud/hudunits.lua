@@ -201,8 +201,8 @@ function HudUnits:drawBackground()
     self:batch('titleBar' .. i, 'title', x - ox * sx, y, a, sx * cd, sy)
 
     -- Runes
-    for j = 1, #unit.runes do
-      if deck.runes[j] then
+    for j = 1, 3 do
+      if unit.runes[j] then
         g.setColor(255, 255, 255)
         self:batch('runeBg' .. i .. j, unpack(unit.runes[j].bg))
         g.setColor(config.runes.colors[deck.runes[j].color])
@@ -457,7 +457,7 @@ function HudUnits:mousemoved(mx, my)
   local units = self.geometry.units
   for i = 1, #units do
     local unit = units[i]
-    for j = 1, #unit.runes do
+    for j = 1, 3 do
       local rune = unit.runes[j]
       local w, h = data.atlas.hud:getDimensions('runeBgNormal')
       if rune then
