@@ -51,7 +51,7 @@ function Game:load(user, options, biome, tutorial)
     self:distribute()
   end)
 
-  backgroundSound = self.sound:loop('background')
+  backgroundSound = self.sound:loop(self.biome)
   love.keyboard.setKeyRepeat(false)
 
   if self.options.mute then self.sound:mute() end
