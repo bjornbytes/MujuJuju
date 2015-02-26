@@ -356,7 +356,7 @@ function HudUnits:drawForeground()
         local level = data.unit[p.deck[i].code].attributes[attribute]
         g.setFont('mesmerize', math.round(.0175 * v))
         g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
-        g.printShadow(level, x + .01 * v, y + .01 * v)
+        g.printShadow(level, x + .01 * v, y + .005 * v)
       end
     end
 
@@ -410,7 +410,8 @@ function HudUnits:mousereleased(mx, my, b)
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
         local class = data.unit[p.deck[i].code]
-        if p:spend(50) then
+        local cost = 30 + 10 * class.attributes[attribute]
+        if p:spend(cost) then
           class.attributes[attribute] = class.attributes[attribute] + 1
         else
           ctx.sound:play('misclick')

@@ -28,7 +28,7 @@ return {
     },
     flow = {
       haste = .03,
-      spirit = 5
+      spirit = 10
     }
   },
 
