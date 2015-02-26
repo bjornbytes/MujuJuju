@@ -52,15 +52,18 @@ function HudUnits:init()
             local rune = p.deck[i].runes and p.deck[i].runes[j]
             runes[j] = {}
 
-            -- Stone
-            local w, h = atlas:getDimensions('runeBg' .. rune.background:capitalize())
-            local scale = size * 2 / h
-            runes[j].bg = {'runeBg' .. rune.background:capitalize(), xx, yy, 0, scale, scale, w / 2, h / 2}
+            if rune then
 
-            -- Rune
-            local w, h = atlas:getDimensions('rune' .. rune.image)
-            local scale = (size - .01 * v * is) / h
-            runes[j].rune = {'rune' .. rune.image, xx, yy, 0, scale, scale, w / 2, h / 2}
+              -- Stone
+              local w, h = atlas:getDimensions('runeBg' .. rune.background:capitalize())
+              local scale = size * 2 / h
+              runes[j].bg = {'runeBg' .. rune.background:capitalize(), xx, yy, 0, scale, scale, w / 2, h / 2}
+
+              -- Rune
+              local w, h = atlas:getDimensions('rune' .. rune.image)
+              local scale = (size - .01 * v * is) / h
+              runes[j].rune = {'rune' .. rune.image, xx, yy, 0, scale, scale, w / 2, h / 2}
+            end
 
             xx = xx + inc
           end
