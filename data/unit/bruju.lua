@@ -216,7 +216,7 @@ Bruju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit.damage = unit.damage + (unit.maxHealth * .25)
+        unit.damage = unit.damage + (unit.health * .25)
       end
     end
   },
