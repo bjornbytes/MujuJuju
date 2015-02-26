@@ -19,13 +19,6 @@ function HudShruju:init()
 end
 
 function HudShruju:update()
-  local mx, my = love.mouse.getPosition()
-  local p = ctx.player
-
-  if p.shruju and love.math.random() < 4 * ls.tickrate then
-    local x, y, w, h = unpack(self.geometry.shruju)
-    ctx.particles:emit('magicshruju', x + w / 2, y + h / 2, 1)
-  end
 end
 
 function HudShruju:draw()

@@ -2,7 +2,6 @@ local MagicShruju = class()
 MagicShruju.image = data.media.graphics.particles.star
 MagicShruju.max = 1024
 MagicShruju.blendMode = 'additive'
-MagicShruju.mode = 'gui'
 
 MagicShruju.options = {}
 MagicShruju.options.particleLifetime = {.5, 1.5}

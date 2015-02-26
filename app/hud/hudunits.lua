@@ -334,7 +334,7 @@ function HudUnits:drawForeground()
     end
     g.setColor(255, 255, 255)
     g.printShadow(str, math.round(xx), math.round(yy + (.025 * v * scale)), true)
-    g.printShadow(unit.cost, xx - (.09125 * v * scale), yy + (.0975 * v * scale), true, {0, 100, 0, 200})
+    g.printShadow(unit.cost, xx - (.091 * v * scale), yy + (.0975 * v * scale), true, {0, 100, 0, 200})
 
     local count = table.count(ctx.units:filter(function(u) return u.class.code == p.deck[i].code end))
     g.printShadow(count, xx + (.087 * v * scale), yy + (.1 * v * scale), true, {0, 100, 0, 200})

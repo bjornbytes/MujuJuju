@@ -1,6 +1,7 @@
 local Shruju = extend(Animation)
 
 Shruju.scale = 1
+Shruju.offsety = 16
 Shruju.default = 'spawn'
 Shruju.states = {}
 

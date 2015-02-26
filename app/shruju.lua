@@ -2,6 +2,7 @@ local g = love.graphics
 Shruju = class()
 Shruju.width = 64
 Shruju.height = 64
+Shruju.depth = -5
 
 function Shruju:activate()
   self.timer = config.shruju.lifetime
@@ -18,6 +19,10 @@ function Shruju:update()
   self.timer = timer.rot(self.timer, function()
     ctx.shrujus:remove(self)
   end)
+
+  if love.math.random() < 4 * ls.tickrate then
+    ctx.particles:emit('magicshruju', self.x, self.y - 30, 1)
+  end
 end
 
 function Shruju:deactivate()
@@ -25,7 +30,10 @@ function Shruju:deactivate()
 end
 
 function Shruju:draw()
-  self.animation:draw(self.x, self.y)
+  local multiplier = self.timer < 10 and (self.timer < 3 and 6 or 3) or 0
+  if math.floor(self.timer * multiplier) % 2 == 0 then
+    self.animation:draw(self.x, self.y)
+  end
 end
 
 function Shruju:pickup()
@@ -39,7 +47,6 @@ function Shruju:drop()
   self:remove()
   ctx.shrujus.objects[self] = self
   self.x = ctx.player.x
-  self.timer = config.shruju.lifetime
   self.animation:set('spawn')
   ctx.event:emit('view.register', {object = self})
 end

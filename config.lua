@@ -105,7 +105,7 @@ return {
   },
 
   shruju = {
-    lifetime = 30
+    lifetime = 60
   },
 
   biomes = {
