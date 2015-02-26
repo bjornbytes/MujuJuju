@@ -33,7 +33,6 @@ function Player:init()
   self.healthDisplay = self.health
   self.prevHealthDisplay = self.healthDisplay
   self.prevHealth = self.health
-  self.lives = config.player.startingLives
 
   -- Dead
   self.dead = false
@@ -287,10 +286,6 @@ function Player:die()
   self.deathTimer = self.deathDuration
   self.dead = true
   self.ghost = GhostPlayer(self)
-  self.lives = self.lives - 1
-  if self.lives < 0 then
-    ctx.event:emit('shrine.dead')
-  end
 
   self.animation:set('death')
   ctx.sound:play('death', function(sound) sound:setVolume(.2) end)

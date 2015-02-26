@@ -16,8 +16,6 @@ function Juju:init(data)
 	self.alpha = 0
 	self.dead = false
 	table.merge(data, self)
-
-  ctx.particles:emit('jujusex', self.x, self.y, 30)
 end
 
 function Juju:update()
@@ -91,6 +89,6 @@ function Juju:draw()
 	local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
 	local wave = math.sin(tick * ls.tickrate * 4)
 
-	g.setColor(255, 255, 255, 255 * self.alpha)
+	ctx.jujus.spriteBatch:setColor(255, 255, 255, 255 * self.alpha)
   ctx.jujus.spriteBatch:add(self.x, self.y + 3 * wave, self.angle, self.scale, self.scale, image:getWidth() / 2, image:getHeight() / 2)
 end

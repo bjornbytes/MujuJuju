@@ -223,6 +223,11 @@ end
 function Unit:paused()
   self.prev.x = self.x
   self.prev.y = self.y
+  self.prev.health = self.health
+  self.prev.healthDisplay = self.healthDisplay
+  self.prev.knockup = self.knockup
+  self.prev.glowScale = self.glowScale
+  self.prev.alpha = self.alpha
   self.animation:set('idle')
 end
 
@@ -399,7 +404,7 @@ function Unit:initAnimation()
           local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
           local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
           local amount = love.math.random(minAmount, maxAmount)
-          local jujus = love.math.random(1, 2)
+          local jujus = love.math.random(2, 5)
 
           if self.elite then
             amount = amount * config.elites.jujuModifier
@@ -411,10 +416,12 @@ function Unit:initAnimation()
               x = self.x,
               y = self.y,
               amount = amount / jujus,
-              vx = love.math.random(-50, 50),
-              vy = love.math.random(-300, -100)
+              vx = love.math.random(-100, 100),
+              vy = love.math.random(-200, -100)
             })
           end
+
+          ctx.particles:emit('jujusex', self.x, self.y, 30)
         end
 
         self.died = true

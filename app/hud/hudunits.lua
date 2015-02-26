@@ -136,6 +136,7 @@ function HudUnits:update()
 	for i = 1, #self.selectFactor do
     self.prevSelectFactor[i] = self.selectFactor[i]
 		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.deck[i].selected and 1 or (p.summonSelect == i and .5 or 0), math.min(8 * ls.tickrate, 1))
+    if self.selectFactor[i] > .01 and self.selectFactor[i] < .99 then table.clear(self.geometry) end
 	end
 
 	for i = 1, #self.cooldownPop do
@@ -389,7 +390,7 @@ function HudUnits:mousereleased(mx, my, b)
       if math.inside(mx, my, x, y, w, h) then
         local upgrade = data.unit[who].upgrades[what]
         local nextLevel = upgrade.level + 1
-        if ctx.upgrades.canBuy(who, what) then
+        if ctx.upgrades.canBuy(who, what) and p:spend(upgrade.costs[nextLevel]) then
           ctx.upgrades.unlock(who, what)
         else
           ctx.sound:play('misclick')
@@ -484,8 +485,8 @@ function HudUnits:ready()
   }
 
   local animationOffsets = {
-    bruju = 0,
-    thuju = -14,
+    bruju = -12,
+    thuju = -16,
     buju = -16,
     kuju = -16
   }

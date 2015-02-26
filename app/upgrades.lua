@@ -20,7 +20,6 @@ Upgrades.clear = function()
 
   Upgrades.unlock = function(who, what)
     local upgrade = data.unit[who].upgrades[what]
-    data.unit[who].cost = data.unit[who].cost + 2
     upgrade.level = upgrade.level + 1
     table.each(ctx.units.objects, function(unit)
       if unit.class.code == who then

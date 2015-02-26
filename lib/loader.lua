@@ -102,7 +102,11 @@ data.load = function()
     -- Set up lazy loading for images
     local code = animation.code
     animation.graphics = setmetatable({_path = 'media/skeletons/' .. code}, {
-      __index = lookup({'.png', '.dds'}, love.graphics and love.graphics.newImage or f.empty)
+      __index = lookup({'.png', '.dds'}, function(path)
+        local img = love.graphics.newImage(path)
+        img:setMipmapFilter('nearest', 1)
+        return img
+      end)
     })
 
     -- Set up static spine data structures

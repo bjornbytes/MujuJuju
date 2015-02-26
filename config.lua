@@ -93,8 +93,6 @@ return {
     jujuRate = 1,
     basePopulation = 3,
     maxPopulation = 10,
-    startingLives = 3,
-    livesPerLevel = 3,
     colors = {
       purple = {.5, 0, 1},
       red = {1, 0, 0},
@@ -197,7 +195,7 @@ return {
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
         levelScale = .85,
-        upgradeCostIncrease = 1,
+        upgradeCostIncrease = 2,
         maxElites = 1,
         eliteBuffCount = 2,
         types = {
@@ -249,7 +247,7 @@ return {
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
         levelScale = .95,
-        upgradeCostIncrease = 1,
+        upgradeCostIncrease = 3,
         maxElites = 2,
         eliteBuffCount = 3,
         types = {
@@ -302,7 +300,7 @@ return {
         maxEnemyRateDecay = .11,
         maxEnemiesCoefficient = .2,
         levelScale = 1.05,
-        upgradeCostIncrease = 1,
+        upgradeCostIncrease = 4,
         maxElites = 3,
         eliteBuffCount = 4,
         types = {
