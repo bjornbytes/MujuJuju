@@ -418,6 +418,7 @@ function HudUnits:mousereleased(mx, my, b)
         local cost = 30 + 10 * class.attributes[attribute]
         if p:spend(cost) then
           class.attributes[attribute] = class.attributes[attribute] + 1
+          class.cost = class.cost + 1
         else
           ctx.sound:play('misclick')
         end
