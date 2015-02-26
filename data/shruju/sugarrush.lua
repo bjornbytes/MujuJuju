@@ -1,7 +1,7 @@
 local SugarRush = extend(Shruju)
 
 SugarRush.name = 'Sugar Rush'
-SugarRush.description = 'Muju moves twice as fast for 90 seconds.'
+SugarRush.description = 'Muju moves twice as fast.'
 
 function SugarRush:apply()
   ctx.player.walkSpeed = ctx.player.walkSpeed * 2
