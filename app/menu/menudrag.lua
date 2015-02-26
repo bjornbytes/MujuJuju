@@ -159,12 +159,14 @@ function MenuDrag:mousereleased(mx, my, b)
     if b == 'l' then
       local deck = ctx.main.geometry.deck
       local i, j = unpack(self.draggingIndex)
-      for i = 1, #deck do
-        local x, y, r, runes = unpack(deck[i])
-        for k = 1, #runes do
-          local x, y, w, h = unpack(runes[k])
-          if math.inside(mx, my, x, y, w, h) and not ctx.user.deck.runes[i][j].unit and not ctx.user.deck.runes[i][k].unit then
-            ctx.user.deck.runes[i][j], ctx.user.deck.runes[i][k] = ctx.user.deck.runes[i][k], ctx.user.deck.runes[i][j]
+      local oldRune = ctx.user.deck.runes[i][j]
+      for m = 1, #deck do
+        local x, y, r, runes = unpack(deck[m])
+        for n = 1, #runes do
+          local x, y, w, h = unpack(runes[n])
+          local newRune = ctx.user.deck.runes[m] and ctx.user.deck.runes[m][n]
+          if math.inside(mx, my, x, y, w, h) and (not oldRune or not oldRune.unit) and (not newRune or not newRune.unit) then
+            ctx.user.deck.runes[i][j], ctx.user.deck.runes[m][n] = ctx.user.deck.runes[m][n], ctx.user.deck.runes[i][j]
             dirty = true
           end
         end
