@@ -1,9 +1,9 @@
 local tween = require 'lib/deps/tween/tween'
 local g = love.graphics
 
-HudShrujuPatch = class()
+HudShrujus = class()
 
-function HudShrujuPatch:init(patch)
+function HudShrujus:init(patch)
   self.patch = patch
   self.active = false
   self.lastPress = 0
@@ -54,7 +54,7 @@ function HudShrujuPatch:init(patch)
   }
 end
 
-function HudShrujuPatch:update()
+function HudShrujus:update()
   if not self.patch then return end
   local p = ctx.player
 
@@ -88,14 +88,12 @@ function HudShrujuPatch:update()
   self.slotScale = math.lerp(self.slotScale, 1, math.min(10 * ls.tickrate, 1))
 end
 
-function HudShrujuPatch:draw()
-  if not self.patch then return end
-
+function HudShrujus:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local mx, my = love.mouse.getPosition()
   local atlas = data.atlas.hud
 
-  g.setFont('pixel', 8)
+  --[=[g.setFont('pixel', 8)
 
   local factor, t = self:getFactor()
   local alphaFactor = ((t / self.maxTime) ^ 4) * .7
@@ -128,46 +126,30 @@ function HudShrujuPatch:draw()
 
     g.setFont('mesmerize', qh * scale - 7)
     g.printCenter(shruju.name, x + (qw * (w / 125)) / 2, y + (120 * scale) + (qh * scale) / 2)
-  end
+  end]=]
 
-  if self.growingFactor > 0 then
-    g.setColor(255, 255, 255, (self.patch.slot and 200 or 120) * growingFactor)
+  local w = .1 * v
+  ctx.shrujus:each(function(shruju)
+    local x, y = ctx.view:screenPoint(shruju.x, shruju.y)
+    y = y - .2 * v
 
-    local code = (self.patch.growing or self.patch.slot) and (self.patch.growing or self.patch.slot.code) or nil
+    g.setColor(255, 255, 255)
 
-    local x, y, w, h = unpack(self.geometry.slot)
-    local qw, qh = atlas:getDimensions('frame')
-    local frameWidth = qw
-    local slotScale = math.lerp(self.prevSlotScale, self.slotScale, ls.accum / ls.tickrate)
-    local scale = (w / frameWidth) * slotScale
-    g.draw(atlas.texture, atlas.quads.frame, x + w / 2, y + h / 2, 0, scale, scale, qw / 2, qh / 2)
+    local qw, qh = atlas:getDimensions('title')
+    local scale = w / qw
+    g.setColor(255, 255, 255, 128)
+    g.draw(atlas.texture, atlas.quads.title, x - qw * scale / 2, y, 0, scale, scale)
 
-    if code then
-      local image = data.media.graphics.shruju[code] or data.media.graphics.shruju.juju
-      local scale = (h - .02 * v) / image:getHeight()
-      g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    g.setColor(255, 255, 255)
+    g.draw(atlas.texture, atlas.quads.title, x - qw * scale / 2, y, 0, scale * (shruju.timer / config.shruju.lifetime), scale)
 
-      local qw, qh = atlas:getDimensions('title')
-      local scale = (w + 5) / qw
-      g.setColor(255, 255, 255, (self.patch.growing and 80 or 255) * growingFactor)
-      g.draw(atlas.texture, atlas.quads.title, x - (scale - (w / frameWidth)) * qw / 2, y + (120 * scale), 0, scale, scale)
-
-      if self.patch.growing then
-        g.setColor(255, 255, 255 * growingFactor)
-        g.draw(atlas.texture, atlas.quads.title, x - (scale - (w / frameWidth)) * qw / 2, y + (120 * scale), 0, scale * (1 - (self.patch.timer / self.patch:getGrowTime(self.patch.growing))), scale)
-      end
-
-      g.setFont('mesmerize', qh * scale - 7)
-      local str = data.shruju[code].name
-      if math.inside(mx, my, x - (scale - (w / frameWidth)) * qw / 2, y + (120 * scale), qw * scale, qh * scale) then
-        str = string.format('%.2f', self.patch.timer)
-      end
-      g.printCenter(str, x + (qw * (w / frameWidth)) / 2, y + (120 * scale) + (qh * scale) / 2)
-    end
-  end
+    g.setFont('mesmerize', qh * scale - 7)
+    local str = shruju.name
+    g.printCenter(str, x, y + qh * scale / 2 - 1)
+  end)
 end
 
-function HudShrujuPatch:keypressed(key)
+function HudShrujus:keypressed(key)
   if self.patch and (key == 'tab' or key == 'e') then
     if self:playerNearby() and (self.patch.growing or self.patch.slot) then
       if self.patch.slot then
@@ -192,7 +174,7 @@ function HudShrujuPatch:keypressed(key)
   end
 end
 
-function HudShrujuPatch:keyreleased(key)
+function HudShrujus:keyreleased(key)
   if self.patch and key == 'tab' or key == 'e' or key == 'escape' then
     if (tick - self.lastPress) * ls.tickrate > self.maxTime then
       self.active = false
@@ -200,7 +182,7 @@ function HudShrujuPatch:keyreleased(key)
   end
 end
 
-function HudShrujuPatch:mousepressed(x, y, b)
+function HudShrujus:mousepressed(x, y, b)
   if not self.patch or self.patch.timer > 0 then return end
 
   local p = ctx.player
@@ -225,7 +207,7 @@ function HudShrujuPatch:mousepressed(x, y, b)
   end
 end
 
-function HudShrujuPatch:mousemoved(mx, my)
+function HudShrujus:mousemoved(mx, my)
   if not self.patch then return end
 
   if self.active then
@@ -249,11 +231,11 @@ function HudShrujuPatch:mousemoved(mx, my)
   end
 end
 
-function HudShrujuPatch:playerNearby()
+function HudShrujus:playerNearby()
   return self.patch and self.patch:playerNearby()
 end
 
-function HudShrujuPatch:getFactor()
+function HudShrujus:getFactor()
   local t = math.lerp(self.prevTime, self.time, ls.accum / ls.tickrate)
   self.tween:set(t)
   return self.factor.value, t

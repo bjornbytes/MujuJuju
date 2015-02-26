@@ -154,6 +154,7 @@ function Player:keypressed(key)
       if shruju:playerNearby() then
         if self.shruju then self.shruju:drop() end
         shruju:pickup()
+        return true
       end
     end)
   end

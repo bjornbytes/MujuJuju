@@ -13,8 +13,8 @@ function Hud:init()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
   self.dead = HudDead()
-  self.shrujuPatches = {HudShrujuPatch(), HudShrujuPatch()}
   self.shruju = HudShruju()
+  self.shrujus = HudShrujus()
   self.status = HudStatus()
   self.tooltip = Tooltip()
   self.pause = HudPause(self)
@@ -34,11 +34,10 @@ function Hud:update()
   self.health:update()
   self.upgrades:update()
   self.shruju:update()
+  self.shrujus:update()
   self.units:update()
   self.dead:update()
   self.pause:update()
-
-  table.with(self.shrujuPatches, 'update')
 
   local newTitle = self.tooltip.tooltipText and self.tooltip.tooltipText:sub(1, self.tooltip.tooltipText:find('\n'))
   if self.tooltip.active and oldTitle ~= newTitle then
@@ -53,8 +52,8 @@ function Hud:gui()
 	if not ctx.ded then
     self.status:draw()
     self.health:draw()
-    table.with(self.shrujuPatches, 'draw')
     self.shruju:draw()
+    self.shrujus:draw()
     self.units:draw()
   end
 
@@ -83,7 +82,6 @@ end
 
 function Hud:mousepressed(x, y, b)
   self.gooey:mousepressed(x, y, b)
-  table.with(self.shrujuPatches, 'mousepressed', x, y, b)
 end
 
 function Hud:mousereleased(x, y, b)
@@ -100,7 +98,6 @@ function Hud:mousemoved(...)
   self.tooltip:dirty()
   self.status:mousemoved(...)
   self.units:mousemoved(...)
-  table.with(self.shrujuPatches, 'mousemoved', ...)
   self.shruju:mousemoved(...)
 end
 
@@ -115,7 +112,6 @@ end
 
 function Hud:menuActive()
   local active = false
-  for _, patch in pairs(self.shrujuPatches) do if patch.active then active = true break end end
   active = active or self.upgrades.active
   return active
 end
