@@ -148,8 +148,7 @@ Bruju.upgrades = {
     apply = function(self, unit)
       if self.level > 0 then
         local modifiers = {1.3, 1.5, 1.7}
-        unit.maxHealth = unit.maxHealth * modifiers[self.level]
-        unit.health = unit.maxHealth
+        unit.health = unit.health * modifiers[self.level]
       end
     end
   },

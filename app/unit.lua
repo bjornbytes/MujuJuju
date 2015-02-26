@@ -159,7 +159,7 @@ function Unit:update()
   end
 
   -- Health decay
-  if self.player then self:hurt(self.maxHealth * .02 * ls.tickrate) end
+  if self.player then self:hurt(self.maxHealth * .02 * ls.tickrate, self, {'pure'}) end
 end
 
 function Unit:draw()
@@ -274,16 +274,22 @@ end
 function Unit:hurt(amount, source, kind)
   if self.dying then return end
 
+  local pure = kind and table.has(kind, 'pure')
+
   -- Prehurt hooks
-  self:abilityCall('prehurt', amount, source, kind)
-  amount = self.buffs:prehurt(amount, source, kind) or amount
+  if not pure then
+    self:abilityCall('prehurt', amount, source, kind)
+    amount = self.buffs:prehurt(amount, source, kind) or amount
+  end
 
   -- Deal damage
   self.health = math.max(self.health - amount, 0)
 
   -- Posthurt hooks
-  self:abilityCall('posthurt', amount, source, kind)
-  self.buffs:posthurt(amount, source, kind)
+  if not pure then
+    self:abilityCall('posthurt', amount, source, kind)
+    self.buffs:posthurt(amount, source, kind)
+  end
 
   -- Die if we are dead
   if self.health <= 0 then
