@@ -10,7 +10,7 @@ Buju.damage = 20
 Buju.range = 16
 Buju.attackSpeed = 1.2
 Buju.speed = 55
-Buju.cost = 5
+Buju.cost = 10
 
 ----------------
 -- Upgrades

@@ -11,7 +11,7 @@ Thuju.damage = 14
 Thuju.range = 12
 Thuju.attackSpeed = 1.15
 Thuju.speed = 35
-Thuju.cost = 5
+Thuju.cost = 10
 
 Thuju.castables = {'tremor', 'inspire'}
 

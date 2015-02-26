@@ -155,14 +155,6 @@ function HudUnits:draw()
 
   if t > 0 and t < 1 then table.clear(self.geometry) end
 
-  if t > 0 then
-    local p = ctx.player
-    g.setFont('pixel', 8)
-    g.setColor(255, 255, 255)
-    g.printShadow(p.skillPoints .. ' skill points', .01 * v, .1 * v)
-    g.printShadow(p.attributePoints .. ' attribute points', .01 * v, .1 * v + g.getFont():getHeight())
-  end
-
   self:drawBackground()
   self:drawForeground()
 end
@@ -397,8 +389,7 @@ function HudUnits:mousereleased(mx, my, b)
       if math.inside(mx, my, x, y, w, h) then
         local upgrade = data.unit[who].upgrades[what]
         local nextLevel = upgrade.level + 1
-        if ctx.upgrades.canBuy(who, what) and p.skillPoints > 0 then
-          p.skillPoints = p.skillPoints - 1
+        if ctx.upgrades.canBuy(who, what) then
           ctx.upgrades.unlock(who, what)
         else
           ctx.sound:play('misclick')
@@ -415,8 +406,7 @@ function HudUnits:mousereleased(mx, my, b)
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
         local class = data.unit[p.deck[i].code]
-        if p.attributePoints > 0 then
-          p.attributePoints = p.attributePoints - 1
+        if p:spend(50) then
           class.attributes[attribute] = class.attributes[attribute] + 1
         else
           ctx.sound:play('misclick')

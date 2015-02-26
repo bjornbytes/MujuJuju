@@ -126,15 +126,8 @@ function Tooltip:setUpgradeTooltip(who, what)
     table.insert(pieces, '{whoCares}{normal}Max Level')
   else
     table.insert(pieces, '{white}{bold}Next Level{normal}: ' .. upgrade.values[upgrade.level + 1])
-
-    if upgrade.levelRequirement then
-      local color = p.level >= upgrade.levelRequirement and '{green}' or '{red}'
-      table.insert(pieces, color .. 'Level ' .. upgrade.levelRequirement)
-    end
-
-    local color = p.skillPoints >= 1 and '{green}' or '{red}'
-    table.insert(pieces, color .. '1 skill point')
-
+    local color = p.juju >= upgrade.costs[upgrade.level + 1] and '{green}' or '{red}'
+    table.insert(pieces, color .. upgrade.costs[upgrade.level + 1] .. ' juju')
     if upgrade.prerequisites then
       for name, min in pairs(upgrade.prerequisites) do
         local color = data.unit[who].upgrades[name].level >= min and '{green}' or '{red}'
@@ -204,7 +197,7 @@ function Tooltip:resize()
   local u, v = self:getUV()
   self.richOptions.title = Typo.font('mesmerize', .0376 * v)
   self.richOptions.normal = Typo.font('mesmerize', .02 * v)
-  self.richOptions.bold = Typo.font('mesmerizeb', .02 * v)
+  self.richOptions.bold = Typo.font('mesmerize', .02 * v)
 end
 
 function Tooltip:dirty()

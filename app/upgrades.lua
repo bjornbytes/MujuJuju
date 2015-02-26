@@ -4,9 +4,8 @@ Upgrades.clear = function()
 	Upgrades.canBuy = function(who, what)
     local p = ctx.player
 		local upgrade = data.unit[who].upgrades[what]
-    if p.skillPoints == 0 then return false end
-    if p.level < upgrade.levelRequirement then return false end
     if upgrade.level >= upgrade.maxLevel then return false end
+    if p.juju < upgrade.costs[upgrade.level + 1] then return false end
 		return Upgrades.checkPrerequisites(who, what)
 	end
 
@@ -21,6 +20,7 @@ Upgrades.clear = function()
 
   Upgrades.unlock = function(who, what)
     local upgrade = data.unit[who].upgrades[what]
+    data.unit[who].cost = data.unit[who].cost + 2
     upgrade.level = upgrade.level + 1
     table.each(ctx.units.objects, function(unit)
       if unit.class.code == who then

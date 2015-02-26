@@ -46,12 +46,6 @@ function Player:init()
   self.jujuTimer = config.player.jujuRate
   self.jujuRate = config.player.jujuRate
 
-  -- Experience
-  self.experience = 0
-  self.level = 1
-  self.skillPoints = 0
-  self.attributePoints = 0
-
   -- List of magic shruju effects
   self.shruju = {}
 
@@ -124,6 +118,9 @@ function Player:update()
       table.remove(self.shruju, i)
     end)
   end)
+
+  -- Health decay
+  self:hurt(self.maxHealth * .033 * ls.tickrate)
 
   -- Lerp healthbar
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * ls.tickrate, 1))
@@ -222,7 +219,7 @@ function Player:summon()
   local animation = self.animation.state.name
 
   -- Check if we can summon
-  if not (ctx.tutorial == nil and cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(0)) then
+  if not (not ctx.hud.upgrades.active and not ctx.paused and ctx.tutorial == nil and cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(10)) then
     return ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
   end
 
@@ -230,7 +227,7 @@ function Player:summon()
   local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
 
   -- Set cooldowns (global cooldown)
-  local cooldown = 1 + table.count(ctx.units:filter(function(u) return u.player ~= nil end))
+  local cooldown = 3
   for i = 1, #self.deck do
     if cooldown > self.deck[i].cooldown then
       self.deck[i].cooldown = cooldown
@@ -247,9 +244,6 @@ function Player:summon()
   self.animation:set('summon')
   local summonSound = love.math.random(1, 3)
   ctx.sound:play('summon' .. summonSound)
-  --[[for i = 1, 15 do
-    ctx.spells:add('dirt', {x = self.x, y = self.y + self.height})
-  end]]
   ctx.hud.units.animations[self.summonSelect]:set('spawn')
   for i = 1, 20 do
     ctx.particles:emit('jujudrop', self.x + love.math.randomNormal(20), self.y + love.math.randomNormal(20) + self.height / 2, 1)
@@ -275,19 +269,7 @@ function Player:spend(amount)
 end
 
 function Player:addJuju(amount)
-
-  -- Increment experience, level up
-  self.experience = self.experience + amount
-  while self.experience >= self.nextLevels[self.level] do
-    self.level = self.level + 1
-    self.skillPoints = self.skillPoints + 1
-    self.attributePoints = self.attributePoints + 2
-    self.maxHealth = self.maxHealth + 25
-    self:heal(25)
-    self.lives = self.lives + config.player.livesPerLevel
-  end
-
-  self.totalJuju = self.totalJuju + amount
+  self.juju = self.juju + amount
 end
 
 function Player:hurt(amount, source)

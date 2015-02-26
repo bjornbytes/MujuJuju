@@ -90,7 +90,7 @@ return {
     minCooldown = .75,
     globalCooldown = 3,
     baseJuju = 30,
-    jujuRate = 0,
+    jujuRate = 1,
     basePopulation = 3,
     maxPopulation = 10,
     startingLives = 3,
@@ -163,7 +163,7 @@ return {
           radius = {.85, .65}
         },
         bloom = {
-          alpha = {0, 255}
+          alpha = {0, 100}
         }
       }
     },

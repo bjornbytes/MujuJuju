@@ -10,7 +10,7 @@ Kuju.damage = 14
 Kuju.range = 150
 Kuju.attackSpeed = 1.3
 Kuju.speed = 35
-Kuju.cost = 5
+Kuju.cost = 10
 
 ----------------
 -- Upgrades

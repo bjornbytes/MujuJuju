@@ -11,7 +11,7 @@ Bruju.damage = 18
 Bruju.range = 12
 Bruju.attackSpeed = 1
 Bruju.speed = 45
-Bruju.cost = 5
+Bruju.cost = 10
 
 ----------------
 -- Upgrades

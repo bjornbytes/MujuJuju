@@ -22,7 +22,7 @@ function Bloom:applyEffect(source, target)
   g.setColor(255, 255, 255)
   g.setCanvas(self.canvas)
 
-  threshold:send('threshold', 0.8)
+  threshold:send('threshold', .8)
   g.setShader(threshold)
   g.draw(source, 0, 0, 0, .25, .25)
 
