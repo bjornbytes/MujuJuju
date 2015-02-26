@@ -1,5 +1,8 @@
 local Tremor = extend(Ability)
 
+Tremor.damages = {30, 60, 90}
+Tremor.spiritRatio = 1.5
+
 function Tremor:activate()
   self.unit.animation:on('event', function(event)
     if event.data.name == 'tremor' then
@@ -18,8 +21,8 @@ end
 
 function Tremor:fire()
   local level = self.unit:upgradeLevel('tremor')
-  local damages = {30, 60, 90}
-  local damage = damages[level] + 1.5 * self.unit.spirit
+  local damages = self.damages
+  local damage = damages[level] + self.spiritRatio * self.unit.spirit
   local stun = 1 * level
   local width = 180 + (60 * self.unit:upgradeLevel('fissure'))
 

@@ -70,11 +70,12 @@ Thuju.upgrades = {
     description = 'Thuju slams the ground, damaging and stunning units in front of him.',
     x = 1,
     y = 0,
-    values = {
-      [1] = '30 damage, 1s stun',
-      [2] = '60 damage, 2s stun',
-      [3] = '90 damage, 3s stun'
-    },
+    values = function(self, level, class)
+      local tremor = data.ability.thuju.tremor
+      local spirit = class.attributes.flow * config.attributes.flow.spirit
+      local level = level == 0 and 1 or level
+      return tremor.damages[level] .. ' {green}(+' .. tremor.spiritRatio * spirit .. '){white} damage'
+    end,
     apply = function(self, unit)
       if self.level > 0 then
         unit:addAbility('tremor')
