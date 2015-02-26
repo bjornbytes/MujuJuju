@@ -27,7 +27,7 @@ function Menu:load(options, systemOptions)
   self.optionsPane = MenuOptions()
 
   -- Initialize sound
-  self.sound = Sound()
+  self.sound = Sound(self.options)
   self.menuSounds = self.sound:loop('riteOfPassage')
   if ctx.options and ctx.options.mute then self.sound:setMute(ctx.options.mute) end
 

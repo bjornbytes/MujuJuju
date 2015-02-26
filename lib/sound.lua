@@ -1,8 +1,10 @@
 Sound = class()
 
-function Sound:init()
-  self.muted = false
-  self.volumes = {master = 1.0, music = 1.0, sound = 1.0}
+function Sound:init(options)
+  options = options or {}
+
+  self.muted = options.muted or false
+  self.volumes = {master = options.master or 1.0, music = options.music or 1.0, sound = options.sound or 1.0}
 	self.sounds = {}
   self.tags = {sound = setmetatable({}, {__mode = 'kv'}), music = setmetatable({}, {__mode = 'kv'})}
 
