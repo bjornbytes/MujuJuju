@@ -28,10 +28,10 @@ Bruju.upgrades = {
     y = 0,
     values = {
       [1] = '10% lifesteal',
-      [2] = '20% lifesteal',
-      [3] = '30% lifesteal',
-      [4] = '40% lifesteal',
-      [5] = '50% lifesteal',
+      [2] = '15% lifesteal',
+      [3] = '20% lifesteal',
+      [4] = '25% lifesteal',
+      [5] = '30% lifesteal',
     },
     apply = function(self, unit)
       if self.level > 0 then
