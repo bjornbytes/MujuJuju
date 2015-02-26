@@ -382,8 +382,6 @@ function HudUnits:mousereleased(mx, my, b)
   if ctx.ded then return end
   if b ~= 'l' then return end
 
-  mx, my = ctx.view:frameMouseX(), ctx.view:frameMouseY()
-
   local p = ctx.player
 
   -- Upgrade click

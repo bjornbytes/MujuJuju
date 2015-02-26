@@ -78,10 +78,13 @@ function Hud:gamepadpressed(gamepad, button)
 end
 
 function Hud:mousepressed(x, y, b)
+  x, y = ctx.view:frameMouseX(), ctx.view:frameMouseY()
   self.gooey:mousepressed(x, y, b)
 end
 
 function Hud:mousereleased(x, y, b)
+  x, y = ctx.view:frameMouseX(), ctx.view:frameMouseY()
+
   local p = ctx.player
   if self.upgrades.active then
     self.units:mousereleased(x, y, b)
