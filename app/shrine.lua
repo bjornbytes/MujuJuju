@@ -26,7 +26,7 @@ function Shrine:update()
 
 
   local p = ctx.player
-  self.highlight = math.lerp(self.highlight, p:atShrine() and 1 or 0, math.min(5 * ls.tickrate, 1))
+  self.highlight = math.lerp(self.highlight, p:atShrine() and 1 or 0, math.min((p:atShrine() and 10 or 5) * ls.tickrate, 1))
   self.hurtFactor = math.lerp(self.hurtFactor, (tick - self.lastHurt) * ls.tickrate < 5 and 1 or 0, math.min(4 * ls.tickrate, 1))
 
   self.health = math.min(self.health + math.max(self.regen, 0) * ls.tickrate, self.maxHealth)
