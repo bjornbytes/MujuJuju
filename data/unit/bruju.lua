@@ -48,13 +48,12 @@ Bruju.upgrades = {
     description = 'Bruju burst into a spirit flame on death, damaging nearby enemies.',
     x = 0,
     y = 0,
-    values = {
-      [1] = '20 damage',
-      [2] = '40 damage',
-      [3] = '70 damage',
-      [4] = '110 damage',
-      [5] = '160 damage'
-    },
+    values = function(self, level, class)
+      local burst = data.ability.bruju.burst
+      local spirit = class.attributes.flow * config.attributes.flow.spirit
+      local level = level == 0 and 1 or level
+      return burst.damages[level] .. ' {green}(+' .. burst.spiritRatio * spirit .. '){white} damage'
+    end,
     apply = function(self, unit)
       if self.level > 0 then
         unit:addAbility('burst')
