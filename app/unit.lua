@@ -404,7 +404,7 @@ function Unit:initAnimation()
           local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
           local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
           local amount = love.math.random(minAmount, maxAmount)
-          local jujus = love.math.random(2, 5)
+          local jujus = love.math.random(1, 3)
 
           if self.elite then
             amount = amount * config.elites.jujuModifier

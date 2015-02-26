@@ -152,7 +152,7 @@ end
 function Tooltip:setMagicShrujuTooltip(shruju)
   local pieces = {}
   table.insert(pieces, '{purple}{title}' .. shruju.name .. '{white}{normal}')
-  table.insert(pieces, '{purple}' .. shruju.description)
+  table.insert(pieces, '{white}' .. shruju.description)
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

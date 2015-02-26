@@ -33,10 +33,10 @@ function Juju:update()
       p:addJuju(self.amount)
 			ctx.hud.status.jujuScale = 2
       ctx.hud.status.jujuAngle = 0
-      ctx.particles:emit('jujusex', self.x, self.y, 50)
+      ctx.particles:emit('jujusex', self.x, self.y, 40)
 		end
     local dis, dir = math.vector(self.x, self.y, self.prevx, self.prevy)
-    for i = 1, 8 do
+    for i = 1, 5 do
       local d = love.math.random() * dis
       ctx.particles:emit('jujudrop', self.x + math.dx(d, dir), self.y + math.dy(d, dir), 1)
     end

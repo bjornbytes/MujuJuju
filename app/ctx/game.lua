@@ -28,7 +28,7 @@ function Game:load(user, options, biome, tutorial)
   self.map = Map()
   self.players = Players()
   self.player = ctx.players:add(1)
-  self.shrujuPatches = ShrujuPatches()
+  self.shrujus = Shrujus()
   self.hud = Hud()
   self.upgrades = Upgrades
   self.shrines = Manager()
@@ -79,7 +79,7 @@ function Game:update()
   self.view:update()
   self.hud:update()
   self.effects:update()
-  self.shrujuPatches:update()
+  self.shrujus:update()
   if self.tutorial then self.tutorial:update() end
 end
 

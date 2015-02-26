@@ -45,8 +45,8 @@ function Player:init()
   self.jujuTimer = config.player.jujuRate
   self.jujuRate = config.player.jujuRate
 
-  -- List of magic shruju effects
-  self.shruju = {}
+  -- The current magic shruju
+  self.shruju = nil
 
   -- Summoning, selection, and population
   self.summonSelect = 1
@@ -111,13 +111,6 @@ function Player:update()
     end
   end
 
-  table.each(self.shruju, function(shruju, i)
-    shruju.timer = timer.rot(shruju.timer, function()
-      shruju:deactivate()
-      table.remove(self.shruju, i)
-    end)
-  end)
-
   -- Health decay
   self:hurt(self.maxHealth * .033 * ls.tickrate)
 
@@ -134,7 +127,7 @@ end
 function Player:draw()
 
   -- Flash when invincible
-  if math.floor(self.invincible * 5) % 2 == 0 then
+  if math.floor(self.invincible * 4) % 2 == 0 then
     local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
     love.graphics.setColor(255, 255, 255)
     self.animation:draw(x, y)
@@ -154,6 +147,15 @@ function Player:keypressed(key)
   -- Summon with space
   if key == ' ' and not self.dead then
     self:summon()
+  end
+
+  if key == 'q' then
+    ctx.shrujus:each(function(shruju)
+      if shruju:playerNearby() then
+        if self.shruju then self.shruju:drop() end
+        shruju:pickup()
+      end
+    end)
   end
 end
 

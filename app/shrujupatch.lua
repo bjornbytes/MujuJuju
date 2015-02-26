@@ -43,6 +43,7 @@ end
 
 function ShrujuPatch:update()
   self.timer = timer.rot(self.timer, function()
+    do return end
     self:makeShruju()
     ctx.sound:play('shrujuSpawn')
   end)
