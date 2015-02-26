@@ -220,13 +220,18 @@ function HudUnits:drawBackground()
         local x, y, w, h = unpack(attributes[i][j])
         local attribute = config.attributes.list[j]
         local scale = w / data.atlas.hud:getDimensions('frame')
-        g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
+        local val = (p.juju >= 30 + 10 * data.unit[p.deck[i].code].attributes[attribute]) and 255 or 150
+        x, y = math.round(x), math.round(y)
+
+        -- Frame
+        g.setColor(val, val, val, 255 * upgradeAlphaFactor)
         self:batch('attributeFrame' .. i .. j, 'frame', x, y, 0, scale, scale)
 
         local image = data.media.graphics.hud.icons[attribute]
         if image then
           local scale = math.min((w - (v * .03)) / image:getWidth(), (h - (v * .03)) / image:getHeight())
           local code = 'attributeIcon' .. i .. j
+          g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
           self:batch(code, attribute, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
         end
       end
