@@ -6,7 +6,7 @@ function Shrujus:init()
 end
 
 function Shrujus:update()
-  if tick % math.floor(1 / ls.tickrate) == 0 and love.math.random() < .002 then
+  if tick % math.floor(1 / ls.tickrate) == 0 and love.math.random() < .0001 then
     self:add(data.shruju[love.math.random(1, #data.shruju)], {x = love.math.random(ctx.map.width)})
   end
 
