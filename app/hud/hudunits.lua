@@ -50,9 +50,9 @@ function HudUnits:init()
           local yy = yy + .174 * v * scale
           for j = 1, ct do
             local rune = p.deck[i].runes and p.deck[i].runes[j]
-            runes[j] = {}
 
             if rune then
+              runes[j].bg = {}
 
               -- Stone
               local w, h = atlas:getDimensions('runeBg' .. rune.background:capitalize())
@@ -460,10 +460,12 @@ function HudUnits:mousemoved(mx, my)
     for j = 1, #unit.runes do
       local rune = unit.runes[j]
       local w, h = data.atlas.hud:getDimensions('runeBgNormal')
-      local x, y, w, h = rune.bg[2], rune.bg[3], rune.bg[5] * w, rune.bg[6] * h
-      if math.inside(mx, my, x - w / 2, y - h / 2, w, h) then
-        ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
-        return
+      if rune then
+        local x, y, w, h = rune.bg[2], rune.bg[3], rune.bg[5] * w, rune.bg[6] * h
+        if math.inside(mx, my, x - w / 2, y - h / 2, w, h) then
+          ctx.hud.tooltip:setRuneTooltip(p.deck[i].runes[j])
+          return
+        end
       end
     end
   end
