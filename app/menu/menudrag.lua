@@ -163,7 +163,7 @@ function MenuDrag:mousereleased(mx, my, b)
         local x, y, r, runes = unpack(deck[i])
         for k = 1, #runes do
           local x, y, w, h = unpack(runes[k])
-          if math.inside(mx, my, x, y, w, h) then
+          if math.inside(mx, my, x, y, w, h) and not ctx.user.deck.runes[i][j].unit and not ctx.user.deck.runes[i][k].unit then
             ctx.user.deck.runes[i][j], ctx.user.deck.runes[i][k] = ctx.user.deck.runes[i][k], ctx.user.deck.runes[i][j]
             dirty = true
           end

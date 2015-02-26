@@ -43,12 +43,12 @@ function HudUnits:init()
         -- Runes
         do
           local runes = {}
-          local ct = p.deck[i].runes and #p.deck[i].runes or 0
+          local ct = 3
           local size = v * .0385 * is
           local inc = size * 3
           local xx = xx - (inc * (ct - 1) / 2)
           local yy = yy + .174 * v * scale
-          for j = 1, ct do
+          for j = 1, 3 do
             local rune = p.deck[i].runes and p.deck[i].runes[j]
 
             if rune then
