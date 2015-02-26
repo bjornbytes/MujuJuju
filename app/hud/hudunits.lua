@@ -52,7 +52,7 @@ function HudUnits:init()
             local rune = p.deck[i].runes and p.deck[i].runes[j]
 
             if rune then
-              runes[j].bg = {}
+              runes[j] = {}
 
               -- Stone
               local w, h = atlas:getDimensions('runeBg' .. rune.background:capitalize())
