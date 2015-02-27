@@ -150,7 +150,7 @@ return {
       },
       shrujuPatches = {300, 600},
       runes = {
-        maxLevel = 25
+        maxLevel = 40
       },
       effects = {
         vignette = {
@@ -202,7 +202,7 @@ return {
       },
       shrujuPatches = {300, 600},
       runes = {
-        maxLevel = 25
+        maxLevel = 60
       },
       effects = {
         vignette = {
@@ -255,7 +255,7 @@ return {
       },
       shrujuPatches = {300, 600},
       runes = {
-        maxLevel = 75
+        maxLevel = 80
       },
       effects = {
         vignette = {
