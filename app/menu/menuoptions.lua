@@ -46,14 +46,13 @@ function MenuOptions:init()
   self.controlGroups = {'graphics', 'sound', 'gameplay'}
 
   self.controls = {
-    graphics = {'resolution', 'fullscreen', 'display', 'vsync', 'msaa', 'textureSmoothing', 'postprocessing', 'particles'},
+    graphics = {'resolution', 'display', 'vsync', 'msaa', 'textureSmoothing', 'postprocessing', 'particles'},
     sound = {'mute', 'master', 'music', 'sound'},
     gameplay = {'colorblind', 'powersave'}
   }
 
   self.controlTypes = {
     resolution = Dropdown,
-    fullscreen = Checkbox,
     display = Dropdown,
     vsync = Checkbox,
     msaa = Checkbox,
@@ -151,7 +150,7 @@ function MenuOptions:init()
 
     ctx.options[keyChanged] = translators[keyChanged] and translators[keyChanged](value) or value
 
-    if keyChanged == 'resolution' or keyChanged == 'fullscreen' or keyChanged == 'display' or keyChanged == 'vsync' or keyChanged == 'msaa' then
+    if keyChanged == 'resolution' or keyChanged == 'display' or keyChanged == 'vsync' or keyChanged == 'msaa' then
       self:setMode()
     elseif keyChanged == 'mute' then
       ctx.sound:setMute(value)
@@ -397,34 +396,42 @@ function MenuOptions:toggle(force)
   self.active = not self.active
 end
 
-function MenuOptions:setMode()
+function MenuOptions:setMode(n)
+  n = n or 0
+  if n and n > 1 then return end
+
   if Context.started and not self.active then
     ctx:resize()
     return
   end
 
-  MenuOptions.pixelScale = MenuOptions.pixelScale or (love.window and love.window.getPixelScale()) or 1
+  local resolutions = love.window.getFullscreenModes()
   local dw, dh = love.window.getDesktopDimensions()
-  local options = table.only(ctx.options, {'fullscreen', 'display', 'vsync', 'msaa'})
-  -- options.highdpi = true -- The problem child for our retina screens. It is incompatible with fullscreentype:normal.
+  local options = table.only(ctx.options, {'display', 'vsync', 'msaa'})
 
-  local borderless = false
+  MenuOptions.pixelScale = love.window and love.window.getPixelScale() or 1
+
+  options.highdpi = true
 
   if not ctx.options.resolution then
-    local resolutions = love.window.getFullscreenModes()
-    table.sort(resolutions, function(a, b) return a.width * a.height > b.width * b.height end)
     ctx.options.resolution = {resolutions[1].width, resolutions[1].height}
-    borderless = true
-  elseif tonumber(ctx.options.resolution[1]) == dw and tonumber(ctx.options.resolution[2]) == dh then
-    borderless = true
   end
 
-  options.fullscreentype = borderless and 'desktop' or 'normal'
+  if tonumber(ctx.options.resolution[1]) == resolutions[1].width and tonumber(ctx.options.resolution[2]) == resolutions[1].height then
+    options.fullscreen = true
+    options.fullscreentype = 'desktop'
+  else
+    options.fullscreen = false
+  end
 
   if love.window.setMode(ctx.options.resolution[1] / MenuOptions.pixelScale, ctx.options.resolution[2] / MenuOptions.pixelScale, options) then
     love.window.setTitle('Muju Juju')
     love.window.setIcon(love.image.newImageData('media/graphics/icon.png'))
     ctx:resize()
+
+    if love.window.getPixelScale() == 2 then
+      self:setMode(n + 1)
+    end
   else
     print('There was a problem applying the requested window options... PANIC _>_>_>')
   end

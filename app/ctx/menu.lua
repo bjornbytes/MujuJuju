@@ -7,6 +7,7 @@ function Menu:load(options, systemOptions)
   data.load()
 
   -- Initialize UI
+  self.u, self.v = love.graphics.getDimensions()
   self.virtualCursor = VirtualCursor()
   self.gooey = Gooey()
 
@@ -32,7 +33,6 @@ function Menu:load(options, systemOptions)
   if ctx.options and ctx.options.mute then self.sound:setMute(ctx.options.mute) end
 
   -- Initialize uv and tooltip
-  self.u, self.v = love.graphics.getDimensions()
   self.tooltip = Tooltip()
 
   self:initAnimations()
