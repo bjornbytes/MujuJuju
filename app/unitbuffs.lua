@@ -71,6 +71,10 @@ function UnitBuffs:add(code, vars)
   table.merge(vars, buff, true)
   if buff.stack then buff.stacks = 1 end
   f.exe(buff.activate, buff)
+  if buff.timer and self:isCrowdControl(code) then
+    local ccimmunity = self:ccImmunity()
+    buff.timer = buff.timer * (1 - ccimmunity)
+  end
   return buff
 end
 
@@ -111,7 +115,7 @@ function UnitBuffs:isCrowdControl(buff)
   if type(buff) == 'string' then buff = data.buff[buff] end
   local tags = buff.tags
   local function t(s) return table.has(tags, s) end
-  return t('slow') or t('root') or t('stun') or t('silence') or t('knockback') or t('taunt')
+  return t('slow') or t('root') or t('stun') or t('silence') or t('knockback') or t('taunt') or t('fear')
 end
 
 function UnitBuffs:shouldApply(code)
