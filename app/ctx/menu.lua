@@ -174,7 +174,7 @@ function Menu:resize()
   self.unitCanvas = g.newCanvas(400, 400)
   self.screenCanvas = g.newCanvas(self.u, self.v)
 
-  love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor' .. ((love.window.getPixelScale() == 2) and 'x2' or '') .. '.png'))
+  love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor' .. ((love.window.getPixelScale() == 2) and '' or '') .. '.png'))
   self.gooey:resize()
   self.start:resize()
   self.choose:resize()
