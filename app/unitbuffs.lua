@@ -260,7 +260,7 @@ end
 function UnitBuffs:potency()
   local ratio = 1
   table.each(self:buffsWithTag('potency'), function(potency)
-    ratio = ratio * potency
+    ratio = ratio * potency.potency
   end)
   return ratio
 end
