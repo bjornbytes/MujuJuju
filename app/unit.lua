@@ -197,11 +197,11 @@ function Unit:draw()
 
   g.setShader()
   ctx.view:worldPush()
-  g.setCanvas(canvas)]]
+  g.setCanvas(canvas)
 
   -- Draw blurred outline
   g.setColor(255, 255, 255, 255 * lerpd.alpha)
-  g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)
+  g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)]]
 
   -- Draw animation
   self.animation:draw(x, y - (lerpd.knockup or 0))
