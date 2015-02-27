@@ -44,7 +44,7 @@ function HudUnits:init()
         do
           local runes = {}
           local ct = 3
-          local size = v * .0385 * is
+          local size = v * .06 * is
           local inc = size + .02 * v
           local xx = xx - (inc * (ct - 1) / 2)
           local yy = yy + .174 * v * scale
@@ -56,12 +56,12 @@ function HudUnits:init()
 
               -- Stone
               local w, h = atlas:getDimensions('runeBg' .. rune.background:capitalize())
-              local scale = size * 2 / h
+              local scale = size / h
               runes[j].bg = {'runeBg' .. rune.background:capitalize(), xx, yy, 0, scale, scale, w / 2, h / 2}
 
               -- Rune
               local w, h = atlas:getDimensions('rune' .. rune.image)
-              local scale = (size - .01 * v * is) / h
+              local scale = (size - .03 * v * is) / h
               runes[j].rune = {'rune' .. rune.image, xx, yy, 0, scale, scale, w / 2, h / 2}
             end
 
