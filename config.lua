@@ -186,12 +186,12 @@ return {
         }
       },
       units = {
-        minEnemyRate = 11,
-        maxEnemyRate = 13,
+        minEnemyRate = 12,
+        maxEnemyRate = 15,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .06,
         maxEnemiesCoefficient = .2,
-        levelScale = .85,
+        levelScale = .75,
         upgradeCostIncrease = 2,
         maxElites = 1,
         eliteBuffCount = 2,
