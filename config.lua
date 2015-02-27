@@ -76,7 +76,7 @@ return {
         healthModified = 7
       },
       pummeling = {
-        offset = 100
+        offset = 75
       },
       cursed = {
         range = 100,
