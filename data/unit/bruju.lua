@@ -121,9 +121,9 @@ Bruju.upgrades = {
     x = 1,
     y = 1,
     values = {
-      [1] = '10% chance',
-      [2] = '20% chance',
-      [3] = '30% chance'
+      [1] = '5% chance',
+      [2] = '10% chance',
+      [3] = '15% chance'
     },
     apply = function(self, unit)
       if self.level > 0 then

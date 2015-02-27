@@ -14,7 +14,7 @@ function Rewind:update()
 end
 
 function Rewind:posthurt(amount, source, kind)
-  if love.math.random() < .1 * self.unit:upgradeLevel('rewind') then
+  if love.math.random() < .05 * self.unit:upgradeLevel('rewind') then
     self.amount = self.amount + amount
 
     if self.unit:upgradeLevel('impulse') > 0 then
