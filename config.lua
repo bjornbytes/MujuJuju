@@ -340,6 +340,9 @@ return {
         },
         siphon = {
           lifesteal = {1, 10}
+        },
+        retaliation = {
+          frenzy = {.03, .15}
         }
       }
     },
@@ -347,6 +350,9 @@ return {
       bruju = {
         siphon = {
           lifesteal = function(x) return '+' .. math.floor((x * 100) + .5) .. '% lifesteal' end
+        },
+        retaliation = {
+          frenzy = function(x) return '+' .. math.floor((x * 100) +.5) .. '% attack speed' end
         }
       }
     },
@@ -392,7 +398,8 @@ return {
       },
       abilities = {
         burst = {'the Supernova', 'Decimation', 'Eruption', 'the Explosion'},
-        siphon = {'the Leech', 'the Lamprey', 'Vampirism'}
+        siphon = {'the Leech', 'the Lamprey', 'Vampirism'},
+        frenzy = {'Vengeance', 'Revenge', 'Retribution'}
       }
     },
     colors = {
