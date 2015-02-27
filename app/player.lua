@@ -221,7 +221,7 @@ function Player:summon()
   local animation = self.animation.state.name
 
   -- Check if we can summon
-  if not (not ctx.hud.upgrades.active and not ctx.paused and ctx.tutorial == nil and cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(10)) then
+  if not (not ctx.hud.upgrades.active and not ctx.paused and ctx.tutorial == nil and cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(cost)) then
     return ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
   end
 

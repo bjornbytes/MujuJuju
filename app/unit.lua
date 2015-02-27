@@ -86,6 +86,7 @@ function Unit:activate()
   end)
 
   -- Display-related variables
+  self.visible = true
   self.maxHealth = self.health
   self.healthDisplay = self.health
   self.prev = {x = self.x, y = self.y, health = self.health, healthDisplay = self.healthDisplay, knockup = 0, glowScale = 1, alpha = 0}
@@ -165,6 +166,8 @@ end
 function Unit:draw()
   local lerpd = table.interpolate(self.prev, self, ls.accum / ls.tickrate)
   local x, y, health = lerpd.x, lerpd.y, lerpd.health
+
+  if not self.visible then return end
 
   -- Decide on color
   local r, gg, b = 0, 0, 0
@@ -255,7 +258,7 @@ function Unit:attack(options) -- Called when attack animation event is fired
 
   -- Kill event
   if target.dying then
-    self.abilityCall('kill', target)
+    self:abilityCall('kill', target)
   end
 
   -- Play sound

@@ -146,7 +146,7 @@ Buju.upgrades = {
   },
   victoryrush = {
     level = 0,
-    maxLevel = 2,
+    maxLevel = 3,
     costs = {500, 500, 500},
     levelRequirement = 20,
     prerequisites = {deathwish = 3},
@@ -156,9 +156,9 @@ Buju.upgrades = {
     x = -1,
     y = 4,
     values = {
-      [1] = 'Speed increased by 10% for 5 seconds.',
-      [2] = 'Speed increased by 20% for 5 seconds.',
-      [3] = 'Speed increased by 40% for 5 seconds.'
+      [1] = 'Speed increased by 40% for 3 seconds.',
+      [2] = 'Speed increased by 80% for 4 seconds.',
+      [3] = 'Speed increased by 120% for 5 seconds.'
     },
     apply = function(self, unit)
       if self.level > 0 then
