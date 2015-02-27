@@ -179,7 +179,7 @@ Bruju.upgrades = {
     y = 3,
     connectedTo = {'fortify'},
     values = {
-      [1] = '65% reduction.',
+      [1] = '50% reduction.',
     },
     apply = function(self, unit)
       if self.level > 0 then

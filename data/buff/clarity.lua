@@ -1,5 +1,5 @@
 local Clarity = extend(Buff)
-Clarity.ccimmunity = .65
+Clarity.ccimmunity = .5
 Clarity.tags = {'ccimmune'}
 
 return Clarity
