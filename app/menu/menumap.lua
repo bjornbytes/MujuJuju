@@ -177,7 +177,7 @@ function MenuMap:mousepressed(mx, my, b)
   if b ~= 'l' then return end
 
   for k, v in ipairs(config.biomeOrder) do
-    if math.insideCircle(mx, my, unpack(self.geometry[v])) and table.has(ctx.user.biomes, v) then
+    if math.insideCircle(mx, my, unpack(self.geometry[v])) and true then -- table.has(ctx.user.biomes, v) then
       ctx.main:setBiome(k)
       self.scales[v] = 1.5
       return
