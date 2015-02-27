@@ -60,7 +60,7 @@ return {
         dotTimer = 3
       },
       hulking = {
-        healthModifier = 2.5,
+        healthModifier = 1.8,
         slow = .5
       },
       demolisher = {
