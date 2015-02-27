@@ -337,6 +337,16 @@ return {
         burst = {
           damage = {5, 50},
           range = {10, 50}
+        },
+        siphon = {
+          lifesteal = {1, 10}
+        }
+      }
+    },
+    abilityFormatters = {
+      bruju = {
+        siphon = {
+          lifesteal = function(x) return '+' .. math.floor((x * 100) + .5) .. '% lifesteal' end
         }
       }
     },
@@ -381,7 +391,8 @@ return {
         haste = {'Refreshment'}
       },
       abilities = {
-        burst = {'the Supernova'}
+        burst = {'the Supernova', 'Decimation', 'Eruption', 'the Explosion'},
+        siphon = {'the Leech', 'the Lamprey', 'Vampirism'}
       }
     },
     colors = {

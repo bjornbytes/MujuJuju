@@ -181,7 +181,10 @@ function Tooltip:setRuneTooltip(rune)
     table.insert(pieces, rune.unit:capitalize() .. ' only')
     local ability = next(rune.abilities)
     local stat, amount = next(rune.abilities[ability])
-    table.insert(pieces, '+' .. math.round(amount) .. ' to ' .. ability:capitalize() .. ' ' .. stat)
+    local formatters = config.runes.abilityFormatters[rune.unit]
+    local str = formatters and formatters[ability] and formatters[ability][stat] and formatters[ability][stat](amount)
+    str = str or ('+' .. math.round(amount) .. ' to ' .. stat)
+    table.insert(pieces, ability:capitalize() ': ' .. str)
   end
   return self:setTooltip(table.concat(pieces, '\n'))
 end
