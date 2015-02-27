@@ -145,7 +145,7 @@ return {
         eliteBuffCount = 1,
         types = {
           duju = 0,
-          spuju = 300
+          spuju = 360
         }
       },
       shrujuPatches = {300, 600},
