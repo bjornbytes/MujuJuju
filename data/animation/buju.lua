@@ -35,7 +35,12 @@ Buju.states.death = {
 
 Buju.states.vanish = {
   priority = 3,
-  speed = 1
+  speed = .5
+}
+
+Buju.states.rend = {
+  priority = 3,
+  speed = 1.3
 }
 
 return Buju
