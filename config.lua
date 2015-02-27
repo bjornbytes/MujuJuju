@@ -114,8 +114,8 @@ return {
       name = 'The Overgrowth',
       benchmarks = {
         bronze = 300,
-        silver = 900,
-        gold = 1800
+        silver = 600,
+        gold = 900
       },
       rewards = {
         silver = 'cavern',
@@ -167,8 +167,8 @@ return {
       name = 'The Hollow',
       benchmarks = {
         bronze = 300,
-        silver = 900,
-        gold = 1800
+        silver = 600,
+        gold = 900
       },
       rewards = {
         silver = 'tundra'
@@ -219,8 +219,8 @@ return {
       name = 'The Wild North',
       benchmarks = {
         bronze = 300,
-        silver = 500,
-        gold = 1000
+        silver = 600,
+        gold = 900
       },
       rewards = {
         silver = 'volcano'
@@ -271,9 +271,9 @@ return {
     volcano = {
       name = 'The Cinders',
       benchmarks = {
-        bronze = 200,
-        silver = 400,
-        gold = 600
+        bronze = 300,
+        silver = 600,
+        gold = 900
       },
       rewards = {
         --
