@@ -347,6 +347,11 @@ return {
         rewind = {
           chance = {.01, .15}
         }
+      },
+      buju = {
+        empoweredstrikes = {
+          perStack = {.01, .05}
+        }
       }
     },
     abilityFormatters = {
@@ -359,6 +364,11 @@ return {
         },
         rewind = {
           chance = {'percent', 'chance'}
+        }
+      },
+      buju = {
+        empoweredstrikes = {
+          perStack = {'percent', 'attack speed per stack'}
         }
       }
     },
@@ -405,7 +415,8 @@ return {
       abilities = {
         burst = {'the Supernova', 'Decimation', 'Eruption', 'the Explosion'},
         siphon = {'the Leech', 'the Lamprey', 'Vampirism'},
-        frenzy = {'Vengeance', 'Revenge', 'Retribution'}
+        retaliation = {'Vengeance', 'Revenge', 'Retribution'},
+        empoweredstrikes = {'Kinetics', 'Slashing'}
       }
     },
     colors = {
