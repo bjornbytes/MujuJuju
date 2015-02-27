@@ -167,6 +167,12 @@ function Tooltip:setMagicShrujuTooltip(shruju)
 end
 
 function Tooltip:setRuneTooltip(rune)
+  local formatters = {
+    percent = function(x, stat)
+      return '+' .. math.round(x * 100) .. '% ' .. stat
+    end
+  }
+
   local pieces = {}
   table.insert(pieces, '{white}{title}' .. rune.name .. '{normal}')
   if rune.attributes then
@@ -181,9 +187,13 @@ function Tooltip:setRuneTooltip(rune)
     table.insert(pieces, rune.unit:capitalize() .. ' only')
     local ability = next(rune.abilities)
     local stat, amount = next(rune.abilities[ability])
-    local formatters = config.runes.abilityFormatters[rune.unit]
-    local str = formatters and formatters[ability] and formatters[ability][stat] and formatters[ability][stat](amount)
-    str = str or ('+' .. math.round(amount) .. ' to ' .. stat)
+    local str = '+' .. math.round(amount) .. ' to ' .. stat
+    local formatter = config.runes.abilityFormatters
+    formatter = formatter[rune.unit] and formatter[rune.unit][ability] and formatter[rune.unit][ability][stat]
+    if formatter then
+      local key, a, b, c, d = unpack(formatter)
+      str = formatters[key](amount, a, b, c, d)
+    end
     table.insert(pieces, ability:capitalize() ': ' .. str)
   end
   return self:setTooltip(table.concat(pieces, '\n'))

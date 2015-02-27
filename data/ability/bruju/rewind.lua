@@ -1,5 +1,7 @@
 local Rewind = extend(Ability)
 
+Rewind.chance = 0
+
 function Rewind:activate()
   self.amount = 0
 end
@@ -14,7 +16,7 @@ function Rewind:update()
 end
 
 function Rewind:posthurt(amount, source, kind)
-  if love.math.random() < .05 * self.unit:upgradeLevel('rewind') then
+  if love.math.random() < self.chance + .05 * self.unit:upgradeLevel('rewind') then
     self.amount = self.amount + amount
 
     if self.unit:upgradeLevel('impulse') > 0 then

@@ -343,16 +343,22 @@ return {
         },
         retaliation = {
           frenzy = {.03, .15}
+        },
+        rewind = {
+          chance = {.01, .15}
         }
       }
     },
     abilityFormatters = {
       bruju = {
         siphon = {
-          lifesteal = function(x) return '+' .. math.floor((x * 100) + .5) .. '% lifesteal' end
+          lifesteal = {'percent', 'lifesteal'}
         },
         retaliation = {
-          frenzy = function(x) return '+' .. math.floor((x * 100) +.5) .. '% attack speed' end
+          frenzy = {'percent', 'attack speed'}
+        },
+        rewind = {
+          chance = {'percent', 'chance'}
         }
       }
     },
