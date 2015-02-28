@@ -230,6 +230,7 @@ function Player:summon()
 
   -- Set cooldowns (global cooldown)
   local cooldown = 3
+  if self:hasShruju('refresh') and love.math.random() < .25 then cooldown = 0 end
   for i = 1, #self.deck do
     if cooldown > self.deck[i].cooldown then
       self.deck[i].cooldown = cooldown
@@ -361,4 +362,8 @@ end
 
 function Player:getPopulation()
   return table.count(ctx.units:filter(function(u) return u.player == self end))
+end
+
+function Player:hasShruju(code)
+  return self.shruju and self.shruju.code == code
 end
