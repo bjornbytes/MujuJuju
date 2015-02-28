@@ -355,6 +355,9 @@ return {
         rend = {
           base = {.15, 1},
           bleed = {3, 30}
+        },
+        deathwish = {
+          chance = {.03, .2}
         }
       }
     },
@@ -376,6 +379,9 @@ return {
         },
         rend = {
           base = {'percent', 'base damage'}
+        },
+        deathwish = {
+          chance = {'percent', 'execute chance'}
         }
       }
     },
@@ -425,7 +431,8 @@ return {
         retaliation = {'Vengeance', 'Revenge', 'Retribution'},
         rewind = {'the Ages', 'Foresight'},
         empoweredstrikes = {'Kinetics', 'Slashing'},
-        rend = {'Laceration', 'the Predator', 'Talons', 'Claws'}
+        rend = {'Laceration', 'the Predator', 'Talons', 'Claws'},
+        deathwish = {'the Assassin', 'the Guillotine', 'Murder', 'Execution'}
       }
     },
     colors = {
