@@ -351,6 +351,10 @@ return {
       buju = {
         empoweredstrikes = {
           perStack = {.01, .05}
+        },
+        rend = {
+          base = {.15, 1},
+          bleed = {3, 30}
         }
       }
     },
@@ -369,6 +373,9 @@ return {
       buju = {
         empoweredstrikes = {
           perStack = {'percent', 'attack speed per stack'}
+        },
+        rend = {
+          base = {'percent', 'base damage'}
         }
       }
     },
@@ -417,7 +424,8 @@ return {
         siphon = {'the Leech', 'the Lamprey', 'Vampirism'},
         retaliation = {'Vengeance', 'Revenge', 'Retribution'},
         rewind = {'the Ages', 'Foresight'},
-        empoweredstrikes = {'Kinetics', 'Slashing'}
+        empoweredstrikes = {'Kinetics', 'Slashing'},
+        rend = {'Laceration', 'the Predator', 'Talons', 'Claws'}
       }
     },
     colors = {

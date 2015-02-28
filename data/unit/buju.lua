@@ -44,7 +44,7 @@ Buju.upgrades = {
     x = 0,
     y = 0,
     values = {
-      [1] = '100% base damage and 5 Damage every second for 3 seconds.',
+      [1] = '100% base damage and 5 damage every second for 3 seconds.',
       [2] = '150% base damage and 10 damage every second for 3 seconds.'
     },
     apply = function(self, unit)

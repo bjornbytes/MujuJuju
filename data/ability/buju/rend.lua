@@ -4,6 +4,8 @@ local Rend = extend(Ability)
 -- Stats
 ----------------
 Rend.cooldown = 4
+Rend.base = 0
+Rend.bleed = 0
 
 
 ----------------
@@ -16,8 +18,9 @@ function Rend:activate()
       local rendLevel = self.unit:upgradeLevel('rend')
       local darkRendLevel = self.unit:upgradeLevel('darkrend')
       local damage = level == 1 and self.unit.damage or self.unit.damage * 1.5
+      damage = damage + (self.base * self.unit.damage)
 
-      local dot = level == 1 and 5 or 10
+      local dot = self.bleed + (level == 1 and 5 or 10)
       dot = ctx.player.dead and (dot * (1 + darkRendLevel / 4)) or dot
 
       if self.unit:upgradeLevel('twinblades') > 0 then
