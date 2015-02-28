@@ -136,7 +136,7 @@ function MenuDrag:mousereleased(mx, my, b)
           break
         end
 
-        for j = 1, #runes do
+        for j = 1, 3 do
           local x, y, w, h = unpack(runes[j])
           if math.inside(mx, my, x, y, w, h) then
             ctx.user.deck.runes[i][j] = rune
