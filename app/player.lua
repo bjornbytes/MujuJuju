@@ -5,14 +5,6 @@ Player.height = 90
 Player.depth = -3.5
 Player.walkSpeed = 65
 
--- Experience table
-Player.nextLevels = {125}
-for i = 2, 30 do
-  local prev = Player.nextLevels[i - 1]
-  local diff = prev - (Player.nextLevels[i - 2] or 0)
-  Player.nextLevels[i] = math.round(prev + 1.135 * diff)
-end
-
 ----------------
 -- Core
 ----------------
@@ -48,9 +40,8 @@ function Player:init()
   -- The current magic shruju
   self.shruju = nil
 
-  -- Summoning, selection, and population
+  -- Summoning and selection
   self.summonSelect = 1
-  self.maxPopulation = config.player.basePopulation * 10
   self.totalSummoned = 0
 
   -- Buffs
@@ -213,15 +204,15 @@ function Player:move()
   self.x = math.clamp(self.x, 0, ctx.map.width)
 end
 
-function Player:summon()
+function Player:summon(options)
+  options = options or {}
   local minion = self.deck[self.summonSelect].code
   local cooldown = self.deck[self.summonSelect].cooldown
-  local population = self:getPopulation()
   local cost = data.unit[minion].cost
   local animation = self.animation.state.name
 
   -- Check if we can summon
-  if not (not ctx.hud.upgrades.active and not ctx.paused and ctx.tutorial == nil and cooldown == 0 and population < self.maxPopulation and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(cost)) then
+  if not options.force and not (not ctx.hud.upgrades.active and not ctx.paused and ctx.tutorial == nil and cooldown == 0 and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(cost)) then
     return ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
   end
 
@@ -245,8 +236,10 @@ function Player:summon()
   self.totalSummoned = self.totalSummoned + 1
   self.invincible = 0
   self.animation:set('summon')
-  local summonSound = love.math.random(1, 3)
-  ctx.sound:play('summon' .. summonSound)
+  if not options.nosound then
+    local summonSound = love.math.random(1, 3)
+    ctx.sound:play('summon' .. summonSound)
+  end
   ctx.hud.units.animations[self.summonSelect]:set('spawn')
   for i = 1, 20 do
     ctx.particles:emit('jujudrop', self.x + love.math.randomNormal(20), self.y + love.math.randomNormal(20) + self.height / 2, 1)
@@ -293,6 +286,10 @@ function Player:die()
 
   self.animation:set('death')
   ctx.sound:play('death', function(sound) sound:setVolume(.2) end)
+
+  if self:hasShruju('reincarnation') then
+    self:summon({force = true, nosound = true})
+  end
 end
 
 function Player:spawn()
@@ -359,10 +356,6 @@ end
 
 function Player:contains(x, y)
   math.inside(x, y, self.x - self.width / 2, self.y, self.width, self.height)
-end
-
-function Player:getPopulation()
-  return table.count(ctx.units:filter(function(u) return u.player == self end))
 end
 
 function Player:hasShruju(code)

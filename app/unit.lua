@@ -37,6 +37,10 @@ function Unit:activate()
   if self.elite then
     self.health = self.health * config.elites.healthModifier
     self.damage = self.damage * config.elites.damageModifier
+
+    if ctx.player:hasShruju('slayer') then
+      self.buffs:add('slayer')
+    end
   end
 
   -- Scale stats
@@ -100,6 +104,11 @@ function Unit:activate()
   self.target = nil
   self:aiCall('activate')
 
+  -- Misc
+  if ctx.player:hasShruju('mirror') and not self.player then
+    self.buffs:add('mirror')
+  end
+
   -- Register with View
   ctx.event:emit('view.register', {object = self})
 end
@@ -118,6 +127,8 @@ function Unit:update()
   self.prev.knockup = self.knockup
   self.prev.glowScale = self.glowScale
   self.prev.alpha = self.alpha
+
+  if ctx.player:hasShruju('distort') and ctx.player.dead then return end
 
   -- Dying behavior
   if self.dying then
@@ -176,8 +187,9 @@ function Unit:draw()
   g.setColor(r, gg, b)
 
   -- Render colored silhouette of unit to canvas
+  --[[
   local shader = data.media.shaders.colorize
-  --[[local canvas = g.getCanvas()
+  local canvas = g.getCanvas()
   self.backCanvas:clear(r, gg, b, 0)
   g.setCanvas(self.canvas)
   self.canvas:clear(r, gg, b, 0)
@@ -207,7 +219,8 @@ function Unit:draw()
   g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)]]
 
   -- Draw animation
-  self.animation:draw(x, y - (lerpd.knockup or 0))
+  local noupdate = ctx.player:hasShruju('distort') and ctx.player.dead
+  self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = noupdate})
 
   -- Fear icon
   if self.buffs:feared() then

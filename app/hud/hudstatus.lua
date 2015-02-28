@@ -6,7 +6,6 @@ function HudStatus:init()
 	self.jujuScale = 1
   self.populationScale = 1
   self.clockScale = 1
-  self.maxPopFactor = 0
   self.jujuAngle = 2 * math.pi
 
   self.jjpm = 0
@@ -15,7 +14,7 @@ function HudStatus:init()
   self.jujuDisplay = config.player.baseJuju
 
   self.prev = {}
-  for _, k in pairs({'jujuScale', 'populationScale', 'clockScale', 'populationr', 'populationg', 'populationb', 'jujuAngle', 'maxPopFactor'}) do
+  for _, k in pairs({'jujuScale', 'populationScale', 'clockScale', 'jujuAngle'}) do
     self.prev[k] = self[k]
   end
 
@@ -29,11 +28,9 @@ function HudStatus:update()
   end
 
   local p = ctx.player
-  local maxPop = p:getPopulation() >= p.maxPopulation
 	self.jujuScale = math.lerp(self.jujuScale, 1, 10 * ls.tickrate)
   self.populationScale = math.lerp(self.populationScale, 1, 10 * ls.tickrate)
   self.clockScale = math.lerp(self.clockScale, 1, 10 * ls.tickrate)
-  self.maxPopFactor = math.lerp(self.maxPopFactor, maxPop and 1 or 0, 10 * ls.tickrate)
   self.jujuAngle = math.lerp(self.jujuAngle, 2 * math.pi, math.min(3 * ls.tickrate, 1))
 
   local benchmark = 'Blue'
@@ -101,17 +98,13 @@ function HudStatus:draw()
   local scale = (height * .6) / image:getHeight()
   local s = scale * lerpd.populationScale
   xx = xx + image:getWidth() / 2 * scale
-  local r = math.lerp(21, 255, lerpd.maxPopFactor)
-  local gg = math.lerp(142, 100, lerpd.maxPopFactor)
-  local b = math.lerp(149, 100, lerpd.maxPopFactor)
+  local r, gg, b = 21, 142, 149
   g.setColor(r, gg, b)
   g.draw(image, xx, height / 2, 0, s, s, image:getWidth() / 2, image:getHeight() / 2)
 
   -- Population Text
   local str = 0
-  local r = math.lerp(255, 255, lerpd.maxPopFactor)
-  local gg = math.lerp(255, 150, lerpd.maxPopFactor)
-  local b = math.lerp(255, 150, lerpd.maxPopFactor)
+  local r, gg, b = 255, 255, 255
   g.setColor(r, gg, b)
   g.print(str, xx + (v * .025), (height * .5) - g.getFont():getHeight() / 2 + 1)
   local hitboxWidth = (xx + (v * .025) + g.getFont():getWidth(str)) - hitboxX

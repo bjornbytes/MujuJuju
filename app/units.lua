@@ -27,9 +27,10 @@ function Units:createEnemy()
 
     if isElite then
       local buffs = table.keys(config.elites.buffs)
-      table.shuffle(buffs)
       for i = 1, conf.units.eliteBuffCount do
-        local buff = buffs[i]
+        local index = love.math.random(1, #buffs)
+        local buff = buffs[index]
+        table.remove(buffs, index)
         unit.buffs:add(buff, config.elites.buffs[buff])
       end
     end

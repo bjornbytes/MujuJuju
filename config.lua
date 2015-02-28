@@ -339,7 +339,7 @@ return {
           range = {10, 50}
         },
         siphon = {
-          lifesteal = {1, 10}
+          lifesteal = {.01, .1}
         },
         retaliation = {
           frenzy = {.03, .15}
