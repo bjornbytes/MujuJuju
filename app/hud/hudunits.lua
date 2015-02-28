@@ -45,7 +45,7 @@ function HudUnits:init()
           local runes = {}
           local ct = 3
           local size = v * .06 * is
-          local inc = size + .02 * v
+          local inc = size + .02 * v * is
           local xx = xx - (inc * (ct - 1) / 2)
           local yy = yy + .174 * v * scale
           for j = 1, 3 do
