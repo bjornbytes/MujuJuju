@@ -1,6 +1,6 @@
 local DeathWish = extend(Ability)
 
-Deathwish.chance = 0
+DeathWish.chance = 0
 
 function DeathWish:preattack(target, amount)
   if target.health / target.maxHealth <= .2 then
