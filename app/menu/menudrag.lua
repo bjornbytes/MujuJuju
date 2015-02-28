@@ -129,13 +129,6 @@ function MenuDrag:mousereleased(mx, my, b)
       if table.count(ctx.user.deck.runes[i]) < 3 and (not rune.unit or rune.unit == ctx.user.deck.minions[i]) then
         local x, y, r, runes = unpack(deck[i])
 
-        if math.insideCircle(mx, my, x, y, r) then
-          table.insert(ctx.user.deck.runes[i], rune)
-          table.remove(ctx.user.runes, self.draggingIndex)
-          dirty = true
-          break
-        end
-
         for j = 1, #runes do
           local x, y, w, h = unpack(runes[j])
           if math.inside(mx, my, x, y, w, h) then
