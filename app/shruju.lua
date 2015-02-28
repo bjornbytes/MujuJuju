@@ -38,13 +38,13 @@ end
 
 function Shruju:pickup()
   ctx.player.shruju = self
-  self:apply()
+  f.exe(self.apply, self)
   ctx.shrujus:remove(self)
   ctx.event:emit('view.unregister', {object = self})
 end
 
 function Shruju:drop()
-  self:remove()
+  f.exe(self.remove, self)
   ctx.shrujus.objects[self] = self
   self.x = ctx.player.x
   self.animation:set('spawn')

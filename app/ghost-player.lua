@@ -33,6 +33,11 @@ function GhostPlayer:update()
 
 	local px, py = self.owner.x, self.owner.y + self.owner.height
 
+  if math.distance(self.x, self.y, px, py) < self.radius + 16 and self.owner:hasShruju('diffuse') and self.owner.deathDuration - self.owner.deathTimer > 1 then
+    self.owner:spawn()
+    return
+  end
+
 	local speed = 140 * self.owner.ghostSpeedMultiplier
 
 	local gx, gy = 0, 0

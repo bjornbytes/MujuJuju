@@ -296,6 +296,7 @@ function Player:die()
 end
 
 function Player:spawn()
+  self.deathTimer = 0
   self.invincible = 4.5
   self.health = self.maxHealth
   self.dead = false

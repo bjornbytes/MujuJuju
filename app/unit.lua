@@ -408,7 +408,7 @@ function Unit:initAnimation()
         self:abilityCall('die')
         self.buffs:die()
 
-        if not self.player or self.player:hasShruju('relinquish') then
+        if not self.player or (self.player:hasShruju('relinquish') and love.math.random() < .5) then
           local juju = config.biomes[ctx.biome].juju
           local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
           local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
