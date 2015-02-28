@@ -416,6 +416,7 @@ return {
         burst = {'the Supernova', 'Decimation', 'Eruption', 'the Explosion'},
         siphon = {'the Leech', 'the Lamprey', 'Vampirism'},
         retaliation = {'Vengeance', 'Revenge', 'Retribution'},
+        rewind = {'the Ages', 'Foresight'},
         empoweredstrikes = {'Kinetics', 'Slashing'}
       }
     },
