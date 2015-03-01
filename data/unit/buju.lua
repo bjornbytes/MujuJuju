@@ -44,9 +44,9 @@ Buju.upgrades = {
     x = 0,
     y = 0,
     values = function(self, level, class)
+      if level == 0 then return '' end
       local rend = data.ability.buju.rend
       local spirit = class.attributes.flow * config.attributes.flow.spirit
-      local level = level == 0 and 1 or level
       return math.round(rend.baseDamages[level] * 100) .. '% base damage and ' .. rend.dots[level] .. ' {green}(+' .. math.round(rend.spiritRatio * spirit) .. '){white} damage per second for 3 seconds.'
     end,
     apply = function(self, unit)
