@@ -363,7 +363,13 @@ function MenuMain:draw()
   end
 
   g.setColor(255, 255, 255)
-  ctx.animations.muju:draw(u * .08, v * .75)
+
+  g.push()
+  g.translate(u * .08, v * .75)
+  g.scale(MenuOptions.pixelScale)
+  ctx.animations.muju:draw(0, 0)
+  g.pop()
+
   local color = ctx.user and ctx.user.color or 'purple'
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
     local slot = ctx.animations.muju.spine.skeleton:findSlot(slot)
