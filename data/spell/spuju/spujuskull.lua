@@ -53,6 +53,7 @@ function SpujuSkull:update()
 			self.health = self.maxHealth
       local targets = ctx.target:inRange(self, self.radius, 'enemy', 'player', 'unit', 'shrine')
       local damage = self.unit.damage
+      if #targets >= 2 then damage = damage / 2 end
       table.each(targets, function(target)
         self.unit:attack({target = target, damage = damage, nosound = true})
       end)
