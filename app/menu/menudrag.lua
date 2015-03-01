@@ -126,14 +126,20 @@ function MenuDrag:mousereleased(mx, my, b)
     local rune = ctx.user.runes[self.draggingIndex]
     for i = 1, #deck do
       ctx.user.deck.runes[i] = ctx.user.deck.runes[i] or {}
-      if table.count(ctx.user.deck.runes[i]) < 3 and (not rune.unit or rune.unit == ctx.user.deck.minions[i]) then
+      if not rune.unit or rune.unit == ctx.user.deck.minions[i] then
         local x, y, r, runes = unpack(deck[i])
 
         for j = 1, #runes do
           local x, y, w, h = unpack(runes[j])
           if math.inside(mx, my, x, y, w, h) then
-            ctx.user.deck.runes[i][j] = rune
-            table.remove(ctx.user.runes, self.draggingIndex)
+            if ctx.user.deck.runes[i][j] then
+              local index = self.draggingIndex
+              ctx.user.runes[index], ctx.user.deck.runes[i][j] = ctx.user.deck.runes[i][j], ctx.user.runes[index]
+            else
+              ctx.user.deck.runes[i][j] = rune
+              table.remove(ctx.user.runes, self.draggingIndex)
+            end
+
             dirty = true
             break
           end
