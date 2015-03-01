@@ -20,7 +20,7 @@ function Rend:activate()
       local targets = {self.unit.target}
       local rendLevel = self.unit:upgradeLevel('rend')
       local darkRendLevel = self.unit:upgradeLevel('darkrend')
-      local damage = self.unit.damage * self.baseDamages[level]
+      local damage = self.unit.damage * self.baseDamages[rendLevel]
       damage = damage + (self.base * self.unit.damage)
 
       local dot = self.bleed + self.dots[rendLevel]
