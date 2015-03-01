@@ -92,15 +92,15 @@ Buju.upgrades = {
     costs = {50, 100, 150, 200, 250},
     levelRequirement = 1,
     name = 'Ghost Armor',
-    description = 'Buju\'s armor now resists slows and stuns in the Juju Realm',
+    description = 'Buju\'s armor gives him a chance to evade attacks while in the Juju Realm.',
     x = 1,
     y = 0,
     values = {
-      [1] = '20% chance to resist slows and stuns.',
-      [2] = '40% chance to resist slows and stuns.',
-      [3] = '60% chance to resist slows and stuns.',
-      [4] = '80% chance to resist slows and stuns.',
-      [5] = '100% chance to resist slows and stuns.'
+      [1] = '10% dodge chance',
+      [2] = '20% dodge chance',
+      [3] = '30% dodge chance',
+      [4] = '40% dodge chance',
+      [5] = '50% dodge chance',
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -116,12 +116,12 @@ Buju.upgrades = {
     prerequisites = {ghostarmor = 3},
     connectedTo = {'ghostarmor'},
     name = 'Void Metal',
-    description = 'Buju\'s armor is fortified with void metal, reducing damage taken in the Juju Realm.',
+    description = 'Buju\'s armor is fortified with void metal, giving him a chance to avoid crowd control effects in the Juju Realm',
     x = 1,
     y = 1,
     values = {
-      [1] = 'Absorbs 25% of incoming damage.',
-      [2] = 'Absorbs 40% of incoming damage.'
+      [1] = '40% chance to avoid crowd control',
+      [2] = '60% chance to avoid crowd control'
     },
     apply = function(self, unit)
       if self.level > 0 then
