@@ -63,6 +63,8 @@ function Player:activate()
     end
   end)
 
+  self.animation.spine.skeleton:setSkin('santa')
+
   -- Color animation
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
     local slot = self.animation.spine.skeleton:findSlot(slot)

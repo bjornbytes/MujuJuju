@@ -14,6 +14,8 @@ return {
     'volcano'
   },
 
+  hats = {'beret', 'crown', 'eyepatch', 'horns', 'party', 'santa', 'wizard'},
+
   attributes = {
     list = {'vitality', 'strength', 'agility', 'flow'},
     vitality = {
@@ -465,7 +467,9 @@ return {
     biomes = {'forest'},
     highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0},
     name = 'Muju',
-    color = 'purple'
+    color = 'purple',
+    hats = {},
+    hat = nil
   },
 
   defaultOptions = {
