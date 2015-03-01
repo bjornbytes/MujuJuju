@@ -6,6 +6,9 @@ local Rend = extend(Ability)
 Rend.cooldown = 4
 Rend.base = 0
 Rend.bleed = 0
+Rend.spiritRatio = .5
+Rend.dots = {5, 10}
+Rend.baseDamages = {1, 1.5}
 
 
 ----------------
@@ -17,11 +20,12 @@ function Rend:activate()
       local targets = {self.unit.target}
       local rendLevel = self.unit:upgradeLevel('rend')
       local darkRendLevel = self.unit:upgradeLevel('darkrend')
-      local damage = level == 1 and self.unit.damage or self.unit.damage * 1.5
+      local damage = self.unit.damage * self.baseDamages[level]
       damage = damage + (self.base * self.unit.damage)
 
-      local dot = self.bleed + (level == 1 and 5 or 10)
+      local dot = self.bleed + self.dots[rendLevel]
       dot = ctx.player.dead and (dot * (1 + darkRendLevel / 4)) or dot
+      dot = dot + (self.spiritRatio * self.unit.spirit)
 
       if self.unit:upgradeLevel('twinblades') > 0 then
         local target, distance = ctx.target:closest(self.unit.target, 'ally', 'unit')

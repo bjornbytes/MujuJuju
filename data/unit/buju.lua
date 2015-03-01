@@ -43,10 +43,12 @@ Buju.upgrades = {
     description = 'Buju sharply brings his spikes down into an enemy leaving it bleeding.',
     x = 0,
     y = 0,
-    values = {
-      [1] = '100% base damage and 5 damage every second for 3 seconds.',
-      [2] = '150% base damage and 10 damage every second for 3 seconds.'
-    },
+    values = function(self, level, class)
+      local rend = data.ability.buju.rend
+      local spirit = class.attributes.flow * config.attributes.flow.spirit
+      local level = level == 0 and 1 or level
+      return math.round(rend.baseDamages[level] * 100) .. '% base damage and ' .. rend.dots[level] .. ' {green}(+' .. math.round(rend.spiritRatio * spirit) .. '){white} damage per second for 3 seconds.'
+    end,
     apply = function(self, unit)
       if self.level > 0 then
         unit:addAbility('rend')
