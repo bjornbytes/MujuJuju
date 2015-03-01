@@ -3,7 +3,7 @@ local Puppetize = extend(Ability)
 ----------------
 -- Data
 ----------------
-Puppetize.cooldown = 14
+Puppetize.cooldown = 30
 
 
 ----------------
