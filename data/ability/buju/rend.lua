@@ -30,7 +30,7 @@ function Rend:activate()
       if self.unit:upgradeLevel('twinblades') > 0 then
         local target, distance = ctx.target:closest(self.unit.target, 'ally', 'unit')
 
-        if distance <= 30 then
+        if target and distance <= 30 then
           table.insert(targets, target)
         end
       end
