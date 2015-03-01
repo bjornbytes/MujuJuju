@@ -356,7 +356,7 @@ return {
         },
         rend = {
           base = {.15, 1},
-          bleed = {3, 30}
+          bleed = {2, 20}
         },
         deathwish = {
           chance = {.03, .2}
