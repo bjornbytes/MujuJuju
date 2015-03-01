@@ -12,6 +12,8 @@ Buju.attackSpeed = 1.2
 Buju.speed = 55
 Buju.cost = 10
 
+Buju.attackParticleCount = 10
+
 ----------------
 -- Upgrades
 ----------------

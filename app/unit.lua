@@ -283,7 +283,7 @@ function Unit:attack(options) -- Called when attack animation event is fired
 
   -- Emit particles
   if not options.noparticles and data.particle[self.class.code .. 'attack'] then
-    ctx.particles:emit(self.class.code .. 'attack', target.x + (target.width * .4 * -math.sign(target.x - self.x)), self.y + self.height * .4, 5)
+    ctx.particles:emit(self.class.code .. 'attack', target.x + (target.width * .4 * -math.sign(target.x - self.x)), self.y + self.height * .4, self.class.attackParticleCount or 5)
   end
 end
 
