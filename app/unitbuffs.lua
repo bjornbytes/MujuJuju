@@ -175,7 +175,11 @@ function UnitBuffs:getBaseAttackSpeed()
 end
 
 function UnitBuffs:prehurt(amount, source, kind)
-  table.with(self.list, 'prehurt', amount, source, kind)
+  table.each(self.list, function(buff)
+    if buff.prehurt then
+      amount = buff:prehurt(amount, source, kind) or amount
+    end
+  end)
 
   if kind and table.has(kind, 'attack') then
     local armors = self:buffsWithTag('armor')
