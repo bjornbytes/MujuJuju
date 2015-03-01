@@ -170,9 +170,10 @@ function MenuDrag:mousereleased(mx, my, b)
       local index = self.draggingIndex
       local code = ctx.user.deck.minions[index]
       table.insert(ctx.user.minions, code)
-      while ctx.user.deck.runes[index] and #ctx.user.deck.runes[index] > 0 do
-        table.insert(ctx.user.runes, ctx.user.deck.runes[index][1])
-        table.remove(ctx.user.deck.runes[index], 1)
+      while ctx.user.deck.runes[index] and next(ctx.user.deck.runes[index]) do
+        local i = next(ctx.user.deck.runes[index])
+        table.insert(ctx.user.runes, ctx.user.deck.runes[index][i])
+        ctx.user.deck.runes[index][i] = nil
       end
       ctx.user.deck.runes[index] = nil
       table.remove(ctx.user.deck.minions, index)
