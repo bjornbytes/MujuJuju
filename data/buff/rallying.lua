@@ -4,9 +4,9 @@ Rallying.tags = {'elite'}
 function Rallying:preattack(target, damage)
   local units = ctx.target:inRange(self.unit, self.range, 'ally', 'unit')
 
-  table.each(units, function (unit)
+  table.each(units, function(unit)
     unit.buffs:add('rallyingfury', {
-      damage = self.damageModifier
+      damageModifier = self.damageModifier
     })
   end)
 
