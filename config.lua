@@ -82,7 +82,7 @@ return {
       },
       cursed = {
         range = 100,
-        weakenModifier = .2
+        weakenModifier = .6
       }
     }
   },
