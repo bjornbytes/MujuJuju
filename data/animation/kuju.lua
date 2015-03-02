@@ -34,6 +34,11 @@ Kuju.states.frozenorb = {
   speed = 1
 }
 
+Kuju.states.frostbite = {
+  priority = 3,
+  speed = 1
+}
+
 Kuju.states.death = {
   priority = 5,
   speed = .8
