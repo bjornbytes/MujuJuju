@@ -1,9 +1,4 @@
 local RallyingFury = extend(Buff)
-RallyingFury.tags = {}
-
-function RallyingFury:preattack(target, damage)
-  return damage * self.damageModifier
-end
-
+RallyingFury.tags = {'haste'}
 
 return RallyingFury

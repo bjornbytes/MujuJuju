@@ -69,8 +69,8 @@ return {
         damageModifier = 5
       },
       rallying = {
-        range = 100,
-        damageModifier = 4
+        range = 200,
+        speedModifier = 2
       },
       frenzied = {
         frenzy = 1,
