@@ -7,7 +7,8 @@ Shruju.depth = -5
 function Shruju:activate()
   self.timer = config.shruju.lifetime
   self.y = ctx.map.height - ctx.map.groundHeight
-  self.animation = data.animation.shruju1()
+  self.index = love.math.random(1, 5)
+  self.animation = data.animation['shruju' .. self.index]()
   self.animation:on('complete', function(data)
     if data.state.name == 'spawn' then self.animation:set('idle') end
   end)

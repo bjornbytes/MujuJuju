@@ -35,7 +35,7 @@ function HudShruju:draw()
     g.setColor(255, 255, 255, 220)
     g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
 
-    local image = data.media.graphics.shruju['harvest']
+    local image = data.media.graphics.shruju['shruju' .. p.shruju.index]
     local scale = math.min((w - (.02 * v)) / (image:getHeight() - 8), (h - (.02 * v)) / (image:getWidth() - 8))
     g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
   end
