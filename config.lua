@@ -37,7 +37,7 @@ return {
   elites = {
     baseModifier = .005,
     levelModifier = .0015,
-    jujuModifier = 2,
+    jujuModifier = 3,
     minimumLevel = 20,
     scale = 1.25,
     healthModifier = 9,
@@ -349,18 +349,6 @@ return {
         rewind = {
           chance = {.01, .15}
         }
-      },
-      buju = {
-        empoweredstrikes = {
-          perStack = {.01, .05}
-        },
-        rend = {
-          base = {.15, 1},
-          bleed = {2, 20}
-        },
-        deathwish = {
-          chance = {.03, .2}
-        }
       }
     },
     abilityFormatters = {
@@ -373,17 +361,6 @@ return {
         },
         rewind = {
           chance = {'percent', 'chance'}
-        }
-      },
-      buju = {
-        empoweredstrikes = {
-          perStack = {'percent', 'attack speed per stack'}
-        },
-        rend = {
-          base = {'percent', 'base damage'}
-        },
-        deathwish = {
-          chance = {'percent', 'execute chance'}
         }
       }
     },
@@ -432,9 +409,6 @@ return {
         siphon = {'the Leech', 'the Lamprey', 'Vampirism'},
         retaliation = {'Vengeance', 'Revenge', 'Retribution'},
         rewind = {'the Ages', 'Foresight'},
-        empoweredstrikes = {'Kinetics', 'Slashing'},
-        rend = {'Laceration', 'the Predator', 'Talons', 'Claws'},
-        deathwish = {'the Assassin', 'the Guillotine', 'Murder', 'Execution'}
       }
     },
     colors = {
