@@ -14,5 +14,4 @@ function GrimReaper:deactivate()
   self.unit:hurt(self.unit.maxHealth)
 end
 
-
 return GrimReaper

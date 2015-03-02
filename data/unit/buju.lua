@@ -133,7 +133,7 @@ Buju.upgrades = {
     name = 'Tempered Bastion',
     description = 'Buju\'s armor is magically infused with light-bending bastion. The chance of effect for Ghost Armor and Void Metal are increased to 100% when Buju is in the Juju Realm.',
     x = 1,
-    y = 3,
+    y = 2,
     connectedTo = {'voidmetal'},
     values = {
       [1] = '100% chance for Ghost Armor and Void Metal'
@@ -142,16 +142,19 @@ Buju.upgrades = {
   grimreaper = {
     level = 0,
     maxLevel = 1,
-    prerequisites = {deathwish = 1},
-    costs = {500},
+    costs = {1000},
     name = 'Grim Reaper',
-    description = 'When Buju kills someone, something cool happens.',
-    x = 0,
+    description = 'When Buju dies, he resurrects for 5 seconds',
+    x = -1,
     y = 3,
-    connectedTo = {'deathwish'},
     values = {
       [1] = 'Something cool'
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit.buffs:add('grimreaper')
+      end
+    end
   },
   ambush = {
     level = 0,
@@ -161,7 +164,7 @@ Buju.upgrades = {
     name = 'Ambush',
     description = 'When Muju enters the Juju Realm, Buju disappears and appears behind the closest enemy, dealing damage.',
     x = -1,
-    y = 4,
+    y = 1,
     connectedTo = {'shadowrush'},
     values = {
       [1] = '50 damage'
@@ -179,7 +182,7 @@ Buju.upgrades = {
     name = 'Twin Blades',
     description = 'Buju\'s attacks will also effect a second nearby enemy.',
     x = 0,
-    y = 4,
+    y = 3,
     values = {
       [1] = 'Double hit'
     },
@@ -196,7 +199,7 @@ Buju.upgrades = {
     name = 'Empowered Strikes',
     description = 'Every time Muju collects Juju, Buju gains a charge of Empowered Strikes.  Empowered Strikes causes Buju\'s next attack to deal increased damage and heal him for a percentage of the damage dealt.',
     x = 1,
-    y = 4,
+    y = 3,
     values = {
       [1] = '+50% damage, +25% lifesteal, max 3 charges'
     },
