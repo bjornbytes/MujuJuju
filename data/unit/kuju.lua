@@ -66,10 +66,10 @@ Kuju.upgrades = {
     y = 0,
     values = {
       [1] = '10 damage per second',
-      [1] = '20 damage per second',
-      [1] = '30 damage per second',
-      [1] = '40 damage per second',
-      [1] = '50 damage per second',
+      [2] = '20 damage per second',
+      [3] = '30 damage per second',
+      [4] = '40 damage per second',
+      [5] = '50 damage per second',
     },
     apply = function(self, unit)
       if self.level > 0 then
