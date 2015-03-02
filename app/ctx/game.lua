@@ -40,7 +40,7 @@ function Game:load(user, options, biome, tutorial)
   self.sound = Sound(options)
   self.effects = Effects()
   self.jujus = Jujus()
-  self.achievements = Achievements()
+  self.achievements = Achievements(self.user)
 
   if tutorial then self.tutorial = Tutorial() end
 
@@ -132,10 +132,6 @@ end
 
 function Game:gamepadaxis(...)
   self.players:gamepadaxis(...)
-end
-
-function Game:textinput(...)
-  self.hud:textinput(...)
 end
 
 function Game:distribute()

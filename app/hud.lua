@@ -12,7 +12,7 @@ function Hud:init()
   self.health = HudHealth()
   self.upgrades = HudUpgrades()
   self.units = HudUnits()
-  self.dead = HudDead()
+  self.dead = HudDead(self)
   self.shruju = HudShruju()
   self.status = HudStatus()
   self.tooltip = Tooltip()
@@ -91,7 +91,6 @@ function Hud:mousereleased(x, y, b)
   end
 
   self.gooey:mousereleased(x, y, b)
-  self.dead:mousereleased(x, y, b)
 end
 
 function Hud:mousemoved(...)
@@ -99,10 +98,6 @@ function Hud:mousemoved(...)
   self.status:mousemoved(...)
   self.units:mousemoved(...)
   self.shruju:mousemoved(...)
-end
-
-function Hud:textinput(char)
-  self.dead:textinput(char)
 end
 
 function Hud:resize()
