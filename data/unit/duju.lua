@@ -12,7 +12,7 @@ Duju.range = 12
 Duju.attackSpeed = 1.15
 Duju.speed = 40
 
-Duju.healthScaling = {6, 1.2}
+Duju.healthScaling = {6, 1}
 Duju.damageScaling = {.5, 1}
 
 Duju.startingAbilities = {'headbutt'}

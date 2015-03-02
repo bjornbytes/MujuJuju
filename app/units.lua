@@ -3,7 +3,7 @@ Units.manages = 'unit'
 
 function Units:init()
   Manager.init(self)
-  self.level = self.level or 0
+  self.level = self.level or config.biomes[ctx.biome].units.startingLevel or 0
   self.nextEnemy = 5
   self.enemyCount = 0
   table.merge(config.biomes[ctx.biome].units, self)
@@ -21,7 +21,7 @@ function Units:createEnemy()
     local eliteChance = config.elites.baseModifier + (config.elites.levelModifier * self.level)
     local eliteCount = table.count(self:filter(function(u) return u.elite end))
     local isElite = love.math.random() < eliteChance
-    isElite = isElite and self.level > config.elites.minimumLevel
+    isElite = isElite and self.level > conf.units.eliteLevelThreshold
     isElite = isElite and eliteCount < conf.units.maxElites
     local unit = self:add(enemyType, {x = x, elite = isElite})
 
