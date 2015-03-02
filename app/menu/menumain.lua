@@ -204,7 +204,6 @@ function MenuMain:update()
 
       if math.inside(mx, my, unpack(gutterRunes[i])) then
         ctx.tooltip:setRuneTooltip(ctx.user.runes[i])
-        break
       end
     end
   end
