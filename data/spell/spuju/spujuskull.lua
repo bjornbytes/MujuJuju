@@ -3,7 +3,7 @@ local SpujuSkull = extend(Spell)
 SpujuSkull.gravity = 700
 SpujuSkull.scale = 1
 SpujuSkull.maxHealth = .3
-SpujuSkull.radius = 30
+SpujuSkull.radius = 25
 
 function SpujuSkull:activate()
   self.x = self.unit.x

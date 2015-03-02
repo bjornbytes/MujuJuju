@@ -9,6 +9,10 @@ Puppetize.cooldown = 30
 ----------------
 -- Behavior
 ----------------
+function Puppetize:activate()
+  self.timer = love.math.random() * self.cooldown
+end
+
 function Puppetize:use()
   if self.unit.target and isa(self.unit.target, Unit) then
     self.unit.target.buffs:add('puppetize', {timer = 3, owner = self.unit})

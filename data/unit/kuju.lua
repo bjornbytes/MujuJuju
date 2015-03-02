@@ -7,7 +7,7 @@ Kuju.description = 'An ice witch who is great at stopping enemies in their track
 ----------------
 Kuju.health = 70
 Kuju.damage = 14
-Kuju.range = 150
+Kuju.range = 170
 Kuju.attackSpeed = 1.3
 Kuju.speed = 35
 Kuju.cost = 10

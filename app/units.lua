@@ -11,7 +11,7 @@ end
 
 function Units:createEnemy()
   local conf = config.biomes[ctx.biome]
-  if self.enemyCount < 1 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
+  if self.enemyCount < 2 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
     local choices = {}
     table.each(conf.units.types, function(time, code)
       if ctx.timer * ls.tickrate >= time then table.insert(choices, code) end
