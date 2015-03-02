@@ -40,7 +40,7 @@ return {
     jujuModifier = 3,
     minimumLevel = 20,
     scale = 1.25,
-    healthModifier = 9,
+    healthModifier = 5,
     damageModifier = 1.5,
     buffs = {
       sinister = {
@@ -62,7 +62,7 @@ return {
         dotTimer = 3
       },
       hulking = {
-        healthModifier = 1.8,
+        healthModifier = 2,
         slow = .5
       },
       demolisher = {
