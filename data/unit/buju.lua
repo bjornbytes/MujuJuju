@@ -204,7 +204,9 @@ Buju.upgrades = {
       [1] = '+50% damage, +25% lifesteal, max 3 charges'
     },
     apply = function(self, unit)
-      unit.buffs:add('empoweredstrikes')
+      if self.level > 0 then
+        unit.buffs:add('empoweredstrikes')
+      end
     end
   }
 }
