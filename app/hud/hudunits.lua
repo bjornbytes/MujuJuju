@@ -499,7 +499,7 @@ function HudUnits:ready()
   local animationOffsets = {
     bruju = -12,
     thuju = -16,
-    buju = -16,
+    buju = -24,
     kuju = -16
   }
 

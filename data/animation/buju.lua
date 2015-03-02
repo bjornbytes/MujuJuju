@@ -1,7 +1,7 @@
 local Buju = extend(Animation)
 
 Buju.scale = .3
-Buju.offsety = 64
+Buju.offsety = 72
 Buju.default = 'spawn'
 Buju.states = {}
 
