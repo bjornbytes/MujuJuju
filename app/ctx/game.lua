@@ -188,7 +188,9 @@ function Game:distribute()
         attributeLevelsDistributed = attributeLevelsDistributed + amount
         if #attributesDistributed < 2 and love.math.random() < .4 then
           attribute = tableRandom(config.attributes.list)
-          table.insert(attributesDistributed, attribute)
+          if not table.has(attributesDistributed, attribute) then
+            table.insert(attributesDistributed, attribute)
+          end
         end
       end
 
