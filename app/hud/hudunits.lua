@@ -369,14 +369,21 @@ function HudUnits:drawForeground()
     local upgrades = self.geometry.upgrades
     for i = 1, #upgrades do
       for j = 1, #upgrades[i] do
+        local x, y, w, h = unpack(upgrades[i][j])
         local who, what = p.deck[i].code, data.unit[p.deck[i].code].upgrades[j].code
         local upgrade = data.unit[who].upgrades[what]
 
-        if upgrade.level > 0 then
-          local x, y, w, h = unpack(upgrades[i][j])
-          x, y = math.round(x), math.round(y)
-          g.setColor(upgrade.level < upgrade.maxLevel and (ctx.options.colorblind and {0, 0, 255, 100} or {0, 255, 0, 100}) or {0, 150, 0, 100})
-          g.rectangle('line', x + .5, y + .5, w - 1, h - 1)
+        -- Upgrade progress test
+        local ct = upgrade.maxLevel
+        local size = .008 * v
+        local inc = w / ct
+        local yy = (y + h / 2) - (inc * (ct - 1) / 2)
+        for i = 1, ct do
+          g.setColor(upgrade.level >= i and {100, 255, 100, 255 * upgradeAlphaFactor} or {255, 255, 255, 100 * upgradeAlphaFactor})
+          local image = data.media.graphics.particles.softCircle
+          local scale = size / image:getWidth()
+          g.draw(image, x + .005 * v, yy, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+          yy = yy + inc
         end
       end
     end
