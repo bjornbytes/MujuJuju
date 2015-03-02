@@ -21,7 +21,7 @@ function Map:init()
     draw = function()
       local alpha = 255 * self.spiritAlpha
       local p = ctx.player
-      alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .5)
+      alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .9)
 
       g.setColor(255, 255, 255)
       local image = data.media.graphics.map[ctx.biome .. 'Background']

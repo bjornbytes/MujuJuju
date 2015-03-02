@@ -157,7 +157,7 @@ return {
           radius = {.85, .65}
         },
         bloom = {
-          alpha = {0, 100}
+          alpha = {0, 60}
         }
       }
     },
