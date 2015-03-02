@@ -134,10 +134,6 @@ function Game:gamepadaxis(...)
   self.players:gamepadaxis(...)
 end
 
-function Game:textinput(...)
-  self.hud:textinput(...)
-end
-
 function Game:distribute()
 
   local function tableRandom(t)
