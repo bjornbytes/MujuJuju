@@ -35,7 +35,7 @@ function HudPause:init(hud)
   self.quit:on('click', quitHandler)
   self.quit.text = 'Quit'
 
-  local function getMousePosition = function()
+  local function getMousePosition()
     return ctx.view:frameMouseX(), ctx.view:frameMouseY()
   end
 

@@ -10,6 +10,7 @@ function Frostbite:activate()
   self.timer = ability.duration
   self.y = ctx.map.height - ctx.map.groundHeight
   self.team = unit.team
+  self.timer = 3
 
   ctx.event:emit('view.register', {object = self})
 end
@@ -29,14 +30,14 @@ function Frostbite:update()
   table.each(targets, function(target)
     local damage = 10 * unit:upgradeLevel('frostbite') * ls.tickrate
     if unit:upgradeLevel('coldfeet') > 0 and target.buffs and target.buffs:slowed() then damage = damage * 2 end
-    target:hurt(ability.dps * ls.tickrate, unit, {'spell'})
+    target:hurt(damage, unit, {'spell'})
   end)
 end
 
 function Frostbite:draw()
   local image = data.media.graphics.spell.frostbite
   local scale = self.width / image:getWidth()
-  g.setColor(255, 255, 255, math.max(self.timer / .2, 1) * 255)
+  g.setColor(255, 255, 255, math.min(self.timer / .2, 1) * 255)
   g.draw(image, self.x, self.y, 0, scale, scale, image:getWidth() / 2, image:getHeight() - 20)
 end
 
