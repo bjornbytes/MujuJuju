@@ -1,5 +1,10 @@
 local g = love.graphics
 
+local function lerpAnimation(code, key, val)
+  ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
+  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
+end
+
 MenuChoose = class()
 
 function MenuChoose:init()
@@ -35,6 +40,16 @@ function MenuChoose:init()
         x = x + inc
       end
       return res
+    end,
+
+    back = function()
+      local u, v = ctx.u, ctx.v
+      return {u * .125, v * .825, u * .2, v  * .1}
+    end,
+
+    next = function()
+      local u, v = ctx.u, ctx.v
+      return {u * .675, v * .825, u * .2, v  * .1}
     end
   }
 
@@ -42,6 +57,16 @@ function MenuChoose:init()
 
   -- Initialize user
   self.user = table.copy(config.defaultUser)
+
+  self.back = ctx.gooey:add(Button, 'menu.choose.back')
+  self.back.geometry = function() return self.geometry.back end
+  self.back:on('click', function() ctx:goto('select') end)
+  self.back.text = 'Back'
+
+  self.next = ctx.gooey:add(Button, 'menu.choose.next')
+  self.next.geometry = function() return self.geometry.next end
+  self.next:on('click', function() self:finished() end)
+  self.next.text = 'Ready!'
 end
 
 function MenuChoose:update()
@@ -51,9 +76,15 @@ function MenuChoose:update()
     local mx, my = love.mouse.getPosition()
     local minions = self.geometry.minions
     for i = 1, #minions do
+      local code = config.starters[i]
+      if i == self.selectedMinion then
+        lerpAnimation(code, 'scale', 1.25)
+      else
+        lerpAnimation(code, 'scale', .9)
+      end
+
       if math.insideCircle(mx, my, unpack(minions[i])) then
-        ctx.tooltip:setUnitTooltip(config.starters[i])
-        break
+        ctx.tooltip:setUnitTooltip(code)
       end
     end
   end
@@ -91,7 +122,7 @@ function MenuChoose:draw()
   end
 
   g.setColor(0, 0, 0, 100)
-  g.rectangle('fill', u * .2, v * .38, u * .6, v * .42)
+  g.rectangle('fill', u * .125, v * .38, u * .75, v * .42)
 
   g.setFont('mesmerize', .08 * v)
   g.setColor(255, 255, 255)
@@ -99,6 +130,7 @@ function MenuChoose:draw()
   g.printShadow('Choose your minion', .5 * u - g.getFont():getWidth(str) / 2, .4 * v)
 
   local minions = self.geometry.minions
+  local ps = love.window.getPixelScale()
   for i = 1, #minions do
     local code = config.starters[i]
     local x, y, r = unpack(minions[i])
@@ -107,16 +139,29 @@ function MenuChoose:draw()
     ctx.unitCanvas:renderTo(function()
       ctx.animations[code]:draw(cw / 2, ch / 2)
     end)
-    g.draw(ctx.unitCanvas, x, y, 0, 1, 1, cw / 2, ch / 2)
+    local lerpd = {}
+    for k, v in pairs(ctx.animationTransforms[code]) do
+      lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, ls.accum / ls.tickrate)
+    end
+    g.draw(ctx.unitCanvas, x, y, 0, lerpd.scale * ps, lerpd.scale * ps, cw / 2, ch / 2)
   end
 
   g.setColor(255, 255, 255)
-  ctx.animations.muju:draw(u * .08, v * .75)
+
+  g.push()
+  g.translate(u * .2, v * .23)
+  g.scale(love.window.getPixelScale())
+  ctx.animations.muju:draw(0, 0)
+  g.pop()
+
   local color = self.user and self.user.color or 'purple'
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
     local slot = ctx.animations.muju.spine.skeleton:findSlot(slot)
     slot.r, slot.g, slot.b = unpack(config.player.colors[color])
   end
+
+  self.back:draw()
+  self.next:draw()
 end
 
 function MenuChoose:keypressed(key)
@@ -133,18 +178,7 @@ function MenuChoose:mousepressed(mx, my, b)
     for i = 1, #minions do
       local x, y, r = unpack(minions[i])
       if math.distance(mx, my, x, y) < r then
-        for j = 1, #self.user.minions do
-          if self.user.minions[j] == config.starters[i] then table.remove(self.user.minions, j) break end
-        end
-        self.user.deck.minions = {config.starters[i]}
-        self.user.deck.runes[1] = {}
-        saveUser(self.user)
-
-        ctx.user = self.user
-
-        ctx:goto('main')
-        ctx.animations.muju:set('summon')
-        ctx.sound:play('summon2')
+        self.selectedMinion = i
       end
     end
 
@@ -166,4 +200,22 @@ end
 
 function MenuChoose:resize()
   table.clear(self.geometry)
+end
+
+function MenuChoose:finished()
+  if not self.selectedMinion then return end
+
+  for j = 1, #self.user.minions do
+    if self.user.minions[j] == config.starters[self.selectedMinion] then table.remove(self.user.minions, j) break end
+  end
+
+  self.user.deck.minions = {config.starters[self.selectedMinion]}
+  self.user.deck.runes[1] = {}
+
+  saveUser(self.user)
+  ctx.user = self.user
+
+  ctx:goto('main')
+  ctx.animations.muju:set('summon')
+  ctx.sound:play('summon2')
 end
