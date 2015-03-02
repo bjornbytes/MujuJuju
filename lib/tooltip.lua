@@ -181,7 +181,11 @@ function Tooltip:setRuneTooltip(rune)
     end)
   elseif rune.stats then
     table.each(rune.stats, function(amount, stat)
-      table.insert(pieces, '+' .. math.round(amount) .. ' to ' .. stat:capitalize())
+      if stat == 'attackSpeed' then
+        table.insert(pieces, '+' .. math.round(amount * 100) .. '% to ' .. ' attack speed')
+      else
+        table.insert(pieces, '+' .. math.round(amount) .. ' to ' .. stat:capitalize())
+      end
     end)
   elseif rune.unit and rune.abilities then
     table.insert(pieces, rune.unit:capitalize() .. ' only')
