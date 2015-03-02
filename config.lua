@@ -40,7 +40,7 @@ return {
     jujuModifier = 3,
     minimumLevel = 20,
     scale = 1.25,
-    healthModifier = 5,
+    healthModifier = 3,
     damageModifier = 1.5,
     buffs = {
       sinister = {
