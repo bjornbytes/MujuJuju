@@ -84,11 +84,13 @@ function GhostPlayer:update()
 	self.x = self.x + self.vx * ls.tickrate
 	self.y = self.y + self.vy * ls.tickrate
 
+  local contained = false
 	self.maxDis = math.lerp(self.maxRange, 0, (1 - (self.owner.deathTimer / self.owner.deathDuration)) ^ 5)
 	if math.distance(self.x, self.y, px, py) + self.radius > self.maxDis then
 		local angle = math.direction(px, py, self.x, self.y)
 		self.x = math.lerp(self.x, px + math.dx(self.maxDis - self.radius, angle), 1)
 		self.y = math.lerp(self.y, py + math.dy(self.maxDis - self.radius, angle), 1)
+    contained = true
 	end
 
 	self.x = math.clamp(self.x, self.radius, ctx.map.width - self.radius)
@@ -102,7 +104,7 @@ function GhostPlayer:update()
 	self.radius = 40 * scale
   self.alpha = math.min(self.alpha + ls.tickrate, 1)
 
-  ctx.particles:emit('ghosttrail', self.x, self.y, math.round(2 * love.math.random()), {
+  ctx.particles:emit('ghosttrail', self.x, self.y, math.min(math.round(len / speed, 1) + (contained and 1 or 0)), {
     linearAcceleration = {-self.vx * 1, -self.vy * 1, -self.vx * 1.5, -self.vy * 1.5}
   })
 end

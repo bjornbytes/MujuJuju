@@ -220,7 +220,7 @@ function HudUnits:drawBackground()
         local x, y, w, h = unpack(attributes[i][j])
         local attribute = config.attributes.list[j]
         local scale = w / data.atlas.hud:getDimensions('frame')
-        local val = (p.juju >= 30 + 10 * data.unit[p.deck[i].code].attributes[attribute]) and 255 or 150
+        local val = (p.juju >= 30 + 20 * data.unit[p.deck[i].code].attributes[attribute]) and 255 or 150
         x, y = math.round(x), math.round(y)
 
         -- Frame
@@ -415,7 +415,7 @@ function HudUnits:mousereleased(mx, my, b)
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
         local class = data.unit[p.deck[i].code]
-        local cost = 30 + 10 * class.attributes[attribute]
+        local cost = 30 + 20 * class.attributes[attribute]
         if p:spend(cost) then
           class.attributes[attribute] = class.attributes[attribute] + 1
           class.cost = class.cost + 1

@@ -222,7 +222,7 @@ function Player:summon(options)
   local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
 
   -- Set cooldowns (global cooldown)
-  local cooldown = 3
+  local cooldown = config.player.baseCooldown
   if self:hasShruju('refresh') and love.math.random() < .25 then cooldown = 0 end
   for i = 1, #self.deck do
     if cooldown > self.deck[i].cooldown then

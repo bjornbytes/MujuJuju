@@ -88,13 +88,10 @@ return {
   },
 
   player = {
-    baseCooldown = 5,
+    baseCooldown = 3,
     minCooldown = .75,
-    globalCooldown = 3,
-    baseJuju = 30,
+    baseJuju = 50,
     jujuRate = 1,
-    basePopulation = 3,
-    maxPopulation = 10,
     colors = {
       purple = {.5, 0, 1},
       red = {1, 0, 0},
@@ -130,14 +127,14 @@ return {
           coefficient = 1
         },
         maximum = {
-          base = 25,
+          base = 30,
           exponent = .7,
           coefficient = 1.2
         }
       },
       units = {
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
+        minEnemyRate = 8,
+        maxEnemyRate = 10,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .06,
         maxEnemiesCoefficient = .2,
@@ -182,14 +179,14 @@ return {
           coefficient = 1
         },
         maximum = {
-          base = 25,
+          base = 30,
           exponent = .7,
           coefficient = 1.2
         }
       },
       units = {
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
+        minEnemyRate = 8,
+        maxEnemyRate = 10,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .06,
         maxEnemiesCoefficient = .2,
@@ -234,14 +231,14 @@ return {
           coefficient = 1
         },
         maximum = {
-          base = 25,
+          base = 30,
           exponent = .7,
           coefficient = 1.2
         }
       },
       units = {
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
+        minEnemyRate = 8,
+        maxEnemyRate = 10,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .06,
         maxEnemiesCoefficient = .2,
@@ -287,14 +284,14 @@ return {
           coefficient = 1
         },
         maximum = {
-          base = 25,
+          base = 30,
           exponent = .7,
           coefficient = 1.2
         }
       },
       units = {
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
+        minEnemyRate = 8,
+        maxEnemyRate = 10,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .06,
         maxEnemiesCoefficient = .2,
