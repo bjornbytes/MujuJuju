@@ -109,6 +109,8 @@ function Unit:activate()
     self.buffs:add('mirror')
   end
 
+  self.range = self.range + love.math.random(-10, 10)
+
   -- Register with View
   ctx.event:emit('view.register', {object = self})
 end
