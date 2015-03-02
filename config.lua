@@ -123,12 +123,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
           base = 30,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1.2
         }
       },
@@ -137,7 +137,7 @@ return {
         maxEnemyRate = 12,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .06,
-        maxEnemiesCoefficient = .2,
+        maxEnemiesCoefficient = .15,
         levelScale = .75,
         upgradeCostIncrease = 1,
         maxElites = 1,
@@ -149,7 +149,7 @@ return {
       },
       shrujuPatches = {300, 600},
       runes = {
-        maxLevel = 40
+        maxLevel = 35
       },
       effects = {
         vignette = {
@@ -175,12 +175,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
           base = 30,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1.2
         }
       },
@@ -189,7 +189,7 @@ return {
         maxEnemyRate = 10,
         minEnemyRateDecay = .04,
         maxEnemyRateDecay = .04,
-        maxEnemiesCoefficient = .2,
+        maxEnemiesCoefficient = .15,
         levelScale = .75,
         upgradeCostIncrease = 2,
         maxElites = 1,
@@ -201,7 +201,7 @@ return {
       },
       shrujuPatches = {300, 600},
       runes = {
-        maxLevel = 60
+        maxLevel = 50
       },
       effects = {
         vignette = {
@@ -227,12 +227,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
           base = 30,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1.2
         }
       },
@@ -241,7 +241,7 @@ return {
         maxEnemyRate = 10,
         minEnemyRateDecay = .04,
         maxEnemyRateDecay = .04,
-        maxEnemiesCoefficient = .2,
+        maxEnemiesCoefficient = .15,
         levelScale = .95,
         upgradeCostIncrease = 3,
         maxElites = 2,
@@ -254,7 +254,7 @@ return {
       },
       shrujuPatches = {300, 600},
       runes = {
-        maxLevel = 80
+        maxLevel = 70
       },
       effects = {
         vignette = {
@@ -280,12 +280,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
           base = 30,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1.2
         }
       },
@@ -294,7 +294,7 @@ return {
         maxEnemyRate = 10,
         minEnemyRateDecay = .04,
         maxEnemyRateDecay = .04,
-        maxEnemiesCoefficient = .2,
+        maxEnemiesCoefficient = .15,
         levelScale = 1.05,
         upgradeCostIncrease = 4,
         maxElites = 3,
@@ -326,9 +326,9 @@ return {
     statRanges = {
       health = {10, 250},
       damage = {3, 70},
-      speed = {5, 80},
+      speed = {5, 60},
       attackSpeed = {.01, .15},
-      spirit = {5, 200},
+      spirit = {5, 60},
       haste = {.04, .2}
     },
     abilities = {
