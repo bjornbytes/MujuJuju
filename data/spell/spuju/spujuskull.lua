@@ -3,13 +3,13 @@ local SpujuSkull = extend(Spell)
 SpujuSkull.gravity = 700
 SpujuSkull.scale = 1
 SpujuSkull.maxHealth = .3
-SpujuSkull.radius = 40
+SpujuSkull.radius = 30
 
 function SpujuSkull:activate()
   self.x = self.unit.x
   self.y = self.unit.y - self.unit.height / 2
   local targetx = self.target.x
-	local dx = math.abs(targetx - self.x)
+	local dx = math.abs(targetx + love.math.randomNormal(35) - self.x)
 	local dy = -self.unit.height
 	local g = self.gravity
 	local v = 150 + 250 * (dx / self.unit.range) -- velocity
@@ -38,7 +38,7 @@ function SpujuSkull:update()
   local image = data.media.graphics.spell.spujuSkull
 	if self.health then
 		self.health = timer.rot(self.health, function() ctx.spells:remove(self) end)
-		self.burstScale = math.lerp(self.burstScale, self.radius / data.media.graphics.spell.burst:getWidth(), 20 * ls.tickrate)
+		self.burstScale = math.lerp(self.burstScale, 2 * self.radius / data.media.graphics.spell.burst:getWidth(), 20 * ls.tickrate)
 	else
 		self.x = self.x + self.vx * ls.tickrate
 		self.y = self.y + self.vy * ls.tickrate
@@ -71,7 +71,7 @@ function SpujuSkull:draw()
 	if self.health then
 		g.setColor(80, 230, 80, 200 * self.health / self.maxHealth)
     local image = data.media.graphics.spell.burst
-		g.draw(image, self.x, ctx.map.height - ctx.map.groundHeight, self.angle, self.burstScale + .25, self.burstScale + .25, image:getWidth() / 2, image:getHeight() / 2)
+		g.draw(image, self.x, ctx.map.height - ctx.map.groundHeight, self.angle, self.burstScale * 2, self.burstScale * 2, image:getWidth() / 2, image:getHeight() / 2)
 	else
 		g.setColor(255, 255, 255)
     local image = data.media.graphics.spell.spujuSkull
