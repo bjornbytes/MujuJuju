@@ -1,0 +1,27 @@
+
+shruju5.png
+size: 128,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cap
+  rotate: false
+  xy: 2, 22
+  size: 75, 93
+  orig: 75, 93
+  offset: 0, 0
+  index: -1
+stemone
+  rotate: false
+  xy: 79, 73
+  size: 32, 42
+  orig: 32, 42
+  offset: 0, 0
+  index: -1
+stemtwo
+  rotate: false
+  xy: 2, 2
+  size: 41, 18
+  orig: 41, 18
+  offset: 0, 0
+  index: -1

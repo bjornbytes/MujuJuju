@@ -1,0 +1,27 @@
+
+shruju2.png
+size: 256,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cap
+  rotate: false
+  xy: 2, 2
+  size: 85, 106
+  orig: 85, 106
+  offset: 0, 0
+  index: -1
+stemone
+  rotate: false
+  xy: 137, 16
+  size: 46, 92
+  orig: 46, 92
+  offset: 0, 0
+  index: -1
+stemtwo
+  rotate: false
+  xy: 89, 13
+  size: 46, 95
+  orig: 46, 95
+  offset: 0, 0
+  index: -1
