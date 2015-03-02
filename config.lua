@@ -228,12 +228,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .85,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
           base = 30,
-          exponent = .85,
+          exponent = .75,
           coefficient = 1.2
         }
       },
@@ -241,9 +241,9 @@ return {
         startingLevel = 30,
         minEnemyRate = 10,
         maxEnemyRate = 12,
-        minEnemyRateDecay = .02,
-        maxEnemyRateDecay = .02,
-        maxEnemiesCoefficient = .1,
+        minEnemyRateDecay = .03,
+        maxEnemyRateDecay = .03,
+        maxEnemiesCoefficient = .15,
         levelScale = 1,
         upgradeCostIncrease = 3,
         maxElites = 2,
