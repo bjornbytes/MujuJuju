@@ -280,12 +280,12 @@ function HudUnits:drawBackground()
         self:batch('upgradeFrame' .. i .. j, 'frame', x, y, 0, scale, scale)
 
         -- Icon
-        local image = data.media.graphics.hud.icons[what]
-        if image then
+        local qw, qh = data.atlas.hud:getDimensions(what)
+        if qw and qh then
           local val = (upgrade.level > 0 or ctx.upgrades.canBuy(who, what)) and 255 or 200
-          local scale = math.min((w - (v * .02)) / image:getWidth(), (h - (v * .02)) / image:getHeight())
+          local scale = math.min((w - (v * .02)) / qw, (h - (v * .02)) / qh)
           local x, y = x + w / 2, y + h / 2
-          local ox, oy = image:getWidth() / 2, image:getHeight() / 2
+          local ox, oy = qw / 2, qh / 2
           local code = 'upgradeIcon' .. i .. j
           g.setColor(val, val, val, 255 * upgradeAlphaFactor)
           self:batch(code, what, x, y, 0, scale, scale, ox, oy)

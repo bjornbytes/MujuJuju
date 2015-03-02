@@ -434,7 +434,7 @@ function Unit:initAnimation()
             amount = amount * config.elites.jujuModifier
             jujus = 1
 
-            ctx.shrujus:add(data.shruju[love.math.random(1, #data.shruju)], {x = love.math.random(ctx.map.width)})
+            ctx.shrujus:add(data.shruju[love.math.random(1, #data.shruju)], {x = self.x})
           end
 
           for i = 1, jujus do

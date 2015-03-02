@@ -27,9 +27,9 @@ Buju.upgrades = {
     x = -1,
     y = 0,
     values = {
-      [1] = '100 range, 10 second cooldown',
-      [2] = '150 range, 8 second cooldown',
-      [3] = '200 range, 6 second cooldown'
+      [1] = '200 range, 10 second cooldown',
+      [2] = '250 range, 8 second cooldown',
+      [3] = '300 range, 6 second cooldown'
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -121,8 +121,8 @@ Buju.upgrades = {
     y = 2,
     values = {
       [1] = 'Crit chance doubled if target below 30% health',
-      [1] = 'Crit chance doubled if target below 40% health',
-      [1] = 'Crit chance doubled if target below 50% health'
+      [2] = 'Crit chance doubled if target below 40% health',
+      [3] = 'Crit chance doubled if target below 50% health'
     }
   },
   temperedbastion = {
@@ -168,7 +168,7 @@ Buju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit:addAbility()
+        unit:addAbility('ambush')
       end
     end
   },
@@ -182,7 +182,12 @@ Buju.upgrades = {
     y = 4,
     values = {
       [1] = 'Double hit'
-    }
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit.buffs:add('twinblades')
+      end
+    end
   },
   empoweredstrikes = {
     level = 0,
@@ -193,8 +198,11 @@ Buju.upgrades = {
     x = 1,
     y = 4,
     values = {
-      [1] = '+50% damage, +30% lifesteal, max 3 charges'
-    }
+      [1] = '+50% damage, +25% lifesteal, max 3 charges'
+    },
+    apply = function(self, unit)
+      unit.buffs:add('empoweredstrikes')
+    end
   }
 }
 

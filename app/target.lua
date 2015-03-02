@@ -40,7 +40,8 @@ end
 function Target:closest(source, teamFilter, ...)
   local targets = halp(source, teamFilter, {...})
   table.sort(targets, function(a, b) return a[2] < b[2] end)
-  return targets[1] and unpack(targets[1])
+  if targets[1] then return unpack(targets[1]) end
+  return nil
 end
 
 function Target:inRange(source, range, teamFilter, ...)

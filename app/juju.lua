@@ -31,6 +31,7 @@ function Juju:update()
 		if math.distance(self.x, self.y, tx, ty) < 16 then
 			ctx.jujus:remove(self)
       p:addJuju(self.amount)
+      ctx.event:emit('juju.collected', {juju = self})
 			ctx.hud.status.jujuScale = 2
       ctx.hud.status.jujuAngle = 0
       ctx.particles:emit('jujusex', self.x, self.y, 40)
