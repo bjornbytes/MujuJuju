@@ -22,7 +22,7 @@ function KujuAttack:update()
     self:hit(self.target, true)
 
     if unit:upgradeLevel('shatter') > 0 then
-      local targets = ctx.target:inRange(self, 60, 'enemy', 'unit', 'player', 'shrine')
+      local targets = ctx.target:inRange(self, 80, 'enemy', 'unit', 'player', 'shrine')
       table.each(targets, function(target)
         if math.sign(target.x - self.target.x) == self.direction then
           self:hit(target, unit:upgradeLevel('frigidsplinters') > 0)

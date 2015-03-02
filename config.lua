@@ -73,7 +73,7 @@ return {
         speedModifier = 2
       },
       frenzied = {
-        frenzy = 1,
+        frenzy = .8,
         haste = 1,
         healthModifier = .5
       },
@@ -123,12 +123,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .75,
+          exponent = .7,
           coefficient = 1
         },
         maximum = {
           base = 30,
-          exponent = .75,
+          exponent = .7,
           coefficient = 1.2
         }
       },
@@ -227,12 +227,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .75,
+          exponent = .8,
           coefficient = 1
         },
         maximum = {
           base = 30,
-          exponent = .75,
+          exponent = .8,
           coefficient = 1.2
         }
       },
