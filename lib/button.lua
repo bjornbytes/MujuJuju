@@ -43,7 +43,7 @@ end
 function Button:render()
   local x, y, w, h = unpack(self.geometry())
   local text = self.text
-  local mx, my = love.mouse.getPosition()
+  local mx, my = self:getMousePosition()
   local hover = self:contains(mx, my)
   local active = hover and love.mouse.isDown('l') and self.gooey.hot == self
 

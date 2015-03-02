@@ -39,6 +39,12 @@ function HudDead:init(hud)
   self.deadQuit:on('click', function() self:endGame() end)
   self.deadQuit.text = 'Finished'
 
+  local function getMousePosition = function()
+    return ctx.view:frameMouseX(), ctx.view:frameMouseY()
+  end
+
+  self.deadOk.getMousePosition, self.deadQuit.getMousePosition = getMousePosition, getMousePosition
+
   self.deadScreen = 1
 end
 

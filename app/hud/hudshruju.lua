@@ -44,8 +44,6 @@ end
 function HudShruju:mousemoved(mx, my)
   if ctx.ded then return end
 
-  mx, my = ctx.view:frameMouseX(), ctx.view:frameMouseY()
-
   local p = ctx.player
   local shruju = self.geometry.shruju
   if p.shruju then

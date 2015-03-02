@@ -300,7 +300,7 @@ end
 
 function HudUnits:drawForeground()
   local u, v = ctx.hud.u, ctx.hud.v
-  local mx, my = love.mouse.getPosition()
+  local mx, my = ctx.view:frameMouseX(), ctx.view:frameMouseY()
   local p = ctx.player
   local atlas = data.atlas.hud
 
@@ -436,8 +436,6 @@ end
 
 function HudUnits:mousemoved(mx, my)
   local p = ctx.player
-
-  mx, my = ctx.view:frameMouseX(), ctx.view:frameMouseY()
 
   -- Attribute tooltips
   local attributes = self.geometry.attributes

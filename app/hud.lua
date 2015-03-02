@@ -93,11 +93,12 @@ function Hud:mousereleased(x, y, b)
   self.gooey:mousereleased(x, y, b)
 end
 
-function Hud:mousemoved(...)
+function Hud:mousemoved(x, y)
+  x, y = ctx.view:frameMouseX(), ctx.view:frameMouseY()
   self.tooltip:dirty()
-  self.status:mousemoved(...)
-  self.units:mousemoved(...)
-  self.shruju:mousemoved(...)
+  self.status:mousemoved(x, y)
+  self.units:mousemoved(x, y)
+  self.shruju:mousemoved(x, y)
 end
 
 function Hud:resize()

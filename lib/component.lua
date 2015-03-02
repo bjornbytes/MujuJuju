@@ -21,3 +21,7 @@ end
 function Component:getOffset(x, y)
   return 0, 0
 end
+
+function Component:getMousePosition()
+  return love.mouse.getPosition()
+end
