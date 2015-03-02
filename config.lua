@@ -72,7 +72,7 @@ return {
         speedModifier = 2
       },
       frenzied = {
-        frenzy = .8,
+        frenzy = .3,
         haste = 1,
         healthModifier = .5
       },
@@ -122,22 +122,22 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1
         },
         maximum = {
           base = 30,
-          exponent = .7,
+          exponent = .75,
           coefficient = 1.2
         }
       },
       units = {
         minEnemyRate = 10,
         maxEnemyRate = 12,
-        minEnemyRateDecay = .03,
-        maxEnemyRateDecay = .03,
+        minEnemyRateDecay = .05,
+        maxEnemyRateDecay = .06,
         maxEnemiesCoefficient = .1,
-        levelScale = .9,
+        levelScale = .75,
         upgradeCostIncrease = 1,
         maxElites = 1,
         eliteBuffCount = 1,
@@ -185,14 +185,13 @@ return {
         }
       },
       units = {
-        startingLevel = 10,
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
+        minEnemyRate = 8,
+        maxEnemyRate = 10,
         minEnemyRateDecay = .03,
         maxEnemyRateDecay = .03,
         maxEnemiesCoefficient = .1,
-        levelScale = 1,
-        upgradeCostIncrease = 1,
+        levelScale = .85,
+        upgradeCostIncrease = 2,
         maxElites = 1,
         eliteLevelThreshold = 20,
         eliteBuffCount = 2,
@@ -229,12 +228,12 @@ return {
       juju = {
         minimum = {
           base = 20,
-          exponent = .8,
+          exponent = .85,
           coefficient = 1
         },
         maximum = {
           base = 30,
-          exponent = .8,
+          exponent = .85,
           coefficient = 1.2
         }
       },
@@ -242,14 +241,14 @@ return {
         startingLevel = 30,
         minEnemyRate = 10,
         maxEnemyRate = 12,
-        minEnemyRateDecay = .03,
-        maxEnemyRateDecay = .03,
+        minEnemyRateDecay = .02,
+        maxEnemyRateDecay = .02,
         maxEnemiesCoefficient = .1,
         levelScale = 1,
         upgradeCostIncrease = 3,
         maxElites = 2,
         eliteBuffCount = 3,
-        eliteLevelThreshold = 80,
+        eliteLevelThreshold = 50,
         types = {
           vuju = 0,
           spuju = 0,
