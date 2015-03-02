@@ -75,7 +75,7 @@ return {
       frenzied = {
         frenzy = 1,
         haste = 1,
-        healthModified = 7
+        healthModifier = .5
       },
       pummeling = {
         offset = 75
@@ -133,8 +133,8 @@ return {
         }
       },
       units = {
-        minEnemyRate = 8,
-        maxEnemyRate = 10,
+        minEnemyRate = 10,
+        maxEnemyRate = 12,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .06,
         maxEnemiesCoefficient = .2,
@@ -185,8 +185,8 @@ return {
         }
       },
       units = {
-        minEnemyRate = 8,
-        maxEnemyRate = 10,
+        minEnemyRate = 9,
+        maxEnemyRate = 11,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .06,
         maxEnemiesCoefficient = .2,
@@ -290,8 +290,8 @@ return {
         }
       },
       units = {
-        minEnemyRate = 8,
-        maxEnemyRate = 10,
+        minEnemyRate = 7,
+        maxEnemyRate = 9,
         minEnemyRateDecay = .05,
         maxEnemyRateDecay = .06,
         maxEnemiesCoefficient = .2,

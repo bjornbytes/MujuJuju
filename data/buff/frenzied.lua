@@ -1,7 +1,7 @@
 local Frenzied = extend(Buff)
 Frenzied.tags = {'elite', 'frenzy', 'haste'}
 
-function Frenzied:active()
+function Frenzied:activate()
   self.unit.health = self.unit.health + self.unit.health * self.healthModifier
   self.unit.maxHealth = self.unit.health
 end
