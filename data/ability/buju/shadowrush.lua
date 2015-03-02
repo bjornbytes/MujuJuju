@@ -6,7 +6,7 @@ function ShadowRush:update()
   local level = self.unit:upgradeLevel('shadowrush')
   if self.timer == 0 and self.unit.target and math.abs(self.unit.target.x - self.unit.x) < self.ranges[level] then
     self:fire()
-    self.cooldown = self.cooldowns[level]
+    self.timer = self.cooldowns[level]
   end
 end
 

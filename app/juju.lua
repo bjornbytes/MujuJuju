@@ -83,7 +83,7 @@ function Juju:update()
 	self.scale = math.lerp(self.scale, .15 + (math.min(self.amount, 200) / 200), 2 * ls.tickrate)
 	self.alpha = math.lerp(self.alpha, p.ded and 1 or .5, 10 * ls.tickrate)
 
-	self.x = math.clamp(self.x, self.amount * 2, love.graphics.getWidth() - self.amount * 2)
+	self.x = math.clamp(self.x, self.amount * 2, ctx.map.width - self.amount * 2)
 end
 
 function Juju:draw()
