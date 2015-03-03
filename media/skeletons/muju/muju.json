@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "TBMxpF9bDU3uxy0Z3MaVpFpvLss", "spine": "2.1.10", "width": 111.06, "height": 177 },
+"skeleton": { "hash": "TBMxpF9bDU3uxy0Z3MaVpFpvLss", "spine": "2.1.13", "width": 111.06, "height": 201.82 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "robebottom", "parent": "root", "length": 62.59, "x": -1.41, "y": 84.35, "rotation": -94.5 },
