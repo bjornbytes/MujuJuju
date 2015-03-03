@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "doLLiPci6yYDdia/3oBSRZXQEs4", "spine": "2.1.11", "width": 280.99, "height": 359.01 },
+"skeleton": { "hash": "F8ttuT5wNJ8CTf/XI2JFX5SQwZk", "spine": "2.1.13", "width": 280.99, "height": 359.01 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "bone", "parent": "root", "x": 0.58, "y": 150.79 },
@@ -12,7 +12,9 @@
 	{ "name": "left arm lower", "parent": "left arm upper", "length": 53.37, "x": 75.4, "y": 0.07, "rotation": 8.5 },
 	{ "name": "right arm lower", "parent": "right arm upper", "length": 52.07, "x": 77.52, "y": -0.08, "rotation": 58.11 },
 	{ "name": "leftblade", "parent": "left arm lower", "length": 157.01, "x": 53.76, "y": -0.14, "rotation": -4.05 },
-	{ "name": "rightblade", "parent": "right arm lower", "length": 164.38, "x": 52.07, "y": -0.18, "rotation": 7.18 }
+	{ "name": "rightblade", "parent": "right arm lower", "length": 164.38, "x": 52.07, "y": -0.18, "rotation": 7.18 },
+	{ "name": "lefthand", "parent": "leftblade", "x": 113.31, "y": -0.99 },
+	{ "name": "righthand", "parent": "rightblade", "x": 108.39, "y": -1.03 }
 ],
 "slots": [
 	{ "name": "left arm upper", "bone": "left arm upper", "attachment": "left arm upper" },
