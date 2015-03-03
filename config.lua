@@ -298,11 +298,12 @@ return {
         maxEnemyRate = 12,
         minEnemyRateDecay = .02,
         maxEnemyRateDecay = .02,
-        maxEnemiesCoefficient = .08,
+        maxEnemiesCoefficient = .02,
         levelScale = 2,
         upgradeCostIncrease = 4,
         maxElites = 3,
         eliteBuffCount = 4,
+        eliteLevelThreshold = 80,
         types = {
           vuju = 240,
           spuju = 120,
