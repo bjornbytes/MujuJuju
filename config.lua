@@ -293,18 +293,19 @@ return {
         }
       },
       units = {
-        minEnemyRate = 8,
-        maxEnemyRate = 10,
-        minEnemyRateDecay = .04,
-        maxEnemyRateDecay = .04,
-        maxEnemiesCoefficient = .1,
+        startingLevel = 40,
+        minEnemyRate = 10,
+        maxEnemyRate = 12,
+        minEnemyRateDecay = .03,
+        maxEnemyRateDecay = .03,
+        maxEnemiesCoefficient = .08,
         levelScale = 2,
         upgradeCostIncrease = 4,
         maxElites = 3,
         eliteBuffCount = 4,
         types = {
-          vuju = 0,
-          spuju = 0,
+          vuju = 240,
+          spuju = 120,
           duju = 0
         }
       },
