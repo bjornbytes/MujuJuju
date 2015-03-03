@@ -302,7 +302,7 @@ return {
         levelScale = 2,
         upgradeCostIncrease = 4,
         maxElites = 3,
-        eliteBuffCount = 4,
+        eliteBuffCount = 3,
         eliteLevelThreshold = 80,
         types = {
           vuju = 240,
