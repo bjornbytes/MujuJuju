@@ -140,7 +140,7 @@ return {
         levelScale = .75,
         upgradeCostIncrease = 1,
         maxElites = 1,
-        eliteBuffCount = 1,
+        maxEliteBuffCount = 1,
         eliteLevelThreshold = 20,
         types = {
           duju = 0,
@@ -194,7 +194,7 @@ return {
         upgradeCostIncrease = 2,
         maxElites = 1,
         eliteLevelThreshold = 20,
-        eliteBuffCount = 2,
+        maxEliteBuffCount = 2,
         types = {
           spuju = 0,
           vuju = 600
@@ -247,7 +247,7 @@ return {
         levelScale = 1,
         upgradeCostIncrease = 3,
         maxElites = 2,
-        eliteBuffCount = 3,
+        maxEliteBuffCount = 3,
         eliteLevelThreshold = 50,
         types = {
           vuju = 0,
@@ -302,7 +302,7 @@ return {
         levelScale = 2,
         upgradeCostIncrease = 4,
         maxElites = 3,
-        eliteBuffCount = 3,
+        maxEliteBuffCount = 4,
         eliteLevelThreshold = 80,
         types = {
           vuju = 240,
