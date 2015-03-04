@@ -94,7 +94,7 @@ Kuju.upgrades = {
     costs = {200, 300, 400},
     prerequisites = {shiverarmor = 1},
     name = 'Crystallize',
-    description = 'Shiver Armor also has a chance to stun attackers for 2 seconds.',
+    description = 'Shiver Armor also has a chance to encase the attacker in ice, stunning it for 2 seconds.',
     x = 0,
     y = 1,
     connectedTo = {'shiverarmor'},
