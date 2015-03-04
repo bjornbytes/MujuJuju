@@ -159,7 +159,7 @@ Buju.upgrades = {
   ambush = {
     level = 0,
     maxLevel = 1,
-    prerequisites = {shadowrush = 3},
+    prerequisites = {shadowrush = 1},
     costs = {500},
     name = 'Ambush',
     description = 'When Muju enters the Juju Realm, Buju disappears and appears behind the closest enemy, dealing damage.',
