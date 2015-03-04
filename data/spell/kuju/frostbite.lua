@@ -2,15 +2,22 @@ local Frostbite = extend(Spell)
 
 local g = love.graphics
 
-Frostbite.width = 100
-
 function Frostbite:activate()
   local ability, unit = self:getAbility(), self:getUnit()
+  local level = unit:upgradeLevel('frostbite')
 
-  self.timer = ability.duration
+  self.timer = 2 + level
+  self.dps = 4 + 2 * level
   self.y = ctx.map.height - ctx.map.groundHeight
   self.team = unit.team
-  self.timer = 3
+  self.tundra = unit:upgradeLevel('tundra') > 0
+  self.width = 125 * (self.tundra and 1.5 or 1)
+  self.threshold = self.timer - 1
+  self.damages = {}
+
+  self.dead = false
+  self.alpha = 1
+  self.prevAlpha = self.alpha
 
   ctx.event:emit('view.register', {object = self})
 end
@@ -22,22 +29,46 @@ end
 function Frostbite:update()
   local ability, unit = self:getAbility(), self:getUnit()
 
-  self.timer = timer.rot(self.timer, function()
-    ctx.spells:remove(self)
-  end)
+  if self.dead then
+    self.prevAlpha = self.alpha
+    self.alpha = self.alpha - ls.tickrate
+    if self.alpha <= 0 then ctx.spells:remove(self) end
+    return
+  end
 
-  local targets = ctx.target:inRange(self, self.width / 2, 'enemy', 'unit')
-  table.each(targets, function(target)
-    local damage = 10 * unit:upgradeLevel('frostbite') * ls.tickrate
-    if unit:upgradeLevel('coldfeet') > 0 and target.buffs and target.buffs:slowed() then damage = damage * 2 end
-    target:hurt(damage, unit, {'spell'})
-  end)
+  self.timer = self.timer - ls.tickrate
+  if self.timer < self.threshold then
+    local touched = {}
+    local targets = ctx.target:inRange(self, self.width / 2, 'enemy', 'unit')
+    table.each(targets, function(target)
+      self.damages[target.viewId] = (self.damages[target.viewId] or 0) + self.dps
+      touched[target.viewId] = true
+      target:hurt(self.damages[target.viewId], unit, {'spell'})
+      if unit:upgradeLevel('brainfreeze') > 0 then
+        target.buffs:add('brainfreeze', {timer = 1})
+      end
+
+      local hypothermia = unit:upgradeLevel('hypothermia')
+      if hypothermia > 0 then
+        target:hurt(target.health * (.08 * hypothermia), unit, {'spell'})
+      end
+    end)
+
+    for k, v in pairs(self.damages) do
+      if not touched[k] then
+        self.damages[k] = nil
+      end
+    end
+
+    if self.threshold > 0 then self.threshold = self.threshold - 1
+    else self.dead = true end
+  end
 end
 
 function Frostbite:draw()
   local image = data.media.graphics.spell.frostbite
   local scale = self.width / image:getWidth()
-  g.setColor(255, 255, 255, math.min(self.timer / .2, 1) * 255)
+  g.setColor(255, 255, 255, math.lerp(self.prevAlpha, self.alpha, ls.accum / ls.tickrate) * 255)
   g.draw(image, self.x, self.y, 0, scale, scale, image:getWidth() / 2, image:getHeight() - 20)
 end
 

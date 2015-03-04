@@ -1,17 +1,17 @@
 local FrozenOrb = extend(Spell)
 FrozenOrb.depth = -10
+FrozenOrb.speed = 500
+FrozenOrb.radius = 16
 
 function FrozenOrb:activate()
-  local unit = self:getUnit()
+  local unit, ability = self:getUnit(), self:getAbility()
 
+  self.direction = ability:getUnitDirection()
   self.team = unit.team
-  self.returning = false
-
-  self.damaged = {}
 
   self.x = unit.x
   self.y = unit.y
-  self.prevx = unit.x
+  self.prevx = self.x
   self.startx = self.x
   self.angle = love.math.random() * 2 * math.pi
   self.prevangle = self.angle
@@ -26,39 +26,57 @@ end
 
 function FrozenOrb:update()
   local ability, unit = self:getAbility(), self:getUnit()
-  local direction = ability:getUnitDirection()
-  local inRange = math.abs(unit.x - self.x) < ability.range
 
   self.prevx = self.x
   self.prevangle = self.angle
 
-  if inRange and not self.returning then
-    self.x = self.x + direction * self.speed * ls.tickrate * math.max(1 - math.abs(unit.x - self.x) / ability.range, .6)
-    self.angle = self.angle + self.angularVelocity * ls.tickrate
-  elseif not inRange or self.returning then
-    if not self.returning then table.clear(self.damaged) end
-    self.returning = true
-    self.x = self.x - direction * self.speed * ls.tickrate
-    self.angle = self.angle - self.angularVelocity * ls.tickrate
-  end
+  self.x = self.x + self.direction * self.speed * ls.tickrate
+  self.angle = self.angle + self.angularVelocity * ls.tickrate
 
-  if math.abs(self.x - unit.x) <= unit.width / 2 and self.returning then
-    self:deactivate()
-  end
-
-  table.each(ctx.target:inRange(self, self.radius, 'enemy', 'unit', 'player'), function(target)
-    if not self.damaged[target.viewId] then
-      if target.buffs and unit:upgradeLevel('windchill') > 0 then
-        local slow = .2 * unit:upgradeLevel('windchill')
-        target.buffs:add('windchill', {
-          slow = slow,
-          timer = self.duration
-        })
+  local target, distance = ctx.target:closest(self, 'enemy', 'unit', 'player')
+  if target and distance < self.radius then
+    local exhaust, slow, timer, knockback = .4, .4, 1.5, 100 * self.direction
+    if target.buffs then
+      target.buffs:add('chilled', {exhaust = exhaust, slow = slow, timer = timer})
+      if unit:upgradeLevel('avalanche') then
+        target.buffs:add('avalanche', {offset = knockback})
       end
-      target:hurt(10 * unit:upgradeLevel('frozenorb'), unit, {'spell'})
-      self.damaged[target.viewId] = true
     end
-  end)
+
+    local damage = unit.spirit * (.5 * unit:upgradeLevel('frozenorb'))
+    target:hurt(damage, unit, {'spell'})
+
+    local hypothermia = unit:upgradeLevel('hypothermia')
+    if hypothermia > 0 then
+      target:hurt(target.health * (.06 * hypothermia), unit, {'spell'})
+    end
+
+    if unit:upgradeLevel('shatter') > 0 then
+      local targets = ctx.target:inRange(self, 80, 'enemy', 'unit', 'player', 'shrine')
+      table.each(targets, function(other)
+        if math.sign(other.x - target.x) == self.direction then
+          if other.buffs then
+            other.buffs:add('chilled', {exhaust = exhaust / 2, slow = slow / 2, timer = timer / 2})
+            if unit:upgradeLevel('avalanche') then
+              other.buffs:add('avalanche', {offset = knockback / 2})
+            end
+          end
+
+          other:hurt(damage / 2, unit, {'spell'})
+
+          if hypothermia > 0 then
+            other:hurt(other.health * (.08 * hypothermia), unit, {'spell'})
+          end
+        end
+      end)
+    end
+
+    ctx.spells:remove(self)
+  end
+
+  if not math.inside(self.x, self.y, 0, 0, ctx.map.width, ctx.map.height) then
+    ctx.spells:remove(self)
+  end
 end
 
 function FrozenOrb:draw()

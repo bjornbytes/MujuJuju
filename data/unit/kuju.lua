@@ -20,17 +20,16 @@ Kuju.upgrades = {
     level = 0,
     maxLevel = 5,
     costs = {100, 150, 200, 250, 300},
-    levelRequirement = 1,
     name = 'Frozen Orb',
-    description = 'Kuju sends out a chilling orb that damages enemies it passes through.  It then returns to Kuju, damaging a second time.',
+    description = 'Kuju sends out a chilling orb that damages the first enemy struck.  The targeted is also Chilled for 1.5 seconds, reducing movement and attack speed by 40%.',
     x = -1,
     y = 0,
     values = {
-      [1] = '10 damage',
-      [2] = '20 damage',
-      [3] = '30 damage',
-      [4] = '40 damage',
-      [5] = '50 damage'
+      [1] = '0.5 damage per spirit, 7 second cooldown',
+      [2] = '1.0 damage per spirit, 6 second cooldown',
+      [3] = '1.5 damage per spirit, 5 second cooldown',
+      [4] = '2.0 damage per spirit, 4 second cooldown',
+      [5] = '2.5 damage per spirit, 3 second cooldown',
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -38,38 +37,36 @@ Kuju.upgrades = {
       end
     end
   },
-  frost = {
+  shiverarmor = {
     level = 0,
     maxLevel = 5,
-    costs = {100, 200, 300, 400, 500},
-    levelRequirement = 1,
-    name = 'Frost',
-    description = 'Kuju\'s attacks slow their targets for 1 second.',
+    costs = {100, 150, 200, 250, 300},
+    name = 'Shiver Armor',
+    description = 'Kuju enchants Muju\'s robes with powerful cold magic for a period of time.  Whenever Muju is struck, he deals damage to the attacker.  10 second cooldown.',
     x = 0,
     y = 0,
     values = {
-      [1] = '10% slow',
-      [2] = '20% slow',
-      [3] = '30% slow',
-      [4] = '40% slow',
-      [5] = '50% slow',
+      [1] = '30 damage, 3 second duration',
+      [2] = '45 damage, 4 second duration',
+      [3] = '60 damage, 5 second duration',
+      [4] = '75 damage, 6 second duration',
+      [5] = '90 damage, 7 second duration',
     }
   },
   frostbite = {
     level = 0,
     maxLevel = 5,
     costs = {100, 150, 200, 250, 300},
-    levelRequirement = 1,
     name = 'Frostbite',
-    description = 'Kuju creates a frozen zone lasting for 3 seconds that damages enemies.',
+    description = 'Kuju freezes an area of ground.  Every second, enemies in the area take damage.  Enemies take more damage the longer they stay in the zone.  20 second cooldown.',
     x = 1,
     y = 0,
     values = {
-      [1] = '10 damage per second',
-      [2] = '20 damage per second',
-      [3] = '30 damage per second',
-      [4] = '40 damage per second',
-      [5] = '50 damage per second',
+      [1] = '6 damage per second per second, 3 second duration',
+      [2] = '8 damage per second per second, 4 second duration',
+      [3] = '10 damage per second per second, 5 second duration',
+      [4] = '12 damage per second per second, 6 second duration',
+      [5] = '14 damage per second per second, 7 second duration',
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -77,113 +74,141 @@ Kuju.upgrades = {
       end
     end
   },
-  windchill = {
+  shatter = {
     level = 0,
-    maxLevel = 3,
-    costs = {150, 300, 450},
+    maxLevel = 1,
+    costs = {350},
     prerequisites = {frozenorb = 3},
-    levelRequirement = 3,
-    name = 'Windchill',
-    description = 'Frozen Orb slows enemies for 2 seconds.',
+    name = 'Shatter',
+    description = 'Frozen Orb shatters on contact, damaging and chilling enemies behind the original target at 50% effectiveness.',
     x = -1,
     y = 1,
     connectedTo = {'frozenorb'},
     values = {
-      [1] = '20% slow',
-      [1] = '40% slow',
-      [1] = '60% slow'
+      [1] = 'Shatters',
     }
   },
-  shatter = {
+  crystallize = {
     level = 0,
-    maxLevel = 1,
-    costs = {500},
-    prerequisites = {frost = 1},
-    levelRequirement = 5,
-    name = 'Shatter',
-    description = 'Kuju\'s attacks shatter into shards of ice which damage enemies behind her initial target.',
+    maxLevel = 3,
+    costs = {200, 300, 400},
+    prerequisites = {shiverarmor = 1},
+    name = 'Crystallize',
+    description = 'Shiver Armor also has a chance to stun attackers for 2 seconds.',
     x = 0,
     y = 1,
-    connectedTo = {'frost'},
+    connectedTo = {'shiverarmor'},
     values = {
-      [1] = 'Attacks shatter'
+      [1] = '20% stun chance',
+      [2] = '35% stun chance',
+      [3] = '50% stun chance'
     }
   },
-  coldfeet = {
+  tundra = {
     level = 0,
     maxLevel = 1,
-    costs = {500},
-    prerequisites = {frostbite = 1},
-    levelRequirement = 3,
-    name = 'Cold Feet',
-    description = 'Frostbite deals double damage if an enemy is slowed.',
+    costs = {350},
+    prerequisites = {frostbite = 3},
+    name = 'Tundra',
+    description = 'The area of effect of frostbite is doubled.',
     x = 1,
     y = 1,
     connectedTo = {'frostbite'},
     values = {
-      [1] = '2.00x damage if target is slowed'
+      [1] = '+100% size'
     }
   },
-  permafrost = {
+  avalanche = {
     level = 0,
     maxLevel = 1,
-    costs = {1000},
+    costs = {350},
     prerequisites = {shatter = 1},
-    levelRequirement = 10,
-    name = 'Permafrost',
-    description = 'Kuju\'s attacks apply stacks of permafrost for 3 seconds.  At 3 stacks, the target is frozen in place, unable to move for 2 seconds.',
+    name = 'Avalanche',
+    description = 'Frozen Orb is conjured with the force of an avalanche, knocking enemies back.',
     x = -1,
     y = 2,
     connectedTo = {'shatter'},
     values = {
-      [1] = '2s root'
+      [1] = 'Knockback'
+    }
+  },
+  frostnova = {
+    level = 0,
+    maxLevel = 1,
+    costs = {500},
+    prerequisites = {crystallize = 1},
+    name = 'Frost Nova',
+    description = 'If Muju dies while Shiver Armor is active, he will emit a powerful ring of frost that damages enemies.',
+    x = 0,
+    y = 2,
+    connectedTo = {'crystallize'},
+    values = {
+      [1] = '10 damage'
     }
   },
   brainfreeze = {
     level = 0,
-    maxLevel = 3,
-    costs = {500, 500, 500},
-    prerequisites = {shatter = 1},
-    levelRequirement = 10,
-    name = 'Brainfreeze',
-    description = 'Kuju\'s attacks lower the attack speed of enemies for 3 seconds.',
-    x = 0,
-    y = 2,
-    connectedTo = {'shatter'},
-    values = {
-      [1] = '15% attack speed reduction',
-      [2] = '30% attack speed reduction',
-      [3] = '45% attack speed reduction',
-    }
-  },
-  frigidsplinters = {
-    level = 0,
     maxLevel = 1,
-    costs = {1000},
-    prerequisites = {shatter = 1},
+    costs = {350},
+    prerequisites = {tundra = 1},
     levelRequirement = 10,
-    name = 'Frigid Splinters',
-    description = 'Ice shards from Shatter also apply on-hit effects.',
+    name = 'Brain Freeze',
+    description = 'Frostbite sabotages its victims\' mental capacities.  Any enemies caught within Frostbite are unable to use special abilities.',
     x = 1,
     y = 2,
-    connectedTo = {'shatter'},
+    connectedTo = {'tundra'},
     values = {
-      [1] = 'Shards apply on-hit effects',
+      [1] = 'Silences enemies',
+    }
+  },
+  windchill = {
+    level = 0,
+    maxLevel = 3,
+    costs = {500, 500, 500},
+    prerequisites = {},
+    name = 'Windchill',
+    description = 'Kuju\'s attacks slow enemies and deal extra damage based on her spirit.',
+    x = -1,
+    y = 3,
+    values = {
+      [1] = '0.4 damage per spirit, 20% slow for .5 seconds',
+      [2] = '0.6 damage per spirit, 40% slow for .75 seconds',
+      [3] = '0.8 damage per spirit, 60% slow for 1 second',
+    }
+  },
+  hypothermia = {
+    level = 0,
+    maxLevel = 3,
+    costs = {500, 750, 1000},
+    prerequisites = {avalanche = 1, brainfreeze = 1},
+    name = 'Hypothermia',
+    description = 'All spell hits from Kuju deal extra damage based on the target\'s current health.',
+    x = 0,
+    y = 3,
+    connectedTo = {'avalanche', 'brainfreeze'},
+    values = {
+      [1] = '8% current health damage',
+      [2] = '16% current health damage',
+      [3] = '24% current health damage',
     }
   },
   veinsofice = {
     level = 0,
     maxLevel = 1,
-    costs = {1500},
+    costs = {1000},
     prerequisites = {},
-    levelRequirement = 15,
     name = 'Veins of Ice',
-    description = 'Kuju deals more damage based on how slow her targets are.',
-    x = 0,
+    description = 'Kuju\'s spirit is increased by a percentage.',
+    x = 1,
     y = 3,
     values = {
-      [1] = '1% extra damage per 1% slow',
-    }
+      [1] = '20% increased spirit'
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit.spirit = unit.spirit + (unit.spirit * .2)
+      end
+    end
   }
 }
 

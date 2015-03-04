@@ -143,6 +143,7 @@ end
 
 function MenuMain:update()
   if not self.active then return end
+  ctx.user.deckSlots = 3
 
   self.map:update()
 

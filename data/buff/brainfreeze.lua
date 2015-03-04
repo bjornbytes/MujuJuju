@@ -1,4 +1,4 @@
 local Brainfreeze = extend(Buff)
-Brainfreeze.tags = {'exhaust'}
+Brainfreeze.tags = {'silence'}
 
 return Brainfreeze

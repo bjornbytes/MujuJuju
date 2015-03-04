@@ -87,6 +87,8 @@ function UnitAI:startAttacking(target)
 end
 
 function UnitAI:useAbilities()
+  if self.unit.buffs:silenced() then return end
+
   table.each(self.unit.abilities, function(ability)
     if ability:canUse() and love.math.random() < .5 then
       f.exe(ability.use, ability)

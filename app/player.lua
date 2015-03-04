@@ -32,7 +32,7 @@ function Player:init()
   self.deathDuration = 7
 
   -- Juju
-  self.juju = config.player.baseJuju
+  self.juju = config.player.baseJuju + 3000
   self.totalJuju = 0
   self.jujuTimer = config.player.jujuRate
   self.jujuRate = config.player.jujuRate
@@ -48,6 +48,7 @@ function Player:init()
   self.invincible = 0
   self.ghostSpeedMultiplier = 1
   self.cooldownSpeed = 1
+  self.buffList = {}
 
   -- joystick
   self.joystick = #love.joystick.getJoysticks() > 0 and love.joystick.getJoysticks()[1]
@@ -273,6 +274,8 @@ end
 function Player:hurt(amount, source)
   if self.invincible == 0 then
     self.health = math.max(self.health - amount, 0)
+
+    ctx.event:emit('player.hurt', {amount = amount, source = source})
 
     -- Die if we are dead
     if self.health <= 0 and self.deathTimer == 0 then self:die() end
