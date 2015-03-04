@@ -95,7 +95,7 @@ function MenuStart:draw()
 
   local image = data.media.graphics.menu.leaves
   local scale = u / image:getWidth() * 1.05
-  g.draw(image, u / 2, 0, 0, scale, scale, image:getWidth() / 2, 0)
+  g.draw(image, u / 2 + offsetX / 4, 0, 0, scale, scale, image:getWidth() / 2, 0)
 
   self.start:draw()
   self.options:draw()
