@@ -65,8 +65,8 @@ function MenuStart:update()
   local u, v = ctx.u, ctx.v
   local image = data.media.graphics.menu.titlescreen
   local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
-  self.offsetX = math.lerp(self.offsetX, (.5 - (love.mouse.getX() / u)) * (u * .02), 2 * ls.tickrate)
-  self.offsetY = math.lerp(self.offsetY, (.5 - (love.mouse.getY() / v)) * (v * .02), 2 * ls.tickrate)
+  self.offsetX = math.lerp(self.offsetX, (.5 - (love.mouse.getX() / u)) * (u * .04), 2 * ls.tickrate)
+  self.offsetY = math.lerp(self.offsetY, (.5 - (love.mouse.getY() / v)) * (v * .04), 2 * ls.tickrate)
 end
 
 function MenuStart:draw()
@@ -91,7 +91,11 @@ function MenuStart:draw()
 
   local image = data.media.graphics.menu.title
   local scale = v * .45 / image:getHeight()
-  g.draw(image, u * .5 + offsetX / 2, v * .3 + offsetY / 2, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
+  g.draw(image, u * .5 + offsetX / .8, v * .3 + offsetY / .8, 0, scale * factor, scale * factor, image:getWidth() / 2, image:getHeight() / 2)
+
+  local image = data.media.graphics.menu.leaves
+  local scale = u / image:getWidth() * 1.05
+  g.draw(image, u / 2 + offsetX / .7, 0, 0, scale, scale, image:getWidth() / 2, 0)
 
   self.start:draw()
   self.options:draw()
