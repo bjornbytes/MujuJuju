@@ -86,7 +86,7 @@ function MenuStart:draw()
   local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
   local offsetX = math.lerp(self.prevOffsetX, self.offsetX, ls.accum / ls.tickrate)
   local offsetY = math.lerp(self.prevOffsetY, self.offsetY, ls.accum / ls.tickrate)
-  g.draw(image, u / 2 + offsetX, v / 2 + offsetY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+  g.draw(image, u / 2 + offsetX * 0, v / 2 + offsetY * 0, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
   g.setShader()
 
   local image = data.media.graphics.menu.title
