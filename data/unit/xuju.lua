@@ -1,29 +1,29 @@
-local Buju = {}
-Buju.name = 'Buju'
-Buju.description = 'A shadow warrior able to phase into and out of the juju realm.  Buju excels in moving quickly, dealing high damage, and avoiding attacks.'
+local Xuju = {}
+Xuju.name = 'Xuju'
+Xuju.description = 'A shadow warrior able to phase into and out of the juju realm.  Xuju excels in moving quickly, dealing high damage, and avoiding attacks.'
 
 ----------------
 -- Stats
 ----------------
-Buju.health = 65
-Buju.damage = 20
-Buju.range = 30
-Buju.attackSpeed = 1.2
-Buju.speed = 55
-Buju.cost = 10
+Xuju.health = 65
+Xuju.damage = 20
+Xuju.range = 30
+Xuju.attackSpeed = 1.2
+Xuju.speed = 55
+Xuju.cost = 10
 
-Buju.attackParticleCount = 10
+Xuju.attackParticleCount = 10
 
 ----------------
 -- Upgrades
 ----------------
-Buju.upgrades = {
+Xuju.upgrades = {
   shadowrush = {
     level = 0,
     maxLevel = 3,
     costs = {100, 150, 200},
     name = 'Shadow Rush',
-    description = 'Buju leaps through the shadows, dashing towards a nearby target.',
+    description = 'Xuju leaps through the shadows, dashing towards a nearby target.',
     x = -1,
     y = 0,
     values = {
@@ -42,7 +42,7 @@ Buju.upgrades = {
     maxLevel = 5,
     costs = {100, 150, 200, 250, 300},
     name = 'Rend',
-    description = 'Buju has a chance to critically injure his opponent with his attacks, dealing double damage.',
+    description = 'Xuju has a chance to critically injure his opponent with his attacks, dealing double damage.',
     x = 0,
     y = 0,
     values = {
@@ -63,7 +63,7 @@ Buju.upgrades = {
     maxLevel = 5,
     costs = {100, 150, 200, 250, 300},
     name = 'Ghost Armor',
-    description = 'Buju has a chance to fade into the juju realm when struck by attacks, negating the damage completely.',
+    description = 'Xuju has a chance to fade into the juju realm when struck by attacks, negating the damage completely.',
     x = 1,
     y = 0,
     values = {
@@ -85,7 +85,7 @@ Buju.upgrades = {
     prerequisites = {rend = 1},
     costs = {200, 300, 400},
     name = 'Fury',
-    description = 'Critical hits increase Buju\'s attack speed for 5 seconds, stacking multiple times.',
+    description = 'Critical hits increase Xuju\'s attack speed for 5 seconds, stacking multiple times.',
     x = 0,
     y = 1,
     connectedTo = {'rend'},
@@ -101,7 +101,7 @@ Buju.upgrades = {
     prerequisites = {ghostarmor = 3},
     costs = {300},
     name = 'Void Metal',
-    description = 'Buju has a chance to resist crowd control effects.',
+    description = 'Xuju has a chance to resist crowd control effects.',
     x = 1,
     y = 1,
     connectedTo = {'ghostarmor'},
@@ -115,7 +115,7 @@ Buju.upgrades = {
     prerequisites = {fury = 1},
     costs = {200, 200, 200},
     name = 'Death Wish',
-    description = 'Buju expertly identifies and exploits the weaknesses of crippled enemies.  Critical hit chance is doubled against enemies that are low on health.',
+    description = 'Xuju expertly identifies and exploits the weaknesses of crippled enemies.  Critical hit chance is doubled against enemies that are low on health.',
     connectedTo = {'fury'},
     x = 0,
     y = 2,
@@ -131,7 +131,7 @@ Buju.upgrades = {
     prerequisites = {voidmetal = 1},
     costs = {1000},
     name = 'Tempered Bastion',
-    description = 'Buju\'s armor is magically infused with light-bending bastion. The chance of effect for Ghost Armor and Void Metal are increased to 100% when Buju is in the Juju Realm.',
+    description = 'Xuju\'s armor is magically infused with light-bending bastion. The chance of effect for Ghost Armor and Void Metal are increased to 100% when Xuju is in the Juju Realm.',
     x = 1,
     y = 2,
     connectedTo = {'voidmetal'},
@@ -144,7 +144,7 @@ Buju.upgrades = {
     maxLevel = 1,
     costs = {1000},
     name = 'Grim Reaper',
-    description = 'When Buju dies, he resurrects for 5 seconds',
+    description = 'When Xuju dies, he resurrects for 5 seconds',
     x = -1,
     y = 3,
     values = {
@@ -162,7 +162,7 @@ Buju.upgrades = {
     prerequisites = {shadowrush = 1},
     costs = {500},
     name = 'Ambush',
-    description = 'When Muju enters the Juju Realm, Buju disappears and appears behind the closest enemy, dealing damage.',
+    description = 'When Muju enters the Juju Realm, Xuju disappears and appears behind the closest enemy, dealing damage.',
     x = -1,
     y = 1,
     connectedTo = {'shadowrush'},
@@ -180,7 +180,7 @@ Buju.upgrades = {
     maxLevel = 1,
     costs = {1500},
     name = 'Twin Blades',
-    description = 'Buju\'s attacks will also effect a second nearby enemy.',
+    description = 'Xuju\'s attacks will also effect a second nearby enemy.',
     x = 0,
     y = 3,
     values = {
@@ -197,7 +197,7 @@ Buju.upgrades = {
     maxLevel = 1,
     costs = {1500},
     name = 'Empowered Strikes',
-    description = 'Every time Muju collects Juju, Buju gains a charge of Empowered Strikes.  Empowered Strikes causes Buju\'s next attack to deal increased damage and heal him for a percentage of the damage dealt.',
+    description = 'Every time Muju collects Juju, Xuju gains a charge of Empowered Strikes.  Empowered Strikes causes Xuju\'s next attack to deal increased damage and heal him for a percentage of the damage dealt.',
     x = 1,
     y = 3,
     values = {
@@ -211,4 +211,4 @@ Buju.upgrades = {
   }
 }
 
-return Buju
+return Xuju

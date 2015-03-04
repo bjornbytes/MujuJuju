@@ -258,7 +258,7 @@ function Menu:initAnimations()
   local scales = {
     thuju = .4,
     bruju = 1,
-    buju = .4,
+    xuju = .4,
     kuju = .5
   }
 

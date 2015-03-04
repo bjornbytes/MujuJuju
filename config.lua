@@ -3,7 +3,7 @@ return {
   starters = {
     'bruju',
     'thuju',
-    'buju',
+    'xuju',
     'kuju'
   },
 
@@ -440,7 +440,7 @@ return {
   },
 
   defaultUser = {
-    minions = {'thuju', 'bruju', 'buju', 'kuju'},
+    minions = {'thuju', 'bruju', 'xuju', 'kuju'},
     runes = {},
     deck = {minions = {}, runes = {}},
     deckSlots = 2,

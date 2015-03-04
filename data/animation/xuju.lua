@@ -1,46 +1,46 @@
-local Buju = extend(Animation)
+local Xuju = extend(Animation)
 
-Buju.scale = .3
-Buju.offsety = 72
-Buju.default = 'spawn'
-Buju.states = {}
+Xuju.scale = .3
+Xuju.offsety = 72
+Xuju.default = 'spawn'
+Xuju.states = {}
 
-Buju.states.spawn = {
+Xuju.states.spawn = {
   priority = 5,
   speed = .75
 }
 
-Buju.states.idle = {
+Xuju.states.idle = {
   priority = 1,
   loop = true,
   speed = 1
 }
 
-Buju.states.walk = {
+Xuju.states.walk = {
   priority = 1,
   loop = true,
   speed = .73
 }
 
-Buju.states.attack = {
+Xuju.states.attack = {
   priority = 1,
   loop = true,
   speed = 1
 }
 
-Buju.states.death = {
+Xuju.states.death = {
   priority = 5,
   speed = .8
 }
 
-Buju.states.vanish = {
+Xuju.states.vanish = {
   priority = 3,
   speed = .5
 }
 
-Buju.states.rend = {
+Xuju.states.rend = {
   priority = 3,
   speed = 1.3
 }
 
-return Buju
+return Xuju
