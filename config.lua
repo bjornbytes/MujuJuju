@@ -439,12 +439,21 @@ return {
   },
 
   defaultUser = {
-    minions = {'thuju', 'bruju', 'xuju', 'kuju'},
-    runes = {},
-    deck = {minions = {}, runes = {}},
-    deckSlots = 2,
-    biomes = {'forest'},
-    highscores = {forest = 0, cavern = 0, tundra = 0, volcano = 0},
+    runes = {
+      stash = {},
+      bruju = {},
+      xuju = {},
+      kuju = {},
+      thuju = {}
+    },
+    minions = {},
+    medals = {
+      forest = {},
+      cavern = {},
+      tundra = {},
+      volcano = {}
+    },
+    survivalTime = 0,
     name = 'Muju',
     color = 'purple',
     hats = {},
