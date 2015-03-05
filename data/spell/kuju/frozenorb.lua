@@ -35,7 +35,7 @@ function FrozenOrb:update()
 
   local target, distance = ctx.target:closest(self, 'enemy', 'unit', 'player')
   if target and distance < self.radius then
-    local exhaust, slow, timer, knockback = .4, .4, 1.5, 100 * self.direction
+    local exhaust, slow, timer, knockback = .4, .4, 1.5, 75 * self.direction
     if target.buffs then
       target.buffs:add('chilled', {exhaust = exhaust, slow = slow, timer = timer})
       if unit:upgradeLevel('avalanche') > 0 then
