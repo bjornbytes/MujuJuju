@@ -46,9 +46,9 @@ function FrozenOrb:update()
     local damage = unit.spirit * (.5 * unit:upgradeLevel('frozenorb'))
     target:hurt(damage, unit, {'spell'})
 
-    local hypothermia = unit:upgradeLevel('hypothermia')
-    if hypothermia > 0 then
-      target:hurt(target.health * (.06 * hypothermia), unit, {'spell'})
+    local wintersblight = unit:upgradeLevel('wintersblight')
+    if wintersblight > 0 then
+      target:hurt(target.health * (.06 * wintersblight), unit, {'spell'})
     end
 
     if unit:upgradeLevel('shatter') > 0 then
@@ -64,8 +64,8 @@ function FrozenOrb:update()
 
           other:hurt(damage / 2, unit, {'spell'})
 
-          if hypothermia > 0 then
-            other:hurt(other.health * (.08 * hypothermia), unit, {'spell'})
+          if wintersblight > 0 then
+            other:hurt(other.health * (.08 * wintersblight), unit, {'spell'})
           end
         end
       end)

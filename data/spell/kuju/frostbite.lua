@@ -48,9 +48,9 @@ function Frostbite:update()
         target.buffs:add('brainfreeze', {timer = 1})
       end
 
-      local hypothermia = unit:upgradeLevel('hypothermia')
-      if hypothermia > 0 then
-        target:hurt(target.health * (.08 * hypothermia), unit, {'spell'})
+      local wintersblight = unit:upgradeLevel('wintersblight')
+      if wintersblight > 0 then
+        target:hurt(target.health * (.08 * wintersblight), unit, {'spell'})
       end
     end)
 

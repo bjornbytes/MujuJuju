@@ -181,12 +181,12 @@ Kuju.upgrades = {
       [3] = '0.8 damage per spirit, 60% slow for 1 second',
     }
   },
-  hypothermia = {
+  wintersblight = {
     level = 0,
     maxLevel = 3,
     costs = {500, 750, 1000},
     prerequisites = {avalanche = 1, brainfreeze = 1},
-    name = 'Hypothermia',
+    name = 'Winter\'s Blight',
     description = 'All spell hits from Kuju deal extra damage based on the target\'s current health.',
     x = 0,
     y = 3,
