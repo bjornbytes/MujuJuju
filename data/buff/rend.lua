@@ -21,7 +21,8 @@ function Rend:preattack(target, amount)
       buff.frenzy = buff.stack and amount * buff.stacks or amount
     end
 
-    ctx.particles:emit('crit', target.x, target.y, 10)
+    local x, y = self.unit:attackParticlePosition(target)
+    ctx.particles:emit('crit', x, y, 10)
 
     return amount * 2
   end

@@ -32,7 +32,7 @@ function Player:init()
   self.deathDuration = 7
 
   -- Juju
-  self.juju = config.player.baseJuju
+  self.juju = config.player.baseJuju + 3000
   self.totalJuju = 0
   self.jujuTimer = config.player.jujuRate
   self.jujuRate = config.player.jujuRate
