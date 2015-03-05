@@ -13,7 +13,7 @@ Xuju.speed = 55
 Xuju.cost = 10
 
 Xuju.attackParticleCount = 10
-Xuju.attackParticleBone = 'righthand'
+Xuju.attackParticleBone = 'region_righthand'
 
 ----------------
 -- Upgrades
