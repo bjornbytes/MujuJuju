@@ -29,7 +29,7 @@ function MenuStart:init()
       local sx, sy, sw, sh = unpack(self.geometry.start)
       local w = u * .12
       local h = w * .28
-      return {u * .5 + v * .01, sy + sh + v * .01, w, h}
+      return {u * .5 + v * .01 - 1, sy + sh + v * .01, w, h}
     end
   }
 
