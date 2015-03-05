@@ -111,12 +111,6 @@ function Menu:keypressed(key)
     saveOptions(self.options)
     self.optionsPane.refreshControls()
   elseif key == 'escape' then love.event.quit()
-  elseif key == 'x' and love.keyboard.isDown('lctrl') and love.keyboard.isDown('lshift') then
-    love.filesystem.remove('save/user.json')
-    love.filesystem.remove('save/' .. ctx.user.name .. '/options.json')
-    if ctx.menuSounds then ctx.menuSounds:stop() end
-    Context:remove(ctx)
-    Context:add(Menu)
   elseif key == 't' then
     self:startGame({tutorial = true})
   end
