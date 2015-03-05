@@ -103,7 +103,7 @@ function MenuUser:draw()
 
   g.setColor(255, 255, 255)
   g.setFont('mesmerize', v * .05)
-  g.printCenter(string.upper('Choose a game slot'), u * .5, v * .18)
+  g.printCenter('Choose a game slot', u * .5, v * .18)
 
   for i = 1, #self.slots do
     self.slots[i]:draw()
