@@ -10,7 +10,7 @@ function Avalanche:update()
   local knockbackFactor = math.max(math.abs(self.offset) / self.base, .5) * 600 * ls.tickrate
   local amount = knockbackFactor
 
-  self.unit.x = self.unit.x + amount * sign
+  self.unit.x = math.clamp(self.unit.x + amount * sign, 0, ctx.map.width)
 
   local knockupFactor = 1 - (2 * math.abs(.5 - math.abs(self.offset / self.base)))
   self.knockup = knockupFactor * 25
