@@ -15,7 +15,7 @@ function Menu:load(options, systemOptions)
   self.start = MenuStart()
   self.select = MenuUser()
   self.choose = MenuChoose()
-  self.main = MenuMain()
+  self.campaign = MenuCampaign()
 
   -- Initialize options
   if not love.filesystem.exists('save/options.json') then
@@ -46,7 +46,7 @@ function Menu:load(options, systemOptions)
   self.unitCanvas = g.newCanvas(400, 400)
   self.screenCanvas = g.newCanvas(self.u, self.v)
 
-  self.main.selectedBiome = options and options.biome or self.main.selectedBiome
+  self.campaign.selectedBiome = options and options.biome or self.campaign.selectedBiome
   self.user = options and options.user
   self.page = options and options.page or 'start'
 
@@ -59,8 +59,8 @@ end
 
 function Menu:update()
   -- Ensure that "Play" can't be clicked while options is open
-  if self.optionsPane.active then self.main.play.disabled = true
-  else self.main.play.disabled = false end
+  if self.optionsPane.active then self.campaign.play.disabled = true
+  else self.campaign.play.disabled = false end
 
   self.tooltip:update()
   self.gooey:update()
@@ -71,7 +71,7 @@ function Menu:update()
   self.start:update()
   self.select:update()
   self.choose:update()
-  self.main:update()
+  self.campaign:update()
   self.optionsPane:update()
 
   self.virtualCursor:update()
@@ -88,7 +88,7 @@ function Menu:draw()
     if self.page ~= 'start' then self:drawBackground() end
     self.select:draw()
     self.choose:draw()
-    self.main:draw()
+    self.campaign:draw()
   end)
 
   g.setColor(255, 255, 255)
@@ -99,7 +99,7 @@ function Menu:draw()
 end
 
 function Menu:keypressed(key)
-  if self.main:keypressed(key) then return end
+  if self.campaign:keypressed(key) then return end
   if self.optionsPane:keypressed(key) then return end
   if self.select:keypressed(key) then return end
   if self.choose:keypressed(key) then return end
@@ -131,13 +131,13 @@ function Menu:mousepressed(mx, my, b)
   if self.optionsPane:mousepressed(mx, my, b) then return end
   self.start:mousepressed(mx, my, b)
   self.choose:mousepressed(mx, my, b)
-  self.main:mousepressed(mx, my, b)
+  self.campaign:mousepressed(mx, my, b)
 end
 
 function Menu:mousereleased(mx, my, b)
   self.gooey:mousereleased(mx, my, b)
   self.start:mousereleased(mx, my, b)
-  self.main:mousereleased(mx, my, b)
+  self.campaign:mousereleased(mx, my, b)
 end
 
 function Menu:gamepadpressed(gamepad, button)
@@ -146,7 +146,7 @@ function Menu:gamepadpressed(gamepad, button)
     self:mousepressed(x, y, 'l')
   else
     self.start:gamepadpressed(gamepad, button)
-    self.main:gamepadpressed(gamepad, button)
+    self.campaign:gamepadpressed(gamepad, button)
     self.optionsPane:gamepadpressed(gamepad, button)
   end
 end
@@ -178,7 +178,7 @@ function Menu:resize()
   self.gooey:resize()
   self.start:resize()
   self.choose:resize()
-  self.main:resize()
+  self.campaign:resize()
   self.select:resize()
   if self.optionsPane then self.optionsPane:resize() end
   self.canvas = g.newCanvas(u, v)
@@ -190,7 +190,7 @@ function Menu:startGame(options)
   if #self.user.deck.minions == 0 then return end
   if self.menuSounds then self.menuSounds:stop() end
   Context:remove(ctx)
-  Context:add(Game, self.user, self.options, config.biomeOrder[self.main.selectedBiome], options and options.tutorial)
+  Context:add(Game, self.user, self.options, config.biomeOrder[self.campaign.selectedBiome], options and options.tutorial)
 end
 
 function Menu:refreshBackground()
@@ -207,7 +207,7 @@ function Menu:refreshBackground()
   self.workingCanvas:clear(255, 255, 255, 0)
 
   self.background1:renderTo(function()
-    local image = data.media.graphics.map[config.biomeOrder[self.main.selectedBiome]]
+    local image = data.media.graphics.map[config.biomeOrder[self.campaign.selectedBiome]]
     g.draw(image, 0, 0, 0, u / image:getWidth(), v / image:getHeight())
   end)
 

@@ -125,7 +125,7 @@ end
 function MenuUser:slotPicked(slot)
   if not self.slots[slot].empty then
     ctx.user = self.users[slot]
-    ctx:goto('main')
+    ctx:goto('campaign')
   else
     ctx.choose.user.slot = slot
     ctx:goto('choose')

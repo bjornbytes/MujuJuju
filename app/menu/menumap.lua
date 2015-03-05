@@ -12,10 +12,10 @@ function MenuMap:init()
     frame = function()
       local u, v = ctx.u, ctx.v
       local factor = self.factor
-      local width = math.lerp(.4 * v, .6 * u, factor)
-      local height = width * (10 / 16)
-      local x = math.lerp(u * .8, u * .5, math.clamp(factor ^ 2, 0, 1))
-      local y = math.lerp(.35 * v, v * .5, math.clamp(factor ^ .5, 0, 1))
+      local width = math.lerp(.95 * u, .98 * u, factor ^ 4)
+      local height = width * (v / u)
+      local x = math.lerp(u * .5, u * .5, factor)
+      local y = math.lerp(-(height * .4), v * .5, factor)
       return {x - width / 2, y - height / 2, width, height}
     end,
 
@@ -77,10 +77,10 @@ function MenuMap:init()
 
   self.active = false
   self.focused = false
-  self.factor = 0
+  self.factor = 1
   self.tweenDuration = .6
   self.tweenMethod = 'outQuint'
-  self.tween = tween.new(self.tweenDuration, self, {factor = 0}, self.tweenMethod)
+  self.tween = tween.new(self.tweenDuration, self, {factor = 1}, self.tweenMethod)
   self.alpha = 0
   self.prevAlpha = self.alpha
   self.scales = {}
@@ -98,7 +98,7 @@ function MenuMap:update()
   for k, v in ipairs(config.biomeOrder) do
     local hover = math.insideCircle(mx, my, unpack(self.geometry[v]))
     self.prevScales[v] = self.scales[v] or 1
-    self.scales[v] = math.lerp(self.scales[v] or 1, (hover or ctx.main.selectedBiome == k) and 1.15 or .9, math.min(16 * ls.tickrate, 1))
+    self.scales[v] = math.lerp(self.scales[v] or 1, (hover or ctx.campaign.selectedBiome == k) and 1.15 or .9, math.min(16 * ls.tickrate, 1))
   end
 end
 
@@ -116,8 +116,7 @@ function MenuMap:draw()
 
   local alpha = math.lerp(self.prevAlpha, self.alpha, ls.accum / ls.tickrate)
 
-  -- Fade out background
-  g.setColor(0, 0, 0, 100 * alpha)
+  g.setColor(0, 0, 0, 80 * alpha)
   g.rectangle('fill', 0, 0, u, v)
 
   local x, y, w, h = unpack(self.geometry.frame)
@@ -126,13 +125,6 @@ function MenuMap:draw()
   local yscale = h / image:getHeight()
   g.setColor(255, 255, 255)
   g.draw(image, x, y, 0, xscale, yscale)
-
-  if not self.focused and math.inside(mx, my, x, y, w, h) and not ctx.optionsPane.active then
-    g.setColor(255, 255, 255, 20)
-    g.setBlendMode('additive')
-    g.draw(image, x, y, 0, xscale, yscale)
-    g.setBlendMode('alpha')
-  end
 
   for k, v in ipairs(config.biomeOrder) do
     local has = table.has(ctx.user.biomes, v)
@@ -147,7 +139,7 @@ function MenuMap:draw()
     local image = data.media.graphics.worldmap.circle
     local scale = r * 2 / image:getWidth()
     scale = scale * math.lerp(self.prevScales[v], self.scales[v], ls.accum / ls.tickrate)
-    if ctx.main.selectedBiome == k then g.setColor(255, 255, 255)
+    if ctx.campaign.selectedBiome == k then g.setColor(255, 255, 255)
     else g.setColor(255, 255, 255, 100) end
     g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
@@ -178,15 +170,14 @@ function MenuMap:mousepressed(mx, my, b)
 
   for k, v in ipairs(config.biomeOrder) do
     if math.insideCircle(mx, my, unpack(self.geometry[v])) and true then -- table.has(ctx.user.biomes, v) then
-      ctx.main:setBiome(k)
+      ctx.campaign:setBiome(k)
+      self:toggle()
       self.scales[v] = 1.5
       return
     end
   end
 
-  if math.inside(mx, my, unpack(self.geometry.frame)) then
-    if not self.focused then self:toggle() end
-  elseif self.focused then
+  if math.inside(mx, my, unpack(self.geometry.frame)) and not self.focused then
     self:toggle()
   end
 end

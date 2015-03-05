@@ -1,5 +1,5 @@
 local g = love.graphics
-MenuMain = class()
+MenuCampaign = class()
 
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
@@ -7,11 +7,11 @@ local function lerpAnimation(code, key, val)
 end
 
 local function lerpRune(rune, key, val)
-  ctx.main.prevRuneTransforms[rune][key] = ctx.main.runeTransforms[rune][key]
-  ctx.main.runeTransforms[rune][key] = math.lerp(ctx.main.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.campaign.prevRuneTransforms[rune][key] = ctx.campaign.runeTransforms[rune][key]
+  ctx.campaign.runeTransforms[rune][key] = math.lerp(ctx.campaign.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
-function MenuMain:init()
+function MenuCampaign:init()
   self.geometry = setmetatable({}, {__index = function(t, k)
     return rawset(t, k, self.geometryFunctions[k]())[k]
   end})
@@ -106,7 +106,7 @@ function MenuMain:init()
 
   self.selectedBiome = selectedBiome or 1
 
-  self.play = ctx.gooey:add(Button, 'menu.main.play')
+  self.play = ctx.gooey:add(Button, 'menu.campaign.play')
   self.play.geometry = function() return self.geometry.play end
   self.play:on('click', function() ctx.animations.muju:set('death') end)
   self.play.text = 'Play'
@@ -115,7 +115,7 @@ function MenuMain:init()
   self.drag = MenuDrag()
 end
 
-function MenuMain:activate()
+function MenuCampaign:activate()
   table.clear(self.geometry)
 
   -- Initialize runes
@@ -134,14 +134,17 @@ function MenuMain:activate()
 
   self.map.active = true
   self.drag.active = true
+
+  self.map.focused = true
+  self.map.factor = 1
 end
 
-function MenuMain:deactivate()
+function MenuCampaign:deactivate()
   self.map.active = false
   self.drag.active = false
 end
 
-function MenuMain:update()
+function MenuCampaign:update()
   if not self.active then return end
 
   self.map:update()
@@ -211,7 +214,7 @@ function MenuMain:update()
   self.drag:update()
 end
 
-function MenuMain:draw()
+function MenuCampaign:draw()
   if not self.active then return end
 
   local u, v = ctx.u, ctx.v
@@ -270,8 +273,8 @@ function MenuMain:draw()
     local rune = ctx.user.runes[i]
     if rune and not self.drag:isDragging('gutterRune', i) then
       local lerpd = {}
-      for k, v in pairs(ctx.main.runeTransforms[rune]) do
-        lerpd[k] = math.lerp(ctx.main.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+      for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
+        lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
       g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
     end
@@ -352,8 +355,8 @@ function MenuMain:draw()
       if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and not self.drag:isDragging('rune', i, j) then
         local rune = ctx.user.deck.runes[i][j]
         local lerpd = {}
-        for k, v in pairs(ctx.main.runeTransforms[rune]) do
-          lerpd[k] = math.lerp(ctx.main.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+        for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
+          lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
 
         g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
@@ -380,11 +383,11 @@ function MenuMain:draw()
   self.drag:draw()
 end
 
-function MenuMain:keypressed(key)
+function MenuCampaign:keypressed(key)
   return self.map:keypressed(key)
 end
 
-function MenuMain:mousepressed(mx, my, b)
+function MenuCampaign:mousepressed(mx, my, b)
   self.map:mousepressed(mx, my, b)
 
   if not self.active or self.map.focused then return end
@@ -392,13 +395,13 @@ function MenuMain:mousepressed(mx, my, b)
   self.drag:mousepressed(mx, my, b)
 end
 
-function MenuMain:mousereleased(mx, my, b)
+function MenuCampaign:mousereleased(mx, my, b)
   if not self.active or self.map.focused then return end
   if ctx.optionsPane.active then return end
   self.drag:mousereleased(mx, my, b)
 end
 
-function MenuMain:gamepadpressed(gamepad, button)
+function MenuCampaign:gamepadpressed(gamepad, button)
   if not self.active or self.map.focused then return end
   if button == 'dpleft' then self:previousBiome()
   elseif button == 'dpright' then self:nextBiome()
@@ -409,20 +412,20 @@ function MenuMain:gamepadpressed(gamepad, button)
   end
 end
 
-function MenuMain:resize()
+function MenuCampaign:resize()
   self.map:resize()
   table.clear(self.geometry)
 end
 
-function MenuMain:previousBiome()
+function MenuCampaign:previousBiome()
   self:setBiome(self.selectedBiome - 1)
 end
 
-function MenuMain:nextBiome()
+function MenuCampaign:nextBiome()
   self:setBiome(self.selectedBiome + 1)
 end
 
-function MenuMain:setBiome(index)
+function MenuCampaign:setBiome(index)
   if index == 0 then index = #config.biomeOrder
   elseif index > #config.biomeOrder then index = 1 end
   self.selectedBiome = index

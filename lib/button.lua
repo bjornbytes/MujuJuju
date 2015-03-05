@@ -56,7 +56,7 @@ function Button:render()
   local yscale = h / button:getHeight()
   g.setColor(255, 255, 255)
   --g.draw(image, x, bgy, 0, w, yscale, 0, image:getHeight())
-  g.setColor(255, 255, 255, 60)
+  g.setColor(255, 255, 255, 65)
   g.rectangle('fill', x, y, w, h)
 
   local fade = math.lerp(self.prevHoverFade, self.hoverFade, ls.accum / ls.tickrate)

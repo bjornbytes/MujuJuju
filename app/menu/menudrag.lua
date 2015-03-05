@@ -8,8 +8,8 @@ local function lerpAnimation(code, key, val)
 end
 
 local function lerpRune(rune, key, val)
-  ctx.main.prevRuneTransforms[rune][key] = ctx.main.runeTransforms[rune][key]
-  ctx.main.runeTransforms[rune][key] = math.lerp(ctx.main.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.campaign.prevRuneTransforms[rune][key] = ctx.campaign.runeTransforms[rune][key]
+  ctx.campaign.runeTransforms[rune][key] = math.lerp(ctx.campaign.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuDrag:init()
@@ -40,14 +40,14 @@ function MenuDrag:draw()
   if self.dragging == 'gutterRune' or self.dragging == 'rune' then
     local x, y, w, h
     if self.dragging == 'rune' then
-      x, y, w, h = unpack(ctx.main.geometry.deck[self.draggingIndex[1]][4][self.draggingIndex[2]])
+      x, y, w, h = unpack(ctx.campaign.geometry.deck[self.draggingIndex[1]][4][self.draggingIndex[2]])
     else
-      x, y, w, h = unpack(ctx.main.geometry.gutterRunes[self.draggingIndex])
+      x, y, w, h = unpack(ctx.campaign.geometry.gutterRunes[self.draggingIndex])
     end
     local rune = self.dragging == 'rune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
     local lerpd = {}
-    for k, v in pairs(ctx.main.runeTransforms[rune]) do
-      lerpd[k] = math.lerp(ctx.main.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+    for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
+      lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
     g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .05 * ctx.v)
   elseif self.dragging == 'minion' or self.dragging == 'gutterMinion' then
@@ -70,7 +70,7 @@ end
 
 function MenuDrag:mousepressed(mx, my, b)
   if b == 'l' then
-    local gutterRunes = ctx.main.geometry.gutterRunes
+    local gutterRunes = ctx.campaign.geometry.gutterRunes
     for i = 1, #gutterRunes do
       local x, y, w, h = unpack(gutterRunes[i])
       if ctx.user.runes[i] and math.inside(mx, my, x, y, w, h) then
@@ -82,7 +82,7 @@ function MenuDrag:mousepressed(mx, my, b)
     end
   end
 
-  local gutterMinions = ctx.main.geometry.gutterMinions
+  local gutterMinions = ctx.campaign.geometry.gutterMinions
   for i = 1, #gutterMinions do
     local x, y, r = unpack(gutterMinions[i])
     if math.insideCircle(mx, my, x, y, r) then
@@ -97,7 +97,7 @@ function MenuDrag:mousepressed(mx, my, b)
     end
   end
 
-  local deck = ctx.main.geometry.deck
+  local deck = ctx.campaign.geometry.deck
   for i = 1, #deck do
     local x, y, r, runes = unpack(deck[i])
     if math.insideCircle(mx, my, x, y, r) then
@@ -122,7 +122,7 @@ function MenuDrag:mousereleased(mx, my, b)
   local dirty = false
 
   if self.dragging == 'gutterRune' and b == 'l' then
-    local deck = ctx.main.geometry.deck
+    local deck = ctx.campaign.geometry.deck
     local rune = ctx.user.runes[self.draggingIndex]
     for i = 1, #deck do
       ctx.user.deck.runes[i] = ctx.user.deck.runes[i] or {}
@@ -147,7 +147,7 @@ function MenuDrag:mousereleased(mx, my, b)
       end
     end
   elseif self.dragging == 'rune' then
-    if b == 'r' or (b == 'l' and math.inside(mx, my, unpack(ctx.main.geometry.gutterRunesFrame))) then
+    if b == 'r' or (b == 'l' and math.inside(mx, my, unpack(ctx.campaign.geometry.gutterRunesFrame))) then
       local i, j = unpack(self.draggingIndex)
       local rune = ctx.user.deck.runes[i][j]
       table.insert(ctx.user.runes, rune)
@@ -156,7 +156,7 @@ function MenuDrag:mousereleased(mx, my, b)
     end
 
     if b == 'l' then
-      local deck = ctx.main.geometry.deck
+      local deck = ctx.campaign.geometry.deck
       local i, j = unpack(self.draggingIndex)
       local oldRune = ctx.user.deck.runes[i][j]
       for m = 1, #deck do
@@ -208,7 +208,7 @@ function MenuDrag:mousereleased(mx, my, b)
 
   if dirty then
     saveUser(ctx.user)
-    table.clear(ctx.main.geometry)
+    table.clear(ctx.campaign.geometry)
   end
 
   self.focused = false
