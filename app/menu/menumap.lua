@@ -137,6 +137,9 @@ function MenuMap:draw()
 
   for k, v in ipairs(config.biomeOrder) do
     local factor = math.lerp(self.prevHovers[v], self.hovers[v], ls.accum / ls.tickrate)
+    local hover = math.insideCircle(mx, my, unpack(self.geometry[v]))
+    local active = hover and love.mouse.isDown('l')
+
     if k >= 2 then
       local x, y = unpack(self.geometry['trail' .. (k - 1)])
       local image = data.media.graphics.worldmap['trail' .. (k - 1)]
@@ -147,6 +150,7 @@ function MenuMap:draw()
     local x, y, r = unpack(self.geometry[v])
     local image = data.media.graphics.worldmap.circle
     local scale = r * 2 / image:getWidth()
+    if active then y = y + 2 end
     scale = scale * (.7 + .2 * factor)
     g.setColor(255, 255, 255)
     g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
@@ -174,7 +178,7 @@ function MenuMap:keypressed(key)
   end
 end
 
-function MenuMap:mousepressed(mx, my, b)
+function MenuMap:mousereleased(mx, my, b)
   if b ~= 'l' then return end
 
   local u, v = ctx.u, ctx.v
@@ -183,7 +187,6 @@ function MenuMap:mousepressed(mx, my, b)
     if math.insideCircle(mx, my, unpack(self.geometry[v])) then
       ctx.campaign:setBiome(v)
       self:toggle()
-      self.scales[v] = 1.5
       return
     end
   end

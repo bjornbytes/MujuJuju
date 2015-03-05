@@ -313,14 +313,12 @@ function MenuCampaign:keypressed(key)
 end
 
 function MenuCampaign:mousepressed(mx, my, b)
-  self.map:mousepressed(mx, my, b)
-
   if not self.active or self.map.focused then return end
-
   self.drag:mousepressed(mx, my, b)
 end
 
 function MenuCampaign:mousereleased(mx, my, b)
+  self.map:mousereleased(mx, my, b)
   if not self.active or self.map.focused then return end
   if ctx.optionsPane.active then return end
   self.drag:mousereleased(mx, my, b)
