@@ -25,11 +25,11 @@ Kuju.upgrades = {
     x = -1,
     y = 0,
     values = {
-      [1] = '0.5 damage per spirit, 7 second cooldown',
-      [2] = '1.0 damage per spirit, 6 second cooldown',
-      [3] = '1.5 damage per spirit, 5 second cooldown',
-      [4] = '2.0 damage per spirit, 4 second cooldown',
-      [5] = '2.5 damage per spirit, 3 second cooldown',
+      [1] = '0.5 damage per spirit, 9 second cooldown',
+      [2] = '1.0 damage per spirit, 8 second cooldown',
+      [3] = '1.5 damage per spirit, 7 second cooldown',
+      [4] = '2.0 damage per spirit, 6 second cooldown',
+      [5] = '2.5 damage per spirit, 5 second cooldown',
     },
     apply = function(self, unit)
       if self.level > 0 then

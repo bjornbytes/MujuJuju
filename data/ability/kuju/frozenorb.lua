@@ -5,13 +5,13 @@ local FrozenOrb = extend(Ability)
 -- Behavior
 ----------------
 function FrozenOrb:activate()
-  self.timer = love.math.random() * 8 - self.unit:upgradeLevel('frozenorb')
+  self.timer = love.math.random() * 10 - self.unit:upgradeLevel('frozenorb')
 
   self.unit.animation:on('event', function(event)
     if event.data.name == 'frozenorb' then
       ctx.sound:play(data.media.sounds.kuju.frozenorb)
       self:createSpell('frozenorb', {})
-      self.timer = 8 - self.unit:upgradeLevel('frozenorb')
+      self.timer = 10 - self.unit:upgradeLevel('frozenorb')
     end
   end)
 end
