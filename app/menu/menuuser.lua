@@ -133,7 +133,6 @@ function MenuUser:slotPicked(slot)
 end
 
 function MenuUser:removeSlot(slot)
-  print(slot, self.slots[slot].empty)
   if not self.slots[slot].empty then
     love.filesystem.remove('save/' .. self.users[slot].name .. '/user.json')
     love.filesystem.remove('save/' .. self.users[slot].name .. '/achievements.json')

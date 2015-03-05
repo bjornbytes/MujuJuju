@@ -7,7 +7,6 @@ function Achievements:init(user)
     achievement = self.achievements[achievement.name]
     if achievement and not achievement.achieved then
       if achievement:apply() then
-        print('You achieved ' .. achievement.title .. '. Congrats, dude.')
         achievement.achieved = true
         self:save(user)
       end
@@ -20,7 +19,6 @@ function Achievements:load(user)
   for _, name in ipairs(achievements) do
     if self.achievements[name] then
       self.achievements[name].achieved = true
-      print(name)
     end
   end
 end
