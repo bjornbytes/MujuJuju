@@ -25,11 +25,11 @@ Kuju.upgrades = {
     x = -1,
     y = 0,
     values = {
-      [1] = '0.5 damage per spirit, 9 second cooldown',
-      [2] = '1.0 damage per spirit, 8 second cooldown',
-      [3] = '1.5 damage per spirit, 7 second cooldown',
-      [4] = '2.0 damage per spirit, 6 second cooldown',
-      [5] = '2.5 damage per spirit, 5 second cooldown',
+      [1] = '0.4 damage per spirit, 9 second cooldown',
+      [2] = '0.8 damage per spirit, 8 second cooldown',
+      [3] = '1.2 damage per spirit, 7 second cooldown',
+      [4] = '1.6 damage per spirit, 6 second cooldown',
+      [5] = '2.0 damage per spirit, 5 second cooldown',
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -46,11 +46,11 @@ Kuju.upgrades = {
     x = 0,
     y = 0,
     values = {
-      [1] = '30 damage, 4 second duration',
-      [2] = '45 damage, 5 second duration',
-      [3] = '60 damage, 6 second duration',
-      [4] = '75 damage, 7 second duration',
-      [5] = '90 damage, 8 second duration',
+      [1] = '15 damage, 4 second duration',
+      [2] = '30 damage, 5 second duration',
+      [3] = '45 damage, 6 second duration',
+      [4] = '60 damage, 7 second duration',
+      [5] = '75 damage, 8 second duration',
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -67,11 +67,11 @@ Kuju.upgrades = {
     x = 1,
     y = 0,
     values = {
-      [1] = '6 damage per second per second, 3 second duration',
-      [2] = '8 damage per second per second, 4 second duration',
-      [3] = '10 damage per second per second, 5 second duration',
-      [4] = '12 damage per second per second, 6 second duration',
-      [5] = '14 damage per second per second, 7 second duration',
+      [1] = '4 damage per second per second, 3 second duration',
+      [2] = '6 damage per second per second, 4 second duration',
+      [3] = '8 damage per second per second, 5 second duration',
+      [4] = '10 damage per second per second, 6 second duration',
+      [5] = '12 damage per second per second, 7 second duration',
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -207,11 +207,11 @@ Kuju.upgrades = {
     x = 1,
     y = 3,
     values = {
-      [1] = '20% increased spirit'
+      [1] = '15% increased spirit'
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit.spirit = unit.spirit + (unit.spirit * .2)
+        unit.spirit = unit.spirit + (unit.spirit * .15)
       end
     end
   }

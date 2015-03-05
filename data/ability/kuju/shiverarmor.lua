@@ -12,7 +12,7 @@ function ShiverArmor:use()
   local crystallize = self.unit:upgradeLevel('crystallize')
   ctx.player.buffs:add('shiverarmor', {
     timer = 3 + level,
-    damage = 15 + 15 * level,
+    damage = 15 * level,
     stunChance = crystallize > 0 and (.05 + .15 * crystallize) or 0,
     stunDuration = 2,
     frostNova = self.unit:upgradeLevel('frostnova') > 0

@@ -43,7 +43,7 @@ function FrozenOrb:update()
       end
     end
 
-    local damage = unit.spirit * (.5 * unit:upgradeLevel('frozenorb'))
+    local damage = unit.spirit * (.4 * unit:upgradeLevel('frozenorb'))
     target:hurt(damage, unit, {'spell'})
 
     local wintersblight = unit:upgradeLevel('wintersblight')
