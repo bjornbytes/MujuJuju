@@ -141,5 +141,5 @@ end
 
 function MenuStart:continue()
   ctx:refreshBackground()
-  ctx:goto('select')
+  ctx:setPage('select')
 end

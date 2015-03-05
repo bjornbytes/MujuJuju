@@ -46,11 +46,11 @@ function Menu:load(options, systemOptions)
   self.unitCanvas = g.newCanvas(400, 400)
   self.screenCanvas = g.newCanvas(self.u, self.v)
 
-  self.campaign.selectedBiome = options and options.biome or self.campaign.selectedBiome
+  self.campaign.biome = options and options.biome or self.campaign.biome
   self.user = options and options.user
   self.page = options and options.page or 'start'
 
-  self:goto(self.page)
+  self:setPage(self.page)
 
   if self.page ~= 'start' then self:refreshBackground() end
 
@@ -190,7 +190,7 @@ function Menu:startGame(options)
   if #self.user.deck.minions == 0 then return end
   if self.menuSounds then self.menuSounds:stop() end
   Context:remove(ctx)
-  Context:add(Game, self.user, self.options, config.biomeOrder[self.campaign.selectedBiome], options and options.tutorial)
+  Context:add(Game, self.user, self.options, self.campaign.biome, options and options.tutorial)
 end
 
 function Menu:refreshBackground()
@@ -207,7 +207,7 @@ function Menu:refreshBackground()
   self.workingCanvas:clear(255, 255, 255, 0)
 
   self.background1:renderTo(function()
-    local image = data.media.graphics.map[config.biomeOrder[self.campaign.selectedBiome]]
+    local image = data.media.graphics.map[self.campaign.biome]
     g.draw(image, 0, 0, 0, u / image:getWidth(), v / image:getHeight())
   end)
 
@@ -256,10 +256,10 @@ function Menu:initAnimations()
   end)
 
   self.animationScales = {
-    thuju = .4,
-    bruju = 1,
-    xuju = .4,
-    kuju = .5
+    thuju = .55,
+    bruju = 1.3,
+    xuju = .55,
+    kuju = .6
   }
 
   self.animationTransforms = {}
@@ -273,7 +273,7 @@ function Menu:initAnimations()
   end
 end
 
-function Menu:goto(page)
+function Menu:setPage(page)
   -- Deactivate the old page
   ctx[ctx.page].active = false
   f.exe(ctx[ctx.page].deactivate, ctx[ctx.page])

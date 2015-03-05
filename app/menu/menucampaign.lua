@@ -1,6 +1,13 @@
 local g = love.graphics
 MenuCampaign = class()
 
+local minionMap = {
+  forest = 'bruju',
+  cavern = 'xuju',
+  tundra = 'kuju',
+  volcano = 'thuju'
+}
+
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
   ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
@@ -17,34 +24,33 @@ function MenuCampaign:init()
   end})
 
   self.geometryFunctions = {
-    deck = function()
+    minionFrame = function()
+      local u, v = ctx.u, ctx.v
+      return {.07 * u - v * .02, .14 * v, self.geometry.runesFrame[3], .45 * v}
+    end,
+
+    minion = function()
       local u, v = love.graphics.getDimensions()
       local size = .2 * v
-      local inc = size + .15 * v
       local runeSize = .08 * v
       local runeInc = runeSize + .02 * v
-      local frame = self.geometry.gutterRunesFrame
       local x = .15 * u
       local y = .35 * v
+      local runex = x - (runeInc * (3 - 1) / 2)
       local runey = y + .18 * v
-      local res = {}
-      for i = 1, #ctx.user.deck.minions do
-        table.insert(res, {x, y, size / 2, {}})
-        local runex = x - (runeInc * (3 - 1) / 2)
-        for i = 1, 3 do
-          table.insert(res[#res][4], {runex - runeSize / 2, runey - runeSize / 2, runeSize, runeSize})
-          runex = runex + runeInc
-        end
-        x = x + inc
+      local res = {x, y, size / 2, {}}
+      for i = 1, 3 do
+        table.insert(res[4], {runex - runeSize / 2, runey - runeSize / 2, runeSize, runeSize})
+        runex = runex + runeInc
       end
       return res
     end,
 
-    gutterRunes = function()
-      local u, v = love.graphics.getDimensions()
+    runes = function()
+      local u, v = ctx.u, ctx.v
       local size = .08 * v
       local inc = size + .01 * v
-      local x = u * .071
+      local x = u * .07
       local ox = x
       local y = v * .675
       local res = {}
@@ -56,38 +62,23 @@ function MenuCampaign:init()
       return res
     end,
 
-    gutterRunesLabel = function()
+    runesLabel = function()
       local u, v = ctx.u, ctx.v
-      return {u * .071, v * .675 - v * .015 - v * .04}
+      return {u * .07, v * .675 - v * .015 - v * .04}
     end,
 
-    gutterRunesFrame = function()
+    runesFrame = function()
       local u, v = ctx.u, ctx.v
-      local label = self.geometry.gutterRunesLabel
+      local label = self.geometry.runesLabel
       local x = label[1] - v * .02
       local y = label[2] - v * .01
-      local w = ((self.geometry.gutterRunes[1][4] + .01 * v) * 11) + v * .03
+      local w = ((self.geometry.runes[1][4] + .01 * v) * 11) + v * .03
       local h = v * .34
       return {x, y, w, h}
     end,
 
-    gutterMinions = function()
-      local u, v = love.graphics.getDimensions()
-      local r = .06 * v
-      local inc = (r * 2) + .02 * v
-      local frame = self.geometry.gutterRunesFrame
-      local x = frame[1] + frame[3] / 2 - inc * ((#ctx.user.minions - 1) / 2)
-      local y = .15 * v
-      local res = {}
-      for i = 1, #ctx.user.minions do
-        table.insert(res, {x, y, r})
-        x = x + inc
-      end
-      return res
-    end,
-
     map = function()
-      local u, v = love.graphics.getDimensions()
+      local u, v = ctx.u, ctx.v
       local width = .4 * v
       local height = width * (10 / 16)
       local x = u * .8
@@ -97,14 +88,19 @@ function MenuCampaign:init()
 
     play = function()
       local u, v = ctx.u, ctx.v
-      local frame = self.geometry.gutterRunesFrame
+      local frame = self.geometry.runesFrame
       local w, h = .2 * u, .13 * v
       local midx = (u + frame[1] + frame[3]) / 2
       return {midx - w / 2, .14 * v, w, h}
+    end,
+
+    muju = function()
+      local u, v = ctx.u, ctx.v
+      return {u * .75, v * .8}
     end
   }
 
-  self.selectedBiome = selectedBiome or 1
+  self:setBiome('forest')
 
   self.play = ctx.gooey:add(Button, 'menu.campaign.play')
   self.play.geometry = function() return self.geometry.play end
@@ -112,7 +108,7 @@ function MenuCampaign:init()
   self.play.text = 'Play'
 
   self.map = MenuMap()
-  self.drag = MenuDrag()
+  self.drag = MenuCampaignDrag()
 end
 
 function MenuCampaign:activate()
@@ -121,12 +117,8 @@ function MenuCampaign:activate()
   -- Initialize runes
   self.runeTransforms = {}
   self.prevRuneTransforms = {}
-  table.each(ctx.user.runes, function(rune)
-    self.runeTransforms[rune] = {}
-    self.prevRuneTransforms[rune] = {}
-  end)
-  table.each(ctx.user.deck.runes, function(runes)
-    table.each(runes, function(rune)
+  table.each(ctx.user.runes, function(list)
+    table.each(list, function(rune)
       self.runeTransforms[rune] = {}
       self.prevRuneTransforms[rune] = {}
     end)
@@ -152,61 +144,32 @@ function MenuCampaign:update()
   local mx, my = love.mouse.getPosition()
   local u, v = ctx.u, ctx.v
 
-  local deck = self.geometry.deck
-  for i = 1, #deck do
-    local x, y, r, runes = unpack(deck[i])
-
-    if not self.drag:isDragging('minion', i) then
-      local code = ctx.user.deck.minions[i]
-
-      lerpAnimation(code, 'scale', 1)
-      lerpAnimation(code, 'x', x)
-      lerpAnimation(code, 'y', y)
-
-      if math.insideCircle(mx, my, x, y, r) then
-        ctx.tooltip:setUnitTooltip(code)
-      end
-    end
-
-    for j = 1, #runes do
-      if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] then
-        local rune = ctx.user.deck.runes[i][j]
-        if not self.drag:isDragging('rune', i, j) then
-          local x, y, w, h = unpack(runes[j])
-          lerpRune(rune, 'x', x + w / 2)
-          lerpRune(rune, 'y', y + h / 2)
-        end
-
-        if math.inside(mx, my, unpack(runes[j])) then
-          ctx.tooltip:setRuneTooltip(ctx.user.deck.runes[i][j])
-        end
-      end
-    end
-  end
-
-  local gutterMinions = self.geometry.gutterMinions
-  for i = 1, #gutterMinions do
-    if not self.drag:isDragging('gutterMinion', i) then
-      local code = ctx.user.minions[i]
-      local x, y, r = unpack(gutterMinions[i])
-
-      lerpAnimation(code, 'scale', .5)
-      lerpAnimation(code, 'x', x)
-      lerpAnimation(code, 'y', y)
-    end
-  end
-
-  local gutterRunes = self.geometry.gutterRunes
-  for i = 1, #gutterRunes do
-    if ctx.user.runes[i] and not self.drag:isDragging('gutterRune', i) then
-      local rune = ctx.user.runes[i]
-      local x, y, w, h = unpack(gutterRunes[i])
+  local runes = self.geometry.minion[4]
+  for i = 1, #runes do
+    local rune = ctx.user.runes[self.minion][i]
+    if rune and not self.drag:isDragging('equippedRune', i) then
+      local x, y, w, h = unpack(runes[i])
 
       lerpRune(rune, 'x', x + w / 2)
       lerpRune(rune, 'y', y + h / 2)
 
-      if math.inside(mx, my, unpack(gutterRunes[i])) then
-        ctx.tooltip:setRuneTooltip(ctx.user.runes[i])
+      if math.inside(mx, my, x, y, w, h) then
+        ctx.tooltip:setRuneTooltip(rune)
+      end
+    end
+  end
+
+  local runes = self.geometry.runes
+  for i = 1, #runes do
+    local rune = ctx.user.runes.stash[i]
+    if rune and not self.drag:isDragging('rune', i) then
+      local x, y, w, h = unpack(runes[i])
+
+      lerpRune(rune, 'x', x + w / 2)
+      lerpRune(rune, 'y', y + h / 2)
+
+      if math.inside(mx, my, x, y, w, h) then
+        ctx.tooltip:setRuneTooltip(rune)
       end
     end
   end
@@ -222,23 +185,15 @@ function MenuCampaign:draw()
 
   local atlas = data.atlas.hud
 
-  --[[local detailsAlpha = 255
-  local x, y, w, h = unpack(self.geometry.map)
-  g.setFont('mesmerize', .06 * v)
-  g.setColor(0, 0, 0, detailsAlpha)
-  g.printCenter(config.biomes[biome].name, x + w / 2 + 1, .15 * v + 1)
-  g.setColor(255, 255, 255, detailsAlpha)
-  g.printCenter(config.biomes[biome].name, x + w / 2, .15 * v)]]
-
   local detailsAlpha = 255
-  local biome = config.biomeOrder[self.selectedBiome]
+  local biome = self.biome
   local midx = self.geometry.play[1] + self.geometry.play[3] / 2
   local medalSize = v * .03
   local medalInc = (medalSize * 3 + (v * .02))
   local medalX = midx - medalInc * (3 - 1) / 2
   local medalY = .3 * v + medalSize + (v * .05)
   for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
-    local achieved = ctx.user.highscores[biome] >= config.biomes[biome].benchmarks[benchmark]
+    local achieved = ctx.user.campaign.medals[biome][benchmark]
     g.setColor(255, 255, 255, (achieved and 1 or .4) * detailsAlpha)
     local image = data.media.graphics.menu[benchmark]
     local scale = medalSize * 2 / image:getWidth() * (achieved and 1 or .8)
@@ -247,33 +202,24 @@ function MenuCampaign:draw()
     medalX = medalX + medalInc
   end
 
-  --[[local minutes = math.floor((ctx.user.highscores[biome] or 0) / 60)
-  local seconds = ctx.user.highscores[biome] % 60
-  local time = string.format('%02d:%02d', minutes, seconds)
-  g.setFont('mesmerize', .04 * v)
-  g.setColor(0, 0, 0, detailsAlpha)
-  g.printf('Best Time ' .. time, x + w / 2 - 100 + 1, medalY + medalSize + v * .04 + 1, 200, 'center')
-  g.setColor(255, 255, 255, detailsAlpha)
-  g.printf('Best Time ' .. time, x + w / 2 - 100, medalY + medalSize + v * .04, 200, 'center')]]
-
+  -- Rune Frame
   g.setColor(0, 0, 0, 100)
-  g.rectangle('fill', unpack(self.geometry.gutterRunesFrame))
+  g.rectangle('fill', unpack(self.geometry.runesFrame))
 
-  -- Gutter rune frames
+  -- Rune Frames
   g.setColor(255, 255, 255)
-  local gutterRunes = self.geometry.gutterRunes
-  for i = 1, #gutterRunes do
-    local x, y, w, h = unpack(gutterRunes[i])
-    local rune = ctx.user.runes[i]
+  local runes = self.geometry.runes
+  for i = 1, #runes do
+    local x, y, w, h = unpack(runes[i])
     local scale = w / atlas:getDimensions('frame')
     g.setColor(255, 255, 255)
     g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
   end
 
-  -- Gutter runes
-  for i = 1, #gutterRunes do
-    local x, y, w, h = unpack(gutterRunes[i])
-    local rune = ctx.user.runes[i]
+  -- Runes
+  for i = 1, #runes do
+    local x, y, w, h = unpack(runes[i])
+    local rune = ctx.user.runes.stash[i]
     if rune and not self.drag:isDragging('gutterRune', i) then
       local lerpd = {}
       for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
@@ -283,109 +229,69 @@ function MenuCampaign:draw()
     end
   end
 
+  -- Rune Label
   g.setColor(255, 255, 255)
   g.setFont('mesmerize', v * .04)
-  local x, y = unpack(self.geometry.gutterRunesLabel)
+  local x, y = unpack(self.geometry.runesLabel)
   g.print('Runes', x, y)
 
-  local frame = self.geometry.gutterRunesFrame
-  g.setFont('mesmerize', .016 * v)
-  g.setColor(#ctx.user.deck.minions < ctx.user.deckSlots and {255, 255, 255} or {255, 150, 150})
-  g.printShadow(#ctx.user.deck.minions .. ' / ' .. ctx.user.deckSlots, frame[1] + frame[3] / 2, v * .04, true)
-
-  --[[local gutterMinions = self.geometry.gutterMinions
-  for i = 1, #gutterMinions do
-    local code = ctx.user.minions[i]
-    local x, y, r = unpack(gutterMinions[i])
-
-    if not self.drag:isDragging('gutterMinion', i) then
-      local cw, ch = ctx.unitCanvas:getDimensions()
-      ctx.unitCanvas:clear(0, 0, 0, 0)
-      ctx.unitCanvas:renderTo(function()
-        ctx.animations[code]:draw(cw / 2, ch / 2)
-      end)
-      local lerpd = {}
-      for k, v in pairs(ctx.animationTransforms[code]) do
-        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, ls.accum / ls.tickrate)
-      end
-      g.setColor(255, 255, 255)
-      g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale * ps, lerpd.scale * ps, cw / 2, ch / 2)
-    end
-  end]]
-
+  -- Minion Frame
   g.setColor(0, 0, 0, 100)
-  g.rectangle('fill', .06 * u, .14 * v, .5725 * u, .45 * v)
+  g.rectangle('fill', unpack(self.geometry.minionFrame))
 
+  -- Minion Text
+  local unit = data.unit[self.minion]
   g.setColor(255, 255, 255)
   g.setFont('mesmerize', .08 * v)
-  g.printShadow(ctx.user.deck.minions[1]:capitalize(), .26 * u, .16 * v)
+  g.printShadow(unit.name, .26 * u, .16 * v)
   g.setFont('mesmerize', .02 * v)
   g.setColor(0, 0, 0)
-  g.printf(data.unit[ctx.user.deck.minions[1]].description, .26 * u + 1, .26 * v + 1, .35 * u)
+  g.printf(unit.description, .26 * u + 1, .26 * v + 1, .35 * u)
   g.setColor(255, 255, 255)
-  g.printf(data.unit[ctx.user.deck.minions[1]].description, .26 * u, .26 * v, .35 * u)
+  g.printf(unit.description, .26 * u, .26 * v, .35 * u)
 
-  local deck = self.geometry.deck
+  -- Minion
+  local x, y, r, runes = unpack(self.geometry.minion)
+  local code = self.minion
   g.setColor(255, 255, 255)
-  for i = 1, #deck do
-    local code = ctx.user.deck.minions[i]
-    local x, y, r, runes = unpack(deck[i])
 
-    -- Stage
-    g.setColor(0, 0, 0, 100)
-    local xoff = .02 * v
-    local height = .04 * v
-    g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
+  -- Stage
+  g.setColor(0, 0, 0, 100)
+  local xoff = .02 * v
+  local height = .04 * v
+  g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
 
-    if not self.drag:isDragging('minion', i) then
-      --[[local cw, ch = ctx.unitCanvas:getDimensions()
-      ctx.unitCanvas:clear(0, 0, 0, 0)
-      ctx.unitCanvas:renderTo(function()
-        ctx.animations[code]:draw(cw / 2, ch / 2)
-      end)]]
+  -- Animation
+  ctx.animations[code].scale = ctx.animationScales[code]
+  ctx.animations[code]:draw(x, y)
+
+  -- Minion Rune Frames
+  for j = 1, #runes do
+    local x, y, w, h = unpack(runes[j])
+    local scale = w / atlas:getDimensions('frame')
+    g.setColor(255, 255, 255)
+    g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
+  end
+
+  -- Minion Runes
+  for i = 1, #runes do
+    local rune = ctx.user.runes[self.minion][i]
+    if rune and not self.drag:isDragging('equippedRune', i) then
+      local x, y, w, h = unpack(runes[i])
+
       local lerpd = {}
-      for k, v in pairs(ctx.animationTransforms[code]) do
-        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, ls.accum / ls.tickrate)
+      for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
+        lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
 
-      --g.setColor(255, 255, 255)
-      --g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale * ps, lerpd.scale * ps, cw / 2, ch / 2)]]
-
-      ctx.animations[code].scale = ctx.animationScales[code] * 1.4
-      ctx.animations[code]:draw(lerpd.x, lerpd.y)
-    end
-
-    for j = 1, #runes do
-      local x, y, w, h = unpack(runes[j])
-      local rune = ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j]
-      local scale = w / atlas:getDimensions('frame')
-      g.setColor(255, 255, 255)
-      g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
+      g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
     end
   end
 
-  for i = 1, #deck do
-    local x, y, r, runes = unpack(deck[i])
-
-    for j = 1, #runes do
-      local x, y, w, h = unpack(runes[j])
-
-      if ctx.user.deck.runes[i] and ctx.user.deck.runes[i][j] and not self.drag:isDragging('rune', i, j) then
-        local rune = ctx.user.deck.runes[i][j]
-        local lerpd = {}
-        for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
-          lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
-        end
-
-        g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
-      end
-    end
-  end
-
+  -- Muju
   g.setColor(255, 255, 255)
-
   g.push()
-  g.translate(u * .75, v * .8)
+  g.translate(unpack(self.geometry.muju))
   g.scale(MenuOptions.pixelScale)
   ctx.animations.muju:draw(0, 0)
   g.pop()
@@ -396,6 +302,7 @@ function MenuCampaign:draw()
     slot.r, slot.g, slot.b = unpack(config.player.colors[color])
   end
 
+  -- Modules
   self.play:draw()
   self.map:draw()
   self.drag:draw()
@@ -435,17 +342,8 @@ function MenuCampaign:resize()
   table.clear(self.geometry)
 end
 
-function MenuCampaign:previousBiome()
-  self:setBiome(self.selectedBiome - 1)
-end
-
-function MenuCampaign:nextBiome()
-  self:setBiome(self.selectedBiome + 1)
-end
-
-function MenuCampaign:setBiome(index)
-  if index == 0 then index = #config.biomeOrder
-  elseif index > #config.biomeOrder then index = 1 end
-  self.selectedBiome = index
+function MenuCampaign:setBiome(biome)
+  self.biome = biome
+  self.minion = minionMap[biome]
   ctx:refreshBackground()
 end

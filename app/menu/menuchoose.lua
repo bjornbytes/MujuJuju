@@ -60,7 +60,7 @@ function MenuChoose:init()
 
   self.back = ctx.gooey:add(Button, 'menu.choose.back')
   self.back.geometry = function() return self.geometry.back end
-  self.back:on('click', function() ctx:goto('select') end)
+  self.back:on('click', function() ctx:setPage('select') end)
   self.back.text = 'Back'
 
   self.next = ctx.gooey:add(Button, 'menu.choose.next')
@@ -205,17 +205,10 @@ end
 function MenuChoose:finished()
   if not self.selectedMinion then return end
 
-  for j = 1, #self.user.minions do
-    if self.user.minions[j] == config.starters[self.selectedMinion] then table.remove(self.user.minions, j) break end
-  end
-
-  self.user.deck.minions = {config.starters[self.selectedMinion]}
-  self.user.deck.runes[1] = {}
-
   saveUser(self.user)
   ctx.user = self.user
 
-  ctx:goto('main')
+  ctx:setPage(self.destination)
   ctx.animations.muju:set('summon')
   ctx.sound:play('summon2')
 end

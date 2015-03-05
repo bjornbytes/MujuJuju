@@ -83,6 +83,8 @@ function MenuMap:init()
   self.tween = tween.new(self.tweenDuration, self, {factor = 1}, self.tweenMethod)
   self.alpha = 0
   self.prevAlpha = self.alpha
+  self.nudge = 0
+  self.prevNudge = self.nudge
   self.scales = {}
   self.prevScales = {}
 end
@@ -90,15 +92,20 @@ end
 function MenuMap:update()
   if not self.active then return end
 
+  local u, v = ctx.u, ctx.v
   local mx, my = love.mouse.getPosition()
 
   self.prevAlpha = self.alpha
   self.alpha = math.lerp(self.alpha, self.focused and 1 or 0, math.min(6 * ls.tickrate, 1))
 
+  self.prevNudge = self.nudge
+  self.nudge = math.lerp(self.nudge, my < .08 * v and 1 or 0, math.min(6 * ls.tickrate, 1))
+  if self.focused then self.nudge = 0 end
+
   for k, v in ipairs(config.biomeOrder) do
     local hover = math.insideCircle(mx, my, unpack(self.geometry[v]))
     self.prevScales[v] = self.scales[v] or 1
-    self.scales[v] = math.lerp(self.scales[v] or 1, (hover or ctx.campaign.selectedBiome == k) and 1.15 or .9, math.min(16 * ls.tickrate, 1))
+    self.scales[v] = math.lerp(self.scales[v] or 1, hover and 1.15 or .9, math.min(16 * ls.tickrate, 1))
   end
 end
 
@@ -123,15 +130,16 @@ function MenuMap:draw()
   local image = data.media.graphics.worldmap.background
   local xscale = w / image:getWidth()
   local yscale = h / image:getHeight()
+  local nudge = math.lerp(self.prevNudge, self.nudge, ls.accum / ls.tickrate)
   g.setColor(255, 255, 255)
+  y = y + nudge * .1 * v
   g.draw(image, x, y, 0, xscale, yscale)
 
   for k, v in ipairs(config.biomeOrder) do
-    local has = table.has(ctx.user.biomes, v)
     if k >= 2 then
       local x, y = unpack(self.geometry['trail' .. (k - 1)])
       local image = data.media.graphics.worldmap['trail' .. (k - 1)]
-      g.setColor(has and {255, 255, 255} or {255, 255, 255, 100})
+      g.setColor(255, 255, 255)
       g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
     end
 
@@ -139,20 +147,13 @@ function MenuMap:draw()
     local image = data.media.graphics.worldmap.circle
     local scale = r * 2 / image:getWidth()
     scale = scale * math.lerp(self.prevScales[v], self.scales[v], ls.accum / ls.tickrate)
-    if ctx.campaign.selectedBiome == k then g.setColor(255, 255, 255)
-    else g.setColor(255, 255, 255, 100) end
+    g.setColor(255, 255, 255)
     g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
     if self.focused then
       local image = data.media.graphics.worldmap[v]
       local x, y = unpack(self.geometry[v .. 'Title'])
       g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
-
-      if not has then
-        local image = data.media.graphics.menu.lock
-        g.setColor(255, 255, 255, 200)
-        g.draw(image, x, y, 0, xscale * .75, yscale * .75, image:getWidth() / 2, image:getHeight() / 2)
-      end
     end
   end
 end
@@ -168,16 +169,18 @@ end
 function MenuMap:mousepressed(mx, my, b)
   if b ~= 'l' then return end
 
+  local u, v = ctx.u, ctx.v
+
   for k, v in ipairs(config.biomeOrder) do
-    if math.insideCircle(mx, my, unpack(self.geometry[v])) and true then -- table.has(ctx.user.biomes, v) then
-      ctx.campaign:setBiome(k)
+    if math.insideCircle(mx, my, unpack(self.geometry[v])) then
+      ctx.campaign:setBiome(v)
       self:toggle()
       self.scales[v] = 1.5
       return
     end
   end
 
-  if math.inside(mx, my, unpack(self.geometry.frame)) and not self.focused then
+  if my < .08 * v and not self.focused then
     self:toggle()
   end
 end
