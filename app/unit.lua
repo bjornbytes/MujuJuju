@@ -434,19 +434,17 @@ function Unit:initAnimation()
 
           if self.elite then
             amount = amount * config.elites.jujuModifier
-            jujus = 1
-
-            ctx.shrujus:add(data.shruju[love.math.random(1, #data.shruju)], {x = self.x})
-          end
-
-          for i = 1, jujus do
-            ctx.jujus:add({
-              x = self.x,
-              y = self.y,
-              amount = amount / jujus,
-              vx = love.math.random(-100, 100),
-              vy = love.math.random(-200, -100)
-            })
+            ctx.shrujus:add(data.shruju[love.math.random(1, #data.shruju)], {x = self.x, juju = amount})
+          else
+            for i = 1, jujus do
+              ctx.jujus:add({
+                x = self.x,
+                y = self.y,
+                amount = amount / jujus,
+                vx = love.math.random(-100, 100),
+                vy = love.math.random(-200, -100)
+              })
+            end
           end
 
           ctx.particles:emit('jujusex', self.x, self.y, 30)
