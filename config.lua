@@ -446,14 +446,17 @@ return {
       kuju = {},
       thuju = {}
     },
-    minions = {},
-    medals = {
-      forest = {},
-      cavern = {},
-      tundra = {},
-      volcano = {}
+    campaign = {
+      medals = {
+        forest = {},
+        cavern = {},
+        tundra = {},
+        volcano = {}
+      }
     },
-    survivalTime = 0,
+    survival = {
+      bestTime = 0
+    },
     name = 'Muju',
     color = 'purple',
     hats = {},
