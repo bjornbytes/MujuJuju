@@ -439,6 +439,10 @@ return {
   },
 
   defaultUser = {
+    name = 'Muju',
+    color = 'purple',
+    hats = {},
+    hat = nil,
     runes = {
       stash = {},
       bruju = {},
@@ -455,12 +459,9 @@ return {
       }
     },
     survival = {
-      bestTime = 0
-    },
-    name = 'Muju',
-    color = 'purple',
-    hats = {},
-    hat = nil
+      bestTime = 0,
+      minions = {}
+    }
   },
 
   defaultOptions = {
