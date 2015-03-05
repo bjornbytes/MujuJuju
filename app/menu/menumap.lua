@@ -56,7 +56,7 @@ function MenuMap:init()
 
     volcanoTitle = function()
       local x, y, w, h = unpack(self.geometry.frame)
-      return {x + .204 * w, y + .225 * h}
+      return {x + .18 * w, y + .18 * h}
     end,
 
     trail1 = function()
@@ -85,8 +85,8 @@ function MenuMap:init()
   self.prevAlpha = self.alpha
   self.nudge = 0
   self.prevNudge = self.nudge
-  self.scales = {}
-  self.prevScales = {}
+  self.hovers = {}
+  self.prevHovers = {}
 end
 
 function MenuMap:update()
@@ -104,8 +104,8 @@ function MenuMap:update()
 
   for k, v in ipairs(config.biomeOrder) do
     local hover = math.insideCircle(mx, my, unpack(self.geometry[v]))
-    self.prevScales[v] = self.scales[v] or 1
-    self.scales[v] = math.lerp(self.scales[v] or 1, hover and 1.15 or .9, math.min(16 * ls.tickrate, 1))
+    self.prevHovers[v] = self.hovers[v] or 0
+    self.hovers[v] = math.lerp(self.hovers[v] or 0, hover and 1 or 0, math.min(10 * ls.tickrate, 1))
   end
 end
 
@@ -136,6 +136,7 @@ function MenuMap:draw()
   g.draw(image, x, y, 0, xscale, yscale)
 
   for k, v in ipairs(config.biomeOrder) do
+    local factor = math.lerp(self.prevHovers[v], self.hovers[v], ls.accum / ls.tickrate)
     if k >= 2 then
       local x, y = unpack(self.geometry['trail' .. (k - 1)])
       local image = data.media.graphics.worldmap['trail' .. (k - 1)]
@@ -146,14 +147,21 @@ function MenuMap:draw()
     local x, y, r = unpack(self.geometry[v])
     local image = data.media.graphics.worldmap.circle
     local scale = r * 2 / image:getWidth()
-    scale = scale * math.lerp(self.prevScales[v], self.scales[v], ls.accum / ls.tickrate)
+    scale = scale * (.7 + .2 * factor)
     g.setColor(255, 255, 255)
     g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
     if self.focused then
       local image = data.media.graphics.worldmap[v]
       local x, y = unpack(self.geometry[v .. 'Title'])
+      local xscale, yscale = xscale * (1 + .1 * factor), yscale * (1 + .1 * factor)
+      g.setColor(255, 255, 255)
       g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
+
+      g.setBlendMode('additive')
+      g.setColor(255, 255, 255, 50 * factor)
+      g.draw(image, x + 2 * factor, y + 2 * factor, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
+      g.setBlendMode('alpha')
     end
   end
 end
