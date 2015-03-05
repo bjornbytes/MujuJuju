@@ -19,7 +19,7 @@ function Headbutt:activate()
       local damage = (self.unit.damage * self.damageModifier) / count
       table.each(targets, function(target)
         if math.sign(target.x - self.unit.x) == self:getUnitDirection() then
-          if target.buffs then target.buffs:add('headbutt', {offset = self.knockbackDistance * self:getUnitDirection()}) end
+          if isa(target, Unit) and target.buffs then target.buffs:add('headbutt', {offset = self.knockbackDistance * self:getUnitDirection()}) end
           target:hurt(damage, self.unit, {'spell'})
         end
       end)

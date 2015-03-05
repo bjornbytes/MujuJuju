@@ -48,7 +48,7 @@ function Player:init()
   self.invincible = 0
   self.ghostSpeedMultiplier = 1
   self.cooldownSpeed = 1
-  self.buffList = {}
+  self.buffs = PlayerBuffs(self)
 
   -- joystick
   self.joystick = #love.joystick.getJoysticks() > 0 and love.joystick.getJoysticks()[1]
@@ -89,6 +89,7 @@ function Player:update()
   -- Core updates
   self:move()
   self:animate()
+  self.buffs:update()
   if self.ghost then self.ghost:update() end
 
   -- Rots
@@ -271,11 +272,13 @@ function Player:addJuju(amount)
   self.juju = self.juju + amount
 end
 
-function Player:hurt(amount, source)
-  if self.invincible == 0 then
+function Player:hurt(amount, source, kind)
+  if not self.dead and self.invincible == 0 then
+    amount = self.buffs:prehurt(amount, source, kind) or amount
     self.health = math.max(self.health - amount, 0)
+    self.buffs:posthurt(amount, source, kind)
 
-    ctx.event:emit('player.hurt', {amount = amount, source = source})
+    ctx.event:emit('player.hurt', {amount = amount, source = source, kind = kind})
 
     -- Die if we are dead
     if self.health <= 0 and self.deathTimer == 0 then self:die() end
@@ -288,6 +291,7 @@ function Player:die()
   self.deathTimer = self.deathDuration
   self.dead = true
   self.ghost = GhostPlayer(self)
+  self.buffs:die()
 
   self.animation:set('death')
   ctx.sound:play('death', function(sound) sound:setVolume(.2) end)

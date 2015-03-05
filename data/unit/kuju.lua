@@ -46,12 +46,17 @@ Kuju.upgrades = {
     x = 0,
     y = 0,
     values = {
-      [1] = '30 damage, 3 second duration',
-      [2] = '45 damage, 4 second duration',
-      [3] = '60 damage, 5 second duration',
-      [4] = '75 damage, 6 second duration',
-      [5] = '90 damage, 7 second duration',
-    }
+      [1] = '30 damage, 4 second duration',
+      [2] = '45 damage, 5 second duration',
+      [3] = '60 damage, 6 second duration',
+      [4] = '75 damage, 7 second duration',
+      [5] = '90 damage, 8 second duration',
+    },
+    apply = function(self, unit)
+      if self.level > 0 then
+        unit:addAbility('shiverarmor')
+      end
+    end
   },
   frostbite = {
     level = 0,
@@ -138,12 +143,12 @@ Kuju.upgrades = {
     costs = {500},
     prerequisites = {crystallize = 1},
     name = 'Frost Nova',
-    description = 'If Muju dies while Shiver Armor is active, he will emit a powerful ring of frost that damages enemies.',
+    description = 'If Muju dies while Shiver Armor is active, he will emit a powerful ring of frost that damages enemies for an amount equal to the current damage of Shiver Armor.',
     x = 0,
     y = 2,
     connectedTo = {'crystallize'},
     values = {
-      [1] = '10 damage'
+      [1] = 'Frost Nova'
     }
   },
   brainfreeze = {
