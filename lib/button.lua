@@ -56,16 +56,18 @@ function Button:render()
   local yscale = h / button:getHeight()
   g.setColor(255, 255, 255)
   --g.draw(image, x, bgy, 0, w, yscale, 0, image:getHeight())
-  g.setColor(255, 255, 255, 65)
+  g.setColor(0, 0, 0, 85)
   g.rectangle('fill', x, y, w, h)
 
   local fade = math.lerp(self.prevHoverFade, self.hoverFade, ls.accum / ls.tickrate)
   g.setColor(0, 0, 0, 200)
+  g.setLineWidth(2)
   --g.rectangle('line', math.round(x) + .5, math.round(y) + .5, w, h)
   local xx, yy = math.round(x) + .5, math.round(y) + .5
   w, h = math.floor(w), math.floor(h)
   g.line(xx, yy + h, xx + w, yy + h)
   g.line(xx + w, yy, xx + w, yy + h)
+  g.setLineWidth(1)
 
   if hover then
     if not self.hoverActive then
@@ -83,8 +85,8 @@ function Button:render()
     end)
 
     local factor = math.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
-    g.setColor(255, 255, 255, 20 * (1 - fade))
-    g.setBlendMode('additive')
+    g.setColor(255, 255, 255, 40 * (1 - fade))
+    g.setBlendMode('alpha')
     g.circle('fill', self.hoverX, self.hoverY, factor * self.hoverDistance)
     g.setBlendMode('alpha')
 

@@ -243,7 +243,7 @@ end
 
 function Menu:initAnimations()
   self.animations = {}
-  self.animations.muju = data.animation.muju({scale = .8, default = 'resurrect'})
+  self.animations.muju = data.animation.muju({scale = 1, default = 'resurrect'})
   self.animations.muju.flipped = true
   self.animations.muju:on('complete', function(data)
     self.animations.muju:set('idle', {force = true})

@@ -24,9 +24,9 @@ function MenuCampaign:init()
       local runeSize = .08 * v
       local runeInc = runeSize + .02 * v
       local frame = self.geometry.gutterRunesFrame
-      local x = .5 * u
-      local y = .38 * v
-      local runey = y + .16 * v
+      local x = .15 * u
+      local y = .35 * v
+      local runey = y + .18 * v
       local res = {}
       for i = 1, #ctx.user.deck.minions do
         table.insert(res, {x, y, size / 2, {}})
@@ -44,21 +44,21 @@ function MenuCampaign:init()
       local u, v = love.graphics.getDimensions()
       local size = .08 * v
       local inc = size + .01 * v
-      local x = u * .31
+      local x = u * .071
       local ox = x
       local y = v * .675
       local res = {}
-      for i = 1, 21 do
+      for i = 1, 33 do
         table.insert(res, {math.round(x), math.round(y), size, size})
         x = x + inc
-        if i % 7 == 0 then y = y + inc x = ox end
+        if i % 11 == 0 then y = y + inc x = ox end
       end
       return res
     end,
 
     gutterRunesLabel = function()
       local u, v = ctx.u, ctx.v
-      return {u * .31, v * .675 - v * .015 - v * .04}
+      return {u * .071, v * .675 - v * .015 - v * .04}
     end,
 
     gutterRunesFrame = function()
@@ -66,7 +66,7 @@ function MenuCampaign:init()
       local label = self.geometry.gutterRunesLabel
       local x = label[1] - v * .02
       local y = label[2] - v * .01
-      local w = ((self.geometry.gutterRunes[1][4] + .01 * v) * 7) + v * .03
+      local w = ((self.geometry.gutterRunes[1][4] + .01 * v) * 11) + v * .03
       local h = v * .34
       return {x, y, w, h}
     end,
@@ -100,7 +100,7 @@ function MenuCampaign:init()
       local frame = self.geometry.gutterRunesFrame
       local w, h = .2 * u, .13 * v
       local midx = (u + frame[1] + frame[3]) / 2
-      return {midx - w / 2, frame[2] + frame[4] - h, w, h}
+      return {midx - w / 2, .14 * v, w, h}
     end
   }
 
@@ -223,28 +223,31 @@ function MenuCampaign:draw()
   local atlas = data.atlas.hud
 
   --[[local detailsAlpha = 255
-  local biome = config.biomeOrder[self.selectedBiome]
   local x, y, w, h = unpack(self.geometry.map)
   g.setFont('mesmerize', .06 * v)
   g.setColor(0, 0, 0, detailsAlpha)
   g.printCenter(config.biomes[biome].name, x + w / 2 + 1, .15 * v + 1)
   g.setColor(255, 255, 255, detailsAlpha)
-  g.printCenter(config.biomes[biome].name, x + w / 2, .15 * v)
+  g.printCenter(config.biomes[biome].name, x + w / 2, .15 * v)]]
 
+  local detailsAlpha = 255
+  local biome = config.biomeOrder[self.selectedBiome]
+  local midx = self.geometry.play[1] + self.geometry.play[3] / 2
   local medalSize = v * .03
-  local medalInc = (medalSize * 2 + (v * .02))
-  local medalX = x + w / 2 - medalInc * (3 - 1) / 2
-  local medalY = y + h + medalSize + (v * .05)
+  local medalInc = (medalSize * 3 + (v * .02))
+  local medalX = midx - medalInc * (3 - 1) / 2
+  local medalY = .3 * v + medalSize + (v * .05)
   for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
     local achieved = ctx.user.highscores[biome] >= config.biomes[biome].benchmarks[benchmark]
     g.setColor(255, 255, 255, (achieved and 1 or .4) * detailsAlpha)
     local image = data.media.graphics.menu[benchmark]
     local scale = medalSize * 2 / image:getWidth() * (achieved and 1 or .8)
     g.draw(image, medalX, medalY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    g.drawRune(ctx.user.runes[i], medalX, medalY + .15 * v, .1 * v - .02 * v, .1 * v - .06 * v)
     medalX = medalX + medalInc
   end
 
-  local minutes = math.floor((ctx.user.highscores[biome] or 0) / 60)
+  --[[local minutes = math.floor((ctx.user.highscores[biome] or 0) / 60)
   local seconds = ctx.user.highscores[biome] % 60
   local time = string.format('%02d:%02d', minutes, seconds)
   g.setFont('mesmerize', .04 * v)
@@ -310,14 +313,17 @@ function MenuCampaign:draw()
     end
   end]]
 
+  g.setColor(0, 0, 0, 100)
+  g.rectangle('fill', .06 * u, .14 * v, .5725 * u, .45 * v)
+
   g.setColor(255, 255, 255)
   g.setFont('mesmerize', .08 * v)
-  g.printShadow(ctx.user.deck.minions[1]:capitalize(), .05 * u, .15 * v)
+  g.printShadow(ctx.user.deck.minions[1]:capitalize(), .26 * u, .16 * v)
   g.setFont('mesmerize', .02 * v)
   g.setColor(0, 0, 0)
-  g.printf(data.unit[ctx.user.deck.minions[1]].description, .05 * u + 1, .25 * v + 1, .35 * u)
+  g.printf(data.unit[ctx.user.deck.minions[1]].description, .26 * u + 1, .26 * v + 1, .35 * u)
   g.setColor(255, 255, 255)
-  g.printf(data.unit[ctx.user.deck.minions[1]].description, .05 * u, .25 * v, .35 * u)
+  g.printf(data.unit[ctx.user.deck.minions[1]].description, .26 * u, .26 * v, .35 * u)
 
   local deck = self.geometry.deck
   g.setColor(255, 255, 255)
@@ -379,7 +385,7 @@ function MenuCampaign:draw()
   g.setColor(255, 255, 255)
 
   g.push()
-  g.translate(u * .15, v * .75)
+  g.translate(u * .75, v * .8)
   g.scale(MenuOptions.pixelScale)
   ctx.animations.muju:draw(0, 0)
   g.pop()
