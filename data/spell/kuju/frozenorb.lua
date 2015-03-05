@@ -36,7 +36,7 @@ function FrozenOrb:update()
   local target, distance = ctx.target:closest(self, 'enemy', 'unit', 'player')
   if target and distance < self.radius then
     local exhaust, slow, timer, knockback = .4, .4, 1.5, 75 * self.direction
-    if target.buffs then
+    if isa(target, Unit) then
       target.buffs:add('chilled', {exhaust = exhaust, slow = slow, timer = timer})
       if unit:upgradeLevel('avalanche') > 0 then
         target.buffs:add('avalanche', {offset = knockback})
@@ -55,7 +55,7 @@ function FrozenOrb:update()
       local targets = ctx.target:inRange(self, 80, 'enemy', 'unit', 'player', 'shrine')
       table.each(targets, function(other)
         if math.sign(other.x - target.x) == self.direction then
-          if other.buffs then
+          if isa(other, Unit) then
             other.buffs:add('chilled', {exhaust = exhaust / 2, slow = slow / 2, timer = timer / 2})
             if unit:upgradeLevel('avalanche') > 0 then
               other.buffs:add('avalanche', {offset = knockback / 2})
