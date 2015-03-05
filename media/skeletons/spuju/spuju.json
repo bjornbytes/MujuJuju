@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "UaX9kXTLXTd8EJ0ZjwhkkSUqcLw", "spine": "2.1.10", "width": 107.99, "height": 108.99 },
+"skeleton": { "hash": "aHNgUtxn3CJRbijI0UOa0WhM4j4", "spine": "2.1.16", "width": 107.99, "height": 108.99 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "glow", "parent": "root", "length": 35.22, "x": 3.5, "y": 96, "rotation": -83.7 },
@@ -292,17 +292,22 @@
 				"rotate": [
 					{ "time": 0, "angle": 0 },
 					{ "time": 0.0666, "angle": -17.78 },
-					{ "time": 0.1333, "angle": -88.39, "curve": "stepped" },
+					{ "time": 0.1333, "angle": -88.39 },
+					{ "time": 0.2333, "angle": -93.73 },
+					{ "time": 0.4, "angle": -88.39, "curve": "stepped" },
 					{ "time": 0.6666, "angle": -88.39 }
 				],
 				"translate": [
 					{ "time": 0, "x": 0, "y": 0 },
 					{ "time": 0.0666, "x": 22.96, "y": 7.3 },
-					{ "time": 0.1333, "x": 56.48, "y": -62.46, "curve": "stepped" },
+					{ "time": 0.1333, "x": 56.48, "y": -62.46 },
+					{ "time": 0.2333, "x": 59.41, "y": -67.16 },
+					{ "time": 0.4, "x": 56.48, "y": -62.46, "curve": "stepped" },
 					{ "time": 0.6666, "x": 56.48, "y": -62.46 }
 				],
 				"scale": [
 					{ "time": 0, "x": 1, "y": 1, "curve": "stepped" },
+					{ "time": 0.4, "x": 1, "y": 1, "curve": "stepped" },
 					{ "time": 0.6666, "x": 1, "y": 1 }
 				]
 			},
@@ -418,7 +423,7 @@
 			}
 		},
 		"events": [
-			{ "time": 0.3333, "name": "deathjuju" }
+			{ "time": 0.4, "name": "deathjuju" }
 		]
 	},
 	"fear": {
