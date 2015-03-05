@@ -24,9 +24,9 @@ function MenuCampaign:init()
       local runeSize = .08 * v
       local runeInc = runeSize + .02 * v
       local frame = self.geometry.gutterRunesFrame
-      local x = frame[1] + frame[3] / 2 - inc * ((#ctx.user.deck.minions - 1) / 2)
-      local y = .45 * v
-      local runey = y - .18 * v
+      local x = .5 * u
+      local y = .38 * v
+      local runey = y + .16 * v
       local res = {}
       for i = 1, #ctx.user.deck.minions do
         table.insert(res, {x, y, size / 2, {}})
@@ -44,7 +44,7 @@ function MenuCampaign:init()
       local u, v = love.graphics.getDimensions()
       local size = .08 * v
       local inc = size + .01 * v
-      local x = u * .19
+      local x = u * .31
       local ox = x
       local y = v * .675
       local res = {}
@@ -58,7 +58,7 @@ function MenuCampaign:init()
 
     gutterRunesLabel = function()
       local u, v = ctx.u, ctx.v
-      return {u * .19, v * .675 - v * .015 - v * .04}
+      return {u * .31, v * .675 - v * .015 - v * .04}
     end,
 
     gutterRunesFrame = function()
@@ -99,7 +99,7 @@ function MenuCampaign:init()
       local u, v = ctx.u, ctx.v
       local frame = self.geometry.gutterRunesFrame
       local w, h = .2 * u, .13 * v
-      local midx = (.6 + (.4 / 2)) * u
+      local midx = (u + frame[1] + frame[3]) / 2
       return {midx - w / 2, frame[2] + frame[4] - h, w, h}
     end
   }
@@ -159,7 +159,7 @@ function MenuCampaign:update()
     if not self.drag:isDragging('minion', i) then
       local code = ctx.user.deck.minions[i]
 
-      lerpAnimation(code, 'scale', .9)
+      lerpAnimation(code, 'scale', 1)
       lerpAnimation(code, 'x', x)
       lerpAnimation(code, 'y', y)
 
@@ -222,7 +222,7 @@ function MenuCampaign:draw()
 
   local atlas = data.atlas.hud
 
-  local detailsAlpha = 255
+  --[[local detailsAlpha = 255
   local biome = config.biomeOrder[self.selectedBiome]
   local x, y, w, h = unpack(self.geometry.map)
   g.setFont('mesmerize', .06 * v)
@@ -251,7 +251,7 @@ function MenuCampaign:draw()
   g.setColor(0, 0, 0, detailsAlpha)
   g.printf('Best Time ' .. time, x + w / 2 - 100 + 1, medalY + medalSize + v * .04 + 1, 200, 'center')
   g.setColor(255, 255, 255, detailsAlpha)
-  g.printf('Best Time ' .. time, x + w / 2 - 100, medalY + medalSize + v * .04, 200, 'center')
+  g.printf('Best Time ' .. time, x + w / 2 - 100, medalY + medalSize + v * .04, 200, 'center')]]
 
   g.setColor(0, 0, 0, 100)
   g.rectangle('fill', unpack(self.geometry.gutterRunesFrame))
@@ -290,7 +290,7 @@ function MenuCampaign:draw()
   g.setColor(#ctx.user.deck.minions < ctx.user.deckSlots and {255, 255, 255} or {255, 150, 150})
   g.printShadow(#ctx.user.deck.minions .. ' / ' .. ctx.user.deckSlots, frame[1] + frame[3] / 2, v * .04, true)
 
-  local gutterMinions = self.geometry.gutterMinions
+  --[[local gutterMinions = self.geometry.gutterMinions
   for i = 1, #gutterMinions do
     local code = ctx.user.minions[i]
     local x, y, r = unpack(gutterMinions[i])
@@ -308,7 +308,16 @@ function MenuCampaign:draw()
       g.setColor(255, 255, 255)
       g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale * ps, lerpd.scale * ps, cw / 2, ch / 2)
     end
-  end
+  end]]
+
+  g.setColor(255, 255, 255)
+  g.setFont('mesmerize', .08 * v)
+  g.printShadow(ctx.user.deck.minions[1]:capitalize(), .05 * u, .15 * v)
+  g.setFont('mesmerize', .02 * v)
+  g.setColor(0, 0, 0)
+  g.printf(data.unit[ctx.user.deck.minions[1]].description, .05 * u + 1, .25 * v + 1, .35 * u)
+  g.setColor(255, 255, 255)
+  g.printf(data.unit[ctx.user.deck.minions[1]].description, .05 * u, .25 * v, .35 * u)
 
   local deck = self.geometry.deck
   g.setColor(255, 255, 255)
@@ -323,18 +332,21 @@ function MenuCampaign:draw()
     g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
 
     if not self.drag:isDragging('minion', i) then
-      local cw, ch = ctx.unitCanvas:getDimensions()
+      --[[local cw, ch = ctx.unitCanvas:getDimensions()
       ctx.unitCanvas:clear(0, 0, 0, 0)
       ctx.unitCanvas:renderTo(function()
         ctx.animations[code]:draw(cw / 2, ch / 2)
-      end)
+      end)]]
       local lerpd = {}
       for k, v in pairs(ctx.animationTransforms[code]) do
         lerpd[k] = math.lerp(ctx.prevAnimationTransforms[code][k] or v, v, ls.accum / ls.tickrate)
       end
 
-      g.setColor(255, 255, 255)
-      g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale * ps, lerpd.scale * ps, cw / 2, ch / 2)
+      --g.setColor(255, 255, 255)
+      --g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, lerpd.scale * ps, lerpd.scale * ps, cw / 2, ch / 2)]]
+
+      ctx.animations[code].scale = ctx.animationScales[code] * 1.4
+      ctx.animations[code]:draw(lerpd.x, lerpd.y)
     end
 
     for j = 1, #runes do
@@ -367,7 +379,7 @@ function MenuCampaign:draw()
   g.setColor(255, 255, 255)
 
   g.push()
-  g.translate(u * .08, v * .75)
+  g.translate(u * .15, v * .75)
   g.scale(MenuOptions.pixelScale)
   ctx.animations.muju:draw(0, 0)
   g.pop()

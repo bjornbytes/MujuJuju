@@ -255,7 +255,7 @@ function Menu:initAnimations()
     end
   end)
 
-  local scales = {
+  self.animationScales = {
     thuju = .4,
     bruju = 1,
     xuju = .4,
@@ -266,7 +266,7 @@ function Menu:initAnimations()
   self.prevAnimationTransforms = {}
 
   for _, code in pairs(config.starters) do
-    self.animations[code] = data.animation[code]({scale = scales[code]})
+    self.animations[code] = data.animation[code]({scale = self.animationScales[code]})
     self.animations[code]:on('complete', function() self.animations[code]:set('idle', {force = true}) end)
     self.animationTransforms[code] = {}
     self.prevAnimationTransforms[code] = {}
