@@ -9,37 +9,49 @@ function MenuStart:init()
   end})
 
   self.geometryFunctions = {
-    start = function()
+    campaign = function()
       local u, v = ctx.u, ctx.v
       local w = u * .25
       local h = w * .28
-      return {u * .5 - w / 2, v * .7 - h / 2, w, h}
+      return {u * .5 - w / 2, v * .65 - h / 2, w, h}
+    end,
+
+    survival = function()
+      local u, v = ctx.u, ctx.v
+      local w = u * .25
+      local h = w * .28
+      return {u * .5 - w / 2, v * .65 + h / 2 + .01 * v, w, h}
     end,
 
     options = function()
       local u, v = ctx.u, ctx.v
-      local sx, sy, sw, sh = unpack(self.geometry.start)
+      local sx, sy, sw, sh = unpack(self.geometry.campaign)
       local w = u * .12
       local h = w * .28
-      return {u * .5 - sw / 2, sy + sh + v * .01, w, h}
+      return {u * .5 - sw / 2, sy + (sh + v * .01) * 2, w, h}
     end,
 
     quit = function()
       local u, v = ctx.u, ctx.v
-      local sx, sy, sw, sh = unpack(self.geometry.start)
+      local sx, sy, sw, sh = unpack(self.geometry.campaign)
       local w = u * .12
       local h = w * .28
-      return {u * .5 + v * .01 - 1, sy + sh + v * .01, w, h}
+      return {u * .5 + v * .01 - 1, sy + (sh + v * .01) * 2, w, h}
     end
   }
 
   self.scale = 0
   self.tween = tween.new(.5, self, {scale = 1}, 'outBack')
 
-  self.start = ctx.gooey:add(Button, 'menu.start.start')
-  self.start.geometry = function() return self.geometry.start end
-  self.start.text = 'Start'
-  self.start:on('click', function() self:continue() end)
+  self.campaign = ctx.gooey:add(Button, 'menu.start.campaign')
+  self.campaign.geometry = function() return self.geometry.campaign end
+  self.campaign.text = 'Campaign'
+  self.campaign:on('click', function() self:continue() end)
+
+  self.survival = ctx.gooey:add(Button, 'menu.start.survival')
+  self.survival.geometry = function() return self.geometry.survival end
+  self.survival.text = 'Survival'
+  self.survival:on('click', function() self:continue() end)
 
   self.options = ctx.gooey:add(Button, 'menu.start.options')
   self.options.geometry = function() return self.geometry.options end
@@ -97,7 +109,8 @@ function MenuStart:draw()
   local scale = u / image:getWidth() * 1.05
   g.draw(image, u / 2 + offsetX / 4, 0, 0, scale, scale, image:getWidth() / 2, 0)
 
-  self.start:draw()
+  self.campaign:draw()
+  self.survival:draw()
   self.options:draw()
   self.quit:draw()
 end
