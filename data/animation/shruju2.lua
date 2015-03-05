@@ -13,7 +13,7 @@ Shruju.states.spawn = {
 Shruju.states.idle = {
   priority = 1,
   loop = true,
-  speed = .22
+  speed = .44
 }
 
 return Shruju
