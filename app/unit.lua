@@ -221,7 +221,7 @@ function Unit:draw()
   g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)]]
 
   -- Draw animation
-  local noupdate = ctx.player:hasShruju('distort') and ctx.player.dead
+  local noupdate = (ctx.player:hasShruju('distort') and ctx.player.dead) or ctx.paused
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = noupdate})
 
   -- Fear icon
@@ -246,7 +246,6 @@ function Unit:paused()
   self.prev.knockup = self.knockup
   self.prev.glowScale = self.glowScale
   self.prev.alpha = self.alpha
-  self.animation:set('idle')
 end
 
 ----------------

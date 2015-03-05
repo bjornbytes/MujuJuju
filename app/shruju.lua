@@ -19,6 +19,18 @@ end
 
 function Shruju:update()
   self.timer = timer.rot(self.timer, function()
+    if not self.juju or self.juju > 0 then
+      local amount = self.juju or 100
+      ctx.jujus:add({
+        x = self.x,
+        y = self.y,
+        amount = amount,
+        vx = 0,
+        vy = love.math.random(-200, -100)
+      })
+
+      ctx.particles:emit('jujusex', self.x, self.y, 30)
+    end
     ctx.shrujus:remove(self)
   end)
 
@@ -28,19 +40,6 @@ function Shruju:update()
 end
 
 function Shruju:deactivate()
-  if not self.juju or self.juju > 0 then
-    local amount = self.juju or 100
-    ctx.jujus:add({
-      x = self.x,
-      y = self.y,
-      amount = amount,
-      vx = 0,
-      vy = love.math.random(-200, -100)
-    })
-
-    ctx.particles:emit('jujusex', self.x, self.y, 30)
-  end
-
   ctx.event:emit('view.unregister', {object = self})
 end
 

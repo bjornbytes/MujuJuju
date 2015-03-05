@@ -6,6 +6,8 @@ function ShiverArmor:activate()
 end
 
 function ShiverArmor:use()
+  if ctx.player.dead then return end
+
   local level = self.unit:upgradeLevel('shiverarmor')
   local crystallize = self.unit:upgradeLevel('crystallize')
   ctx.player.buffs:add('shiverarmor', {

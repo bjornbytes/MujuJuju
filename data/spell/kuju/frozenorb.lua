@@ -89,4 +89,9 @@ function FrozenOrb:draw()
   g.draw(image, x, self.y, self.angle, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 end
 
+function FrozenOrb:paused()
+  self.prevx = self.x
+  self.prevangle = self.angle
+end
+
 return FrozenOrb
