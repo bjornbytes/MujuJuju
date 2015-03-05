@@ -238,21 +238,20 @@ return {
         }
       },
       units = {
-        startingLevel = 30,
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
+        minEnemyRate = 8,
+        maxEnemyRate = 10,
         minEnemyRateDecay = .03,
         maxEnemyRateDecay = .03,
-        maxEnemiesCoefficient = .15,
+        maxEnemiesCoefficient = .12,
         levelScale = 1,
         upgradeCostIncrease = 3,
         maxElites = 2,
+        eliteLevelThreshold = 20,
         maxEliteBuffCount = 3,
-        eliteLevelThreshold = 50,
         types = {
-          vuju = 0,
+          vuju = 240,
           spuju = 0,
-          duju = 0
+          duju = 120
         }
       },
       shrujuPatches = {300, 600},

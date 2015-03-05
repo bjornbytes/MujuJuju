@@ -29,6 +29,10 @@ function Unit:activate()
   -- Scale
   self.scale = 1 - r / 300
 
+  -- Ability stats
+  self.spirit = 0
+  self.haste = 1
+
   -- Initialize subsystems
   self:initAnimation()
   self.buffs = UnitBuffs(self)
@@ -72,10 +76,6 @@ function Unit:activate()
   table.each(self.class.startingAbilities, function(ability)
     self:addAbility(ability)
   end)
-
-  -- Ability stats
-  self.spirit = 0
-  self.haste = 1
 
   -- Apply attributes
   table.each(config.attributes.list, function(attribute)

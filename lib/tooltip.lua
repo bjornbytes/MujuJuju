@@ -183,6 +183,8 @@ function Tooltip:setRuneTooltip(rune)
     table.each(rune.stats, function(amount, stat)
       if stat == 'attackSpeed' then
         table.insert(pieces, '+' .. math.round(amount * 100) .. '% to ' .. ' attack speed')
+      elseif stat == 'haste' then
+        table.insert(pieces, '+' .. math.round(amount * 100) .. '% to ' .. ' haste')
       else
         table.insert(pieces, '+' .. math.round(amount) .. ' to ' .. stat:capitalize())
       end
