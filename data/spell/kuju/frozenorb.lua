@@ -38,7 +38,7 @@ function FrozenOrb:update()
     local exhaust, slow, timer, knockback = .4, .4, 1.5, 100 * self.direction
     if target.buffs then
       target.buffs:add('chilled', {exhaust = exhaust, slow = slow, timer = timer})
-      if unit:upgradeLevel('avalanche') then
+      if unit:upgradeLevel('avalanche') > 0 then
         target.buffs:add('avalanche', {offset = knockback})
       end
     end
@@ -57,7 +57,7 @@ function FrozenOrb:update()
         if math.sign(other.x - target.x) == self.direction then
           if other.buffs then
             other.buffs:add('chilled', {exhaust = exhaust / 2, slow = slow / 2, timer = timer / 2})
-            if unit:upgradeLevel('avalanche') then
+            if unit:upgradeLevel('avalanche') > 0 then
               other.buffs:add('avalanche', {offset = knockback / 2})
             end
           end
