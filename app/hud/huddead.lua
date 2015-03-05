@@ -72,7 +72,7 @@ function HudDead:draw()
     g.printCenter(str, u * .5, v * .375)
 
     g.setColor(240, 240, 240, 255 * self.deadAlpha)
-    str = tostring(math.floor(ctx.timer))
+    str = tostring(toTime(ctx.timer * ls.tickrate, true))
     g.printCenter(str, u * .5, v * .45)
 
     self.deadOk:draw()
@@ -88,7 +88,7 @@ function HudDead:draw()
       for _, entry in ipairs(self.highscores) do
         g.print(entry.country, u * .27, yy)
         g.print(entry.name, u * .325, yy)
-        g.printf(entry.score, 0, yy, u * .725, 'right')
+        g.printf(toTime(tonumber(entry.score) * ls.tickrate, true), 0, yy, u * .725, 'right')
         yy = yy + g.getFont():getHeight() + 4
       end
     else
