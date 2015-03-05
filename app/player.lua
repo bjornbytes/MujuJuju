@@ -65,6 +65,8 @@ function Player:activate()
   end)
 
   self.animation.spine.skeleton:setSkin('santa')
+  self.animation.spine.skeleton:findBone('hat').scaleX = self.animation.scale
+  self.animation.spine.skeleton:findBone('hat').scaleY = self.animation.scale
 
   -- Color animation
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
