@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "lYNSOXn84tHFXOlZ1IhmvWxPBa8", "spine": "2.1.10", "width": 111.01, "height": 119.01 },
+"skeleton": { "hash": "m0bi9UJKexCYa9aI6LKm7KpecHc", "spine": "2.1.16", "width": 111.01, "height": 119.01 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "chest", "parent": "root", "length": 53.15, "y": 72, "rotation": -94.08 },
@@ -9,7 +9,9 @@
 	{ "name": "bone2", "parent": "leftarmupper", "x": 32.34, "y": -3.51 },
 	{ "name": "head", "parent": "bone", "length": 27.01, "x": 9.54, "y": -8.53, "rotation": 7.18 },
 	{ "name": "rightarmlower", "parent": "rightarmupper", "length": 32.38, "x": 34.64, "y": 0.9, "rotation": 56.83 },
-	{ "name": "leftarmlower", "parent": "bone2", "length": 30.81, "rotation": -64.34 }
+	{ "name": "leftarmlower", "parent": "bone2", "length": 30.81, "rotation": -64.34 },
+	{ "name": "region_righthand", "parent": "rightarmlower", "x": 24.82, "y": -0.45 },
+	{ "name": "region_lefthand", "parent": "leftarmlower", "x": 18.63, "y": 0.6 }
 ],
 "slots": [
 	{ "name": "leftarmlower", "bone": "leftarmlower", "attachment": "leftarmlower" },
@@ -25,42 +27,42 @@
 			"chest": { "x": 19.62, "y": -1.11, "rotation": 94.08, "width": 61, "height": 91 },
 			"chest_bb": {
 				"type": "boundingbox",
-				"vertices": [ 66.16451, -15.642836, 60.139748, 16.631989, -7.9164505, 27.69237, -26.194824, -4.436206, -15.58757, -35.451912 ]
+				"vertices": [ 66.16451, -15.64283, 60.13975, 16.63198, -7.91645, 27.69237, -26.19482, -4.4362, -15.58757, -35.45191 ]
 			}
 		},
 		"head": {
 			"head": { "x": 16.52, "y": -0.32, "rotation": -87.65, "width": 48, "height": 57 },
 			"head_bb": {
 				"type": "boundingbox",
-				"vertices": [ 39.30517, 13.189119, 4.43132, 22.024574, -11.663643, -17.809814, 19.485329, -26.797451, 39.32531, -10.129507 ]
+				"vertices": [ 39.30516, 13.18911, 4.43132, 22.02457, -11.66364, -17.80981, 19.48532, -26.79745, 39.32531, -10.1295 ]
 			}
 		},
 		"leftarmlower": {
 			"leftarmlower": { "x": 12.82, "y": -2.14, "rotation": 103.14, "width": 38, "height": 58 },
 			"leftarmlower_bb": {
 				"type": "boundingbox",
-				"vertices": [ 31.22025, -22.079107, 39.574177, 20.063965, -8.107334, 7.0289993, 2.9033928, -11.457242 ]
+				"vertices": [ 31.22025, -22.0791, 39.57417, 20.06396, -8.10733, 7.02899, 2.90339, -11.45724 ]
 			}
 		},
 		"leftarmupper": {
 			"leftarmupper": { "x": 30.87, "y": -10.46, "rotation": 38.8, "width": 31, "height": 67 },
 			"leftarmupper_bb": {
 				"type": "boundingbox",
-				"vertices": [ 4.7673836, -4.4435577, 22.26156, -14.299896, 41.86136, 7.440193, -0.3768196, 15.342827 ]
+				"vertices": [ 4.76738, -4.44355, 22.26156, -14.29989, 41.86135, 7.44019, -0.37681, 15.34282 ]
 			}
 		},
 		"rightarmlower": {
 			"rightarmlower": { "x": 17.75, "y": 0.18, "rotation": 80.86, "width": 36, "height": 55 },
 			"rightarmlower_bb": {
 				"type": "boundingbox",
-				"vertices": [ 40.6486, -20.406643, 41.667515, 15.302227, 0.61787415, 12.459318, -4.114826, -16.988567 ]
+				"vertices": [ 40.6486, -20.40664, 41.66751, 15.30222, 0.61787, 12.45931, -4.11482, -16.98856 ]
 			}
 		},
 		"rightarmupper": {
 			"rightarmupper": { "x": 33.87, "y": 9.72, "rotation": 137.69, "width": 35, "height": 62 },
 			"rightarmupper_bb": {
 				"type": "boundingbox",
-				"vertices": [ 39.271626, -10.199997, 33.71191, 9.99271, 5.9401894, 11.336746, -2.982872, -9.531242 ]
+				"vertices": [ 39.27162, -10.19999, 33.71191, 9.99271, 5.94018, 11.33674, -2.98287, -9.53124 ]
 			}
 		}
 	}

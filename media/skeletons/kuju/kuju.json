@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "jwF0h2L8bXR20ypVgcUh8fr/k0s", "spine": "2.1.13", "width": 246.93, "height": 350.33 },
+"skeleton": { "hash": "ALK3LjToP2aNKLm7GJOgtaQC5zU", "spine": "2.1.16", "width": 246.93, "height": 350.33 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "Roto", "parent": "root", "x": 50.98, "y": 165.73 },
@@ -16,7 +16,9 @@
 	{ "name": "rightforearm", "parent": "rightupperarm", "length": 50.97, "x": 62.52, "y": 0.69, "rotation": 130.24 },
 	{ "name": "hair", "parent": "face", "length": 22.45, "x": 29.75, "rotation": -3.15 },
 	{ "name": "lefthand", "parent": "leftforearm", "length": 30.35, "x": 44.93, "y": 0.18, "rotation": 12.55 },
-	{ "name": "righthand", "parent": "rightforearm", "length": 44.16, "x": 51.05, "y": -0.73, "rotation": -55.58 }
+	{ "name": "righthand", "parent": "rightforearm", "length": 44.16, "x": 51.05, "y": -0.73, "rotation": -55.58 },
+	{ "name": "region_lefthand", "parent": "lefthand", "x": 16.33, "y": -0.08 },
+	{ "name": "region_righthand", "parent": "righthand", "x": 9.19, "y": 5.22 }
 ],
 "slots": [
 	{ "name": "hair", "bone": "hair", "attachment": "hair" },
