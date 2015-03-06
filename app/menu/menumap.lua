@@ -76,7 +76,7 @@ function MenuMap:init()
   }
 
   self.active = false
-  self.focused = false
+  self.focused = true
   self.factor = 1
   self.tweenDuration = .6
   self.tweenMethod = 'outQuint'
@@ -186,13 +186,13 @@ function MenuMap:mousereleased(mx, my, b)
   for k, v in ipairs(config.biomeOrder) do
     if math.insideCircle(mx, my, unpack(self.geometry[v])) then
       ctx.campaign:setBiome(v)
-      self:toggle()
+      self:setFocus(false)
       return
     end
   end
 
   if my < .08 * v and not self.focused then
-    self:toggle()
+    self:setFocus(true)
   end
 end
 
@@ -208,4 +208,8 @@ function MenuMap:toggle()
     self.tween = tween.new(self.tweenDuration, self, {factor = 1}, self.tweenMethod)
   end
   self.focused = not self.focused
+end
+
+function MenuMap:setFocus(focused)
+  if focused ~= self.focused then self:toggle() end
 end

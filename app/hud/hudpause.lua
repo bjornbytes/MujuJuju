@@ -6,7 +6,7 @@ local function backHandler()
 end
 
 local function quitHandler()
-  Context:add(Menu, {page = 'main', user = ctx.user}, ctx.options)
+  Context:add(Menu, ctx.user, ctx.options, {page = ctx.mode, biome = ctx.biome})
   Context:remove(ctx)
 end
 

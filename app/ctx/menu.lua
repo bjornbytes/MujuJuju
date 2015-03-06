@@ -3,7 +3,7 @@ local g = love.graphics
 
 Menu = class()
 
-function Menu:load(options, systemOptions)
+function Menu:load(user, options, info)
   data.load()
 
   -- Initialize UI
@@ -23,14 +23,14 @@ function Menu:load(options, systemOptions)
     love.filesystem.write('save/options.json', json.encode(config.defaultOptions))
   end
   local str = love.filesystem.read('save/options.json')
-  self.options = systemOptions or json.decode(str)
+  self.options = options or json.decode(str)
   self.options = self.options or table.copy(config.defaultOptions)
   self.optionsPane = MenuOptions()
 
   -- Initialize sound
   self.sound = Sound(self.options)
   self.menuSounds = self.sound:loop('riteOfPassage')
-  if ctx.options and ctx.options.mute then self.sound:setMute(ctx.options.mute) end
+  if self.options and self.options.mute then self.sound:setMute(self.options.mute) end
 
   -- Initialize uv and tooltip
   self.tooltip = Tooltip()
@@ -46,9 +46,9 @@ function Menu:load(options, systemOptions)
   self.unitCanvas = g.newCanvas(400, 400)
   self.screenCanvas = g.newCanvas(self.u, self.v)
 
-  self.campaign.biome = options and options.biome or self.campaign.biome
-  self.user = options and options.user
-  self.page = options and options.page or 'start'
+  self.user = user
+  self.campaign.biome = info and info.biome
+  self.page = info and info.page or 'start'
 
   self:setPage(self.page)
 
@@ -110,9 +110,8 @@ function Menu:keypressed(key)
     self.sound:setMute(self.options.mute)
     saveOptions(self.options)
     self.optionsPane.refreshControls()
-  elseif key == 'escape' then love.event.quit()
-  elseif key == 't' then
-    self:startGame({tutorial = true})
+  elseif key == 'escape' then
+    love.event.quit()
   end
 end
 
@@ -180,11 +179,11 @@ function Menu:resize()
   self:refreshBackground()
 end
 
-function Menu:startGame(options)
-  if #self.user.deck.minions == 0 then return end
+function Menu:startGame(gameOptions)
+  if not gameOptions or not gameOptions.biome then return end
   if self.menuSounds then self.menuSounds:stop() end
   Context:remove(ctx)
-  Context:add(Game, self.user, self.options, self.campaign.biome, options and options.tutorial)
+  Context:add(Game, self.user, self.options, gameOptions)
 end
 
 function Menu:refreshBackground()
@@ -201,7 +200,7 @@ function Menu:refreshBackground()
   self.workingCanvas:clear(255, 255, 255, 0)
 
   self.background1:renderTo(function()
-    local image = data.media.graphics.map[self.campaign.biome]
+    local image = data.media.graphics.map[self.campaign.biome or 'forest']
     g.draw(image, 0, 0, 0, u / image:getWidth(), v / image:getHeight())
   end)
 
@@ -245,7 +244,7 @@ function Menu:initAnimations()
 
   self.animations.muju:on('event', function(data)
     if data.data.name == 'flor' then
-      self:startGame()
+      f.exe(self[self.page].mujuDead, self[self.page])
     end
   end)
 
@@ -269,11 +268,11 @@ end
 
 function Menu:setPage(page)
   -- Deactivate the old page
-  ctx[ctx.page].active = false
-  f.exe(ctx[ctx.page].deactivate, ctx[ctx.page])
+  self[self.page].active = false
+  f.exe(self[self.page].deactivate, self[self.page])
 
   -- Activate the new page
-  ctx.page = page
-  ctx[page].active = true
-  f.exe(ctx[page].activate, ctx[page])
+  self.page = page
+  self[self.page].active = true
+  f.exe(self[self.page].activate, self[self.page])
 end

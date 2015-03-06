@@ -3,17 +3,19 @@ Units.manages = 'unit'
 
 function Units:init()
   Manager.init(self)
-  self.level = self.level or config.biomes[ctx.biome].units.startingLevel or 0
+
+  self.config = ctx.mode == 'campaign' and config.enemies[ctx.biome] or config.enemies.survival
+  self.level = 0
   self.nextEnemy = 5
   self.enemyCount = 0
-  table.merge(config.biomes[ctx.biome].units, self)
+  table.merge(self.config, self)
 end
 
 function Units:createEnemy()
   local conf = config.biomes[ctx.biome]
-  if self.enemyCount < 2 + math.floor(self.level * conf.units.maxEnemiesCoefficient) then
+  if self.enemyCount < 2 + math.floor(self.level * self.maxEnemiesCoefficient) then
     local choices = {}
-    table.each(conf.units.types, function(time, code)
+    table.each(self.types, function(time, code)
       if ctx.timer * ls.tickrate >= time then table.insert(choices, code) end
     end)
     local enemyType = choices[love.math.random(1, #choices)]
@@ -21,13 +23,13 @@ function Units:createEnemy()
     local eliteChance = config.elites.baseModifier + (config.elites.levelModifier * self.level)
     local eliteCount = table.count(self:filter(function(u) return u.elite end))
     local isElite = love.math.random() < eliteChance
-    isElite = isElite and self.level > conf.units.eliteLevelThreshold
-    isElite = isElite and eliteCount < conf.units.maxElites
+    isElite = isElite and self.level > self.eliteLevelThreshold
+    isElite = isElite and eliteCount < self.maxElites
     local unit = self:add(enemyType, {x = x, elite = isElite})
 
     if isElite then
       local buffs = table.keys(config.elites.buffs)
-      for i = 1, math.min(conf.units.maxEliteBuffCount, math.max(1, math.floor(ctx.timer * ls.tickrate / 60 / 5))) do
+      for i = 1, math.min(self.maxEliteBuffCount, math.max(1, math.floor(ctx.timer * ls.tickrate / 60 / 5))) do
         local index = love.math.random(1, #buffs)
         local buff = buffs[index]
         table.remove(buffs, index)
@@ -35,8 +37,8 @@ function Units:createEnemy()
       end
     end
 
-    self.minEnemyRate = math.max(self.minEnemyRate - conf.units.minEnemyRateDecay * math.clamp((1.5 + self.minEnemyRate) / 10, .2, 1) ^ 1.5, 1.5)
-    self.maxEnemyRate = math.max(self.maxEnemyRate - conf.units.maxEnemyRateDecay * math.clamp((3.0 + self.maxEnemyRate) / 10, .4, 1) ^ 1.5, 3.0)
+    self.minEnemyRate = math.max(self.minEnemyRate - self.minEnemyRateDecay * math.clamp((1.5 + self.minEnemyRate) / 10, .2, 1) ^ 1.5, 1.5)
+    self.maxEnemyRate = math.max(self.maxEnemyRate - self.maxEnemyRateDecay * math.clamp((3.0 + self.maxEnemyRate) / 10, .4, 1) ^ 1.5, 3.0)
   else
     return .5
   end
@@ -49,7 +51,7 @@ function Units:update()
     self.enemyCount = table.count(self:filter(function(u) return u.team == 0 end))
     self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
-    self.level = self.level + (ls.tickrate / 15) * config.biomes[ctx.biome].units.levelScale
+    self.level = self.level + (ls.tickrate / 15) * self.levelScale
   end
 
   return Manager.update(self)

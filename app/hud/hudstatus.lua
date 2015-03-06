@@ -10,6 +10,7 @@ function HudStatus:init()
 
   self.jjpm = 0
   self.jjpmTimer = 1
+  self.jjpmHover = false
 
   self.jujuDisplay = config.player.baseJuju
 
@@ -35,9 +36,9 @@ function HudStatus:update()
 
   local benchmark = 'Blue'
   local old = self.clockIcon
-  if math.floor(ctx.timer * ls.tickrate) >= config.biomes[ctx.biome].benchmarks.gold then benchmark = 'Gold'
-  elseif math.floor(ctx.timer * ls.tickrate) >= config.biomes[ctx.biome].benchmarks.silver then benchmark = 'Silver'
-  elseif math.floor(ctx.timer * ls.tickrate) >= config.biomes[ctx.biome].benchmarks.bronze then benchmark = 'Bronze' end
+  if math.floor(ctx.timer * ls.tickrate) >= config.medals.gold then benchmark = 'Gold'
+  elseif math.floor(ctx.timer * ls.tickrate) >= config.medals.silver then benchmark = 'Silver'
+  elseif math.floor(ctx.timer * ls.tickrate) >= config.medals.bronze then benchmark = 'Bronze' end
   self.clockIcon = data.media.graphics.hud['clock' .. benchmark]
   if self.clockIcon ~= old then
     self.clockScale = 2
@@ -45,6 +46,7 @@ function HudStatus:update()
 
   self.jjpmTimer = timer.rot(self.jjpmTimer, function()
     self.jjpm = math.round((p.totalJuju / (ctx.timer * ls.tickrate / 60)) / .1) * .1
+    if self.jjpmHover then ctx:mousemoved(love.mouse.getPosition()) end
     return .5
   end)
 
@@ -138,17 +140,18 @@ end
 
 function HudStatus:mousemoved(mx, my)
   local p = ctx.player
+  self.jjpmHover = false
   if math.inside(mx, my, unpack(self.hitboxes.juju)) then
+    self.jjpmHover = true
     ctx.hud.tooltip:setTooltip('{white}{title}Juju{normal}\n{whoCares}Use it to summon minions and purchase upgrades.  Collect it in the juju realm.\n\n{green}' .. p.totalJuju .. ' {white}total juju ({green}' .. self.jjpm .. ' {white}per minute)')
   elseif math.inside(mx, my, unpack(self.hitboxes.population)) then
     ctx.hud.tooltip:setTooltip('{white}{title}Population{normal}\n{whoCares}The maximum number of minions you may summon at once.\n\n{green}' .. p.totalSummoned .. ' {white}minion' .. (p.totalSummoned == 1 and '' or 's') .. ' summoned.')
   elseif math.inside(mx, my, unpack(self.hitboxes.timer)) then
     local str = ''
-    local benchmarks = config.biomes[ctx.biome].benchmarks
     local time = ctx.timer * ls.tickrate
-    str = str .. 'Bronze: ' .. (time >= benchmarks.bronze and '{green}' or '{red}') .. toTime(benchmarks.bronze) .. '{white}\n'
-    str = str .. 'Silver: ' .. (time >= benchmarks.silver and '{green}' or '{red}') .. toTime(benchmarks.silver) .. '{white}\n'
-    str = str .. 'Gold: ' .. (time >= benchmarks.gold and '{green}' or '{red}') .. toTime(benchmarks.gold) .. '{white}\n'
+    str = str .. 'Bronze: ' .. (time >= config.medals.bronze and '{green}' or '{red}') .. toTime(config.medals.bronze) .. '{white}\n'
+    str = str .. 'Silver: ' .. (time >= config.medals.silver and '{green}' or '{red}') .. toTime(config.medals.silver) .. '{white}\n'
+    str = str .. 'Gold: ' .. (time >= config.medals.gold and '{green}' or '{red}') .. toTime(config.medals.gold) .. '{white}\n'
     ctx.hud.tooltip:setTooltip('{white}{title}Timer{normal}\n{whoCares}How long you\'ve lasted.  Survive for a long time to unlock rewards!\n\n' .. str)
   end
 end

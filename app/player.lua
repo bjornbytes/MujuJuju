@@ -32,10 +32,11 @@ function Player:init()
   self.deathDuration = 7
 
   -- Juju
-  self.juju = config.player.baseJuju
+  self.juju = 0
   self.totalJuju = 0
   self.jujuTimer = config.player.jujuRate
   self.jujuRate = config.player.jujuRate
+  self:addJuju(config.player.baseJuju)
 
   -- The current magic shruju
   self.shruju = nil
@@ -272,6 +273,7 @@ end
 
 function Player:addJuju(amount)
   self.juju = self.juju + amount
+  self.totalJuju = self.totalJuju + amount
 end
 
 function Player:hurt(amount, source, kind)
@@ -338,14 +340,20 @@ end
 
 function Player:initDeck()
   self.deck = {}
-  local deck = ctx.user.deck
 
-  for i = 1, 3 do
-    local code = deck.minions[i]
+  local minions = {}
+  if ctx.mode == 'campaign' then
+    minions = {config.biomes[ctx.biome].minion}
+  elseif ctx.mode == 'survival' then
+    minions = ctx.user.survival.minions
+  end
+
+  for i = 1, 2 do
+    local code = minions[i]
 
     if code then
       self.deck[code] = {
-        runes = deck.runes[i] or {},
+        runes = ctx.user.runes[code],
         cooldown = 0,
         maxCooldown = 3,
         code = code

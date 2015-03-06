@@ -112,12 +112,7 @@ function HudDead:keypressed(key)
 end
 
 function HudDead:endGame()
-  local biomeIndex = nil
-  for i = 1, #config.biomeOrder do
-    if config.biomeOrder[i] == ctx.biome then biomeIndex = i end
-  end
-
-  Context:add(Menu, {biome = biomeIndex, page = 'main', user = ctx.user}, ctx.options)
+  Context:add(Menu, ctx.user, ctx.options, {page = ctx.mode, biome = ctx.biome, user = ctx.user})
   Context:remove(ctx)
 end
 

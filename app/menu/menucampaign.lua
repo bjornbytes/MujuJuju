@@ -1,13 +1,6 @@
 local g = love.graphics
 MenuCampaign = class()
 
-local minionMap = {
-  forest = 'bruju',
-  cavern = 'xuju',
-  tundra = 'kuju',
-  volcano = 'thuju'
-}
-
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
   ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
@@ -100,8 +93,6 @@ function MenuCampaign:init()
     end
   }
 
-  self:setBiome('forest')
-
   self.play = ctx.gooey:add(Button, 'menu.campaign.play')
   self.play.geometry = function() return self.geometry.play end
   self.play:on('click', function() ctx.animations.muju:set('death') end)
@@ -126,9 +117,6 @@ function MenuCampaign:activate()
 
   self.map.active = true
   self.drag.active = true
-
-  self.map.focused = true
-  self.map.factor = 1
 end
 
 function MenuCampaign:deactivate()
@@ -141,12 +129,15 @@ function MenuCampaign:update()
 
   self.map:update()
 
+  if not self.biome then return end
+
   local mx, my = love.mouse.getPosition()
   local u, v = ctx.u, ctx.v
+  local minion = config.biomes[self.biome].minion
 
   local runes = self.geometry.minion[4]
   for i = 1, #runes do
-    local rune = ctx.user.runes[self.minion][i]
+    local rune = ctx.user.runes[minion][i]
     if rune and not self.drag:isDragging('equippedRune', i) then
       local x, y, w, h = unpack(runes[i])
 
@@ -180,10 +171,14 @@ end
 function MenuCampaign:draw()
   if not self.active then return end
 
+  if not self.biome then
+    return self.map:draw()
+  end
+
   local u, v = ctx.u, ctx.v
   local ps = love.window.getPixelScale()
-
   local atlas = data.atlas.hud
+  local minion = config.biomes[self.biome].minion
 
   local detailsAlpha = 255
   local biome = self.biome
@@ -240,7 +235,7 @@ function MenuCampaign:draw()
   g.rectangle('fill', unpack(self.geometry.minionFrame))
 
   -- Minion Text
-  local unit = data.unit[self.minion]
+  local unit = data.unit[minion]
   g.setColor(255, 255, 255)
   g.setFont('mesmerize', .08 * v)
   g.printShadow(unit.name, .26 * u, .16 * v)
@@ -250,20 +245,16 @@ function MenuCampaign:draw()
   g.setColor(255, 255, 255)
   g.printf(unit.description, .26 * u, .26 * v, .35 * u)
 
-  -- Minion
+  -- Minion Stage
   local x, y, r, runes = unpack(self.geometry.minion)
-  local code = self.minion
-  g.setColor(255, 255, 255)
-
-  -- Stage
-  g.setColor(0, 0, 0, 100)
   local xoff = .02 * v
   local height = .04 * v
+  g.setColor(0, 0, 0, 100)
   g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
 
-  -- Animation
-  ctx.animations[code].scale = ctx.animationScales[code]
-  ctx.animations[code]:draw(x, y)
+  -- Minion Animation
+  ctx.animations[minion].scale = ctx.animationScales[minion]
+  ctx.animations[minion]:draw(x, y)
 
   -- Minion Rune Frames
   for j = 1, #runes do
@@ -275,7 +266,7 @@ function MenuCampaign:draw()
 
   -- Minion Runes
   for i = 1, #runes do
-    local rune = ctx.user.runes[self.minion][i]
+    local rune = ctx.user.runes[minion][i]
     if rune and not self.drag:isDragging('equippedRune', i) then
       local x, y, w, h = unpack(runes[i])
 
@@ -289,18 +280,17 @@ function MenuCampaign:draw()
   end
 
   -- Muju
+  local color = ctx.user and ctx.user.color or 'purple'
+  for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
+    local slot = ctx.animations.muju.spine.skeleton:findSlot(slot)
+    slot.r, slot.g, slot.b = unpack(config.player.colors[color])
+  end
   g.setColor(255, 255, 255)
   g.push()
   g.translate(unpack(self.geometry.muju))
   g.scale(MenuOptions.pixelScale)
   ctx.animations.muju:draw(0, 0)
   g.pop()
-
-  local color = ctx.user and ctx.user.color or 'purple'
-  for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
-    local slot = ctx.animations.muju.spine.skeleton:findSlot(slot)
-    slot.r, slot.g, slot.b = unpack(config.player.colors[color])
-  end
 
   -- Modules
   self.play:draw()
@@ -342,6 +332,9 @@ end
 
 function MenuCampaign:setBiome(biome)
   self.biome = biome
-  self.minion = minionMap[biome]
   ctx:refreshBackground()
+end
+
+function MenuCampaign:mujuDead()
+  ctx:startGame({mode = 'campaign', biome = self.biome})
 end

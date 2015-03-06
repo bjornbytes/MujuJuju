@@ -1,6 +1,6 @@
 Game = class()
 
-function Game:load(user, options, biome, tutorial)
+function Game:load(user, options, info)
   self.options = options
 
   if self.options.textureSmoothing then
@@ -17,7 +17,8 @@ function Game:load(user, options, biome, tutorial)
 
   self.user = user
   self.id = 1
-  self.biome = biome
+  self.mode = info.mode
+  self.biome = info.biome
 
   self.paused = false
   self.ded = false
@@ -37,7 +38,7 @@ function Game:load(user, options, biome, tutorial)
   self.spells = Spells()
   self.particles = Particles()
   self.target = Target()
-  self.sound = Sound(options)
+  self.sound = Sound(self.options)
   self.effects = Effects()
   self.jujus = Jujus()
   self.achievements = Achievements(self.user)
@@ -141,16 +142,32 @@ function Game:distribute()
   end
 
   -- So the hud can draw them
-  self.rewards = {runes = {}, biomes = {}, minions = {}}
+  self.rewards = {runes = {}, medals = {}}
 
   local time = math.floor(self.timer * ls.tickrate)
-  local bronze = time >= config.biomes[self.biome].benchmarks.bronze
-  local silver = time >= config.biomes[self.biome].benchmarks.silver
-  local gold = time >= config.biomes[self.biome].benchmarks.gold
+  local bronze = time >= config.medals.bronze
+  local silver = time >= config.medals.silver
+  local gold = time >= config.medals.gold
+
+  -- Distribute medals
+  if bronze and not ctx.user.campaign.medals[self.biome] then
+    table.insert(self.rewards.medals, 'bronze')
+    self.user.campaign.medals[self.biome].bronze = true
+  end
+
+  if silver and not ctx.user.campaign.medals[self.biome] then
+    table.insert(self.rewards.medals, 'silver')
+    self.user.campaign.medals[self.biome].silver = true
+  end
+
+  if gold and not ctx.user.campaign.medals[self.biome] then
+    table.insert(self.rewards.medals, 'gold')
+    self.user.campaign.medals[self.biome].gold = true
+  end
 
   -- Distribute runes
   local runeCount = 0
-  if bronze and love.math.random() < .9 then runeCount = runeCount + 1 end
+  if bronze then runeCount = runeCount + 1 end
   if silver and love.math.random() < .3 then runeCount = runeCount + 1 end
   if gold and love.math.random() < .2 then runeCount = runeCount + 1 end
 
@@ -158,7 +175,7 @@ function Game:distribute()
 
     -- Basics
     local rune = {}
-    local maxLevel = config.biomes[ctx.biome].runes.maxLevel
+    local maxLevel = config..runes.maxLevels[self.biome]
     local mu = 0
     if gold then mu = maxLevel
     elseif silver then mu = maxLevel * .75
@@ -232,21 +249,10 @@ function Game:distribute()
     table.insert(self.rewards.runes, rune)
   end
 
-  -- Distribute biomes
-  if silver then
-    local nextBiome = config.biomes[self.biome].rewards.silver
-    if nextBiome and not table.has(self.user.biomes, nextBiome) then
-      table.insert(self.user.biomes, nextBiome)
-      table.insert(self.rewards.biomes, nextBiome)
-      saveUser(self.user)
-    end
-  end
-
   -- Calculate highscores
-  if time > self.user.highscores[self.biome] then
-    self.user.highscores[self.biome] = time
+  if self.mode == 'surviva' and time > self.user.survival.bestTime then
+    self.user.survival.bestTime = time
     self.rewards.highscore = true
-    saveUser(self.user)
   end
 
   saveUser(self.user)

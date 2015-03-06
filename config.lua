@@ -107,225 +107,57 @@ return {
   },
 
   biomes = {
-
     forest = {
       name = 'The Overgrowth',
-      benchmarks = {
-        bronze = 300,
-        silver = 600,
-        gold = 900
-      },
-      rewards = {
-        silver = 'cavern',
-        gold = 'unit'
-      },
-      juju = {
-        minimum = {
-          base = 20,
-          exponent = .75,
-          coefficient = 1
-        },
-        maximum = {
-          base = 30,
-          exponent = .75,
-          coefficient = 1.2
-        }
-      },
-      units = {
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
-        minEnemyRateDecay = .05,
-        maxEnemyRateDecay = .06,
-        maxEnemiesCoefficient = .1,
-        levelScale = .75,
-        upgradeCostIncrease = 2,
-        maxElites = 1,
-        maxEliteBuffCount = 1,
-        eliteLevelThreshold = 20,
-        types = {
-          duju = 0,
-          spuju = 360
-        }
-      },
-      shrujuPatches = {300, 600},
-      runes = {
-        maxLevel = 35
-      },
-      effects = {
-        vignette = {
-          blur = {.45, .45},
-          radius = {.85, .65}
-        },
-        bloom = {
-          alpha = {0, 60}
-        }
-      }
+      description = 'A forest',
+      minion = 'bruju'
     },
 
     cavern = {
       name = 'The Hollow',
-      benchmarks = {
-        bronze = 300,
-        silver = 600,
-        gold = 900
-      },
-      rewards = {
-        silver = 'tundra'
-      },
-      juju = {
-        minimum = {
-          base = 20,
-          exponent = .75,
-          coefficient = 1
-        },
-        maximum = {
-          base = 30,
-          exponent = .75,
-          coefficient = 1.2
-        }
-      },
-      units = {
-        minEnemyRate = 8,
-        maxEnemyRate = 10,
-        minEnemyRateDecay = .03,
-        maxEnemyRateDecay = .03,
-        maxEnemiesCoefficient = .1,
-        levelScale = .85,
-        upgradeCostIncrease = 2,
-        maxElites = 1,
-        eliteLevelThreshold = 20,
-        maxEliteBuffCount = 2,
-        types = {
-          spuju = 0,
-          vuju = 600
-        }
-      },
-      shrujuPatches = {300, 600},
-      runes = {
-        maxLevel = 50
-      },
-      effects = {
-        vignette = {
-          blur = {.6, 1.15},
-          radius = {.75, .75}
-        },
-        bloom = {
-          alpha = {5, 20}
-        }
-      }
+      description = 'A cave',
+      minion = 'xuju'
     },
 
     tundra = {
       name = 'The Wild North',
-      benchmarks = {
-        bronze = 300,
-        silver = 600,
-        gold = 900
-      },
-      rewards = {
-        silver = 'volcano'
-      },
-      juju = {
-        minimum = {
-          base = 20,
-          exponent = .75,
-          coefficient = 1
-        },
-        maximum = {
-          base = 30,
-          exponent = .75,
-          coefficient = 1.2
-        }
-      },
-      units = {
-        minEnemyRate = 8,
-        maxEnemyRate = 10,
-        minEnemyRateDecay = .03,
-        maxEnemyRateDecay = .03,
-        maxEnemiesCoefficient = .12,
-        levelScale = 1.1,
-        upgradeCostIncrease = 2,
-        maxElites = 2,
-        eliteLevelThreshold = 20,
-        maxEliteBuffCount = 3,
-        types = {
-          vuju = 240,
-          spuju = 0,
-          duju = 120
-        }
-      },
-      shrujuPatches = {300, 600},
-      runes = {
-        maxLevel = 70
-      },
-      effects = {
-        vignette = {
-          blur = {.45, 1.15},
-          radius = {.85, .85}
-        },
-        bloom = {
-          alpha = {10, 20}
-        }
-      }
+      description = ' A mountain',
+      minion = 'kuju'
     },
 
     volcano = {
       name = 'The Cinders',
-      benchmarks = {
-        bronze = 300,
-        silver = 600,
-        gold = 900
-      },
-      rewards = {
-        --
-      },
-      juju = {
-        minimum = {
-          base = 20,
-          exponent = .75,
-          coefficient = 1
-        },
-        maximum = {
-          base = 30,
-          exponent = .75,
-          coefficient = 1.2
-        }
-      },
-      units = {
-        startingLevel = 40,
-        minEnemyRate = 10,
-        maxEnemyRate = 12,
-        minEnemyRateDecay = .02,
-        maxEnemyRateDecay = .02,
-        maxEnemiesCoefficient = .02,
-        levelScale = 2,
-        upgradeCostIncrease = 2,
-        maxElites = 3,
-        maxEliteBuffCount = 4,
-        eliteLevelThreshold = 80,
-        types = {
-          vuju = 240,
-          spuju = 120,
-          duju = 0
-        }
-      },
-      shrujuPatches = {300, 600},
-      runes = {
-        maxLevel = 100
-      },
-      effects = {
-        vignette = {
-          blur = {.45, 1.15},
-          radius = {.85, .85}
-        },
-        bloom = {
-          alpha = {10, 70}
-        }
-      }
+      description = 'A volcano',
+      minion = 'thuju'
     }
   },
 
+  juju = {
+    minimum = {
+      base = 20,
+      exponent = .75,
+      coefficient = 1
+    },
+    maximum = {
+      base = 30,
+      exponent = .75,
+      coefficient = 1.2
+    }
+  },
+
+  medals = {
+    bronze = 300,
+    silver = 600,
+    gold = 900
+  },
+
   runes = {
+    maxLevels = {
+      forest = 35,
+      cavern = 50,
+      tundra = 70,
+      volcano = 100
+    },
     stats = {'health', 'damage', 'speed', 'attackSpeed', 'spirit', 'haste'},
     statRanges = {
       health = {10, 250},
@@ -435,7 +267,75 @@ return {
 
   units = {
     baseHealthScaling = 3,
-    baseDamageScaling = 3
+    baseDamageScaling = 3,
+    upgradeCostIncrease = 2
+  },
+
+  enemies = {
+    forest = {
+      minEnemyRate = 10,
+      maxEnemyRate = 12,
+      minEnemyRateDecay = .05,
+      maxEnemyRateDecay = .06,
+      maxEnemiesCoefficient = .1,
+      levelScale = .75,
+      maxElites = 1,
+      maxEliteBuffCount = 1,
+      eliteLevelThreshold = 20,
+      types = {
+        duju = 0,
+        spuju = 360
+      }
+    },
+    cavern = {
+      minEnemyRate = 8,
+      maxEnemyRate = 10,
+      minEnemyRateDecay = .03,
+      maxEnemyRateDecay = .03,
+      maxEnemiesCoefficient = .1,
+      levelScale = .85,
+      maxElites = 1,
+      maxEliteBuffCount = 2,
+      eliteLevelThreshold = 20,
+      types = {
+        spuju = 0,
+        vuju = 600
+      }
+    },
+    tundra = {
+      level = 20,
+      minEnemyRate = 8,
+      maxEnemyRate = 10,
+      minEnemyRateDecay = .03,
+      maxEnemyRateDecay = .03,
+      maxEnemiesCoefficient = .12,
+      levelScale = 1.1,
+      maxElites = 2,
+      maxEliteBuffCount = 3,
+      eliteLevelThreshold = 50,
+      types = {
+        vuju = 240,
+        spuju = 0,
+        duju = 120
+      }
+    },
+    volcano = {
+      level = 40,
+      minEnemyRate = 10,
+      maxEnemyRate = 12,
+      minEnemyRateDecay = .02,
+      maxEnemyRateDecay = .02,
+      maxEnemiesCoefficient = .02,
+      levelScale = 2,
+      maxElites = 3,
+      maxEliteBuffCount = 4,
+      eliteLevelThreshold = 80,
+      types = {
+        vuju = 240,
+        spuju = 120,
+        duju = 0
+      }
+    }
   },
 
   defaultUser = {
@@ -479,5 +379,44 @@ return {
     sound = .75,
     colorblind = false,
     powersave = true
+  },
+
+  effects = {
+    forest = {
+      vignette = {
+        blur = {.45, .45},
+        radius = {.85, .65}
+      },
+      bloom = {
+        alpha = {0, 60}
+      }
+    },
+    cavern = {
+      vignette = {
+        blur = {.6, 1.15},
+        radius = {.75, .75}
+      },
+      bloom = {
+        alpha = {5, 20}
+      }
+    },
+    tundra = {
+      vignette = {
+        blur = {.45, 1.15},
+        radius = {.85, .85}
+      },
+      bloom = {
+        alpha = {10, 20}
+      }
+    },
+    volcano = {
+      vignette = {
+        blur = {.45, 1.15},
+        radius = {.85, .85}
+      },
+      bloom = {
+        alpha = {10, 70}
+      }
+    }
   }
 }
