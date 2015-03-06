@@ -10,14 +10,21 @@ function MenuCampaignDrag:init()
   self.dragging = nil
   self.dragIndex = nil
   self.dragSource = nil
+  self.dragAlpha = 0
+  self.prevDragAlpha = self.dragAlpha
 end
 
 function MenuCampaignDrag:update()
   local rune = self.dragging
   if rune then
-    lerpRune(rune, 'x', love.mouse.getX())
-    lerpRune(rune, 'y', love.mouse.getY())
+    local x, y = self:snap(love.mouse.getPosition())
+    lerpRune(rune, 'x', x)
+    lerpRune(rune, 'y', y)
+    lerpRune(rune, 'scale', 1.1)
   end
+
+  self.prevDragAlpha = self.dragAlpha
+  self.dragAlpha = math.lerp(self.dragAlpha, rune and 1 or 0, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuCampaignDrag:draw()
@@ -35,22 +42,23 @@ function MenuCampaignDrag:draw()
       lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
 
+    h = h * lerpd.scale
     g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .05 * ctx.v)
   end
 end
 
 function MenuCampaignDrag:mousepressed(mx, my, b)
-  if b == 'l' then
-    local runes = ctx.campaign.geometry.runes
-    for i = 1, #runes do
-      local rune = ctx.user.runes.stash[i]
-      local x, y, w, h = unpack(runes[i])
-      if rune and math.inside(mx, my, x, y, w, h) then
-        self.dragging = rune
-        self.dragIndex = i
-        self.dragSource = 'stash'
-        break
-      end
+  if b ~= 'l' then return end
+
+  local runes = ctx.campaign.geometry.runes
+  for i = 1, #runes do
+    local rune = ctx.user.runes.stash[i]
+    local x, y, w, h = unpack(runes[i])
+    if rune and math.inside(mx, my, x, y, w, h) then
+      self.dragging = rune
+      self.dragIndex = i
+      self.dragSource = 'stash'
+      break
     end
   end
 
@@ -69,6 +77,8 @@ end
 
 function MenuCampaignDrag:mousereleased(mx, my, b)
   if not self.dragging or b ~= 'l' then return end
+
+  mx, my = self:snap(mx, my)
 
   local dirty = false
   local runes = ctx.user.runes
@@ -110,10 +120,44 @@ function MenuCampaignDrag:mousereleased(mx, my, b)
   end
 
   self.dragging = nil
-  self.dragIndex = nil
-  self.dragSource = nil
 end
 
 function MenuCampaignDrag:isDragging(source, index)
   return self.dragging and self.dragIndex == index and self.dragSource == source
+end
+
+function MenuCampaignDrag:snap(mx, my)
+  local minx, miny, mindis = nil, nil, math.huge
+  local minion = config.biomes[ctx.campaign.biome].minion
+  local v = ctx.v
+
+  -- Stash
+  local geometry = ctx.campaign.geometry.runes
+  for i = 1, 33 do
+    local rune = ctx.user.runes.stash[i]
+    local x, y, w, h = unpack(geometry[i])
+    x, y = x + w / 2, y + h / 2
+    local dis = math.distance(x, y, mx, my)
+    if dis < mindis and (self.dragSource ~= 'stash' or self.dragIndex ~= i) then
+      minx, miny, mindis = x, y, dis
+    end
+  end
+
+  -- Minion
+  local geometry = ctx.campaign.geometry.minion[4]
+  for i = 1, 3 do
+    local rune = ctx.user.runes[minion][i]
+    local x, y, w, h = unpack(geometry[i])
+    x, y = x + w / 2, y + h / 2
+    local dis = math.distance(x, y, mx, my)
+    if dis < mindis and (self.dragSource ~= minion or self.dragIndex ~= i) then
+      minx, miny, mindis = x, y, dis
+    end
+  end
+
+  if mindis < .05 * v then
+    return math.lerp(mx, minx, .25), math.lerp(my, miny, .25)
+  end
+
+  return mx, my
 end

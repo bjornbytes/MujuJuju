@@ -69,6 +69,14 @@ function MenuUser:activate()
         local file = love.filesystem.read('save/' .. file .. '/user.json')
         local user = json.decode(file)
         self.users[user.slot] = user
+        for _, list in pairs(user.runes) do
+          for k in pairs(list) do
+            if type(k) == 'string' and k:match('%d+') then
+              list[tonumber(k)] = list[k]
+              list[k] = nil
+            end
+          end
+        end
       end
     end)
   end

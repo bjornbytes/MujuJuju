@@ -136,13 +136,14 @@ function MenuCampaign:update()
   local minion = config.biomes[self.biome].minion
 
   local runes = self.geometry.minion[4]
-  for i = 1, #runes do
+  for i = 1, 3 do
     local rune = ctx.user.runes[minion][i]
     if rune and not self.drag:isDragging(minion, i) then
       local x, y, w, h = unpack(runes[i])
 
       lerpRune(rune, 'x', x + w / 2)
       lerpRune(rune, 'y', y + h / 2)
+      lerpRune(rune, 'scale', 1)
 
       if math.inside(mx, my, x, y, w, h) then
         ctx.tooltip:setRuneTooltip(rune)
@@ -151,13 +152,14 @@ function MenuCampaign:update()
   end
 
   local runes = self.geometry.runes
-  for i = 1, #runes do
+  for i = 1, 33 do
     local rune = ctx.user.runes.stash[i]
     if rune and not self.drag:isDragging('stash', i) then
       local x, y, w, h = unpack(runes[i])
 
       lerpRune(rune, 'x', x + w / 2)
       lerpRune(rune, 'y', y + h / 2)
+      lerpRune(rune, 'scale', 1)
 
       if math.inside(mx, my, x, y, w, h) then
         ctx.tooltip:setRuneTooltip(rune)
@@ -220,6 +222,7 @@ function MenuCampaign:draw()
       for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
         lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
+      h = h * lerpd.scale
       g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
     end
   end
@@ -262,6 +265,13 @@ function MenuCampaign:draw()
     local scale = w / atlas:getDimensions('frame')
     g.setColor(255, 255, 255)
     g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
+    if self.drag.dragSource == 'stash' and self.drag.dragAlpha > 0 then
+      local alpha = math.lerp(self.drag.prevDragAlpha, self.drag.dragAlpha, ls.accum / ls.tickrate)
+      g.setBlendMode('additive')
+      g.setColor(255, 255, 255, 80 * alpha)
+      g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
+      g.setBlendMode('alpha')
+    end
   end
 
   -- Minion Runes
@@ -274,6 +284,7 @@ function MenuCampaign:draw()
       for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
         lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
+      h = h * lerpd.scale
 
       g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
     end
