@@ -138,7 +138,7 @@ function MenuCampaign:update()
   local runes = self.geometry.minion[4]
   for i = 1, #runes do
     local rune = ctx.user.runes[minion][i]
-    if rune and not self.drag:isDragging('equippedRune', i) then
+    if rune and not self.drag:isDragging(minion, i) then
       local x, y, w, h = unpack(runes[i])
 
       lerpRune(rune, 'x', x + w / 2)
@@ -153,7 +153,7 @@ function MenuCampaign:update()
   local runes = self.geometry.runes
   for i = 1, #runes do
     local rune = ctx.user.runes.stash[i]
-    if rune and not self.drag:isDragging('rune', i) then
+    if rune and not self.drag:isDragging('stash', i) then
       local x, y, w, h = unpack(runes[i])
 
       lerpRune(rune, 'x', x + w / 2)
@@ -215,7 +215,7 @@ function MenuCampaign:draw()
   for i = 1, #runes do
     local x, y, w, h = unpack(runes[i])
     local rune = ctx.user.runes.stash[i]
-    if rune and not self.drag:isDragging('gutterRune', i) then
+    if rune and not self.drag:isDragging('stash', i) then
       local lerpd = {}
       for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
         lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
@@ -267,7 +267,7 @@ function MenuCampaign:draw()
   -- Minion Runes
   for i = 1, #runes do
     local rune = ctx.user.runes[minion][i]
-    if rune and not self.drag:isDragging('equippedRune', i) then
+    if rune and not self.drag:isDragging(minion, i) then
       local x, y, w, h = unpack(runes[i])
 
       local lerpd = {}

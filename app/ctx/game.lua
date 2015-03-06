@@ -175,7 +175,7 @@ function Game:distribute()
 
     -- Basics
     local rune = {}
-    local maxLevel = config..runes.maxLevels[self.biome]
+    local maxLevel = config.runes.maxLevels[self.biome]
     local mu = 0
     if gold then mu = maxLevel
     elseif silver then mu = maxLevel * .75
@@ -245,7 +245,7 @@ function Game:distribute()
     rune.background = runeLevel < 30 and 'broken' or 'normal'
 
     -- Add to account
-    table.insert(self.user.runes, rune)
+    table.insert(self.user.runes.stash, rune)
     table.insert(self.rewards.runes, rune)
   end
 

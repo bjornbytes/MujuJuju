@@ -208,7 +208,7 @@ function MenuChoose:finished()
   saveUser(self.user)
   ctx.user = self.user
 
-  ctx:setPage(self.destination)
+  ctx:setPage('campaign')
   ctx.animations.muju:set('summon')
   ctx.sound:play('summon2')
 end

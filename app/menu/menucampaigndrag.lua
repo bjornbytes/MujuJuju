@@ -7,115 +7,100 @@ local function lerpRune(rune, key, val)
 end
 
 function MenuCampaignDrag:init()
-  self.active = false
-  self.focused = false
   self.dragging = nil
-  self.draggingIndex = nil
+  self.dragIndex = nil
+  self.dragSource = nil
 end
 
 function MenuCampaignDrag:update()
-  if not self.active then return end
-
-  if self.dragging then
-    local rune = self.dragging == 'equippedRune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
+  local rune = self.dragging
+  if rune then
     lerpRune(rune, 'x', love.mouse.getX())
     lerpRune(rune, 'y', love.mouse.getY())
   end
 end
 
 function MenuCampaignDrag:draw()
-  if not self.active then return end
-
-  if self.dragging then
+  local rune, index, source = self.dragging, self.dragIndex, self.dragSource
+  if rune then
     local x, y, w, h
-    if self.dragging == 'equippedRune' then
-      x, y, w, h = unpack(ctx.campaign.geometry.minion[4][self.draggingIndex[2]])
+    if source == 'stash' then
+      x, y, w, h = unpack(ctx.campaign.geometry.runes[index])
     else
-      x, y, w, h = unpack(ctx.campaign.geometry.runes[self.draggingIndex])
+      x, y, w, h = unpack(ctx.campaign.geometry.minion[4][index])
     end
-    local rune = self.dragging == 'equippedRune' and ctx.user.deck.runes[self.draggingIndex[1]][self.draggingIndex[2]] or ctx.user.runes[self.draggingIndex]
+
     local lerpd = {}
     for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
       lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
+
     g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .05 * ctx.v)
   end
 end
 
 function MenuCampaignDrag:mousepressed(mx, my, b)
-  do return end
   if b == 'l' then
     local runes = ctx.campaign.geometry.runes
     for i = 1, #runes do
+      local rune = ctx.user.runes.stash[i]
       local x, y, w, h = unpack(runes[i])
-      if ctx.user.runes[i] and math.inside(mx, my, x, y, w, h) then
-        self.focused = true
-        self.dragging = 'rune'
-        self.draggingIndex = i
+      if rune and math.inside(mx, my, x, y, w, h) then
+        self.dragging = rune
+        self.dragIndex = i
+        self.dragSource = 'stash'
         break
       end
     end
   end
 
-  local x, y, r, runes = unpack(ctx.campaign.geometry.minion)
-  for j = 1, #runes do
-    local x, y, w, h = unpack(runes[j])
-    if ctx.user.deck.runes[1] and ctx.user.deck.runes[1][j] and math.inside(mx, my, x, y, w, h) then
-      self.focused = true
-      self.dragging = 'equippedRune'
-      self.draggingIndex = {1, j}
+  local _, _, _, runes = unpack(ctx.campaign.geometry.minion)
+  local minion = config.biomes[ctx.campaign.biome].minion
+  for i = 1, #runes do
+    local rune = ctx.user.runes[minion][i]
+    local x, y, w, h = unpack(runes[i])
+    if rune and math.inside(mx, my, x, y, w, h) then
+      self.dragging = rune
+      self.dragIndex = i
+      self.dragSource = minion
     end
   end
 end
 
 function MenuCampaignDrag:mousereleased(mx, my, b)
+  if not self.dragging or b ~= 'l' then return end
+
   local dirty = false
-  do return end
+  local runes = ctx.user.runes
+  local dragging, index, source = self.dragging, self.dragIndex, self.dragSource
+  local minion = config.biomes[ctx.campaign.biome].minion
 
-  if self.dragging == 'rune' and b == 'l' then
-    local rune = ctx.user.runes[self.draggingIndex]
-    if not rune.unit or rune.unit == ctx.user.deck.minions[1] then
-      local x, y, r, runes = unpack(ctx.campaign.geometry.minion)
+  local function swap(src1, idx1, src2, idx2)
+    local old, new = runes[src1][idx1]
+    local unit1, unit2 = old and old.unit, new and new.unit
+    if (unit1 and (src2 ~= 'stash' and src2 ~= unit1)) or (unit2 and (src1 ~= 'stash' and src1 ~= unit2)) then return end
+    runes[src1][idx1], runes[src2][idx2] = runes[src2][idx2], runes[src1][idx1]
+  end
 
-      local i = 1
-      for j = 1, #runes do
-        local x, y, w, h = unpack(runes[j])
-        if math.inside(mx, my, x, y, w, h) then
-          if ctx.user.deck.runes[i][j] then
-            local index = self.draggingIndex
-            ctx.user.runes[index], ctx.user.deck.runes[i][j] = ctx.user.deck.runes[i][j], ctx.user.runes[index]
-          else
-            ctx.user.deck.runes[i][j] = rune
-            table.remove(ctx.user.runes, self.draggingIndex)
-          end
-
-          dirty = true
-          break
-        end
-      end
-    end
-  elseif self.dragging == 'equippedRune' then
-    if b == 'r' or (b == 'l' and math.inside(mx, my, unpack(ctx.campaign.geometry.runesFrame))) then
-      local i, j = unpack(self.draggingIndex)
-      local rune = ctx.user.deck.runes[i][j]
-      table.insert(ctx.user.runes, rune)
-      ctx.user.deck.runes[i][j] = nil
+  -- Stash
+  local geometry = ctx.campaign.geometry.runes
+  for i = 1, 33 do
+    local rune = ctx.user.runes.stash[i]
+    if math.inside(mx, my, unpack(geometry[i])) then
+      swap(source, index, 'stash', i)
       dirty = true
+      break
     end
+  end
 
-    if b == 'l' then
-      local i, j = unpack(self.draggingIndex)
-      i = 1
-      local oldRune = ctx.user.deck.runes[i][j]
-      local x, y, r, runes = unpack(ctx.campaign.geometry.minion)
-      for n = 1, #runes do
-        local x, y, w, h = unpack(runes[n])
-        local newRune = ctx.user.deck.runes[m] and ctx.user.deck.runes[m][n]
-        if math.inside(mx, my, x, y, w, h) and (not oldRune or not oldRune.unit) and (not newRune or not newRune.unit) then
-          ctx.user.deck.runes[i][j], ctx.user.deck.runes[m][n] = ctx.user.deck.runes[m][n], ctx.user.deck.runes[i][j]
-          dirty = true
-        end
-      end
+  -- Minion
+  local geometry = ctx.campaign.geometry.minion[4]
+  for i = 1, 3 do
+    local rune = ctx.user.runes[minion][i]
+    if math.inside(mx, my, unpack(geometry[i])) then
+      swap(source, index, minion, i)
+      dirty = true
+      break
     end
   end
 
@@ -124,11 +109,11 @@ function MenuCampaignDrag:mousereleased(mx, my, b)
     table.clear(ctx.campaign.geometry)
   end
 
-  self.focused = false
   self.dragging = nil
-  self.draggingIndex = nil
+  self.dragIndex = nil
+  self.dragSource = nil
 end
 
-function MenuCampaignDrag:isDragging(kind, index1, index2)
-  return self.focused and self.dragging == kind and (self.draggingIndex == index1 or (type(self.draggingIndex) == 'table' and self.draggingIndex[1] == index1 and self.draggingIndex[2] == index2))
+function MenuCampaignDrag:isDragging(source, index)
+  return self.dragging and self.dragIndex == index and self.dragSource == source
 end
