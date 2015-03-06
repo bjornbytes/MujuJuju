@@ -27,7 +27,7 @@ function MenuCampaign:init()
       local size = .2 * v
       local runeSize = .08 * v
       local runeInc = runeSize + .02 * v
-      local x = .15 * u
+      local x = .07 * u + size / 2 + .04 * v
       local y = .35 * v
       local runex = x - (runeInc * (3 - 1) / 2)
       local runey = y + .18 * v
@@ -185,8 +185,8 @@ function MenuCampaign:draw()
   local detailsAlpha = 255
   local biome = self.biome
   local midx = self.geometry.play[1] + self.geometry.play[3] / 2
-  local medalSize = v * .03
-  local medalInc = (medalSize * 3 + (v * .02))
+  local medalSize = v * .04
+  local medalInc = (medalSize * 4 + (v * .02))
   local medalX = midx - medalInc * (3 - 1) / 2
   local medalY = .3 * v + medalSize + (v * .05)
   for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
@@ -195,7 +195,10 @@ function MenuCampaign:draw()
     local image = data.media.graphics.menu[benchmark]
     local scale = medalSize * 2 / image:getWidth() * (achieved and 1 or .8)
     g.draw(image, medalX, medalY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-    g.drawRune(ctx.user.runes[i], medalX, medalY + .15 * v, .1 * v - .02 * v, .1 * v - .06 * v)
+
+    local qw, qh = atlas:getDimensions('runeBgBroken')
+    local scale = medalSize * 2 / qw
+    g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .16 * v, 0, scale, scale, qw / 2, qh / 2)
     medalX = medalX + medalInc
   end
 
@@ -247,6 +250,27 @@ function MenuCampaign:draw()
   g.printf(unit.description, .26 * u + 1, .26 * v + 1, .35 * u)
   g.setColor(255, 255, 255)
   g.printf(unit.description, .26 * u, .26 * v, .35 * u)
+
+  -- Minion Featured
+  local _, lines = g.getFont():getWrap(unit.description, .35 * u)
+  local y = .26 * v + lines * g.getFont():getHeight() + .02 * v
+  local height = self.geometry.minionFrame[2] + self.geometry.minionFrame[4] - y - .01 * v
+  local h = math.max(height / #unit.featured - .01 * v, 0)
+  for i = 1, #unit.featured do
+    local qw, qh = atlas:getDimensions('frame')
+    local scale = h / qh
+    g.draw(atlas.texture, atlas.quads.frame, .26 * u, y, 0, scale, scale)
+
+    local qw, qh = atlas:getDimensions(unit.featured[i][1])
+    if qw then
+      local scale = (h * .75) / math.max(qw, qh)
+      g.draw(atlas.texture, atlas.quads[unit.featured[i][1]], .26 * u + h / 2, y + h / 2, 0, scale, scale, qw / 2, qh / 2)
+    end
+
+    g.setFont('mesmerize', .02 * v)
+    g.printShadow(unit.upgrades[unit.featured[i][1]].name .. ': ' .. unit.featured[i][2], .3 * u, y + h / 2 - g.getFont():getHeight() / 2)
+    y = y + h + .01 * v
+  end
 
   -- Minion Stage
   local x, y, r, runes = unpack(self.geometry.minion)

@@ -212,4 +212,11 @@ Xuju.upgrades = {
   }
 }
 
+Xuju.featured = {
+  {'shadowrush', 'Dash through the shadows to strike enemies.'},
+  {'rend', 'A chance to deal double damage on each attack.'},
+  {'ghostarmor', 'A chance to evade attacks.'},
+  {'twinblades', 'Strike twice with every hit.'}
+}
+
 return Xuju

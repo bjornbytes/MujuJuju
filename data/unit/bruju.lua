@@ -240,4 +240,11 @@ Bruju.upgrades = {
   }
 }
 
+Bruju.featured = {
+  {'siphon', 'Steal health from enemies with every attack.'},
+  {'burst', 'Explode on death to damage enemies.'},
+  {'rewind', 'Move backwards in time to avoid taking damage.'},
+  {'moxie', 'Convert health into damage.'}
+}
+
 return Bruju

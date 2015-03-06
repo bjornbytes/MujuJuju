@@ -138,7 +138,7 @@ function MenuCampaignDrag:snap(mx, my)
     local x, y, w, h = unpack(geometry[i])
     x, y = x + w / 2, y + h / 2
     local dis = math.distance(x, y, mx, my)
-    if dis < mindis and (self.dragSource ~= 'stash' or self.dragIndex ~= i) then
+    if dis < mindis then
       minx, miny, mindis = x, y, dis
     end
   end
@@ -150,13 +150,13 @@ function MenuCampaignDrag:snap(mx, my)
     local x, y, w, h = unpack(geometry[i])
     x, y = x + w / 2, y + h / 2
     local dis = math.distance(x, y, mx, my)
-    if dis < mindis and (self.dragSource ~= minion or self.dragIndex ~= i) then
+    if dis < mindis then
       minx, miny, mindis = x, y, dis
     end
   end
 
   if mindis < .05 * v then
-    return math.lerp(mx, minx, .25), math.lerp(my, miny, .25)
+    return math.lerp(mx, minx, .3), math.lerp(my, miny, .3)
   end
 
   return mx, my

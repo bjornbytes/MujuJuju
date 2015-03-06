@@ -217,4 +217,11 @@ Thuju.upgrades = {
   }
 }
 
+Thuju.featured = {
+  {'wardofthorns', 'Reflect damage.'},
+  {'tremor', 'Damage and stun enemies in a line.'},
+  {'inspire', 'Buff nearby allies when summoned.'},
+  {'impenetrablehide', 'Gain armor whenever damage is taken.'}
+}
+
 return Thuju

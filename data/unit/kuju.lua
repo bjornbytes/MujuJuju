@@ -11,6 +11,7 @@ Kuju.range = 140
 Kuju.attackSpeed = 1.45
 Kuju.speed = 35
 Kuju.cost = 10
+Kuju.attackSpell = 'kujuattack'
 
 ----------------
 -- Upgrades
@@ -217,6 +218,11 @@ Kuju.upgrades = {
   }
 }
 
-Kuju.attackSpell = 'kujuattack'
+Kuju.featured = {
+  {'frozenorb', 'Damage and slow enemies.'},
+  {'shiverarmor', 'Muju damages and stuns attackers.'},
+  {'frostbite', 'Deal high damage over time to all enemies in an area.'},
+  {'frostnova', 'Muju damages all nearby enemies when he dies.'}
+}
 
 return Kuju
