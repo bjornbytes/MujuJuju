@@ -166,6 +166,7 @@ function Menu:resize()
   self.workingCanvas = g.newCanvas(self.u, self.v)
   self.unitCanvas = g.newCanvas(400, 400)
   self.screenCanvas = g.newCanvas(self.u, self.v)
+  self:initAnimations()
 
   love.mouse.setCursor(love.mouse.newCursor('media/graphics/cursor' .. ((love.window.getPixelScale() == 2) and '' or '') .. '.png'))
   self.gooey:resize()
@@ -236,7 +237,7 @@ end
 
 function Menu:initAnimations()
   self.animations = {}
-  self.animations.muju = data.animation.muju({scale = 1, default = 'resurrect'})
+  self.animations.muju = data.animation.muju({scale = 1 * (self.u / 1366), default = 'resurrect'})
   self.animations.muju.flipped = true
   self.animations.muju:on('complete', function(data)
     self.animations.muju:set('idle', {force = true})
@@ -249,10 +250,10 @@ function Menu:initAnimations()
   end)
 
   self.animationScales = {
-    thuju = .55,
-    bruju = 1.3,
-    xuju = .55,
-    kuju = .6
+    thuju = .55 * (self.u / 1366),
+    bruju = 1.3 * (self.u / 1366),
+    xuju = .55 * (self.u / 1366),
+    kuju = .6 * (self.u / 1366)
   }
 
   self.animationTransforms = {}

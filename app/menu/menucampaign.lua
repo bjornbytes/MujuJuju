@@ -24,8 +24,8 @@ function MenuCampaign:init()
 
     minion = function()
       local u, v = love.graphics.getDimensions()
-      local size = .2 * v
-      local runeSize = .08 * v
+      local size = .1125 * u
+      local runeSize = .045 * u
       local runeInc = runeSize + .02 * v
       local x = .07 * u + size / 2 + .04 * v
       local y = .35 * v
@@ -41,7 +41,7 @@ function MenuCampaign:init()
 
     runes = function()
       local u, v = ctx.u, ctx.v
-      local size = .08 * v
+      local size = .045 * u
       local inc = size + .01 * v
       local x = u * .07
       local ox = x
@@ -66,7 +66,7 @@ function MenuCampaign:init()
       local x = label[1] - v * .02
       local y = label[2] - v * .01
       local w = ((self.geometry.runes[1][4] + .01 * v) * 11) + v * .03
-      local h = v * .34
+      local h = ((self.geometry.runes[1][4] + .01 * v) * 3) + v * .055 + v * .02
       return {x, y, w, h}
     end,
 
@@ -185,8 +185,8 @@ function MenuCampaign:draw()
   local detailsAlpha = 255
   local biome = self.biome
   local midx = self.geometry.play[1] + self.geometry.play[3] / 2
-  local medalSize = v * .04
-  local medalInc = (medalSize * 4 + (v * .02))
+  local medalSize = u * .0225
+  local medalInc = (medalSize * 4 + (u * .01125))
   local medalX = midx - medalInc * (3 - 1) / 2
   local medalY = .3 * v + medalSize + (v * .05)
   for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
@@ -242,42 +242,53 @@ function MenuCampaign:draw()
 
   -- Minion Text
   local unit = data.unit[minion]
+  local x = .07 * u + .2 * u
+  local textWidth = self.geometry.minionFrame[1] + self.geometry.minionFrame[3] - x - .02 * v
   g.setColor(255, 255, 255)
   g.setFont('mesmerize', .08 * v)
-  g.printShadow(unit.name, .26 * u, .16 * v)
+  g.printShadow(unit.name, x, .16 * v)
   g.setFont('mesmerize', .02 * v)
   g.setColor(0, 0, 0)
-  g.printf(unit.description, .26 * u + 1, .26 * v + 1, .35 * u)
+  g.printf(unit.description, x + 1, .26 * v + 1, textWidth)
   g.setColor(255, 255, 255)
-  g.printf(unit.description, .26 * u, .26 * v, .35 * u)
+  g.printf(unit.description, x, .26 * v, textWidth)
 
   -- Minion Featured
-  local _, lines = g.getFont():getWrap(unit.description, .35 * u)
+  local _, lines = g.getFont():getWrap(unit.description, textWidth)
   local y = .26 * v + lines * g.getFont():getHeight() + .02 * v
   local height = self.geometry.minionFrame[2] + self.geometry.minionFrame[4] - y - .01 * v
   local h = math.max(height / #unit.featured - .01 * v, 0)
   for i = 1, #unit.featured do
     local qw, qh = atlas:getDimensions('frame')
     local scale = h / qh
-    g.draw(atlas.texture, atlas.quads.frame, .26 * u, y, 0, scale, scale)
+    g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
 
     local qw, qh = atlas:getDimensions(unit.featured[i][1])
     if qw then
       local scale = (h * .75) / math.max(qw, qh)
-      g.draw(atlas.texture, atlas.quads[unit.featured[i][1]], .26 * u + h / 2, y + h / 2, 0, scale, scale, qw / 2, qh / 2)
+      g.draw(atlas.texture, atlas.quads[unit.featured[i][1]], x + h / 2, y + h / 2, 0, scale, scale, qw / 2, qh / 2)
     end
 
     g.setFont('mesmerize', .02 * v)
-    g.printShadow(unit.upgrades[unit.featured[i][1]].name .. ': ' .. unit.featured[i][2], .3 * u, y + h / 2 - g.getFont():getHeight() / 2)
+    local str = unit.upgrades[unit.featured[i][1]].name .. ': ' .. unit.featured[i][2]
+    local textWidth = textWidth - h - .01 * v
+    local _, lines = g.getFont():getWrap(str, textWidth)
+    local textHeight = g.getFont():getHeight() * lines
+    g.setColor(0, 0, 0)
+    g.printf(str, x + h + .01 * v, y + h / 2 - textHeight / 2, textWidth)
+    g.setColor(255, 255, 255)
+    g.printf(str, x + h + .01 * v, y + h / 2 - textHeight / 2, textWidth)
     y = y + h + .01 * v
   end
 
   -- Minion Stage
   local x, y, r, runes = unpack(self.geometry.minion)
-  local xoff = .02 * v
-  local height = .04 * v
-  g.setColor(0, 0, 0, 100)
-  g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
+  if v / u < 3 / 4 then
+    local xoff = .02 * v
+    local height = .04 * v
+    g.setColor(0, 0, 0, 100)
+    g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
+  end
 
   -- Minion Animation
   ctx.animations[minion].scale = ctx.animationScales[minion]
