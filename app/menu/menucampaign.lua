@@ -202,7 +202,7 @@ function MenuCampaign:draw()
       g.setColor(achieved and {255, 255, 255} or {0, 0, 0})
       g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .14 * v, 0, scale, scale, qw / 2, qh / 2)
     elseif benchmark == 'silver' then
-      local image = ctx.animations.muju.graphics.santa
+      local image = data.media.graphics.hats.santa
       local scale = medalSize * 2 / image:getWidth()
       g.setColor(achieved and {255, 255, 255} or {0, 0, 0})
       g.draw(image, medalX, medalY + .14 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
