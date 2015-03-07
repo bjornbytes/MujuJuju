@@ -89,7 +89,7 @@ function MenuCampaign:init()
 
     muju = function()
       local u, v = ctx.u, ctx.v
-      return {u * .75, v * .8}
+      return {u * .75, v * .82}
     end
   }
 
@@ -188,7 +188,7 @@ function MenuCampaign:draw()
   local medalSize = u * .0225
   local medalInc = (medalSize * 4)
   local medalX = midx - medalInc * (3 - 1) / 2
-  local medalY = .18 * v + medalSize
+  local medalY = .2 * v + medalSize
   for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
     local achieved = ctx.user.campaign.medals[biome][benchmark]
     g.setColor(255, 255, 255, (achieved and 1 or .4) * detailsAlpha)
@@ -196,10 +196,13 @@ function MenuCampaign:draw()
     local scale = medalSize * 2 / image:getWidth() * (achieved and 1 or .8)
     g.draw(image, medalX, medalY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
-    local qw, qh = atlas:getDimensions('runeBgBroken')
-    local scale = medalSize * 2 / qw
-    g.setColor(0, 0, 0)
-    g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .14 * v, 0, scale, scale, qw / 2, qh / 2)
+    if benchmark == 'bronze' then
+      local qw, qh = atlas:getDimensions('runeBgBroken')
+      local scale = medalSize * 2 / qw
+      g.setColor(0, 0, 0)
+      g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .14 * v, 0, scale, scale, qw / 2, qh / 2)
+    end
+
     g.setColor(255, 255, 255)
     g.setFont('mesmerize', .05 * v)
     g.printCenter('?', medalX, medalY + .14 * v)
