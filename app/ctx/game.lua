@@ -150,17 +150,17 @@ function Game:distribute()
   local gold = time >= config.medals.gold
 
   -- Distribute medals
-  if bronze and not ctx.user.campaign.medals[self.biome] then
+  if bronze and not ctx.user.campaign.medals[self.biome].bronze then
     table.insert(self.rewards.medals, 'bronze')
     self.user.campaign.medals[self.biome].bronze = true
   end
 
-  if silver and not ctx.user.campaign.medals[self.biome] then
+  if silver and not ctx.user.campaign.medals[self.biome].silver then
     table.insert(self.rewards.medals, 'silver')
     self.user.campaign.medals[self.biome].silver = true
   end
 
-  if gold and not ctx.user.campaign.medals[self.biome] then
+  if gold and not ctx.user.campaign.medals[self.biome].gold then
     table.insert(self.rewards.medals, 'gold')
     self.user.campaign.medals[self.biome].gold = true
   end

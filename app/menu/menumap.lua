@@ -105,7 +105,7 @@ function MenuMap:update()
   for k, v in ipairs(config.biomeOrder) do
     local hover = math.insideCircle(mx, my, unpack(self.geometry[v]))
     self.prevHovers[v] = self.hovers[v] or 0
-    self.hovers[v] = math.lerp(self.hovers[v] or 0, hover and 1 or 0, math.min(10 * ls.tickrate, 1))
+    self.hovers[v] = math.lerp(self.hovers[v] or 0, (not self:isLocked(v) and hover) and 1 or 0, math.min(10 * ls.tickrate, 1))
   end
 end
 
@@ -135,9 +135,9 @@ function MenuMap:draw()
   y = y + nudge * .1 * v
   g.draw(image, x, y, 0, xscale, yscale)
 
-  for k, v in ipairs(config.biomeOrder) do
-    local factor = math.lerp(self.prevHovers[v], self.hovers[v], ls.accum / ls.tickrate)
-    local hover = math.insideCircle(mx, my, unpack(self.geometry[v]))
+  for k, biome in ipairs(config.biomeOrder) do
+    local factor = math.lerp(self.prevHovers[biome], self.hovers[biome], ls.accum / ls.tickrate)
+    local hover = math.insideCircle(mx, my, unpack(self.geometry[biome]))
     local active = hover and love.mouse.isDown('l')
 
     if k >= 2 then
@@ -147,7 +147,7 @@ function MenuMap:draw()
       g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
     end
 
-    local x, y, r = unpack(self.geometry[v])
+    local x, y, r = unpack(self.geometry[biome])
     local image = data.media.graphics.worldmap.circle
     local scale = r * 2 / image:getWidth()
     if active then y = y + 2 end
@@ -155,9 +155,27 @@ function MenuMap:draw()
     g.setColor(255, 255, 255)
     g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
 
+    if not self:isLocked(biome) then
+      local standard = ''
+      for _, medal in ipairs({'bronze', 'silver', 'gold'}) do
+        if ctx.user.campaign.medals[biome][medal] then
+          standard = medal
+        end
+      end
+      local image = data.media.graphics.worldmap[standard .. 'standard']
+      local scale = .15 * v / image:getHeight()
+      if active then y = y - 2 end
+      g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight())
+    else
+      local image = data.media.graphics.menu.lock
+      local scale = .1 * v / image:getHeight()
+      if active then y = y - 2 end
+      g.draw(image, x, y - .02 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    end
+
     if self.focused then
-      local image = data.media.graphics.worldmap[v]
-      local x, y = unpack(self.geometry[v .. 'Title'])
+      local image = data.media.graphics.worldmap[biome]
+      local x, y = unpack(self.geometry[biome .. 'Title'])
       local xscale, yscale = xscale * (1 + .1 * factor), yscale * (1 + .1 * factor)
       g.setColor(255, 255, 255)
       g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
@@ -184,7 +202,7 @@ function MenuMap:mousereleased(mx, my, b)
   local u, v = ctx.u, ctx.v
 
   for k, v in ipairs(config.biomeOrder) do
-    if math.insideCircle(mx, my, unpack(self.geometry[v])) then
+    if not self:isLocked(v) and math.insideCircle(mx, my, unpack(self.geometry[v])) then
       ctx.campaign:setBiome(v)
       self:setFocus(false)
       return
@@ -212,4 +230,14 @@ end
 
 function MenuMap:setFocus(focused)
   if focused ~= self.focused then self:toggle() end
+end
+
+function MenuMap:isLocked(biome)
+  if biome == 'forest' then return false end
+  local prevs = {
+    cavern = 'forest',
+    tundra = 'cavern',
+    volcano = 'tundra'
+  }
+  return not ctx.user.campaign.medals[prevs[biome]].gold
 end

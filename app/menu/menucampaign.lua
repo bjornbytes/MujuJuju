@@ -354,8 +354,9 @@ function MenuCampaign:mousepressed(mx, my, b)
 end
 
 function MenuCampaign:mousereleased(mx, my, b)
+  if not self.active then return end
   self.map:mousereleased(mx, my, b)
-  if not self.active or self.map.focused then return end
+  if self.map.focused then return end
   if ctx.optionsPane.active then return end
   self.drag:mousereleased(mx, my, b)
 end
