@@ -213,11 +213,23 @@ function Tooltip:setAttributeTooltip(attribute, unit)
   local p = ctx.player
   local pieces = {}
   table.insert(pieces, '{white}{title}' .. attribute:capitalize() .. '{normal}')
+  table.insert(pieces, '{whoCares}' .. config.attributes.descriptions[attribute] .. '{white}')
+  table.insert(pieces, '')
   if unit then
     if type(unit) == 'string' then unit = data.unit[unit] end
     local level = unit.attributes[attribute]
     table.each(config.attributes[attribute], function(amount, stat)
-      table.insert(pieces, '+' .. amount .. ' ' .. stat .. ' per level {green}(' .. (amount * level) .. '){white}')
+      local value = amount
+      local total = amount * level
+      if stat == 'attackSpeed' then
+        stat = 'attack speed'
+        value = (amount * 100) .. '%'
+        total = ((amount * level) * 100) .. '%'
+      elseif stat == 'haste' then
+        value = (amount * 100) .. '%'
+        total = ((amount * level) * 100) .. '%'
+      end
+      table.insert(pieces, '+' .. value .. ' ' .. stat .. ' per level {green}(' .. (total) .. '){white}')
     end)
     local cost = 30 + 20 * level
     local color = p.juju >= cost and '{green}' or '{red}'

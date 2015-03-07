@@ -18,6 +18,12 @@ return {
 
   attributes = {
     list = {'vitality', 'strength', 'agility', 'flow'},
+    descriptions = {
+      vitality = 'Increases the health of your minion.',
+      strength = 'Increases the damage that minions deal with attacks.',
+      agility = 'Makes your minions move faster and attack faster.',
+      flow = 'Makes your minions deal more damage with special abilities and reduces their cooldowns.'
+    },
     vitality = {
       health = 10
     },
