@@ -89,7 +89,7 @@ function MenuCampaign:init()
 
     muju = function()
       local u, v = ctx.u, ctx.v
-      return {u * .75, v * .82}
+      return {u * .75, v * .8}
     end
   }
 
@@ -344,8 +344,16 @@ function MenuCampaign:draw()
     local slot = ctx.animations.muju.spine.skeleton:findSlot(slot)
     slot.r, slot.g, slot.b = unpack(config.player.colors[color])
   end
+  local cw, ch = ctx.unitCanvas:getDimensions()
+  ctx.unitCanvas:clear(0, 0, 0, 0)
+  ctx.unitCanvas:renderTo(function()
+    ctx.animations.muju:draw(cw / 2, ch / 2)
+  end)
+  local scale = (.15 * v / cw) * 1 * 3
   g.setColor(255, 255, 255)
-  ctx.animations.muju:draw(unpack(self.geometry.muju))
+  local x, y = unpack(self.geometry.muju)
+  g.draw(ctx.unitCanvas, x, y, 0, scale, scale, cw / 2, ch / 2)
+
 
   -- Modules
   self.play:draw()
