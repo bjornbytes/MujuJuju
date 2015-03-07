@@ -69,6 +69,10 @@ function MenuChoose:init()
   self.next.text = 'Ready!'
 end
 
+function MenuChoose:activate(destination)
+  self.destination = destination
+end
+
 function MenuChoose:update()
   self.active = ctx.page == 'choose'
 

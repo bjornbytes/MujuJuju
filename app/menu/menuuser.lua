@@ -60,7 +60,7 @@ function MenuUser:init()
   self:activate()
 end
 
-function MenuUser:activate()
+function MenuUser:activate(destination)
   -- Gather existing user saves
   self.users = {}
   if love.filesystem.exists('save') then
@@ -98,6 +98,8 @@ function MenuUser:activate()
       self.remove[i]:on('click', function() self:removeSlot(i) end)
     end
   end
+
+  self.destination = destination
 end
 
 function MenuUser:update()
@@ -133,10 +135,10 @@ end
 function MenuUser:slotPicked(slot)
   if not self.slots[slot].empty then
     ctx.user = self.users[slot]
-    ctx:setPage('campaign')
+    ctx:setPage(self.destination)
   else
     ctx.choose.user.slot = slot
-    ctx:setPage('choose')
+    ctx:setPage('choose', self.destination)
   end
 end
 

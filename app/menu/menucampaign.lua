@@ -23,7 +23,7 @@ function MenuCampaign:init()
     end,
 
     minion = function()
-      local u, v = love.graphics.getDimensions()
+      local u, v = ctx.u, ctx.v
       local size = .1125 * u
       local runeSize = .045 * u
       local runeInc = runeSize + .02 * v

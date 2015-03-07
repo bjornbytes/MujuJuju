@@ -46,12 +46,12 @@ function MenuStart:init()
   self.campaign = ctx.gooey:add(Button, 'menu.start.campaign')
   self.campaign.geometry = function() return self.geometry.campaign end
   self.campaign.text = 'Campaign'
-  self.campaign:on('click', function() self:continue() end)
+  self.campaign:on('click', function() self:continue('campaign') end)
 
   self.survival = ctx.gooey:add(Button, 'menu.start.survival')
   self.survival.geometry = function() return self.geometry.survival end
   self.survival.text = 'Survival'
-  self.survival:on('click', function() self:continue() end)
+  self.survival:on('click', function() self:continue('survival') end)
 
   self.options = ctx.gooey:add(Button, 'menu.start.options')
   self.options.geometry = function() return self.geometry.options end
@@ -139,7 +139,7 @@ function MenuStart:resize()
   table.clear(self.geometry)
 end
 
-function MenuStart:continue()
+function MenuStart:continue(destination)
   ctx:refreshBackground()
-  ctx:setPage('select')
+  ctx:setPage('select', destination)
 end

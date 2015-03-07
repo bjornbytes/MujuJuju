@@ -16,6 +16,7 @@ function Menu:load(user, options, info)
   self.select = MenuUser()
   self.choose = MenuChoose()
   self.campaign = MenuCampaign()
+  self.survival = MenuSurvival()
 
   -- Initialize options
   if not love.filesystem.exists('save/options.json') then
@@ -72,6 +73,7 @@ function Menu:update()
   self.select:update()
   self.choose:update()
   self.campaign:update()
+  self.survival:update()
   self.optionsPane:update()
 
   self.virtualCursor:update()
@@ -89,6 +91,7 @@ function Menu:draw()
     self.select:draw()
     self.choose:draw()
     self.campaign:draw()
+    self.survival:draw()
   end)
 
   g.setColor(255, 255, 255)
@@ -100,6 +103,7 @@ end
 
 function Menu:keypressed(key)
   if self.campaign:keypressed(key) then return end
+  if self.survival:keypressed(key) then return end
   if self.optionsPane:keypressed(key) then return end
   if self.select:keypressed(key) then return end
   if self.choose:keypressed(key) then return end
@@ -125,12 +129,14 @@ function Menu:mousepressed(mx, my, b)
   self.start:mousepressed(mx, my, b)
   self.choose:mousepressed(mx, my, b)
   self.campaign:mousepressed(mx, my, b)
+  self.survival:mousepressed(mx, my, b)
 end
 
 function Menu:mousereleased(mx, my, b)
   self.gooey:mousereleased(mx, my, b)
   self.start:mousereleased(mx, my, b)
   self.campaign:mousereleased(mx, my, b)
+  self.survival:mousereleased(mx, my, b)
 end
 
 function Menu:gamepadpressed(gamepad, button)
@@ -250,10 +256,10 @@ function Menu:initAnimations()
   end)
 
   self.animationScales = {
-    thuju = .55 * (self.u / 1366),
-    bruju = 1.3 * (self.u / 1366),
-    xuju = .55 * (self.u / 1366),
-    kuju = .6 * (self.u / 1366)
+    thuju = .55,
+    bruju = 1.3,
+    xuju = .55,
+    kuju = .6
   }
 
   self.animationTransforms = {}
@@ -267,7 +273,8 @@ function Menu:initAnimations()
   end
 end
 
-function Menu:setPage(page)
+function Menu:setPage(page, ...)
+
   -- Deactivate the old page
   self[self.page].active = false
   f.exe(self[self.page].deactivate, self[self.page])
@@ -275,5 +282,5 @@ function Menu:setPage(page)
   -- Activate the new page
   self.page = page
   self[self.page].active = true
-  f.exe(self[self.page].activate, self[self.page])
+  f.exe(self[self.page].activate, self[self.page], ...)
 end

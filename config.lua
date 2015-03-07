@@ -335,6 +335,22 @@ return {
         spuju = 120,
         duju = 0
       }
+    },
+    survival = {
+      minEnemyRate = 10,
+      maxEnemyRate = 12,
+      minEnemyRateDecay = .05,
+      maxEnemyRateDecay = .05,
+      maxEnemiesCoefficient = .15,
+      levelScale = .75,
+      maxElites = 3,
+      maxEliteBuffCount = 4,
+      eliteLevelThreshold = 20,
+      types = {
+        duju = 0,
+        spuju = 0,
+        vuju = 0
+      }
     }
   },
 
