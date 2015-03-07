@@ -84,7 +84,7 @@ function MenuCampaign:init()
       local frame = self.geometry.runesFrame
       local w, h = .2 * u, .13 * v
       local midx = (u + frame[1] + frame[3]) / 2
-      return {midx - w / 2, .14 * v, w, h}
+      return {midx - w / 2, .45 * v, w, h}
     end,
 
     muju = function()
@@ -188,7 +188,7 @@ function MenuCampaign:draw()
   local medalSize = u * .0225
   local medalInc = (medalSize * 4 + (u * .01125))
   local medalX = midx - medalInc * (3 - 1) / 2
-  local medalY = .3 * v + medalSize + (v * .05)
+  local medalY = .15 * v + medalSize
   for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
     local achieved = ctx.user.campaign.medals[biome][benchmark]
     g.setColor(255, 255, 255, (achieved and 1 or .4) * detailsAlpha)
