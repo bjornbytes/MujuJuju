@@ -45,6 +45,14 @@ function Player:init()
   self.summonSelect = 1
   self.totalSummoned = 0
 
+  -- Channeled Heal
+  self.healing = false
+  self.healingAmount = .05
+  self.healingCost = 2
+  self.healingRange = 200
+  self.healingTick = 1
+  self.healingTimer = 0
+
   -- Buffs
   self.invincible = 0
   self.ghostSpeedMultiplier = 1
@@ -99,6 +107,17 @@ function Player:update()
   self.deathTimer = timer.rot(self.deathTimer, function() self:spawn() end)
   self.invincible = timer.rot(self.invincible)
 
+  -- Healing Rot
+  if self.healingTimer <= 0 and self.healing then
+      self.healingTimer = self.healingTick
+  end
+
+  self.healingTimer = timer.rot(self.healingTimer, function()
+    if self.healing then
+      self:channelHeal()
+    end
+  end)
+
   for i = 1, #self.deck do
     if self.deck[i].cooldown > 0 then
       self.deck[i].cooldown = self.deck[i].cooldown - ls.tickrate * self.cooldownSpeed
@@ -130,6 +149,34 @@ function Player:draw()
     love.graphics.setColor(255, 255, 255)
     self.animation:draw(x, y)
   end
+
+  -- Draw a line to healed target
+  if self.healingTimer <= .5 and self.healing and self.healingTarget then
+    love.graphics.setColor(50, 230, 50)
+    love.graphics.setLineWidth(3)
+    love.graphics.setLineStyle('smooth')
+    love.graphics.line(self.x, self.y + self.height / 2, self.healingTarget.x, self.healingTarget.y + self.healingTarget.height / 2)
+  end
+end
+
+function Player:channelHeal()
+  local ally
+  local allies = ctx.target:inRange(self, self.healingRange, 'ally', 'unit')
+
+  for _, unit in ipairs(allies) do
+    if not ally or ally.health > unit.health then
+      ally = unit
+    end
+  end
+
+  if ally then
+    self.healingTarget = ally
+    if self:spend(self.healingCost) then
+      self.healingTarget:heal(self.healingTarget.maxHealth * self.healingAmount)
+    end
+  else
+    self.healingTarget = nil
+  end
 end
 
 function Player:keypressed(key)
@@ -155,6 +202,16 @@ function Player:keypressed(key)
         return true
       end
     end)
+  end
+
+  if key == 'lshift' and not self.dead then
+    self.healing = true
+  end
+end
+
+function Player:keyreleased(key)
+  if key == 'lshift' then
+    self.healing = false
   end
 end
 

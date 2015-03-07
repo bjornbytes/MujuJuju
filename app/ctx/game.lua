@@ -110,6 +110,7 @@ end
 
 function Game:keyreleased(...)
   self.hud:keyreleased(...)
+  self.player:keyreleased(...)
 end
 
 function Game:mousepressed(...)
