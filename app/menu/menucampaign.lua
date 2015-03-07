@@ -198,7 +198,11 @@ function MenuCampaign:draw()
 
     local qw, qh = atlas:getDimensions('runeBgBroken')
     local scale = medalSize * 2 / qw
+    g.setColor(0, 0, 0)
     g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .14 * v, 0, scale, scale, qw / 2, qh / 2)
+    g.setColor(255, 255, 255)
+    g.setFont('mesmerize', .05 * v)
+    g.printCenter('?', medalX, medalY + .14 * v)
     medalX = medalX + medalInc
   end
 
