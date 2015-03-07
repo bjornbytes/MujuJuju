@@ -283,4 +283,6 @@ function Menu:setPage(page, ...)
   self.page = page
   self[self.page].active = true
   f.exe(self[self.page].activate, self[self.page], ...)
+
+  self:mousemoved(love.mouse.getPosition())
 end
