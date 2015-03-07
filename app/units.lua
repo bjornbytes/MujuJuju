@@ -8,6 +8,7 @@ function Units:init()
   self.level = 0
   self.nextEnemy = 5
   self.enemyCount = 0
+  self.nextSpike = 5 * 60 / ls.tickrate
   table.merge(self.config, self)
 end
 
@@ -52,6 +53,11 @@ function Units:update()
     self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
     self.level = self.level + (ls.tickrate / 15) * self.levelScale
+
+    if tick > self.nextSpike then
+      self.levelScale = self.levelScale * 2
+      self.nextSpike = self.nextSpike + (5 * 60 / ls.tickrate)
+    end
   end
 
   return Manager.update(self)
