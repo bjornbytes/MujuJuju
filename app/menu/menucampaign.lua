@@ -188,7 +188,7 @@ function MenuCampaign:draw()
   local medalSize = u * .0225
   local medalInc = (medalSize * 4 + (u * .01125))
   local medalX = midx - medalInc * (3 - 1) / 2
-  local medalY = .15 * v + medalSize
+  local medalY = .18 * v + medalSize
   for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
     local achieved = ctx.user.campaign.medals[biome][benchmark]
     g.setColor(255, 255, 255, (achieved and 1 or .4) * detailsAlpha)
@@ -198,7 +198,7 @@ function MenuCampaign:draw()
 
     local qw, qh = atlas:getDimensions('runeBgBroken')
     local scale = medalSize * 2 / qw
-    g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .16 * v, 0, scale, scale, qw / 2, qh / 2)
+    g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .14 * v, 0, scale, scale, qw / 2, qh / 2)
     medalX = medalX + medalInc
   end
 
