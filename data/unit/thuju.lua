@@ -57,7 +57,8 @@ Thuju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit:addAbility('wardofthorns')
+        local ability = unit:addAbility('wardofthorns')
+        unit:applySkillRunes(ability, 'vigor')
       end
     end
   },
@@ -200,7 +201,7 @@ Thuju.upgrades = {
   taunt = {
     level = 0,
     maxLevel = 1,
-    costs = {1500},
+    costs = {500},
     levelRequirement = 20,
     name = 'Taunt',
     description = 'Thuju taunts any enemies he attacks, forcing them to attack him.',

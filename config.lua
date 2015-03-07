@@ -215,6 +215,18 @@ return {
         cystallize = {
           chance = {.03, .15}
         }
+      },
+      thuju = {
+        wardofthorns = {
+          reflect = {.05, .3}
+        },
+        tremor = {
+          damage = {5, 50},
+          stun = {.1, .75}
+        },
+        vigor = {
+          perstack = {2, 10}
+        }
       }
     },
     abilityFormatters = {
@@ -255,6 +267,17 @@ return {
         },
         crystallize = {
           chance = {'percent', 'chance'}
+        }
+      },
+      thuju = {
+        wardofthorns = {
+          reflect = {'percent', 'damage reflected'}
+        },
+        tremor = {
+          stun = {'flat', 'second stun'}
+        },
+        vigor = {
+          perstack = {'flat', 'damage per stack'}
         }
       }
     },
@@ -311,7 +334,10 @@ return {
         avalanche = {'the Glacier', 'Pummeling'},
         frostbite = {'the Arctic', 'the Tundra', 'the Poles'},
         shiverarmor = {'Shudders', 'Hypothermia', 'Chills', 'Shivers'},
-        crystallize = {'the Ice Age', 'Stasis', 'Crystals'}
+        crystallize = {'the Ice Age', 'Stasis', 'Crystals'},
+        wardofthorns = {'Spines', 'the Porcupine', 'Quills', 'the Thicket'},
+        tremor = {'the Earthquake', 'Disaster', 'the Fissure'},
+        vigor = {'Vim', 'the Brute', 'Brawn'}
       }
     },
     colors = {
