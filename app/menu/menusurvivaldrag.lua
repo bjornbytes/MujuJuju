@@ -31,6 +31,7 @@ function MenuSurvivalDrag:update()
     local minion = self.dragging
     lerpAnimation(minion, 'x', x)
     lerpAnimation(minion, 'y', y)
+    lerpAnimation(minion, 'scale', 1)
   end
 
   self.prevDragAlpha = self.dragAlpha
@@ -64,7 +65,7 @@ function MenuSurvivalDrag:draw()
     end)
     local lerpd = {}
     for k, v in pairs(ctx.animationTransforms[minion]) do
-      lerpd[k] = math.lerp(ctx.prevAnimationTransforms[k] or v, v, ls.accum / ls.tickrate)
+      lerpd[k] = math.lerp(ctx.prevAnimationTransforms[minion][k] or v, v, ls.accum / ls.tickrate)
     end
     local scale = (2 * r / cw) * lerpd.scale * 3 * ps
     g.setColor(255, 255, 255)
