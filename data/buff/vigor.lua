@@ -4,7 +4,7 @@ Vigor.armor = 0
 Vigor.stack = true
 
 function Vigor:preattack(target, amount)
-  local perStack = data.ability.wardofthorns.runePerStack + 5 + (5 * self.stacks)
+  local perStack = data.ability.thuju.wardofthorns.runePerStack + 5 + (5 * self.stacks)
   return amount + (self.stacks * perStack)
 end
 
