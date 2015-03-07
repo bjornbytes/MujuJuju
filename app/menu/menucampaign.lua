@@ -81,10 +81,10 @@ function MenuCampaign:init()
 
     play = function()
       local u, v = ctx.u, ctx.v
-      local frame = self.geometry.runesFrame
+      local frame = self.geometry.minionFrame
       local w, h = .2 * u, .13 * v
       local midx = (u + frame[1] + frame[3]) / 2
-      return {midx - w / 2, .45 * v, w, h}
+      return {midx - w / 2, frame[2] + frame[4] - h, w, h}
     end,
 
     muju = function()
