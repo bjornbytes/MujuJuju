@@ -17,10 +17,10 @@ end
 function MenuSurvivalDrag:update()
   local rune = self.dragging
   if rune then
-    local x, y = self:snap(love.mouse.getPosition())
+    local x, y, size = self:snap(love.mouse.getX(), love.mouse.getY(), .05 * ctx.u)
     lerpRune(rune, 'x', x)
     lerpRune(rune, 'y', y)
-    lerpRune(rune, 'scale', 1.1)
+    lerpRune(rune, 'size', size)
   end
 
   self.prevDragAlpha = self.dragAlpha
@@ -30,11 +30,9 @@ end
 function MenuSurvivalDrag:draw()
   local rune, index, source = self.dragging, self.dragIndex, self.dragSource
   if rune then
-    local x, y, w, h
-    if source == 'stash' then
-      x, y, w, h = unpack(ctx.survival.geometry.runes[index])
-    else
-      x, y, w, h = unpack(ctx.survival.geometry.deck[source][index])
+    local h = ctx.survival.geometry.runes[index][4]
+    if table.has(ctx.survival.gutter, self.dragSource) then
+      h = ctx.survival.geometry.gutter[1][4][1][4]
     end
 
     local lerpd = {}
@@ -42,8 +40,7 @@ function MenuSurvivalDrag:draw()
       lerpd[k] = math.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
 
-    h = h * lerpd.scale
-    g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .05 * ctx.v)
+    g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * ctx.v, (lerpd.size - .015 * ctx.v) * .5)
   end
 end
 
@@ -68,14 +65,12 @@ function MenuSurvivalDrag:mousepressed(mx, my, b)
   for i = 1, #deck do
     local minion = ctx.user.survival.minions[i]
     local x, y, r, runes = unpack(deck[i])
-    if minion and math.insideCircle(mx, my, x, y, r) then
-    end
 
     for j = 1, #runes do
       local rune = ctx.user.runes[minion][j]
       if rune and math.inside(mx, my, unpack(runes[j])) then
         self.dragging = rune
-        self.dragIndex = i
+        self.dragIndex = j
         self.dragSource = minion
       end
     end
@@ -85,11 +80,15 @@ function MenuSurvivalDrag:mousepressed(mx, my, b)
   local gutter = ctx.survival.geometry.gutter
   for i = 1, #gutter do
     local minion = ctx.survival.gutter[i]
-    local x, y, r = unpack(ctx.survival.geometry.gutter[i])
-    if math.insideCircle(mx, my, x, y, r) then
-      self.dragging = minion
-      self.dragIndex = i
-      self.dragSource = 'gutter'
+    local x, y, r, runes = unpack(ctx.survival.geometry.gutter[i])
+
+    for j = 1, #runes do
+      local rune = ctx.user.runes[minion][j]
+      if rune and math.inside(mx, my, unpack(runes[j])) then
+        self.dragging = rune
+        self.dragIndex = j
+        self.dragSource = minion
+      end
     end
   end
 end
@@ -126,8 +125,22 @@ function MenuSurvivalDrag:mousereleased(mx, my, b)
   for i = 1, #deck do
     local minion = ctx.user.survival.minions[i]
     local x, y, r, runes = unpack(deck[i])
-    if minion and math.insideCircle(mx, my, x, y, r) then
+
+    for j = 1, #runes do
+      local rune = ctx.user.runes[minion][j]
+      if math.inside(mx, my, unpack(runes[j])) then
+        swapRune(source, index, minion, j)
+        dirty = true
+        break
+      end
     end
+  end
+
+  -- Gutter
+  local gutter = ctx.survival.geometry.gutter
+  for i = 1, #gutter do
+    local minion = ctx.survival.gutter[i]
+    local x, y, r, runes = unpack(ctx.survival.geometry.gutter[i])
 
     for j = 1, #runes do
       local rune = ctx.user.runes[minion][j]
@@ -155,9 +168,60 @@ function MenuSurvivalDrag:isDraggingMinion(source, index)
   return type(self.dragging) == 'string' and self.dragIndex == index and self.dragSource == source
 end
 
-function MenuSurvivalDrag:snap(mx, my)
-  local minx, miny, mindis = nil, nil, math.huge
+function MenuSurvivalDrag:snap(mx, my, size)
+  size = size or 0
+  local minx, miny, mindis, minsize = nil, nil, math.huge, 0
   local v = ctx.v
 
-  return mx, my
+  -- Rune Stash
+  local geometry = ctx.survival.geometry.runes
+  for i = 1, 33 do
+    local rune = ctx.user.runes.stash[i]
+    local x, y, w, h = unpack(geometry[i])
+    x, y = x + w / 2, y + h / 2
+    local dis = math.distance(x, y, mx, my)
+    if dis < mindis then
+      minx, miny, mindis, minsize = x, y, dis, h
+    end
+  end
+
+  -- Deck
+  local deck = ctx.survival.geometry.deck
+  for i = 1, #deck do
+    local minion = ctx.user.survival.minions[i]
+    local x, y, r, runes = unpack(deck[i])
+
+    for j = 1, #runes do
+      local rune = ctx.user.runes[minion][j]
+      local x, y, w, h = unpack(runes[j])
+      x, y = x + w / 2, y + h / 2
+      local dis = math.distance(x, y, mx, my)
+      if dis < mindis then
+        minx, miny, mindis, minsize = x, y, dis, h
+      end
+    end
+  end
+
+  -- Gutter
+  local gutter = ctx.survival.geometry.gutter
+  for i = 1, #gutter do
+    local minion = ctx.survival.gutter[i]
+    local x, y, r, runes = unpack(ctx.survival.geometry.gutter[i])
+
+    for j = 1, #runes do
+      local rune = ctx.user.runes[minion][j]
+      local x, y, w, h = unpack(runes[j])
+      x, y = x + w / 2, y + h / 2
+      local dis = math.distance(x, y, mx, my)
+      if dis < mindis then
+        minx, miny, mindis, minsize = x, y, dis, h
+      end
+    end
+  end
+
+  if mindis < .05 * v then
+    return math.lerp(mx, minx, .5), math.lerp(my, miny, .5), math.lerp(size, minsize, .5)
+  end
+
+  return mx, my, size
 end

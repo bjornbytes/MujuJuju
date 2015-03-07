@@ -143,7 +143,7 @@ function MenuCampaign:update()
 
       lerpRune(rune, 'x', x + w / 2)
       lerpRune(rune, 'y', y + h / 2)
-      lerpRune(rune, 'scale', 1)
+      lerpRune(rune, 'size', h)
 
       if math.inside(mx, my, x, y, w, h) then
         ctx.tooltip:setRuneTooltip(rune)
@@ -159,7 +159,7 @@ function MenuCampaign:update()
 
       lerpRune(rune, 'x', x + w / 2)
       lerpRune(rune, 'y', y + h / 2)
-      lerpRune(rune, 'scale', 1)
+      lerpRune(rune, 'size', h)
 
       if math.inside(mx, my, x, y, w, h) then
         ctx.tooltip:setRuneTooltip(rune)
@@ -265,8 +265,7 @@ function MenuCampaign:draw()
       for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
         lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
-      h = h * lerpd.scale
-      g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
+      g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5)
     end
   end
 
@@ -365,9 +364,8 @@ function MenuCampaign:draw()
       for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
         lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
-      h = h * lerpd.scale
 
-      g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
+      g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5)
     end
   end
 

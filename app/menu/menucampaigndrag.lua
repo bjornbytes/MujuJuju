@@ -20,7 +20,7 @@ function MenuCampaignDrag:update()
     local x, y = self:snap(love.mouse.getPosition())
     lerpRune(rune, 'x', x)
     lerpRune(rune, 'y', y)
-    lerpRune(rune, 'scale', 1.1)
+    lerpRune(rune, 'size', .05 * ctx.u)
   end
 
   self.prevDragAlpha = self.dragAlpha
@@ -42,8 +42,7 @@ function MenuCampaignDrag:draw()
       lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
 
-    h = h * lerpd.scale
-    g.drawRune(rune, (lerpd.x or x), (lerpd.y or y), h - .02 * ctx.v, h - .05 * ctx.v)
+    g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * ctx.v, (lerpd.size - .015 * ctx.v) * .5)
   end
 end
 
