@@ -201,6 +201,11 @@ function MenuCampaign:draw()
       local scale = medalSize * 2 / qw
       g.setColor(achieved and {255, 255, 255} or {0, 0, 0})
       g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .14 * v, 0, scale, scale, qw / 2, qh / 2)
+    elseif benchmark == 'silver' then
+      local image = ctx.animations.muju.graphics.santa
+      local scale = medalSize * 1.5 / image:getWidth()
+      g.setColor(achieved and {255, 255, 255} or {0, 0, 0})
+      g.draw(image, medalX, medalY + .14 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     elseif benchmark == 'gold' then
       local nextMinions = {
         forest = 'xuju',
@@ -213,9 +218,11 @@ function MenuCampaign:draw()
         ctx.unitCanvas:clear(0, 0, 0, 0)
         ctx.unitCanvas:renderTo(function()
           local animation = ctx.animations[nextMinion]
-          animation.spine.skeleton.r = 0
-          animation.spine.skeleton.g = 0
-          animation.spine.skeleton.b = 0
+          if not achieved then
+            animation.spine.skeleton.r = 0
+            animation.spine.skeleton.g = 0
+            animation.spine.skeleton.b = 0
+          end
           animation:draw(cw / 2, ch / 2)
           animation.spine.skeleton.r = 1
           animation.spine.skeleton.g = 1

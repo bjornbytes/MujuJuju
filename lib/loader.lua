@@ -104,7 +104,7 @@ data.load = function()
     animation.graphics = setmetatable({_path = 'media/skeletons/' .. code}, {
       __index = lookup({'.png', '.dds'}, function(path)
         local img = love.graphics.newImage(path)
-        img:setMipmapFilter('nearest', 1)
+        if path:match('%.dds') then img:setMipmapFilter('nearest', 1) end
         return img
       end)
     })
