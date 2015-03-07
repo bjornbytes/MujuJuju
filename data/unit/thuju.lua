@@ -126,7 +126,7 @@ Thuju.upgrades = {
     },
     bonuses = function()
       local bonuses = {}
-      local wardofthorns = data.buff.wardofthorns
+      local wardofthorns = data.ability.thuju.wardofthorns
       if wardofthorns.runePerStack > 0 then
         table.insert(bonuses, {'Runes', wardofthorns.runePerStack, 'damage per stack'})
       end
