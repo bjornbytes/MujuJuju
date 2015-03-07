@@ -428,6 +428,11 @@ function Unit:initAnimation()
         if self.class.attackSpell then
           ctx.spells:add(data.spell[self.class.code][self.class.attackSpell], {unit = self, target = self.target})
           ctx.sound:play(data.media.sounds[self.class.code].attackStart, function(sound) sound:setVolume(.5) end)
+          -- Emit particles
+          if data.particle[self.class.code .. 'attack'] then
+            local x, y = self:attackParticlePosition(self.target)
+            ctx.particles:emit(self.class.code .. 'attack', x, y, self.class.attackParticleCount or 5)
+          end
         else
           self:attack()
         end

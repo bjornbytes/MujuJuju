@@ -12,6 +12,7 @@ Kuju.attackSpeed = 1.45
 Kuju.speed = 35
 Kuju.cost = 10
 Kuju.attackSpell = 'kujuattack'
+Kuju.attackParticleBone = 'lefthand'
 
 ----------------
 -- Upgrades
