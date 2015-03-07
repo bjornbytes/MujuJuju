@@ -100,12 +100,14 @@ function MenuSurvivalDrag:mousepressed(mx, my, b)
       self.dragSource = 'deck'
     end
 
-    for j = 1, #runes do
-      local rune = ctx.user.runes[minion][j]
-      if rune and math.inside(mx, my, unpack(runes[j])) then
-        self.dragging = rune
-        self.dragIndex = j
-        self.dragSource = minion
+    if minion then
+      for j = 1, #runes do
+        local rune = ctx.user.runes[minion][j]
+        if rune and math.inside(mx, my, unpack(runes[j])) then
+          self.dragging = rune
+          self.dragIndex = j
+          self.dragSource = minion
+        end
       end
     end
   end
@@ -209,6 +211,7 @@ function MenuSurvivalDrag:mousereleased(mx, my, b)
   end
 
   if dirty then
+    ctx.survival:refreshGutter()
     saveUser(ctx.user)
     table.clear(ctx.survival.geometry)
   end

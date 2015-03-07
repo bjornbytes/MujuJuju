@@ -31,8 +31,11 @@ function HudDeadSurvival:init(hud)
 
   self.deadOk = hud.gooey:add(Button, 'hud.dead.ok')
   self.deadOk.geometry = function() return self.geometry.deadOk end
-  self.deadOk:on('click', function() self:sendScore() end)
-  self.deadOk.text = 'Next'
+  self.deadOk:on('click', function()
+    if ctx.options.offline then self:endGame()
+    else self:sendScore() end
+  end)
+  self.deadOk.text = ctx.options.offline and 'Finished' or 'Next'
 
   self.deadQuit = hud.gooey:add(Button, 'hud.dead.quit')
   self.deadQuit.geometry = function() return self.geometry.deadQuit end

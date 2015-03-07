@@ -394,7 +394,8 @@ return {
     music = 1.0,
     sound = .75,
     colorblind = false,
-    powersave = true
+    powersave = true,
+    offline = false
   },
 
   effects = {

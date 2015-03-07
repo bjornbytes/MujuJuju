@@ -87,7 +87,7 @@ end
 
 function Game:unload()
   self.backgroundSound:stop()
-  self.youlose:stop()
+  if self.youlose then self.youlose:stop() end
 end
 
 function Game:draw()

@@ -48,7 +48,7 @@ function MenuOptions:init()
   self.controls = {
     graphics = {'resolution', 'display', 'vsync', 'msaa', 'textureSmoothing', 'postprocessing', 'particles'},
     sound = {'mute', 'master', 'music', 'sound'},
-    gameplay = {'colorblind', 'powersave'}
+    gameplay = {'colorblind', 'powersave', 'offline'}
   }
 
   self.controlTypes = {
@@ -64,7 +64,8 @@ function MenuOptions:init()
     music = Slider,
     sound = Slider,
     colorblind = Checkbox,
-    powersave = Checkbox
+    powersave = Checkbox,
+    offline = Checkbox
   }
 
   self.controlLabels = {
@@ -72,14 +73,16 @@ function MenuOptions:init()
     msaa = 'Antialiasing',
     textureSmoothing = 'Texture Smoothing',
     colorblind = 'Colorblind Mode',
-    powersave = 'Power Saving'
+    powersave = 'Power Saving',
+    offline = 'Offline Mode'
   }
 
   self.controlDescriptions = {
     display = 'Which monitor Muju Juju runs on',
     postprocessing = 'Cool effects like bloom and distortions',
     textureSmoothing = 'Reduces rendering artifacts, especially on smaller screens',
-    powersave = 'If you are on a laptop, this will limit the framerate depending on whether or not it\'s plugged in so Muju Juju doesn\'t kill your battery or melt your laptop'
+    powersave = 'If you are on a laptop, this will limit the framerate depending on whether or not it\'s plugged in so Muju Juju doesn\'t kill your battery or melt your laptop',
+    offline = 'Muju Juju won\'t ever send or load highscores.'
   }
 
   self.sliderData = {
@@ -218,7 +221,7 @@ function MenuOptions:update()
     table.each(self.controls[group], function(control)
       local ox, oy = self.components[control]:getOffset()
       local mx, my = mx + ox, my + oy
-      if self.controlDescriptions[control] and self.components[control]:contains(mx, my) and ctx.gooey.focused ~= self.components[control] then
+      if self.controlDescriptions[control] and self.components[control]:contains(mx, my) and ctx.gooey.focused ~= self.components[control] and (not ctx.gooey.focused or not ctx.gooey.focused:contains(mx, my)) then
         self.tooltipFactor = math.lerp(self.tooltipFactor, 1, math.min(4 * ls.tickrate, 1))
         self.tooltipText = self.controlDescriptions[control]
         dirty = true
