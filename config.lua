@@ -92,11 +92,11 @@ return {
     baseJuju = 50,
     jujuRate = 1,
     colors = {
-      purple = {.5, 0, 1},
-      red = {1, 0, 0},
-      blue = {0, 0, 1},
-      green = {0, 1, 0},
-      black = {0, 0, 0},
+      purple = {.4, 0, .9},
+      red = {.9, 0, 0},
+      blue = {0, 0, .9},
+      green = {0, .9, 0},
+      black = {.3, .3, .3},
       white = {1, 1, 1}
     },
     colorOrder = {'purple', 'red', 'blue', 'green', 'black', 'white'}
