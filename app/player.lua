@@ -284,6 +284,11 @@ function Player:hurt(amount, source, kind)
 
     ctx.event:emit('player.hurt', {amount = amount, source = source, kind = kind})
 
+    if amount > 5 then
+      local sound = data.media.sounds['hit' .. love.math.random(1, 3)]
+      ctx.sound:play(sound)
+    end
+
     -- Die if we are dead
     if self.health <= 0 and self.deathTimer == 0 then self:die() end
   end
