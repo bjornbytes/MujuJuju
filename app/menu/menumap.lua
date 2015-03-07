@@ -148,14 +148,14 @@ function MenuMap:draw()
     end
 
     local x, y, r = unpack(self.geometry[biome])
-    local image = data.media.graphics.worldmap.circle
-    local scale = r * 2 / image:getWidth()
-    if active then y = y + 2 end
-    scale = scale * (.7 + .2 * factor)
-    g.setColor(255, 255, 255)
-    g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-
     if not self:isLocked(biome) then
+      local image = data.media.graphics.worldmap.circle
+      local scale = r * 2 / image:getWidth()
+      if active then y = y + 2 end
+      scale = scale * (.7 + .2 * factor)
+      g.setColor(255, 255, 255)
+      g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
       local standard = ''
       for _, medal in ipairs({'bronze', 'silver', 'gold'}) do
         if ctx.user.campaign.medals[biome][medal] then
@@ -168,7 +168,7 @@ function MenuMap:draw()
       g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight())
     else
       local image = data.media.graphics.menu.lock
-      local scale = .1 * v / image:getHeight()
+      local scale = .08 * v / image:getHeight()
       if active then y = y - 2 end
       g.draw(image, x, y - .02 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     end
