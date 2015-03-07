@@ -38,8 +38,9 @@ function Units:createEnemy()
       end
     end
 
-    self.minEnemyRate = math.max(self.minEnemyRate - self.minEnemyRateDecay * math.clamp((1.5 + self.minEnemyRate) / 10, .2, 1) ^ 1.5, 1.5)
-    self.maxEnemyRate = math.max(self.maxEnemyRate - self.maxEnemyRateDecay * math.clamp((3.0 + self.maxEnemyRate) / 10, .4, 1) ^ 1.5, 3.0)
+    self.minEnemyRate = math.max(self.minEnemyRate - self.minEnemyRateDecay * math.clamp((0.5 + self.minEnemyRate) / 10, .2, 1) ^ 1.5, 0.5)
+    self.maxEnemyRate = math.max(self.maxEnemyRate - self.maxEnemyRateDecay * math.clamp((1.0 + self.maxEnemyRate) / 10, .4, 1) ^ 1.5, 1.0)
+    if self.maxEnemyRate < self.minEnemyRate then self.maxEnemyRate = self.minEnemyRate end
   else
     return .5
   end
@@ -55,7 +56,7 @@ function Units:update()
     self.level = self.level + (ls.tickrate / 15) * self.levelScale
 
     if tick > self.nextSpike then
-      self.levelScale = self.levelScale * 2
+      self.levelScale = self.levelScale * 1.5
       self.nextSpike = self.nextSpike + (5 * 60 / ls.tickrate)
     end
   end
