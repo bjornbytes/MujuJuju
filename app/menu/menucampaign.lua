@@ -84,7 +84,7 @@ function MenuCampaign:init()
       local frame = self.geometry.minionFrame
       local w, h = .2 * u, .13 * v
       local midx = (u + frame[1] + frame[3]) / 2
-      return {midx - w / 2, frame[2] + frame[4] - h, w, h}
+      return {midx - w / 2, .5 * v, w, h}
     end,
 
     muju = function()
@@ -186,7 +186,7 @@ function MenuCampaign:draw()
   local biome = self.biome
   local midx = self.geometry.play[1] + self.geometry.play[3] / 2
   local medalSize = u * .0225
-  local medalInc = (medalSize * 4 + (u * .01125))
+  local medalInc = (medalSize * 4)
   local medalX = midx - medalInc * (3 - 1) / 2
   local medalY = .18 * v + medalSize
   for i, benchmark in ipairs({'bronze', 'silver', 'gold'}) do
