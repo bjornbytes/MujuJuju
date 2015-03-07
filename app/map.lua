@@ -6,7 +6,7 @@ Map.width, Map.height = 1067, 600
 Map.depth = -100
 
 function Map:init()
-  self.groundHeight = 92
+  self.groundHeight = 132
 
   self.spiritAlpha = 0
 
