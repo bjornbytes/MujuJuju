@@ -61,7 +61,7 @@ function Juju:update()
 		local ghost = p.ghost
 
     local distance, direction = math.vector(self.x, self.y, ghost.x, ghost.y)
-    local threshold = self.amount + 90
+    local threshold = 80
     local exponent = ctx.player:hasShruju('absorb') and .5 or .1
     if ctx.player:hasShruju('absorb') then threshold = threshold * 2 end
     local factor = math.clamp((threshold - distance) / threshold, 0, 1)
