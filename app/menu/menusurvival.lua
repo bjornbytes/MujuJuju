@@ -174,9 +174,12 @@ function MenuSurvival:update()
   for i = 1, #gutter do
     local x, y, r, runes = unpack(gutter[i])
     local minion = self.gutter[i]
-    lerpAnimation(minion, 'x', x)
-    lerpAnimation(minion, 'y', y)
-    lerpAnimation(minion, 'scale', .75)
+
+    if not self.drag:isDraggingMinion('gutter', i) then
+      lerpAnimation(minion, 'x', x)
+      lerpAnimation(minion, 'y', y)
+      lerpAnimation(minion, 'scale', .75)
+    end
 
     for j = 1, #runes do
       local rune = ctx.user.runes[minion][j]
@@ -200,9 +203,11 @@ function MenuSurvival:update()
 
     local minion = ctx.user.survival.minions[i]
     if minion then
-      lerpAnimation(minion, 'x', x)
-      lerpAnimation(minion, 'y', y)
-      lerpAnimation(minion, 'scale', .9)
+      if not self.drag:isDraggingMinion('deck', i) then
+        lerpAnimation(minion, 'x', x)
+        lerpAnimation(minion, 'y', y)
+        lerpAnimation(minion, 'scale', .9)
+      end
 
       for j = 1, #runes do
         local rune = ctx.user.runes[minion][j]
@@ -270,7 +275,7 @@ function MenuSurvival:draw()
   for i = 1, #gutter do
     local x, y, r, runes = unpack(gutter[i])
     local minion = self.gutter[i]
-    if minion then
+    if minion and not self.drag:isDraggingMinion('gutter', i) then
       local cw, ch = ctx.unitCanvas:getDimensions()
       ctx.unitCanvas:clear(0, 0, 0, 0)
       ctx.unitCanvas:renderTo(function()
@@ -323,7 +328,7 @@ function MenuSurvival:draw()
     g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
 
     -- Deck Minion
-    if minion then
+    if minion and not self.drag:isDraggingMinion('deck', i) then
       local cw, ch = ctx.unitCanvas:getDimensions()
       ctx.unitCanvas:clear(0, 0, 0, 0)
       ctx.unitCanvas:renderTo(function()
