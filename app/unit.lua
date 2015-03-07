@@ -67,24 +67,27 @@ function Unit:activate()
   self.channeling = false
   self.spawning = true
 
-  -- Add abilities
-  self.abilities = {}
-  table.each(self.class.startingAbilities, function(ability)
-    self:addAbility(ability)
-  end)
-
-  -- Apply attributes
-  table.each(config.attributes.list, function(attribute)
-    table.each(config.attributes[attribute], function(perLevel, stat)
-      self[stat] = self[stat] + self.class.attributes[attribute] * perLevel
-    end)
-  end)
-
-  -- Apply upgrades
   if self.player then
-    for i = 1, #self.class.upgrades do
-      local upgrade = self.class.upgrades[i]
-      f.exe(upgrade.apply, upgrade, self)
+
+    -- Add abilities
+    self.abilities = {}
+    table.each(self.class.startingAbilities, function(ability)
+      self:addAbility(ability)
+    end)
+
+    -- Apply attributes
+    table.each(config.attributes.list, function(attribute)
+      table.each(config.attributes[attribute], function(perLevel, stat)
+        self[stat] = self[stat] + self.class.attributes[attribute] * perLevel
+      end)
+    end)
+
+    -- Apply upgrades
+    if self.player then
+      for i = 1, #self.class.upgrades do
+        local upgrade = self.class.upgrades[i]
+        f.exe(upgrade.apply, upgrade, self)
+      end
     end
   end
 
