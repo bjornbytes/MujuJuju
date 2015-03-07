@@ -102,10 +102,10 @@ function MenuMap:update()
   self.nudge = math.lerp(self.nudge, my < .08 * v and 1 or 0, math.min(6 * ls.tickrate, 1))
   if self.focused then self.nudge = 0 end
 
-  for k, v in ipairs(config.biomeOrder) do
-    local hover = math.insideCircle(mx, my, unpack(self.geometry[v]))
-    self.prevHovers[v] = self.hovers[v] or 0
-    self.hovers[v] = math.lerp(self.hovers[v] or 0, (not self:isLocked(v) and hover) and 1 or 0, math.min(10 * ls.tickrate, 1))
+  for k, biome in ipairs(config.biomeOrder) do
+    local hover = math.inside(mx, my, self:getHitbox(biome))
+    self.prevHovers[biome] = self.hovers[biome] or 0
+    self.hovers[biome] = math.lerp(self.hovers[biome] or 0, (not self:isLocked(biome) and hover) and 1 or 0, math.min(10 * ls.tickrate, 1))
   end
 end
 
@@ -137,7 +137,7 @@ function MenuMap:draw()
 
   for k, biome in ipairs(config.biomeOrder) do
     local factor = math.lerp(self.prevHovers[biome], self.hovers[biome], ls.accum / ls.tickrate)
-    local hover = math.insideCircle(mx, my, unpack(self.geometry[biome]))
+    local hover = math.inside(mx, my, self:getHitbox(biome))
     local active = hover and love.mouse.isDown('l')
 
     if k >= 2 then
@@ -147,15 +147,30 @@ function MenuMap:draw()
       g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
     end
 
-    local x, y, r = unpack(self.geometry[biome])
     if not self:isLocked(biome) then
+      local x, y, r = unpack(self.geometry[biome])
       local image = data.media.graphics.worldmap.circle
       local scale = r * 2 / image:getWidth()
       if active then y = y + 2 end
       scale = scale * (.7 + .2 * factor)
       g.setColor(255, 255, 255)
       g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    end
 
+    local image = data.media.graphics.worldmap[biome]
+    local x, y = unpack(self.geometry[biome .. 'Title'])
+    local xscale, yscale = xscale * (1 + .1 * factor), yscale * (1 + .1 * factor)
+    g.setColor(255, 255, 255)
+    g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
+
+    g.setBlendMode('additive')
+    g.setColor(255, 255, 255, 50 * factor)
+    g.draw(image, x + 2 * factor, y + 2 * factor, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
+    g.setBlendMode('alpha')
+
+    local x, y, r = unpack(self.geometry[biome])
+    g.setColor(255, 255, 255)
+    if not self:isLocked(biome) then
       local standard = ''
       for _, medal in ipairs({'bronze', 'silver', 'gold'}) do
         if ctx.user.campaign.medals[biome][medal] then
@@ -164,25 +179,13 @@ function MenuMap:draw()
       end
       local image = data.media.graphics.worldmap[standard .. 'standard']
       local scale = .15 * v / image:getHeight()
-      if active then y = y - 2 end
+      if active then y = y + 2 end
+      scale = scale * (1 + .2 * factor)
       g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight())
     else
       local image = data.media.graphics.menu.lock
       local scale = .08 * v / image:getHeight()
       g.draw(image, x, y - .02 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-    end
-
-    if self.focused then
-      local image = data.media.graphics.worldmap[biome]
-      local x, y = unpack(self.geometry[biome .. 'Title'])
-      local xscale, yscale = xscale * (1 + .1 * factor), yscale * (1 + .1 * factor)
-      g.setColor(255, 255, 255)
-      g.draw(image, x, y, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
-
-      g.setBlendMode('additive')
-      g.setColor(255, 255, 255, 50 * factor)
-      g.draw(image, x + 2 * factor, y + 2 * factor, 0, xscale, yscale, image:getWidth() / 2, image:getHeight() / 2)
-      g.setBlendMode('alpha')
     end
   end
 end
@@ -239,4 +242,11 @@ function MenuMap:isLocked(biome)
     volcano = 'tundra'
   }
   return not ctx.user.campaign.medals[prevs[biome]].gold
+end
+
+function MenuMap:getHitbox(biome)
+  local u, v = ctx.u, ctx.v
+  local x, y = unpack(self.geometry[biome])
+  local w, h = .1 * v, .2 * v
+  return x - w / 2, y - h + .02 * v, w, h
 end
