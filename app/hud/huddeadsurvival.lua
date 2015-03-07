@@ -1,8 +1,8 @@
-HudDead = class()
+HudDeadSurvival = class()
 
 local g = love.graphics
 
-function HudDead:init(hud)
+function HudDeadSurvival:init(hud)
   self.geometry = setmetatable({}, {__index = function(t, k)
     return rawset(t, k, self.geometryFunctions[k]())[k]
   end})
@@ -48,12 +48,12 @@ function HudDead:init(hud)
   self.deadScreen = 1
 end
 
-function HudDead:update()
+function HudDeadSurvival:update()
   if not ctx.ded then return end
   self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * ls.tickrate)
 end
 
-function HudDead:draw()
+function HudDeadSurvival:draw()
   if not ctx.ded then return end
 
   local u, v = ctx.hud.u, ctx.hud.v
@@ -101,7 +101,7 @@ function HudDead:draw()
   end
 end
 
-function HudDead:keypressed(key)
+function HudDeadSurvival:keypressed(key)
   if not ctx.ded then return end
 
   if self.deadScreen == 1 and key == 'return' then
@@ -111,16 +111,16 @@ function HudDead:keypressed(key)
   end
 end
 
-function HudDead:endGame()
+function HudDeadSurvival:endGame()
   Context:add(Menu, ctx.user, ctx.options, {page = ctx.mode, biome = ctx.biome, user = ctx.user})
   Context:remove(ctx)
 end
 
-function HudDead:sendScore()
+function HudDeadSurvival:sendScore()
   self.highscores = nil
 
   local http = require('socket.http')
-  local payload = 'name=' .. ctx.user.name .. '&score=' .. math.floor(ctx.timer) .. '&biome=' .. ctx.biome
+  local payload = 'name=' .. ctx.user.name .. '&score=' .. math.floor(ctx.timer)
   local response = http.request(self.hub, payload)
 
   if response then

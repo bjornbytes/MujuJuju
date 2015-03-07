@@ -33,6 +33,7 @@ function Shrine:update()
   end
 
   self.health = math.min(self.health + math.max(self.regen, 0) * ls.tickrate, self.maxHealth)
+  self:hurt(10)
 end
 
 function Shrine:draw()

@@ -2,8 +2,8 @@ local g = love.graphics
 MenuSurvivalDrag = class()
 
 local function lerpRune(rune, key, val)
-  ctx.campaign.prevRuneTransforms[rune][key] = ctx.campaign.runeTransforms[rune][key]
-  ctx.campaign.runeTransforms[rune][key] = math.lerp(ctx.campaign.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.survival.prevRuneTransforms[rune][key] = ctx.survival.runeTransforms[rune][key]
+  ctx.survival.runeTransforms[rune][key] = math.lerp(ctx.survival.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuSurvivalDrag:init()
@@ -32,14 +32,14 @@ function MenuSurvivalDrag:draw()
   if rune then
     local x, y, w, h
     if source == 'stash' then
-      x, y, w, h = unpack(ctx.campaign.geometry.runes[index])
+      x, y, w, h = unpack(ctx.survival.geometry.runes[index])
     else
-      x, y, w, h = unpack(ctx.campaign.geometry.minion[4][index])
+      x, y, w, h = unpack(ctx.survival.geometry.deck[source][index])
     end
 
     local lerpd = {}
-    for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
-      lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+    for k, v in pairs(ctx.survival.runeTransforms[rune]) do
+      lerpd[k] = math.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
 
     h = h * lerpd.scale
@@ -49,9 +49,9 @@ end
 
 function MenuSurvivalDrag:mousepressed(mx, my, b)
   if b ~= 'l' then return end
-  do return end
 
-  local runes = ctx.campaign.geometry.runes
+  -- Rune Stash
+  local runes = ctx.survival.geometry.runes
   for i = 1, #runes do
     local rune = ctx.user.runes.stash[i]
     local x, y, w, h = unpack(runes[i])
@@ -63,103 +63,101 @@ function MenuSurvivalDrag:mousepressed(mx, my, b)
     end
   end
 
-  local _, _, _, runes = unpack(ctx.campaign.geometry.minion)
-  local minion = config.biomes[ctx.campaign.biome].minion
-  for i = 1, #runes do
-    local rune = ctx.user.runes[minion][i]
-    local x, y, w, h = unpack(runes[i])
-    if rune and math.inside(mx, my, x, y, w, h) then
-      self.dragging = rune
+  -- Deck
+  local deck = ctx.survival.geometry.deck
+  for i = 1, #deck do
+    local minion = ctx.user.survival.minions[i]
+    local x, y, r, runes = unpack(deck[i])
+    if minion and math.insideCircle(mx, my, x, y, r) then
+    end
+
+    for j = 1, #runes do
+      local rune = ctx.user.runes[minion][j]
+      if rune and math.inside(mx, my, unpack(runes[j])) then
+        self.dragging = rune
+        self.dragIndex = i
+        self.dragSource = minion
+      end
+    end
+  end
+
+  -- Gutter
+  local gutter = ctx.survival.geometry.gutter
+  for i = 1, #gutter do
+    local minion = ctx.survival.gutter[i]
+    local x, y, r = unpack(ctx.survival.geometry.gutter[i])
+    if math.insideCircle(mx, my, x, y, r) then
+      self.dragging = minion
       self.dragIndex = i
-      self.dragSource = minion
+      self.dragSource = 'gutter'
     end
   end
 end
 
 function MenuSurvivalDrag:mousereleased(mx, my, b)
   if not self.dragging or b ~= 'l' then return end
-  do return end
 
   mx, my = self:snap(mx, my)
 
   local dirty = false
   local runes = ctx.user.runes
   local dragging, index, source = self.dragging, self.dragIndex, self.dragSource
-  local minion = config.biomes[ctx.campaign.biome].minion
 
-  local function swap(src1, idx1, src2, idx2)
+  local function swapRune(src1, idx1, src2, idx2)
     local old, new = runes[src1][idx1]
     local unit1, unit2 = old and old.unit, new and new.unit
     if (unit1 and (src2 ~= 'stash' and src2 ~= unit1)) or (unit2 and (src1 ~= 'stash' and src1 ~= unit2)) then return end
     runes[src1][idx1], runes[src2][idx2] = runes[src2][idx2], runes[src1][idx1]
   end
 
-  -- Stash
-  local geometry = ctx.campaign.geometry.runes
+  -- Rune Stash
+  local geometry = ctx.survival.geometry.runes
   for i = 1, 33 do
     local rune = ctx.user.runes.stash[i]
     if math.inside(mx, my, unpack(geometry[i])) then
-      swap(source, index, 'stash', i)
+      swapRune(source, index, 'stash', i)
       dirty = true
       break
     end
   end
 
-  -- Minion
-  local geometry = ctx.campaign.geometry.minion[4]
-  for i = 1, 3 do
-    local rune = ctx.user.runes[minion][i]
-    if math.inside(mx, my, unpack(geometry[i])) then
-      swap(source, index, minion, i)
-      dirty = true
-      break
+  -- Deck
+  local deck = ctx.survival.geometry.deck
+  for i = 1, #deck do
+    local minion = ctx.user.survival.minions[i]
+    local x, y, r, runes = unpack(deck[i])
+    if minion and math.insideCircle(mx, my, x, y, r) then
+    end
+
+    for j = 1, #runes do
+      local rune = ctx.user.runes[minion][j]
+      if math.inside(mx, my, unpack(runes[j])) then
+        swapRune(source, index, minion, j)
+        dirty = true
+        break
+      end
     end
   end
 
   if dirty then
     saveUser(ctx.user)
-    table.clear(ctx.campaign.geometry)
+    table.clear(ctx.survival.geometry)
   end
 
   self.dragging = nil
 end
 
-function MenuSurvivalDrag:isDragging(source, index)
-  return self.dragging and self.dragIndex == index and self.dragSource == source
+function MenuSurvivalDrag:isDraggingRune(source, index)
+  return type(self.dragging) == 'table' and self.dragIndex == index and self.dragSource == source
+end
+
+function MenuSurvivalDrag:isDraggingMinion(source, index)
+  return type(self.dragging) == 'string' and self.dragIndex == index and self.dragSource == source
 end
 
 function MenuSurvivalDrag:snap(mx, my)
   local minx, miny, mindis = nil, nil, math.huge
-  local minion = config.biomes[ctx.campaign.biome].minion
   local v = ctx.v
-
-  -- Stash
-  local geometry = ctx.campaign.geometry.runes
-  for i = 1, 33 do
-    local rune = ctx.user.runes.stash[i]
-    local x, y, w, h = unpack(geometry[i])
-    x, y = x + w / 2, y + h / 2
-    local dis = math.distance(x, y, mx, my)
-    if dis < mindis then
-      minx, miny, mindis = x, y, dis
-    end
-  end
-
-  -- Minion
-  local geometry = ctx.campaign.geometry.minion[4]
-  for i = 1, 3 do
-    local rune = ctx.user.runes[minion][i]
-    local x, y, w, h = unpack(geometry[i])
-    x, y = x + w / 2, y + h / 2
-    local dis = math.distance(x, y, mx, my)
-    if dis < mindis then
-      minx, miny, mindis = x, y, dis
-    end
-  end
-
-  if mindis < .05 * v then
-    return math.lerp(mx, minx, .3), math.lerp(my, miny, .3)
-  end
 
   return mx, my
 end

@@ -147,7 +147,7 @@ function MenuSurvival:update()
   local runes = self.geometry.runes
   for i = 1, 33 do
     local rune = ctx.user.runes.stash[i]
-    if rune and not self.drag:isDragging('stash', i) then
+    if rune and not self.drag:isDraggingRune('stash', i) then
       local x, y, w, h = unpack(runes[i])
 
       lerpRune(rune, 'x', x + w / 2)
@@ -180,6 +180,21 @@ function MenuSurvival:update()
       lerpAnimation(minion, 'x', x)
       lerpAnimation(minion, 'y', y)
       lerpAnimation(minion, 'scale', .9)
+
+      for j = 1, #runes do
+        local rune = ctx.user.runes[minion][j]
+        if rune and not self.drag:isDraggingRune(minion, j) then
+          local x, y, w, h = unpack(runes[j])
+
+          lerpRune(rune, 'x', x + w / 2)
+          lerpRune(rune, 'y', y + h / 2)
+          lerpRune(rune, 'scale', 1)
+
+          if math.inside(mx, my, x, y, w, h) then
+            ctx.tooltip:setRuneTooltip(rune)
+          end
+        end
+      end
     end
   end
 
@@ -211,7 +226,7 @@ function MenuSurvival:draw()
   for i = 1, #runes do
     local x, y, w, h = unpack(runes[i])
     local rune = ctx.user.runes.stash[i]
-    if rune and not self.drag:isDragging('stash', i) then
+    if rune and not self.drag:isDraggingRune('stash', i) then
       local lerpd = {}
       for k, v in pairs(self.runeTransforms[rune]) do
         lerpd[k] = math.lerp(self.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
@@ -256,14 +271,14 @@ function MenuSurvival:draw()
 
   local deck = self.geometry.deck
   for i = 1, #deck do
+    local minion = ctx.user.survival.minions[i]
     local x, y, r, runes = unpack(deck[i])
 
-      local xoff = .02 * v
-      local height = .04 * v
-      g.setColor(0, 0, 0, 100)
-      g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
+    local xoff = .02 * v
+    local height = .04 * v
+    g.setColor(0, 0, 0, 100)
+    g.polygon('fill', x - r - xoff, y + r - height, x + r + xoff, y + r - height, x + r, y + r, x - r, y + r)
 
-    local minion = ctx.user.survival.minions[i]
     if minion then
       local cw, ch = ctx.unitCanvas:getDimensions()
       ctx.unitCanvas:clear(0, 0, 0, 0)
@@ -284,6 +299,27 @@ function MenuSurvival:draw()
       local scale = w / atlas:getDimensions('frame')
       g.setColor(255, 255, 255)
       g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
+    end
+  end
+
+  for i = 1, #deck do
+    local minion = ctx.user.survival.minions[i]
+    if minion then
+      local _, _, _, runes = unpack(deck[i])
+      for i = 1, #runes do
+        local rune = ctx.user.runes[minion][i]
+        if rune and not self.drag:isDraggingRune(minion, i) then
+          local x, y, w, h = unpack(runes[i])
+
+          local lerpd = {}
+          for k, v in pairs(ctx.survival.runeTransforms[rune]) do
+            lerpd[k] = math.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+          end
+          h = h * lerpd.scale
+
+          g.drawRune(rune, lerpd.x, lerpd.y, h - .02 * v, h - .05 * v)
+        end
+      end
     end
   end
 
