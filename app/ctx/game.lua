@@ -48,11 +48,12 @@ function Game:load(user, options, info)
   Upgrades.clear()
 
   self.event:on('shrine.dead', function(data)
+    self.youlose = ctx.sound:play('youlose')
     self.ded = true
     self:distribute()
   end)
 
-  backgroundSound = self.sound:loop(self.biome)
+  self.backgroundSound = self.sound:loop(self.biome)
   love.keyboard.setKeyRepeat(false)
 
   if self.options.mute then self.sound:mute() end
@@ -85,7 +86,8 @@ function Game:update()
 end
 
 function Game:unload()
-  backgroundSound:stop()
+  self.backgroundSound:stop()
+  self.youlose:stop()
 end
 
 function Game:draw()

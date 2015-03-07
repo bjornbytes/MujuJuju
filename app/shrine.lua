@@ -22,7 +22,7 @@ function Shrine:init()
 end
 
 function Shrine:update()
-  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(2 * ls.tickrate, 1))
+  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(math.lerp(2 * ls.tickrate, 1, 1 - (self.health / self.maxHealth)), 1))
 
   local p = ctx.player
   self.highlight = math.lerp(self.highlight, p:atShrine() and 1 or 0, math.min((p:atShrine() and 10 or 5) * ls.tickrate, 1))
@@ -33,6 +33,7 @@ function Shrine:update()
   end
 
   self.health = math.min(self.health + math.max(self.regen, 0) * ls.tickrate, self.maxHealth)
+  self:hurt(50)
 end
 
 function Shrine:draw()
