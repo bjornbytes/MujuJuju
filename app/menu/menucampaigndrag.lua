@@ -17,10 +17,10 @@ end
 function MenuCampaignDrag:update()
   local rune = self.dragging
   if rune then
-    local x, y = self:snap(love.mouse.getPosition())
+    local x, y, size = self:snap(love.mouse.getX(), love.mouse.getY(), .05 * ctx.u)
     lerpRune(rune, 'x', x)
     lerpRune(rune, 'y', y)
-    lerpRune(rune, 'size', .05 * ctx.u)
+    lerpRune(rune, 'size', size)
   end
 
   self.prevDragAlpha = self.dragAlpha
@@ -125,8 +125,9 @@ function MenuCampaignDrag:isDragging(source, index)
   return self.dragging and self.dragIndex == index and self.dragSource == source
 end
 
-function MenuCampaignDrag:snap(mx, my)
-  local minx, miny, mindis = nil, nil, math.huge
+function MenuCampaignDrag:snap(mx, my, size)
+  size = size or 0
+  local minx, miny, mindis, minsize = nil, nil, math.huge, 0
   local minion = config.biomes[ctx.campaign.biome].minion
   local v = ctx.v
 
@@ -138,7 +139,7 @@ function MenuCampaignDrag:snap(mx, my)
     x, y = x + w / 2, y + h / 2
     local dis = math.distance(x, y, mx, my)
     if dis < mindis then
-      minx, miny, mindis = x, y, dis
+      minx, miny, mindis, minsize = x, y, dis, h
     end
   end
 
@@ -150,13 +151,13 @@ function MenuCampaignDrag:snap(mx, my)
     x, y = x + w / 2, y + h / 2
     local dis = math.distance(x, y, mx, my)
     if dis < mindis then
-      minx, miny, mindis = x, y, dis
+      minx, miny, mindis, minsize = x, y, dis, h
     end
   end
 
   if mindis < .05 * v then
-    return math.lerp(mx, minx, .3), math.lerp(my, miny, .3)
+    return math.lerp(mx, minx, .5), math.lerp(my, miny, .5), math.lerp(size, minsize, .5)
   end
 
-  return mx, my
+  return mx, my, size
 end
