@@ -169,7 +169,6 @@ function MenuMap:draw()
     else
       local image = data.media.graphics.menu.lock
       local scale = .08 * v / image:getHeight()
-      if active then y = y - 2 end
       g.draw(image, x, y - .02 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     end
 
