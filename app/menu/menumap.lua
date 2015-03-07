@@ -41,7 +41,7 @@ function MenuMap:init()
 
     forestTitle = function()
       local x, y, w, h = unpack(self.geometry.frame)
-      return {x + .244 * w, y + .646 * h}
+      return {x + .23 * w, y + .64 * h}
     end,
 
     cavernTitle = function()
