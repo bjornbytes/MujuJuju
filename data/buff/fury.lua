@@ -1,5 +1,5 @@
-local EmpoweredStrikes = extend(Buff)
-EmpoweredStrikes.stack = true
-EmpoweredStrikes.tags = {'frenzy'}
+local Fury = extend(Buff)
+Fury.stack = true
+Fury.tags = {'frenzy'}
 
-return EmpoweredStrikes
+return Fury

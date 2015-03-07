@@ -1,6 +1,8 @@
 local Ambush = extend(Ability)
 
 Ambush.cooldown = 7
+Ambush.damage = 50
+Ambush.spiritRatio = 1
 
 function Ambush:activate()
   self.target = nil
@@ -18,7 +20,8 @@ function Ambush:activate()
       self.unit.casting = false
     elseif event.data.name == 'rend' and self.target then
       if self.target then
-        self.target:hurt(50, self.unit, {})
+        local damage = self.damage + self.spiritRatio * self.unit.spirit
+        self.target:hurt(damage, self.unit, {})
       end
     end
   end)

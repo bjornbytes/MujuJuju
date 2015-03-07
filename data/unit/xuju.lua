@@ -55,7 +55,9 @@ Xuju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit.buffs:add('rend')
+        local buff = unit.buffs:add('rend')
+        unit:applySkillRunes(buff, 'rend')
+        unit:applySkillRunes(buff, 'fury')
       end
     end
   },
@@ -167,9 +169,12 @@ Xuju.upgrades = {
     x = -1,
     y = 1,
     connectedTo = {'shadowrush'},
-    values = {
-      [1] = '50 damage'
-    },
+    values = function(self, level, class)
+      if level == 0 then return '' end
+      local ambush = data.ability.xuju.ambush
+      local spirit = class.attributes.flow * config.attributes.flow.spirit
+      return ambush.damage .. ' {green}(+' .. ambush.spiritRatio * spirit .. '){white} damage'
+    end,
     apply = function(self, unit)
       if self.level > 0 then
         unit:addAbility('ambush')

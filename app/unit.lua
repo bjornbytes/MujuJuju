@@ -366,6 +366,19 @@ function Unit:hasRunes()
   return runes and #runes > 0
 end
 
+function Unit:applySkillRunes(object, code)
+  code = code or object.code
+  if self.player then
+    table.each(self.player.deck[self.class.code].runes, function(rune)
+      if rune.unit == self.class.code and rune.abilities[code] then
+        table.each(rune.abilities[code], function(amount, stat)
+          object[stat] = object[stat] + amount
+        end)
+      end
+    end)
+  end
+end
+
 function Unit:addAbility(code)
   if self:hasAbility(code) then return end
   local Ability = data.ability[self.class.code][code]
@@ -374,16 +387,7 @@ function Unit:addAbility(code)
   ability.unit = self
   table.insert(self.abilities, ability)
 
-  -- Apply ability runes
-  if self.player then
-    table.each(self.player.deck[self.class.code].runes, function(rune)
-      if rune.unit == self.class.code and rune.abilities[code] then
-        table.each(rune.abilities[code], function(amount, stat)
-          ability[stat] = ability[stat] + amount
-        end)
-      end
-    end)
-  end
+  self:applySkillRunes(ability)
 
   f.exe(ability.activate, ability)
 end

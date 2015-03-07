@@ -182,6 +182,20 @@ return {
         rewind = {
           chance = {.01, .15}
         }
+      },
+      xuju = {
+        rend = {
+          chance = {.01, .05}
+        },
+        ghostarmor = {
+          chance = {.01, .05}
+        },
+        voidmetal = {
+          chance = {.01, .05}
+        },
+        fury = {
+          perstack = {.01, .08}
+        }
       }
     },
     abilityFormatters = {
@@ -194,6 +208,20 @@ return {
         },
         rewind = {
           chance = {'percent', 'chance'}
+        }
+      },
+      xuju = {
+        rend = {
+          chance = {'percent', 'chance'}
+        },
+        ghostarmor = {
+          chance = {'percent', 'chance'}
+        },
+        voidmetal = {
+          chance = {'percent', 'chance'}
+        },
+        fury = {
+          perstack = {'percent', 'attack speed per stack'}
         }
       }
     },
