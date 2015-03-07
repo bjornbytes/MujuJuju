@@ -204,7 +204,7 @@ function MenuMap:mousereleased(mx, my, b)
   local u, v = ctx.u, ctx.v
 
   for k, v in ipairs(config.biomeOrder) do
-    if not self:isLocked(v) and math.insideCircle(mx, my, unpack(self.geometry[v])) then
+    if not self:isLocked(v) and math.inside(mx, my, self:getHitbox(v)) then
       ctx.campaign:setBiome(v)
       self:setFocus(false)
       return
