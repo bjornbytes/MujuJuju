@@ -332,11 +332,7 @@ function MenuCampaign:draw()
     slot.r, slot.g, slot.b = unpack(config.player.colors[color])
   end
   g.setColor(255, 255, 255)
-  g.push()
-  g.translate(unpack(self.geometry.muju))
-  g.scale(MenuOptions.pixelScale)
-  ctx.animations.muju:draw(0, 0)
-  g.pop()
+  ctx.animations.muju:draw(unpack(self.geometry.muju))
 
   -- Modules
   self.play:draw()

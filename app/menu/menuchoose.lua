@@ -152,11 +152,7 @@ function MenuChoose:draw()
 
   g.setColor(255, 255, 255)
 
-  g.push()
-  g.translate(u * .2, v * .23)
-  g.scale(love.window.getPixelScale())
-  ctx.animations.muju:draw(0, 0)
-  g.pop()
+  ctx.animations.muju:draw(u * .2, v * .23)
 
   local color = self.user and self.user.color or 'purple'
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
