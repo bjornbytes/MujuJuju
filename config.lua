@@ -97,6 +97,7 @@ return {
     minCooldown = .75,
     baseJuju = 50,
     jujuRate = 1,
+    maxHealthPerMinute = 25,
     colors = {
       purple = {.4, 0, .9},
       red = {.9, 0, 0},

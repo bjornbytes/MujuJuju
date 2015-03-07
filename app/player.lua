@@ -25,6 +25,7 @@ function Player:init()
   self.healthDisplay = self.health
   self.prevHealthDisplay = self.healthDisplay
   self.prevHealth = self.health
+  self.maxHealthIncreaseTime = 60
 
   -- Dead
   self.dead = false
@@ -107,6 +108,13 @@ function Player:update()
         self.deck[i].cooldown = 0
       end
     end
+  end
+
+  -- Max Health Increase
+  if ctx.timer * ls.tickrate > self.maxHealthIncreaseTime then
+    self.maxHealth = self.maxHealth + config.player.maxHealthPerMinute
+    if not self.dead then self.health = self.health + config.player.maxHealthPerMinute end
+    self.maxHealthIncreaseTime = self.maxHealthIncreaseTime + 60
   end
 
   -- Health decay
