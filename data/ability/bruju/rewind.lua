@@ -28,4 +28,12 @@ function Rewind:posthurt(amount, source, kind)
   end
 end
 
+function Rewind:bonuses()
+  local bonuses = {}
+  if self.runeChance > 0 then
+    table.insert(bonuses, {'Runes', math.round(self.runeChance * 100) .. '%', 'chance'})
+  end
+  return bonuses
+end
+
 return Rewind

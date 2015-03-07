@@ -366,11 +366,38 @@ function Player:initDeck()
 
       self.deck[i] = self.deck[code]
 
+      -- Attribute and ability runes
       table.each(self.deck[i].runes, function(rune)
         if rune.attributes then
           table.each(rune.attributes, function(amount, attribute)
             local class = data.unit[code]
             class.attributes[attribute] = class.attributes[attribute] + amount
+          end)
+        elseif rune.abilities then
+          table.each(rune.abilities, function(stats, ability)
+            table.each(stats, function(amount, stat)
+              local target = data.ability[code][ability]
+              local proxy = config.runes.abilityProxies[code] and config.runes.abilityProxies[code][ability]
+              if proxy then
+                if type(proxy) == 'string' then
+                  if proxy == 'buff' then
+                    target = data.buff[ability]
+                  elseif proxy == 'ability' then
+                    target = data.ability[code][ability]
+                  end
+                elseif type(proxy) == 'table' then
+                  local kind, key = unpack(proxy)
+                  if kind == 'ability' then
+                    target = data.ability[code][key]
+                  elseif kind == 'buff' then
+                    target = data.buff[key]
+                  end
+                end
+              end
+
+              local key = 'rune' .. stat:capitalize()
+              target[key] = target[key] + amount
+            end)
           end)
         end
       end)

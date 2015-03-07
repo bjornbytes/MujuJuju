@@ -11,6 +11,8 @@ Bruju.damage = 18
 Bruju.range = 12
 Bruju.attackSpeed = 1.2
 Bruju.speed = 45
+Bruju.haste = 1
+Bruju.spirit = 0
 Bruju.cost = 10
 
 ----------------
@@ -33,12 +35,16 @@ Bruju.upgrades = {
       [4] = '25% lifesteal',
       [5] = '30% lifesteal',
     },
+    bonuses = function()
+      return data.ability.bruju.siphon:bonuses()
+    end,
     apply = function(self, unit)
       if self.level > 0 then
         unit:addAbility('siphon')
       end
     end
   },
+
   burst = {
     level = 0,
     maxLevel = 5,
@@ -48,11 +54,15 @@ Bruju.upgrades = {
     description = 'Bruju burst into a spirit flame on death, damaging nearby enemies.',
     x = 0,
     y = 0,
-    values = function(self, level, class)
-      if level == 0 then return '' end
-      local burst = data.ability.bruju.burst
-      local spirit = class.attributes.flow * config.attributes.flow.spirit
-      return burst.damages[level] .. ' {green}(+' .. burst.spiritRatio * spirit .. '){white} damage'
+    values = {
+      [1] = '20 damage',
+      [2] = '40 damage',
+      [3] = '70 damage',
+      [4] = '110 damage',
+      [5] = '160 damage',
+    },
+    bonuses = function(self)
+      return data.ability.bruju.burst:bonuses()
     end,
     apply = function(self, unit)
       if self.level > 0 then
@@ -60,6 +70,7 @@ Bruju.upgrades = {
       end
     end
   },
+
   retaliation = {
     level = 0,
     maxLevel = 1,
@@ -72,12 +83,16 @@ Bruju.upgrades = {
     values = {
       [1] = '30% attack speed'
     },
+    bonuses = function()
+      return data.ability.bruju.retaliation:bonuses()
+    end,
     apply = function(self, unit)
       if self.level > 0 then
         unit:addAbility('retaliation')
       end
     end
   },
+
   equilibrium = {
     level = 0,
     maxLevel = 1,
@@ -93,6 +108,7 @@ Bruju.upgrades = {
       [1] = '2.00x lifesteal'
     }
   },
+
   eruption = {
     level = 0,
     maxLevel = 3,
@@ -111,6 +127,7 @@ Bruju.upgrades = {
       [3] = '150 range'
     }
   },
+
   rewind = {
     level = 0,
     maxLevel = 3,
@@ -125,12 +142,16 @@ Bruju.upgrades = {
       [2] = '10% chance',
       [3] = '15% chance'
     },
+    bonuses = function()
+      return data.ability.bruju.rewind:bonuses()
+    end,
     apply = function(self, unit)
       if self.level > 0 then
         unit:addAbility('rewind')
       end
     end
   },
+
   fortify = {
     level = 0,
     maxLevel = 3,
@@ -152,6 +173,7 @@ Bruju.upgrades = {
       end
     end
   },
+
   impulse = {
     level = 0,
     maxLevel = 1,
@@ -167,6 +189,7 @@ Bruju.upgrades = {
       [1] = 'So much burst.',
     }
   },
+
   clarity = {
     level = 0,
     maxLevel = 1,
@@ -187,6 +210,7 @@ Bruju.upgrades = {
       end
     end
   },
+
   sanctuary = {
     level = 0,
     maxLevel = 1,
@@ -202,6 +226,7 @@ Bruju.upgrades = {
       [1] = '50% of the damage heals.',
     }
   },
+
   moxie = {
     level = 0,
     maxLevel = 1,
@@ -220,6 +245,7 @@ Bruju.upgrades = {
       end
     end
   },
+
   conduction = {
     level = 0,
     maxLevel = 1,

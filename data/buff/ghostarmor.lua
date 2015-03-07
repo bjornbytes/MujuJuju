@@ -13,4 +13,12 @@ function GhostArmor:prehurt(amount, source, kind)
   return amount
 end
 
+function GhostArmor:bonuses()
+  local bonuses = {}
+  if self.runeChance > 0 then
+    table.insert(bonuses, {'Runes', math.round(self.runeChance * 100) .. '%', 'dodge chance'})
+  end
+  return bonuses
+end
+
 return GhostArmor

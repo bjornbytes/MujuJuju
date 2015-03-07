@@ -37,6 +37,7 @@ function FrozenOrb:update()
 
   local target, distance = ctx.target:closest(self, 'enemy', 'unit', 'player')
   if target and distance < self.radius then
+    local spiritRatio = ability.spiritRatios[unit:upgradeLevel('frozenorb')]
     local exhaust, slow, timer = ability.runeSlow + .4, ability.runeSlow + .4, 1.5
     local knockback = ability.runeKnockback + 75 * self.direction
     if isa(target, Unit) then
@@ -46,7 +47,7 @@ function FrozenOrb:update()
       end
     end
 
-    local damage = ability.runeDamage + unit.spirit * (.4 * unit:upgradeLevel('frozenorb'))
+    local damage = ability.runeDamage + unit.spirit * spiritRatio
     target:hurt(damage, unit, {'spell'})
     ctx.particles:emit('frozenorb', self.x, self.y, 1)
 

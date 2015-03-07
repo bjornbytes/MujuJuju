@@ -147,10 +147,15 @@ function Tooltip:setUpgradeTooltip(who, what)
     end
   end
 
-  table.insert(pieces, '')
-  table.insert(pieces, '{bold}{whoCares}Bonuses{normal}')
-  table.insert(pieces, 'Spirit: +{green}17{white} to damage')
-  table.insert(pieces, 'Runes: +{green}8{white} to damage')
+  local bonuses = upgrade.bonuses and upgrade:bonuses(data.unit[who])
+  if bonuses and type(bonuses) == 'table' and #bonuses > 0 then
+    table.insert(pieces, '')
+    table.insert(pieces, '{white}Bonuses')
+    for i = 1, #bonuses do
+      local bonus = bonuses[i]
+      table.insert(pieces, '{white}{bold}' .. bonus[1] .. '{normal}: ' .. '{green}+' .. bonus[2] .. '{white} ' .. bonus[3])
+    end
+  end
 
   return self:setTooltip(table.concat(pieces, '\n'))
 end
@@ -179,6 +184,10 @@ function Tooltip:setRuneTooltip(rune)
 
     flat = function(x, stat)
       return '+' .. math.round(x) .. ' ' .. stat
+    end,
+
+    time = function(x, stat)
+      return '+' .. math.round(x * 10) / 10 .. 's ' .. stat
     end
   }
 

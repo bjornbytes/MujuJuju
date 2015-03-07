@@ -14,4 +14,12 @@ function Siphon:postattack(target, amount)
   end
 end
 
+function Siphon:bonuses()
+  local bonuses = {}
+  if self.runeLifesteal > 0 then
+    table.insert(bonuses, {'Runes', math.round(self.runeLifesteal * 100) .. '%', 'lifesteal'})
+  end
+  return bonuses
+end
+
 return Siphon

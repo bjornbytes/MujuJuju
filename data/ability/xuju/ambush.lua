@@ -40,4 +40,13 @@ function Ambush:fire()
   self.unit.casting = true
 end
 
+function Ambush:bonuses()
+  local bonuses = {}
+  local spirit = Unit.getStat('xuju', 'spirit')
+  if spirit > 0 then
+    table.insert(bonuses, {'Spirit', spirit * self.spiritRatio, 'damage'})
+  end
+  return bonuses
+end
+
 return Ambush

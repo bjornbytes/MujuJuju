@@ -35,4 +35,12 @@ function WardOfThorns:prehurt(amount, source, kind)
   end
 end
 
+function WardOfThorns:bonuses()
+  local bonuses = {}
+  if self.runeReflect > 0 then
+    table.insert(bonuses, {'Runes', math.round(self.runeReflect * 100) .. '%', 'damage reflected'})
+  end
+  return bonuses
+end
+
 return WardOfThorns

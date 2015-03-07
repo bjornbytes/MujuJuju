@@ -10,6 +10,8 @@ Kuju.damage = 6
 Kuju.range = 140
 Kuju.attackSpeed = 1.45
 Kuju.speed = 35
+Kuju.spirit = 0
+Kuju.haste = 1
 Kuju.cost = 10
 Kuju.attackSpell = 'kujuattack'
 Kuju.attackParticleBone = 'lefthand'
@@ -33,13 +35,16 @@ Kuju.upgrades = {
       [4] = '1.6 damage per spirit, 6 second cooldown',
       [5] = '2.0 damage per spirit, 5 second cooldown',
     },
+    bonuses = function()
+      return data.ability.kuju.frozenorb:bonuses()
+    end,
     apply = function(self, unit)
       if self.level > 0 then
-        local ability = unit:addAbility('frozenorb')
-        unit:applySkillRunes(ability, 'avalanche')
+        unit:addAbility('frozenorb')
       end
     end
   },
+
   shiverarmor = {
     level = 0,
     maxLevel = 5,
@@ -55,13 +60,16 @@ Kuju.upgrades = {
       [4] = '60 damage, 7 second duration',
       [5] = '75 damage, 8 second duration',
     },
+    bonuses = function()
+      return data.ability.kuju.shiverarmor:bonuses()
+    end,
     apply = function(self, unit)
       if self.level > 0 then
-        local ability = unit:addAbility('shiverarmor')
-        unit:applySkillRunes(ability, 'crystallize')
+        unit:addAbility('shiverarmor')
       end
     end
   },
+
   frostbite = {
     level = 0,
     maxLevel = 5,
@@ -77,12 +85,16 @@ Kuju.upgrades = {
       [4] = '10 damage per second per second, 6 second duration',
       [5] = '12 damage per second per second, 7 second duration',
     },
+    bonuses = function()
+      return data.ability.kuju.frostbite:bonuses()
+    end,
     apply = function(self, unit)
       if self.level > 0 then
         unit:addAbility('frostbite')
       end
     end
   },
+
   shatter = {
     level = 0,
     maxLevel = 1,
@@ -97,6 +109,7 @@ Kuju.upgrades = {
       [1] = 'Shatters',
     }
   },
+
   crystallize = {
     level = 0,
     maxLevel = 3,
@@ -111,8 +124,17 @@ Kuju.upgrades = {
       [1] = '20% stun chance',
       [2] = '35% stun chance',
       [3] = '50% stun chance'
-    }
+    },
+    bonuses = function()
+      local bonuses = {}
+      local shiverarmor = data.ability.kuju.shiverarmor
+      if shiverarmor.runeStunChance > 0 then
+        table.insert(bonuses, {'Runes', math.round(shiverarmor.runeStunChance * 100) .. '%', 'stun chance'})
+      end
+      return bonuses
+    end
   },
+
   tundra = {
     level = 0,
     maxLevel = 1,
@@ -127,6 +149,7 @@ Kuju.upgrades = {
       [1] = '+100% size'
     }
   },
+
   avalanche = {
     level = 0,
     maxLevel = 1,
@@ -139,8 +162,17 @@ Kuju.upgrades = {
     connectedTo = {'shatter'},
     values = {
       [1] = 'Knockback'
-    }
+    },
+    bonuses = function()
+      local bonuses = {}
+      local frozenorb = data.ability.kuju.frozenorb
+      if frozenorb.runeKnockback > 0 then
+        table.insert(bonuses, {'Runes', frozenorb.runeKnockback, 'knockback distance'})
+      end
+      return bonuses
+    end
   },
+
   frostnova = {
     level = 0,
     maxLevel = 1,
@@ -155,6 +187,7 @@ Kuju.upgrades = {
       [1] = 'Frost Nova'
     }
   },
+
   brainfreeze = {
     level = 0,
     maxLevel = 1,
@@ -170,6 +203,7 @@ Kuju.upgrades = {
       [1] = 'Silences enemies',
     }
   },
+
   windchill = {
     level = 0,
     maxLevel = 3,
@@ -185,6 +219,7 @@ Kuju.upgrades = {
       [3] = '0.8 damage per spirit, 60% slow for 1 second',
     }
   },
+
   wintersblight = {
     level = 0,
     maxLevel = 3,
@@ -201,6 +236,7 @@ Kuju.upgrades = {
       [3] = '24% current health damage',
     }
   },
+
   veinsofice = {
     level = 0,
     maxLevel = 1,

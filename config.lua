@@ -272,7 +272,7 @@ return {
           size = {'percent', 'size'}
         },
         crystallize = {
-          chance = {'percent', 'chance'}
+          stunChance = {'percent', 'chance'}
         }
       },
       thuju = {
@@ -280,11 +280,26 @@ return {
           reflect = {'percent', 'damage reflected'}
         },
         tremor = {
-          stun = {'flat', 'second stun'}
+          stun = {'time', 'stun duration'}
         },
         vigor = {
-          perstack = {'flat', 'damage per stack'}
+          perStack = {'flat', 'damage per stack'}
         }
+      }
+    },
+    abilityProxies = {
+      xuju = {
+        rend = 'buff',
+        ghostarmor = 'buff',
+        voidmetal = 'buff',
+        fury = {'buff', 'rend'}
+      },
+      kuju = {
+        avalanche = {'ability', 'frozenorb'},
+        crystallize = {'ability', 'shiverarmor'}
+      },
+      thuju = {
+        vigor = {'ability', 'wardofthorns'}
       }
     },
     prefixes = {

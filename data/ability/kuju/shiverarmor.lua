@@ -22,4 +22,14 @@ function ShiverArmor:use()
   self.timer = self.cooldown
 end
 
+function ShiverArmor:bonuses()
+  local bonuses = {}
+
+  if self.runeDamage > 0 then
+    table.insert(bonuses, {'Runes', self.runeDamage, 'damage'})
+  end
+
+  return bonuses
+end
+
 return ShiverArmor

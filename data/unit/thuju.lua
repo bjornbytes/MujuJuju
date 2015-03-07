@@ -11,6 +11,8 @@ Thuju.damage = 14
 Thuju.range = 12
 Thuju.attackSpeed = 1.15
 Thuju.speed = 35
+Thuju.spirit = 0
+Thuju.haste = 1
 Thuju.cost = 10
 
 Thuju.castables = {'tremor', 'inspire'}
@@ -39,6 +41,7 @@ Thuju.upgrades = {
       end
     end
   },
+
   wardofthorns = {
     level = 0,
     maxLevel = 5,
@@ -55,13 +58,16 @@ Thuju.upgrades = {
       [4] = '100% reflected',
       [5] = '150% reflected'
     },
+    bonuses = function()
+      return data.ability.thuju.wardofthorns:bonuses()
+    end,
     apply = function(self, unit)
       if self.level > 0 then
-        local ability = unit:addAbility('wardofthorns')
-        unit:applySkillRunes(ability, 'vigor')
+        unit:addAbility('wardofthorns')
       end
     end
   },
+
   tremor = {
     level = 0,
     maxLevel = 3,
@@ -71,11 +77,13 @@ Thuju.upgrades = {
     description = 'Thuju slams the ground, damaging and stunning units in front of him.',
     x = 1,
     y = 0,
-    values = function(self, level, class)
-      local tremor = data.ability.thuju.tremor
-      local spirit = class.attributes.flow * config.attributes.flow.spirit
-      local level = level == 0 and 1 or level
-      return tremor.damages[level] .. ' {green}(+' .. tremor.spiritRatio * spirit .. '){white} damage'
+    values = {
+      [1] = '30 damage, 1s stun',
+      [2] = '60 damage, 2s stun',
+      [3] = '90 damage, 3s stun',
+    },
+    bonuses = function()
+      return data.ability.thuju.tremor:bonuses()
     end,
     apply = function(self, unit)
       if self.level > 0 then
@@ -83,6 +91,7 @@ Thuju.upgrades = {
       end
     end
   },
+
   briarlance = {
     level = 0,
     maxLevel = 1,
@@ -98,6 +107,7 @@ Thuju.upgrades = {
       [1] = 'Reflect ranged attacks (75% normal reflect)',
     }
   },
+
   vigor = {
     level = 0,
     maxLevel = 3,
@@ -113,8 +123,17 @@ Thuju.upgrades = {
       [1] = '+10 damage, up to 2 stacks.',
       [2] = '+15 damage, up to 3 stacks.',
       [3] = '+20 damage, up to 4 stacks.',
-    }
+    },
+    bonuses = function()
+      local bonuses = {}
+      local wardofthorns = data.buff.wardofthorns
+      if wardofthorns.runePerStack > 0 then
+        table.insert(bonuses, {'Runes', wardofthorns.runePerStack, 'damage per stack'})
+      end
+      return bonuses
+    end
   },
+
   fissure = {
     level = 0,
     maxLevel = 3,
@@ -133,6 +152,7 @@ Thuju.upgrades = {
       [3] = '360 range',
     }
   },
+
   unbreakable = {
     level = 0,
     maxLevel = 1,
@@ -148,6 +168,7 @@ Thuju.upgrades = {
       [1] = '1.50x armor against ranged attacks',
     }
   },
+
   impenetrablehide = {
     level = 0,
     maxLevel = 3,
@@ -165,6 +186,7 @@ Thuju.upgrades = {
       [3] = '20% armor per stack',
     }
   },
+
   staggeringentry = {
     level = 0,
     maxLevel = 1,
@@ -180,6 +202,7 @@ Thuju.upgrades = {
       [1] = '100% awesomeness',
     }
   },
+
   infusedcarapace = {
     level = 0,
     maxLevel = 1,
@@ -198,6 +221,7 @@ Thuju.upgrades = {
       end
     end
   },
+
   taunt = {
     level = 0,
     maxLevel = 1,

@@ -16,10 +16,7 @@ function Burst:die()
 
   local damage = self.runeDamage + damages[burst] + self.spiritRatio * self.unit.spirit
   local range = self.runeRange + self.ranges[eruption]
-  local heal = 0
-
-  heal = sanctuary > 0 and damage * .5 or 0
-  heal = heal
+  local heal = sanctuary > 0 and damage * .5 or 0
 
   self:createSpell({
     damage = damage,
@@ -31,15 +28,23 @@ end
 
 function Burst:bonuses()
   local bonuses = {}
-  local unit = self.unit
-  local eruption = unit:upgradeLevel('eruption')
+  local spirit = Unit.getStat('bruju', 'spirit')
+  local eruption = data.unit.bruju.upgrades.eruption.level
+
   if eruption > 0 then
-    local baseRange = self.ranges[0]
-    table.insert(bonuses, {'Eruption', self.ranges[eruption] - baseRange, 'range'})
+    table.insert(bonuses, {'Eruption', self.ranges[eruption] - self.ranges[0], 'range'})
   end
-  if unit.spirit > 0 then
-    local damageBonus = self.spiritRatio * unit.spirit
-    table.insert(bonuses, {'Spirit', damageBonus, 'damage'})
+
+  if spirit > 0 then
+    table.insert(bonuses, {'Spirit', spirit * self.spiritRatio, 'damage'})
+  end
+
+  if self.runeDamage > 0 then
+    table.insert(bonuses, {'Runes', self.runeDamage, 'damage'})
+  end
+
+  if self.runeRange > 0 then
+    table.insert(bonuses, {'Runes', self.runeRange, 'range'})
   end
   return bonuses
 end

@@ -10,6 +10,8 @@ Xuju.damage = 20
 Xuju.range = 30
 Xuju.attackSpeed = 1.2
 Xuju.speed = 55
+Xuju.spirit = 0
+Xuju.haste = 1
 Xuju.cost = 10
 
 Xuju.attackParticleCount = 10
@@ -38,6 +40,7 @@ Xuju.upgrades = {
       end
     end
   },
+
   rend = {
     level = 0,
     maxLevel = 5,
@@ -53,14 +56,16 @@ Xuju.upgrades = {
       [4] = '26% crit chance',
       [5] = '30% crit chance',
     },
+    bonuses = function()
+      return data.buff.rend:bonuses()
+    end,
     apply = function(self, unit)
       if self.level > 0 then
-        local buff = unit.buffs:add('rend')
-        unit:applySkillRunes(buff, 'rend')
-        unit:applySkillRunes(buff, 'fury')
+        unit.buffs:add('rend')
       end
     end
   },
+
   ghostarmor = {
     level = 0,
     maxLevel = 5,
@@ -76,12 +81,16 @@ Xuju.upgrades = {
       [4] = '25% dodge chance',
       [5] = '30% dodge chance',
     },
+    bonuses = function()
+      return data.buff.ghostarmor:bonuses()
+    end,
     apply = function(self, unit)
       if self.level > 0 then
         unit.buffs:add('ghostarmor')
       end
     end
   },
+
   fury = {
     level = 0,
     maxLevel = 3,
@@ -96,8 +105,17 @@ Xuju.upgrades = {
       [1] = '10% attack speed per stack, max 3 stacks',
       [2] = '12% attack speed per stack, max 4 stacks',
       [3] = '15% attack speed per stack, max 5 stacks'
-    }
+    },
+    bonuses = function()
+      local bonuses = {}
+      local rend = data.buff.rend
+      if rend.runePerStack > 0 then
+        table.insert(bonuses, {'Runes', math.round(rend.runePerStack * 100) .. '%', 'attack speed per stack'})
+      end
+      return bonuses
+    end
   },
+
   voidmetal = {
     level = 0,
     maxLevel = 1,
@@ -110,8 +128,12 @@ Xuju.upgrades = {
     connectedTo = {'ghostarmor'},
     values = {
       [1] = '40% chance to ignore crowd control effects.'
-    }
+    },
+    bonuses = function()
+      return data.buff.voidmetal:bonuses()
+    end
   },
+
   deathwish = {
     level = 0,
     maxLevel = 3,
@@ -128,6 +150,7 @@ Xuju.upgrades = {
       [3] = 'Crit chance doubled if target below 50% health'
     }
   },
+
   temperedbastion = {
     level = 0,
     maxLevel = 1,
@@ -142,6 +165,7 @@ Xuju.upgrades = {
       [1] = '100% chance for Ghost Armor and Void Metal'
     }
   },
+
   grimreaper = {
     level = 0,
     maxLevel = 1,
@@ -159,6 +183,7 @@ Xuju.upgrades = {
       end
     end
   },
+
   ambush = {
     level = 0,
     maxLevel = 1,
@@ -169,11 +194,11 @@ Xuju.upgrades = {
     x = -1,
     y = 1,
     connectedTo = {'shadowrush'},
-    values = function(self, level, class)
-      if level == 0 then return '' end
-      local ambush = data.ability.xuju.ambush
-      local spirit = class.attributes.flow * config.attributes.flow.spirit
-      return ambush.damage .. ' {green}(+' .. ambush.spiritRatio * spirit .. '){white} damage'
+    values = {
+      [1] = '50 damage'
+    },
+    bonuses = function()
+      return data.ability.xuju.ambush:bonuses()
     end,
     apply = function(self, unit)
       if self.level > 0 then
@@ -181,6 +206,7 @@ Xuju.upgrades = {
       end
     end
   },
+
   twinblades = {
     level = 0,
     maxLevel = 1,
@@ -198,6 +224,7 @@ Xuju.upgrades = {
       end
     end
   },
+
   empoweredstrikes = {
     level = 0,
     maxLevel = 1,

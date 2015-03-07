@@ -2,7 +2,7 @@ local g = love.graphics
 
 Unit = class()
 
-Unit.classStats = {'width', 'height', 'health', 'damage', 'range', 'attackSpeed', 'speed', 'flow'}
+Unit.classStats = {'width', 'height', 'health', 'damage', 'range', 'attackSpeed', 'speed', 'spirit', 'haste'}
 
 Unit.width = 64
 Unit.height = 64
@@ -28,10 +28,6 @@ function Unit:activate()
 
   -- Scale
   self.scale = 1 - r / 300
-
-  -- Ability stats
-  self.spirit = 0
-  self.haste = 1
 
   -- Initialize subsystems
   self:initAnimation()
@@ -369,20 +365,6 @@ function Unit:hasRunes()
   return runes and #runes > 0
 end
 
-function Unit:applySkillRunes(object, code)
-  code = code or object.code
-  if self.player then
-    table.each(self.player.deck[self.class.code].runes, function(rune)
-      if rune.unit == self.class.code and rune.abilities[code] then
-        table.each(rune.abilities[code], function(amount, stat)
-          local key = 'rune' .. stat:capitalize()
-          object[key] = object[key] + amount
-        end)
-      end
-    end)
-  end
-end
-
 function Unit:addAbility(code)
   if self:hasAbility(code) then return end
   local Ability = data.ability[self.class.code][code]
@@ -390,8 +372,6 @@ function Unit:addAbility(code)
   local ability = Ability()
   ability.unit = self
   table.insert(self.abilities, ability)
-
-  self:applySkillRunes(ability)
 
   f.exe(ability.activate, ability)
 
@@ -497,4 +477,27 @@ function Unit:initAnimation()
     if not data.state.loop then self.animation:set('idle', {force = true}) end
     self.attackStart = tick
   end)
+end
+
+function Unit.getStat(class, stat)
+  if type(class) == 'string' then class = data.unit[class] end
+  local amount = class[stat]
+
+  table.each(config.attributes.list, function(attribute)
+    table.each(config.attributes[attribute], function(perLevel, attributeStat)
+      if attributeStat == stat then
+        amount = amount + class.attributes[attribute] * perLevel
+      end
+    end)
+  end)
+
+  table.each(ctx.player.deck[class.code].runes, function(rune)
+    table.each(rune.stats, function(runeAmount, runeStat)
+      if runeStat == stat then
+        amount = amount + runeAmount
+      end
+    end)
+  end)
+
+  return amount
 end
