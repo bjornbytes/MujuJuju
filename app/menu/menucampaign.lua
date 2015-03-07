@@ -303,7 +303,7 @@ function MenuCampaign:draw()
   ctx.unitCanvas:renderTo(function()
     ctx.animations[minion]:draw(cw / 2, ch / 2)
   end)
-  local scale = (2 * r / cw) * .9 * 3 * ps
+  local scale = (2 * r / cw) * .9 * 3
   g.setColor(255, 255, 255)
   g.draw(ctx.unitCanvas, x, y, 0, scale, scale, cw / 2, ch / 2)
 
