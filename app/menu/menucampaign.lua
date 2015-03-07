@@ -199,14 +199,40 @@ function MenuCampaign:draw()
     if benchmark == 'bronze' then
       local qw, qh = atlas:getDimensions('runeBgBroken')
       local scale = medalSize * 2 / qw
-      g.setColor(0, 0, 0)
+      g.setColor(achieved and {255, 255, 255} or {0, 0, 0})
       g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .14 * v, 0, scale, scale, qw / 2, qh / 2)
+    elseif benchmark == 'gold' then
+      local nextMinions = {
+        forest = 'xuju',
+        cavern = 'kuju',
+        tundra = 'thuju'
+      }
+      local nextMinion = nextMinions[self.biome]
+      if nextMinion then
+        local cw, ch = ctx.unitCanvas:getDimensions()
+        ctx.unitCanvas:clear(0, 0, 0, 0)
+        ctx.unitCanvas:renderTo(function()
+          local animation = ctx.animations[nextMinion]
+          animation.spine.skeleton.r = 0
+          animation.spine.skeleton.g = 0
+          animation.spine.skeleton.b = 0
+          animation:draw(cw / 2, ch / 2)
+          animation.spine.skeleton.r = 1
+          animation.spine.skeleton.g = 1
+          animation.spine.skeleton.b = 1
+        end)
+        local scale = (.1 * v / cw) * 3
+        g.setColor(255, 255, 255)
+        g.draw(ctx.unitCanvas, medalX, medalY + .17 * v, 0, scale, scale, cw / 2, ch / 2)
+      end
     end
 
-    g.setColor(255, 255, 255)
-    g.setFont('mesmerize', .05 * v)
-    g.printCenter('?', medalX, medalY + .14 * v)
-    medalX = medalX + medalInc
+    if not achieved then
+      g.setColor(255, 255, 255)
+      g.setFont('mesmerize', .05 * v)
+      g.printCenter('?', medalX, medalY + .14 * v)
+      medalX = medalX + medalInc
+    end
   end
 
   -- Rune Frame
