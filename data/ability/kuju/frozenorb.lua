@@ -1,8 +1,8 @@
 local FrozenOrb = extend(Ability)
 
-FrozenOrb.damage = 0
-FrozenOrb.slow = 0
-FrozenOrb.knockback = 0
+FrozenOrb.runeDamage = 0
+FrozenOrb.runeSlow = 0
+FrozenOrb.runeKnockback = 0
 
 ----------------
 -- Behavior

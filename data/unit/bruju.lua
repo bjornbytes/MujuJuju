@@ -159,7 +159,7 @@ Bruju.upgrades = {
     prerequisites = {burst = 1, rewind = 1},
     levelRequirement = 10,
     name = 'Impulse',
-    description = 'Rewind also triggers Burst.',
+    description = 'Every time rewind is triggered, Bruju ruptures the fabric of time, casting Burst.',
     x = 1,
     y = 2,
     connectedTo = {'rewind'},

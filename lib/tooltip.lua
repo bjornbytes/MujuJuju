@@ -147,6 +147,11 @@ function Tooltip:setUpgradeTooltip(who, what)
     end
   end
 
+  table.insert(pieces, '')
+  table.insert(pieces, '{bold}{whoCares}Bonuses{normal}')
+  table.insert(pieces, 'Spirit: +{green}17{white} to damage')
+  table.insert(pieces, 'Runes: +{green}8{white} to damage')
+
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

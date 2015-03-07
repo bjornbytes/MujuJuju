@@ -1,8 +1,8 @@
 local Frostbite = extend(Ability)
 Frostbite.cooldown = 20
 
-Frostbite.damage = 0
-Frostbite.size = 0
+Frostbite.runeDamage = 0
+Frostbite.runeSize = 0
 
 ----------------
 -- Behavior

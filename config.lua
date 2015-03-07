@@ -200,7 +200,7 @@ return {
           chance = {.01, .05}
         },
         fury = {
-          perstack = {.01, .08}
+          perStack = {.01, .08}
         }
       },
       kuju = {
@@ -219,7 +219,7 @@ return {
           damage = {5, 20}
         },
         cystallize = {
-          chance = {.03, .15}
+          stunChance = {.03, .15}
         }
       },
       thuju = {
@@ -231,7 +231,7 @@ return {
           stun = {.1, .75}
         },
         vigor = {
-          perstack = {2, 10}
+          perStack = {2, 10}
         }
       }
     },
@@ -258,7 +258,7 @@ return {
           chance = {'percent', 'chance'}
         },
         fury = {
-          perstack = {'percent', 'attack speed per stack'}
+          perStack = {'percent', 'attack speed per stack'}
         }
       },
       kuju = {

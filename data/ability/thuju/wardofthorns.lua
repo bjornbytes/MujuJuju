@@ -1,14 +1,14 @@
 local WardOfThorns = extend(Ability)
 
-WardOfThorns.reflect = 0
-WardOfThorns.perstack = 0
+WardOfThorns.runeReflect = 0
+WardOfThorns.runePerStack = 0
 
 function WardOfThorns:prehurt(amount, source, kind)
   if not source or not kind then return end
   local melee = source.range < 100
   if table.has(kind, 'attack') then
     local reflects = {.10, .25, .45, .70, 1.00}
-    local reflect = self.reflect + reflects[self.unit:upgradeLevel('wardofthorns')]
+    local reflect = self.runeReflect + reflects[self.unit:upgradeLevel('wardofthorns')]
 
     local function applyVigor()
       if self.unit:upgradeLevel('vigor') > 0 then

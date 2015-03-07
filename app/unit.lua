@@ -375,7 +375,8 @@ function Unit:applySkillRunes(object, code)
     table.each(self.player.deck[self.class.code].runes, function(rune)
       if rune.unit == self.class.code and rune.abilities[code] then
         table.each(rune.abilities[code], function(amount, stat)
-          object[stat] = object[stat] + amount
+          local key = 'rune' .. stat:capitalize()
+          object[key] = object[key] + amount
         end)
       end
     end)
