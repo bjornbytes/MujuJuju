@@ -242,7 +242,7 @@ function MenuSurvival:draw()
       for k, v in pairs(ctx.animationTransforms[minion]) do
         lerpd[k] = math.lerp(ctx.prevAnimationTransforms[k] or v, v, ls.accum / ls.tickrate)
       end
-      local scale = (2 * r / cw) * lerpd.scale * 3
+      local scale = (2 * r / cw) * lerpd.scale * 3 * ps
       g.setColor(255, 255, 255)
       g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, scale, scale, cw / 2, ch / 2)
     end
@@ -274,7 +274,7 @@ function MenuSurvival:draw()
       for k, v in pairs(ctx.animationTransforms[minion]) do
         lerpd[k] = math.lerp(ctx.prevAnimationTransforms[k] or v, v, ls.accum / ls.tickrate)
       end
-      local scale = (2 * r / cw) * lerpd.scale * 3
+      local scale = (2 * r / cw) * lerpd.scale * 3 * ps
       g.setColor(255, 255, 255)
       g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, scale, scale, cw / 2, ch / 2)
     end
