@@ -275,7 +275,7 @@ function MenuCampaign:draw()
     local _, lines = g.getFont():getWrap(str, textWidth)
     local textHeight = g.getFont():getHeight() * lines
     g.setColor(0, 0, 0)
-    g.printf(str, x + h + .01 * v, y + h / 2 - textHeight / 2, textWidth)
+    g.printf(str, x + h + .01 * v + 1, y + h / 2 - textHeight / 2 + 1, textWidth)
     g.setColor(255, 255, 255)
     g.printf(str, x + h + .01 * v, y + h / 2 - textHeight / 2, textWidth)
     y = y + h + .01 * v
