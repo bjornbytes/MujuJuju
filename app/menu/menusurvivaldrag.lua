@@ -27,11 +27,11 @@ function MenuSurvivalDrag:update()
     lerpRune(rune, 'y', y)
     lerpRune(rune, 'size', size)
   elseif self:isDraggingMinion() then
-    local x, y = self:snap(love.mouse.getX(), love.mouse.getY())
+    local x, y, size = self:snap(love.mouse.getX(), love.mouse.getY(), 1)
     local minion = self.dragging
     lerpAnimation(minion, 'x', x)
     lerpAnimation(minion, 'y', y)
-    lerpAnimation(minion, 'scale', 1)
+    lerpAnimation(minion, 'scale', size)
   end
 
   self.prevDragAlpha = self.dragAlpha
@@ -232,14 +232,16 @@ function MenuSurvivalDrag:snap(mx, my, size)
   local v = ctx.v
 
   -- Rune Stash
-  local geometry = ctx.survival.geometry.runes
-  for i = 1, 33 do
-    local rune = ctx.user.runes.stash[i]
-    local x, y, w, h = unpack(geometry[i])
-    x, y = x + w / 2, y + h / 2
-    local dis = math.distance(x, y, mx, my)
-    if dis < mindis then
-      minx, miny, mindis, minsize = x, y, dis, h
+  if self:isDraggingRune() then
+    local geometry = ctx.survival.geometry.runes
+    for i = 1, 33 do
+      local rune = ctx.user.runes.stash[i]
+      local x, y, w, h = unpack(geometry[i])
+      x, y = x + w / 2, y + h / 2
+      local dis = math.distance(x, y, mx, my)
+      if dis < mindis then
+        minx, miny, mindis, minsize = x, y, dis, h
+      end
     end
   end
 
@@ -248,14 +250,20 @@ function MenuSurvivalDrag:snap(mx, my, size)
   for i = 1, #deck do
     local minion = ctx.user.survival.minions[i]
     local x, y, r, runes = unpack(deck[i])
-
-    for j = 1, #runes do
-      local rune = ctx.user.runes[minion][j]
-      local x, y, w, h = unpack(runes[j])
-      x, y = x + w / 2, y + h / 2
+    if self:isDraggingMinion() then
       local dis = math.distance(x, y, mx, my)
       if dis < mindis then
-        minx, miny, mindis, minsize = x, y, dis, h
+        minx, miny, mindis, minsize = x, y, dis, .9
+      end
+    elseif self:isDraggingRune() then
+      for j = 1, #runes do
+        local rune = ctx.user.runes[minion][j]
+        local x, y, w, h = unpack(runes[j])
+        x, y = x + w / 2, y + h / 2
+        local dis = math.distance(x, y, mx, my)
+        if dis < mindis then
+          minx, miny, mindis, minsize = x, y, dis, h
+        end
       end
     end
   end
@@ -265,19 +273,26 @@ function MenuSurvivalDrag:snap(mx, my, size)
   for i = 1, #gutter do
     local minion = ctx.survival.gutter[i]
     local x, y, r, runes = unpack(ctx.survival.geometry.gutter[i])
-
-    for j = 1, #runes do
-      local rune = ctx.user.runes[minion][j]
-      local x, y, w, h = unpack(runes[j])
-      x, y = x + w / 2, y + h / 2
+    if self:isDraggingMinion() then
       local dis = math.distance(x, y, mx, my)
       if dis < mindis then
-        minx, miny, mindis, minsize = x, y, dis, h
+        minx, miny, mindis, minsize = x, y, dis, .5
+      end
+    elseif self:isDraggingRune() then
+      for j = 1, #runes do
+        local rune = ctx.user.runes[minion][j]
+        local x, y, w, h = unpack(runes[j])
+        x, y = x + w / 2, y + h / 2
+        local dis = math.distance(x, y, mx, my)
+        if dis < mindis then
+          minx, miny, mindis, minsize = x, y, dis, h
+        end
       end
     end
   end
 
-  if mindis < .05 * v then
+  local threshold = self:isDraggingMinion() and (.1 * v) or (.05 * v)
+  if mindis < threshold then
     return math.lerp(mx, minx, .5), math.lerp(my, miny, .5), math.lerp(size, minsize, .5)
   end
 
