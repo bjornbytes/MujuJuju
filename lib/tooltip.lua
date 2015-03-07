@@ -170,6 +170,10 @@ function Tooltip:setRuneTooltip(rune)
   local formatters = {
     percent = function(x, stat)
       return '+' .. math.round(x * 100) .. '% ' .. stat
+    end,
+
+    flat = function(x, stat)
+      return '+' .. math.round(x) .. ' ' .. stat
     end
   }
 

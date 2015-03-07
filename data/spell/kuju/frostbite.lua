@@ -7,11 +7,11 @@ function Frostbite:activate()
   local level = unit:upgradeLevel('frostbite')
 
   self.timer = 2 + level
-  self.dps = 2 + 2 * level
+  self.dps = 2 + 2 * level + ability.damage
   self.y = ctx.map.height - ctx.map.groundHeight
   self.team = unit.team
   self.tundra = unit:upgradeLevel('tundra') > 0
-  self.width = 125 * (self.tundra and 1.5 or 1)
+  self.width = 125 * (self.tundra and 1.5 or 1) * (1 + ability.size)
   self.threshold = self.timer - 1
   self.damages = {}
 

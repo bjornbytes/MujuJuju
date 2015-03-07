@@ -34,7 +34,8 @@ Kuju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit:addAbility('frozenorb')
+        local ability = unit:addAbility('frozenorb')
+        unit:applySkillRunes(ability, 'avalanche')
       end
     end
   },
@@ -55,7 +56,8 @@ Kuju.upgrades = {
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit:addAbility('shiverarmor')
+        local ability = unit:addAbility('shiverarmor')
+        unit:applySkillRunes(ability, 'crystallize')
       end
     end
   },

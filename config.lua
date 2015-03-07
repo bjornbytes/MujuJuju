@@ -196,6 +196,25 @@ return {
         fury = {
           perstack = {.01, .08}
         }
+      },
+      kuju = {
+        frozenorb = {
+          damage = {5, 20},
+          slow = {.02, .15}
+        },
+        avalanche = {
+          knockback = {10, 30}
+        },
+        frostbite = {
+          damage = {1, 2},
+          size = {.1, .4}
+        },
+        shiverarmor = {
+          damage = {5, 20}
+        },
+        cystallize = {
+          chance = {.03, .15}
+        }
       }
     },
     abilityFormatters = {
@@ -222,6 +241,20 @@ return {
         },
         fury = {
           perstack = {'percent', 'attack speed per stack'}
+        }
+      },
+      kuju = {
+        frozenorb = {
+          slow = {'percent', 'slow'}
+        },
+        avalanche = {
+          knockback = {'flat', 'knockback distance'}
+        },
+        frostbite = {
+          size = {'percent', 'size'}
+        },
+        crystallize = {
+          chance = {'percent', 'chance'}
         }
       }
     },
@@ -273,7 +306,12 @@ return {
         rend = {'Laceration', 'the Predator', 'Talons', 'Claws'},
         ghostarmor = {'the Shade', 'the Wraith', 'Fog'},
         voidmetal = {'Feint', 'Plasma'},
-        fury = {'Ire', 'Furor'}
+        fury = {'Ire', 'Furor'},
+        frozenorb = {'the Snowflake', 'Ice'},
+        avalanche = {'the Glacier', 'Pummeling'},
+        frostbite = {'the Arctic', 'the Tundra', 'the Poles'},
+        shiverarmor = {'Shudders', 'Hypothermia', 'Chills', 'Shivers'},
+        crystallize = {'the Ice Age', 'Stasis', 'Crystals'}
       }
     },
     colors = {

@@ -35,7 +35,7 @@ function FrozenOrb:update()
 
   local target, distance = ctx.target:closest(self, 'enemy', 'unit', 'player')
   if target and distance < self.radius then
-    local exhaust, slow, timer, knockback = .4, .4, 1.5, 75 * self.direction
+    local exhaust, slow, timer, knockback = ability.slow + .4, ability.slow + .4, 1.5, ability.knockback + 75 * self.direction
     if isa(target, Unit) then
       target.buffs:add('chilled', {exhaust = exhaust, slow = slow, timer = timer})
       if unit:upgradeLevel('avalanche') > 0 then
@@ -43,7 +43,7 @@ function FrozenOrb:update()
       end
     end
 
-    local damage = unit.spirit * (.4 * unit:upgradeLevel('frozenorb'))
+    local damage = ability.damage + unit.spirit * (.4 * unit:upgradeLevel('frozenorb'))
     target:hurt(damage, unit, {'spell'})
 
     local wintersblight = unit:upgradeLevel('wintersblight')
