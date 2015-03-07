@@ -25,7 +25,7 @@ function HudDeadCampaign:init(hud)
   self.deadOk:on('click', function() self:endGame() end)
   self.deadOk.text = 'Finished'
 
-  self.delay = 3
+  self.delay = 1
   self.timeFactor = 0
   self.prevTimeFactor = self.timeFactor
   self.soundTimer = 0

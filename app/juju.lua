@@ -61,7 +61,7 @@ function Juju:update()
 		local ghost = p.ghost
 
     local distance, direction = math.vector(self.x, self.y, ghost.x, ghost.y)
-    local threshold = 80
+    local threshold = 100
     local exponent = ctx.player:hasShruju('absorb') and .5 or .1
     if ctx.player:hasShruju('absorb') then threshold = threshold * 2 end
     local factor = math.clamp((threshold - distance) / threshold, 0, 1)
@@ -80,7 +80,7 @@ function Juju:update()
 	end
 
 	self.angle = self.angle + (math.sin(tick * ls.tickrate) * math.cos(tick * ls.tickrate)) / love.math.random(9, 11)
-	self.scale = math.lerp(self.scale, .15 + (math.min(self.amount, 200) / 250), 2 * ls.tickrate)
+	self.scale = math.lerp(self.scale, .15 + (math.min(self.amount, 150) / 250), 2 * ls.tickrate)
 	self.alpha = math.lerp(self.alpha, p.ded and 1 or .5, 10 * ls.tickrate)
 
 	self.x = math.clamp(self.x, self.amount * 2, ctx.map.width - self.amount * 2)
