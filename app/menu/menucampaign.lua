@@ -291,8 +291,14 @@ function MenuCampaign:draw()
   end
 
   -- Minion Animation
-  ctx.animations[minion].scale = ctx.animationScales[minion]
-  ctx.animations[minion]:draw(x, y)
+  local cw, ch = ctx.unitCanvas:getDimensions()
+  ctx.unitCanvas:clear(0, 0, 0, 0)
+  ctx.unitCanvas:renderTo(function()
+    ctx.animations[minion]:draw(cw / 2, ch / 2)
+  end)
+  local scale = (2 * r / cw) * .9 * 3 * ps
+  g.setColor(255, 255, 255)
+  g.draw(ctx.unitCanvas, x, y, 0, scale, scale, cw / 2, ch / 2)
 
   -- Minion Rune Frames
   for j = 1, #runes do
