@@ -283,7 +283,7 @@ function MenuCampaign:draw()
 
   -- Minion Stage
   local x, y, r, runes = unpack(self.geometry.minion)
-  if v / u < 3 / 4 then
+  if true or v / u < 3 / 4 then
     local xoff = .02 * v
     local height = .04 * v
     g.setColor(0, 0, 0, 100)
