@@ -44,6 +44,7 @@ function Frostbite:update()
       self.damages[target.viewId] = (self.damages[target.viewId] or 0) + self.dps
       touched[target.viewId] = true
       target:hurt(self.damages[target.viewId], unit, {'spell'})
+      ctx.particles:emit('frostbite', target.x, self.y, 4)
       if unit:upgradeLevel('brainfreeze') > 0 then
         target.buffs:add('brainfreeze', {timer = 1})
       end

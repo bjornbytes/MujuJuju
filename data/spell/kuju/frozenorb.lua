@@ -33,6 +33,8 @@ function FrozenOrb:update()
   self.x = self.x + self.direction * self.speed * ls.tickrate
   self.angle = self.angle + self.angularVelocity * ls.tickrate
 
+  ctx.particles:emit('kujuattack', math.lerp(self.prevx, self.x, love.math.random()), self.y, 1)
+
   local target, distance = ctx.target:closest(self, 'enemy', 'unit', 'player')
   if target and distance < self.radius then
     local exhaust, slow, timer, knockback = ability.slow + .4, ability.slow + .4, 1.5, ability.knockback + 75 * self.direction
@@ -45,6 +47,7 @@ function FrozenOrb:update()
 
     local damage = ability.damage + unit.spirit * (.4 * unit:upgradeLevel('frozenorb'))
     target:hurt(damage, unit, {'spell'})
+    ctx.particles:emit('frozenorb', self.x, self.y, 1)
 
     local wintersblight = unit:upgradeLevel('wintersblight')
     if wintersblight > 0 then
@@ -63,6 +66,7 @@ function FrozenOrb:update()
           end
 
           other:hurt(damage / 2, unit, {'spell'})
+          ctx.particles:emit('frozenorb', other.x, other.y, 1)
 
           if wintersblight > 0 then
             other:hurt(other.health * (.08 * wintersblight), unit, {'spell'})

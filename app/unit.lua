@@ -85,9 +85,12 @@ function Unit:activate()
   end)
 
   -- Apply upgrades
-  table.each(self.class.upgrades, function(upgrade)
-    f.exe(upgrade.apply, upgrade, self)
-  end)
+  if self.player then
+    for i = 1, #self.class.upgrades do
+      local upgrade = self.class.upgrades[i]
+      f.exe(upgrade.apply, upgrade, self)
+    end
+  end
 
   -- Display-related variables
   self.visible = true
@@ -390,6 +393,8 @@ function Unit:addAbility(code)
   self:applySkillRunes(ability)
 
   f.exe(ability.activate, ability)
+
+  return ability
 end
 
 function Unit:hasAbility(code)
