@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "6aplyJ7NJ4lDGXMVMGpnF8O0ACs", "spine": "2.1.16", "width": 111.06, "height": 177 },
+"skeleton": { "hash": "4ukw46ZAe7EImh38oUtnTEvYJNk", "spine": "2.1.16", "width": 111.06, "height": 177 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "robebottom", "parent": "root", "length": 62.59, "x": -1.41, "y": 84.35, "rotation": -94.5 },
@@ -1255,9 +1255,7 @@
 			"ded": {
 				"color": [
 					{ "time": 0, "color": "ffffff00", "curve": "stepped" },
-					{ "time": 0.7666, "color": "ffffff00" },
-					{ "time": 0.8666, "color": "ffffffff" },
-					{ "time": 0.9666, "color": "ffffff00" }
+					{ "time": 1.1666, "color": "ffffff00" }
 				]
 			}
 		},
