@@ -238,8 +238,9 @@ function MenuCampaign:draw()
       g.setColor(255, 255, 255)
       g.setFont('mesmerize', .05 * v)
       g.printCenter('?', medalX, medalY + .14 * v)
-      medalX = medalX + medalInc
     end
+
+    medalX = medalX + medalInc
   end
 
   -- Rune Frame

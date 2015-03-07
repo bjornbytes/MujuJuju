@@ -250,7 +250,7 @@ return {
       },
       xuju = {
         rend = {
-          chance = {'percent', 'chance'}
+          chance = {'percent', 'crit chance'}
         },
         ghostarmor = {
           chance = {'percent', 'chance'}
