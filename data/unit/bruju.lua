@@ -238,11 +238,11 @@ Bruju.upgrades = {
     x = -1,
     y = 4,
     values = {
-      [1] = '15% maximum health converted to damage',
+      [1] = '10% maximum health converted to damage',
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit.damage = unit.damage + (unit.health * .15)
+        unit.damage = unit.damage + (unit.health * .1)
       end
     end
   },
@@ -257,7 +257,7 @@ Bruju.upgrades = {
     x = 0,
     y = 4,
     values = {
-      [1] = '15% increased healing from all sources.',
+      [1] = '10% increased healing from all sources.',
     },
     apply = function(self, unit)
       if self.level > 0 then
