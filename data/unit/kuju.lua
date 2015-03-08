@@ -14,7 +14,7 @@ Kuju.spirit = 0
 Kuju.haste = 1
 Kuju.cost = 10
 Kuju.attackSpell = 'kujuattack'
-Kuju.attackParticleBone = 'region_lefthand'
+Kuju.attackParticleBone = 'region_righthand'
 
 ----------------
 -- Upgrades
