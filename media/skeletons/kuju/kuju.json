@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "iMlV2FMd6BO+r6sheKGKrA+OK/k", "spine": "2.1.14", "width": 246.94, "height": 350.3 },
+"skeleton": { "hash": "Ly/3b3Q1DgtrEHjYrftYz9cBU8A", "spine": "2.1.14", "width": 246.94, "height": 350.3 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "Roto", "parent": "root", "x": 50.98, "y": 165.73 },
@@ -1328,11 +1328,6 @@
 					{ "time": 0.5, "angle": -94.19 },
 					{ "time": 0.8, "angle": -98.54, "curve": "stepped" },
 					{ "time": 1.1666, "angle": -98.54 }
-				],
-				"translate": [
-					{ "time": 0, "x": 0, "y": 0, "curve": "stepped" },
-					{ "time": 0.8, "x": 0, "y": 0, "curve": "stepped" },
-					{ "time": 1.1666, "x": 0, "y": 0 }
 				]
 			},
 			"leftthigh": {
