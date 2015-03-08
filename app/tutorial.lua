@@ -66,12 +66,6 @@ function Tutorial:gui()
 
     g.setColor(255, 255, 255, 255 * alpha)
     g.printShadow(str, x, y, true)
-
-    if self.messageIndex == 1 then
-      local image = data.media.graphics.tutorial.space
-      local scale = u * .2 / image:getWidth()
-      g.draw(image, x, y + h / 2 + padding * 2 + image:getHeight() / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-    end
   end
 end
 

@@ -43,7 +43,7 @@ function Game:load(user, options, info)
   self.jujus = Jujus()
   self.achievements = Achievements(self.user)
 
-  if tutorial then self.tutorial = Tutorial() end
+  if info.tutorial then self.tutorial = Tutorial() end
 
   Upgrades.clear()
 
