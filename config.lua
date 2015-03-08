@@ -389,13 +389,13 @@ return {
     forest = {
       minEnemyRate = 10,
       maxEnemyRate = 12,
-      minEnemyRateDecay = .05,
-      maxEnemyRateDecay = .06,
+      minEnemyRateDecay = .04,
+      maxEnemyRateDecay = .04,
       maxEnemiesCoefficient = .1,
       levelScale = .75,
       maxElites = 1,
       maxEliteBuffCount = 1,
-      eliteLevelThreshold = 20,
+      eliteLevelThreshold = 30,
       types = {
         duju = 0,
         spuju = 360
