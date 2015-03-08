@@ -14,6 +14,7 @@ Bruju.speed = 45
 Bruju.haste = 1
 Bruju.spirit = 0
 Bruju.cost = 10
+Bruju.attackParticleBone = 'region_lefthand'
 
 ----------------
 -- Upgrades
