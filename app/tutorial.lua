@@ -5,7 +5,7 @@ Tutorial = class()
 function Tutorial:init()
   self.messages = {
     'This is Muju',
-    'You can move Muju with A and D',
+    'You can move Muju with A and D'
   }
 
   self.messageIndex = 1

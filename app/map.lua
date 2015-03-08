@@ -40,6 +40,13 @@ function Map:init()
   self.foreground = {
     depth = -50,
     draw = function()
+      if ctx.biome == 'forest' then
+        local image = data.media.graphics.map.forestForeground
+        local scale = self.height / data.media.graphics.map[ctx.biome]:getHeight()
+        g.setColor(255, 255, 255)
+        g.draw(image, 0, self.height - image:getHeight() * scale, 0, scale, scale)
+      end
+
       local image = data.media.graphics.map.grass
       local scale = self.height / data.media.graphics.map[ctx.biome]:getHeight()
       local shearx = math.sin(tick / 100) * math.cos(tick / 60) ^ 2 * .08
