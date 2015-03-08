@@ -14,7 +14,7 @@ Thuju.speed = 35
 Thuju.spirit = 0
 Thuju.haste = 1
 Thuju.cost = 10
-Bruju.attackParticleBone = 'region_lefthand'
+Thuju.attackParticleBone = 'region_lefthand'
 
 ----------------
 -- Upgrades
