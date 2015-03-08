@@ -99,10 +99,10 @@ return {
     jujuRate = 1,
     maxHealthPerMinute = 25,
     colors = {
-      purple = {.4, 0, .9},
-      red = {.9, 0, 0},
-      blue = {0, 0, .9},
-      green = {0, .9, 0},
+      purple = {.6, .2, .9},
+      red = {.9, .2, .2},
+      blue = {.2, .2, .9},
+      green = {.2, .9, .2},
       black = {.3, .3, .3},
       white = {1, 1, 1}
     },
