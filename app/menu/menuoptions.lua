@@ -81,7 +81,7 @@ function MenuOptions:init()
     display = 'Which monitor Muju Juju runs on',
     postprocessing = 'Cool effects like bloom and distortions',
     textureSmoothing = 'Reduces rendering artifacts, especially on smaller screens',
-    powersave = 'If you are on a laptop, this will limit the framerate depending on whether or not it\'s plugged in so Muju Juju doesn\'t kill your battery or melt your laptop',
+    powersave = 'If you are on a laptop, this will intelligently limit the framerate so Muju Juju doesn\'t kill your battery.',
     offline = 'Muju Juju won\'t ever send or load highscores.'
   }
 
@@ -222,7 +222,7 @@ function MenuOptions:update()
       local ox, oy = self.components[control]:getOffset()
       local mx, my = mx + ox, my + oy
       if self.controlDescriptions[control] and self.components[control]:contains(mx, my) and ctx.gooey.focused ~= self.components[control] and (not ctx.gooey.focused or not ctx.gooey.focused:contains(mx, my)) then
-        self.tooltipFactor = math.lerp(self.tooltipFactor, 1, math.min(4 * ls.tickrate, 1))
+        self.tooltipFactor = math.lerp(self.tooltipFactor, 1, math.min(6 * ls.tickrate, 1))
         self.tooltipText = self.controlDescriptions[control]
         dirty = true
       end
