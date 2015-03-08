@@ -390,8 +390,12 @@ function MenuSurvival:draw()
   self.drag:draw()
 end
 
-function MenuSurvival:keypressed(key)
-  --
+function MenuSurvival:keyreleased(key)
+  if not self.active then return end
+  if key == 'escape' then
+    ctx:setPage('start')
+    return true
+  end
 end
 
 function MenuSurvival:mousepressed(mx, my, b)

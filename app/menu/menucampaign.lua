@@ -393,8 +393,13 @@ function MenuCampaign:draw()
   self.drag:draw()
 end
 
-function MenuCampaign:keypressed(key)
-  return self.map:keypressed(key)
+function MenuCampaign:keyreleased(key)
+  if not self.active then return end
+  if self.map:keyreleased(key) then return true end
+  if key == 'escape' then
+    ctx:setPage('start')
+    return true
+  end
 end
 
 function MenuCampaign:mousepressed(mx, my, b)

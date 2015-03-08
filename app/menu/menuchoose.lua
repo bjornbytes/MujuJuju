@@ -60,7 +60,7 @@ function MenuChoose:init()
 
   self.back = ctx.gooey:add(Button, 'menu.choose.back')
   self.back.geometry = function() return self.geometry.back end
-  self.back:on('click', function() ctx:setPage('select') end)
+  self.back:on('click', function() ctx:setPage('select', self.destination) end)
   self.back.text = 'Back'
 
   self.next = ctx.gooey:add(Button, 'menu.choose.next')
@@ -166,8 +166,16 @@ end
 
 function MenuChoose:keypressed(key)
   if not self.active then return end
-  if key == 'backspace' then self.user.name = self.user.name:sub(1, -2) end
+  if key == 'backspace' then
+    self.user.name = self.user.name:sub(1, -2)
+  end
+end
 
+function MenuChoose:keyreleased(key)
+  if not self.active then return end
+  if key == 'escape' then
+    ctx:setPage('select', self.destination)
+  end
   return self.active
 end
 
@@ -208,7 +216,7 @@ function MenuChoose:finished()
   saveUser(self.user)
   ctx.user = self.user
 
-  ctx:setPage('campaign')
+  ctx:setPage(self.destination)
   ctx.animations.muju:set('summon')
   ctx.sound:play('summon2')
 end

@@ -102,20 +102,22 @@ function Menu:draw()
 end
 
 function Menu:keypressed(key)
-  if self.campaign:keypressed(key) then return end
-  if self.survival:keypressed(key) then return end
-  if self.optionsPane:keypressed(key) then return end
-  if self.select:keypressed(key) then return end
   if self.choose:keypressed(key) then return end
-  if self.start:keypressed(key) then return end
+end
+
+function Menu:keyreleased(key)
+  if self.campaign:keyreleased(key) then return end
+  if self.survival:keyreleased(key) then return end
+  if self.optionsPane:keyreleased(key) then return end
+  if self.select:keyreleased(key) then return end
+  if self.choose:keyreleased(key) then return end
+  if self.start:keyreleased(key) then return end
 
   if key == 'm' then
     self.options.mute = not self.options.mute
     self.sound:setMute(self.options.mute)
     saveOptions(self.options)
     self.optionsPane.refreshControls()
-  elseif key == 'escape' then
-    love.event.quit()
   end
 end
 

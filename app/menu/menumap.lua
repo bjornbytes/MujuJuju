@@ -190,10 +190,9 @@ function MenuMap:draw()
   end
 end
 
-function MenuMap:keypressed(key)
-  if key == 'z' then self:toggle()
-  elseif key == 'escape' and self.focused then
-    self:toggle()
+function MenuMap:keyreleased(key)
+  if key == 'escape' and self.focused then
+    ctx:setPage('start')
     return true
   end
 end

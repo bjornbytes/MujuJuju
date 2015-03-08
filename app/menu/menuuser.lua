@@ -121,7 +121,9 @@ function MenuUser:draw()
   end
 end
 
-function MenuUser:keypressed(key)
+function MenuUser:keyreleased(key)
+  if not self.active then return end
+
   if key == 'escape' then
     ctx:setPage('start')
     return true
