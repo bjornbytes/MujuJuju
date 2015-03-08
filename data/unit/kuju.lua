@@ -167,7 +167,7 @@ Kuju.upgrades = {
       local bonuses = {}
       local frozenorb = data.ability.kuju.frozenorb
       if frozenorb.runeKnockback > 0 then
-        table.insert(bonuses, {'Runes', frozenorb.runeKnockback, 'knockback distance'})
+        table.insert(bonuses, {'Runes', math.round(frozenorb.runeKnockback), 'knockback distance'})
       end
       return bonuses
     end

@@ -26,7 +26,7 @@ function ShiverArmor:bonuses()
   local bonuses = {}
 
   if self.runeDamage > 0 then
-    table.insert(bonuses, {'Runes', self.runeDamage, 'damage'})
+    table.insert(bonuses, {'Runes', math.round(self.runeDamage), 'damage'})
   end
 
   return bonuses

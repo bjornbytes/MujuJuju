@@ -39,7 +39,7 @@ function FrozenOrb:update()
   if target and distance < self.radius then
     local spiritRatio = ability.spiritRatios[unit:upgradeLevel('frozenorb')]
     local exhaust, slow, timer = ability.runeSlow + .4, ability.runeSlow + .4, 1.5
-    local knockback = ability.runeKnockback + 75 * self.direction
+    local knockback = (ability.runeKnockback + 75) * self.direction
     if isa(target, Unit) then
       target.buffs:add('chilled', {exhaust = exhaust, slow = slow, timer = timer})
       if unit:upgradeLevel('avalanche') > 0 then

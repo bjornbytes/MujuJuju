@@ -33,6 +33,8 @@ function MenuSurvivalDrag:update()
         ctx.user.runes[self.dragSource][self.dragIndex] = nil
         self.dragging = nil
         self.trashTimer = 5
+        saveUser(ctx.user)
+        table.clear(ctx.campaign.geometry)
       end
     else
       self.trashTimer = 5

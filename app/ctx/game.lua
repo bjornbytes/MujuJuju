@@ -249,8 +249,10 @@ function Game:distribute()
     rune.background = runeLevel < 30 and 'broken' or 'normal'
 
     -- Add to account
-    table.insert(self.user.runes.stash, rune)
-    table.insert(self.rewards.runes, rune)
+    if #ctx.user.runes.stash < 32 then
+      table.insert(self.user.runes.stash, rune)
+      table.insert(self.rewards.runes, rune)
+    end
   end
 
   -- Calculate highscores

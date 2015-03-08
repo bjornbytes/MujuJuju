@@ -219,7 +219,7 @@ return {
         shiverarmor = {
           damage = {5, 20}
         },
-        cystallize = {
+        crystallize = {
           stunChance = {.03, .15}
         }
       },

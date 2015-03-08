@@ -137,7 +137,7 @@ end
 function MenuUser:slotPicked(slot)
   if not self.slots[slot].empty then
     ctx.user = self.users[slot]
-    ctx:setPage(self.destination)
+    ctx:setPage(self.destination or 'campaign')
   else
     ctx.choose.user.slot = slot
     ctx:setPage('choose', self.destination)
@@ -149,6 +149,6 @@ function MenuUser:removeSlot(slot)
     love.filesystem.remove('save/' .. self.users[slot].name .. '/user.json')
     love.filesystem.remove('save/' .. self.users[slot].name .. '/achievements.json')
     love.filesystem.remove('save/' .. self.users[slot].name)
-    ctx:setPage('select')
+    ctx:setPage('select', self.destination)
   end
 end

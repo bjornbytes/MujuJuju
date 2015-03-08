@@ -218,7 +218,7 @@ function Tooltip:setRuneTooltip(rune)
       local key, a, b, c, d = unpack(formatter)
       str = formatters[key](amount, a, b, c, d)
     end
-    table.insert(pieces, ability:capitalize() .. ': ' .. str)
+    table.insert(pieces, data.unit[rune.unit].upgrades[ability].name .. ': ' .. str)
   end
   return self:setTooltip(table.concat(pieces, '\n'))
 end

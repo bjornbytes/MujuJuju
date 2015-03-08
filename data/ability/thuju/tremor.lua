@@ -38,11 +38,11 @@ function Tremor:bonuses()
 
   local spirit = Unit.getStat('thuju', 'spirit')
   if spirit > 0 then
-    table.insert(bonuses, {'Spirit', spirit * self.spiritRatio, 'damage'})
+    table.insert(bonuses, {'Spirit', math.round(spirit * self.spiritRatio), 'damage'})
   end
 
   if self.runeDamage > 0 then
-    table.insert(bonuses, {'Runes', self.runeDamage, 'damage'})
+    table.insert(bonuses, {'Runes', math.round(self.runeDamage), 'damage'})
   end
 
   if self.runeStun > 0 then
