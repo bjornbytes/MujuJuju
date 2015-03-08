@@ -18,6 +18,8 @@ function Tutorial:init()
   self.tween = tween.new(self.maxTime, self.factor, {value = 1}, 'inOutBack')
   self.delay = self.maxTime
 
+  self.moveX = 0
+
   ctx.event:emit('view.register', {object = self, mode = 'gui'})
 end
 

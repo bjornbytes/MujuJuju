@@ -68,4 +68,7 @@ end
 
 function Map:update()
   self.spiritAlpha = math.lerp(self.spiritAlpha, ctx.player.dead and 1 or 0, .6 * ls.tickrate)
+  if love.math.random() < 4 * ls.tickrate then
+    ctx.particles:emit('firefly' .. love.math.random(1, 3), ctx.map.width / 2, ctx.map.height / 2, 1)
+  end
 end
