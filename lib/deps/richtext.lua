@@ -33,7 +33,7 @@ local rich = {}
 rich.__index = rich
 
 function rich:new(t, stdcolor) -- syntax: rt = rich.new{text, width, resource1 = ..., ...}
-  rich.canvas = rich.canvas or love.graphics.newCanvas(800, 600)
+  rich.canvas = rich.canvas or love.graphics.newCanvas(love.graphics.getWidth() * .5, love.graphics.getHeight() * .5)
 	local obj = setmetatable({parsedtext = {}, resources = {}}, rich)
 	obj.width = t[2]
 	obj.hardwrap = false

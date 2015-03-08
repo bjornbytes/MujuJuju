@@ -72,7 +72,6 @@ end
 
 function HudDeadCampaign:draw()
   if not ctx.ded then return end
-  ctx.timer = 12 * 60 / ls.tickrate
 
   local u, v = ctx.hud.u, ctx.hud.v
   local bigFont = .09 * v

@@ -112,8 +112,9 @@ function Player:update()
 
   -- Max Health Increase
   if ctx.timer * ls.tickrate > self.maxHealthIncreaseTime then
+    local ratio = self.health / self.maxHealth
     self.maxHealth = self.maxHealth + config.player.maxHealthPerMinute
-    if not self.dead then self.health = self.health + config.player.maxHealthPerMinute end
+    self.health = self.maxHealth * ratio
     self.maxHealthIncreaseTime = self.maxHealthIncreaseTime + 60
   end
 

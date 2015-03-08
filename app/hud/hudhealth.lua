@@ -219,7 +219,7 @@ function HudHealth:draw()
         if next(elitebuffs) then
           local string = ''
           table.each(elitebuffs, function(buff) string = string .. buff.code:capitalize() .. ' ' end)
-          g.setFont('pixel', 8)
+          g.setFont('mesmerize', .02 * ctx.hud.v)
           local texty = y + barHeight * scale / 2 - g.getFont():getHeight() / 2
           g.setColor(255, 255, 255)
           g.printShadow(string, x, texty, true)
