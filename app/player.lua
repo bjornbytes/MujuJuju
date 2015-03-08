@@ -152,7 +152,7 @@ function Player:keypressed(key)
   end
 
   -- Summon with space
-  if key == ' ' and not self.dead then
+  if key == ' ' and not self.dead and not ctx.tutorial then
     self:summon()
   end
 
