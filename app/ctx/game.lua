@@ -231,7 +231,7 @@ function Game:distribute()
 
       -- Ability bonuses
       local unit = tableRandom(table.keys(config.runes.abilities))
-      if self.mode == 'campaign' and love.math.random() < .5 then unit = config.biomes[biome].minion end
+      if self.mode == 'campaign' and love.math.random() < .5 then unit = config.biomes[ctx.biome].minion end
       local ability = tableRandom(table.keys(config.runes.abilities[unit]))
       local stat = tableRandom(table.keys(config.runes.abilities[unit][ability]))
       local min, max = unpack(config.runes.abilities[unit][ability][stat])
