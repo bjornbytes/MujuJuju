@@ -257,7 +257,7 @@ function MenuSurvival:draw()
       local image = data.media.graphics.menu.trashcan
       local scale = (h - .025 * v) / image:getHeight()
       local dragAlpha = math.lerp(self.drag.prevDragAlpha, self.drag.dragAlpha, ls.accum / ls.tickrate)
-      g.setColor(255, 255, 255, 150 + 100 * dragAlpha)
+      g.setColor(255, 255, 255, 150 + 100 * (self.drag:isDraggingRune() and dragAlpha or 0))
       g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     else
       local rune = ctx.user.runes.stash[i]
