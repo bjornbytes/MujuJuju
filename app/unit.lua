@@ -435,13 +435,12 @@ function Unit:initAnimation()
           local juju = config.juju
           local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
           local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
-          local amount = love.math.random(minAmount, maxAmount)
+          local amount = love.math.random(minAmount, maxAmount) * (self.elite and config.elites.jujuModifier or 1)
           local jujus = love.math.random(1, 3)
 
           if ctx.player:hasShruju('harvest') then amount = amount * 1.5 end
 
-          if self.elite then
-            amount = amount * config.elites.jujuModifier
+          if self.elite and love.math.random() < .25 then
             ctx.shrujus:add(data.shruju[love.math.random(1, #data.shruju)], {x = self.x, juju = amount})
           else
             for i = 1, jujus do
