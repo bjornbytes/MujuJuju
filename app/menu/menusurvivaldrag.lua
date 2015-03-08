@@ -17,6 +17,7 @@ function MenuSurvivalDrag:init()
   self.dragSource = nil
   self.dragAlpha = 0
   self.prevDragAlpha = self.dragAlpha
+  self.trashTimer = 5
 end
 
 function MenuSurvivalDrag:update()
@@ -26,6 +27,16 @@ function MenuSurvivalDrag:update()
     lerpRune(rune, 'x', x)
     lerpRune(rune, 'y', y)
     lerpRune(rune, 'size', size)
+    if math.inside(x, y, unpack(ctx.survival.geometry.runes[#ctx.survival.geometry.runes])) then
+      self.trashTimer = self.trashTimer - ls.tickrate
+      if self.trashTimer <= 0 then
+        ctx.user.runes[self.dragSource][self.dragIndex] = nil
+        self.dragging = nil
+        self.trashTimer = 5
+      end
+    else
+      self.trashTimer = 5
+    end
   elseif self:isDraggingMinion() then
     local x, y, size = self:snap(love.mouse.getX(), love.mouse.getY(), 1)
     local minion = self.dragging
@@ -35,7 +46,7 @@ function MenuSurvivalDrag:update()
   end
 
   self.prevDragAlpha = self.dragAlpha
-  self.dragAlpha = math.lerp(self.dragAlpha, rune and 1 or 0, math.min(10 * ls.tickrate, 1))
+  self.dragAlpha = math.lerp(self.dragAlpha, self.dragging and 1 or 0, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuSurvivalDrag:draw()
@@ -55,6 +66,13 @@ function MenuSurvivalDrag:draw()
     end
 
     g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * ctx.v, (lerpd.size - .015 * ctx.v) * .5)
+
+    if self.trashTimer < 5 then
+      local trash = math.ceil(self.trashTimer)
+      g.setColor(255, 0, 0)
+      g.setFont('mesmerize', (.08 + .02 * (5 - trash)) * v)
+      g.printShadow(trash, lerpd.x, lerpd.y, true)
+    end
   elseif self:isDraggingMinion() then
     local minion = source == 'gutter' and ctx.survival.gutter[index] or ctx.user.survival.minions[index]
     local r = source == 'gutter' and ctx.survival.geometry.gutter[index][3] or ctx.survival.geometry.deck[index][3]
@@ -81,7 +99,7 @@ function MenuSurvivalDrag:mousepressed(mx, my, b)
   for i = 1, #runes do
     local rune = ctx.user.runes.stash[i]
     local x, y, w, h = unpack(runes[i])
-    if rune and math.inside(mx, my, x, y, w, h) then
+    if i ~= #runes and rune and math.inside(mx, my, x, y, w, h) then
       self.dragging = rune
       self.dragIndex = i
       self.dragSource = 'stash'
@@ -155,7 +173,7 @@ function MenuSurvivalDrag:mousereleased(mx, my, b)
   local geometry = ctx.survival.geometry.runes
   for i = 1, 33 do
     local rune = runes.stash[i]
-    if self:isDraggingRune() and math.inside(mx, my, unpack(geometry[i])) then
+    if i ~= 33 and self:isDraggingRune() and math.inside(mx, my, unpack(geometry[i])) then
       swapRune(source, index, 'stash', i)
       dirty = true
       break
@@ -217,6 +235,7 @@ function MenuSurvivalDrag:mousereleased(mx, my, b)
   end
 
   self.dragging = nil
+  self.trashTimer = 5
 end
 
 function MenuSurvivalDrag:isDraggingRune(source, index)
