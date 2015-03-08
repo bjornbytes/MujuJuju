@@ -86,10 +86,6 @@ function MenuChoose:update()
       else
         lerpAnimation(code, 'scale', .9)
       end
-
-      if math.insideCircle(mx, my, unpack(minions[i])) then
-        ctx.tooltip:setUnitTooltip(code)
-      end
     end
   end
 end

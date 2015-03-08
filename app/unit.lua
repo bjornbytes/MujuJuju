@@ -484,6 +484,7 @@ end
 function Unit.getStat(class, stat)
   if type(class) == 'string' then class = data.unit[class] end
   local amount = class[stat]
+  if stat == 'attackSpeed' or stat == 'haste' then amount = 0 end
 
   table.each(config.attributes.list, function(attribute)
     table.each(config.attributes[attribute], function(perLevel, attributeStat)

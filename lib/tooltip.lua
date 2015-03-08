@@ -106,12 +106,41 @@ function Tooltip:setTooltip(str)
   self.active = true
 end
 
-function Tooltip:setUnitTooltip(code)
-  if not code then return end
-  local unit = data.unit[code]
+function Tooltip:setUnitTooltip(class)
+  if type(class) == 'string' then class = data.unit[class] end
   local pieces = {}
-  table.insert(pieces, '{white}{title}' .. unit.name .. '{normal}')
-  table.insert(pieces, '{whoCares}' .. unit.description)
+  table.insert(pieces, '{title}{white}' .. class.name .. '{normal}')
+  table.insert(pieces, '{whoCares}' .. class.description .. '{white}')
+  table.insert(pieces, '')
+  for _, stat in ipairs({'health', 'damage', 'attackSpeed', 'speed', 'spirit', 'haste'}) do
+    local base = class[stat]
+    local actual = Unit.getStat(class, stat)
+    local label = stat:capitalize()
+    local extra = ''
+    local color = '{white}'
+    if stat == 'attackSpeed' then
+      label = 'Attack Speed'
+      if actual > 0 then
+        color = '{green}'
+        extra = ' {white}({whoCares}' .. math.round(base * 100) / 100 .. ' + {green}' .. math.round(actual * 100) .. '%{white})'
+      end
+      local actual = math.max(base - (base * actual), .4)
+      table.insert(pieces, '{whoCares}{bold}' .. label .. '{white}{normal}: ' .. color .. math.round(actual * 100) / 100 .. extra)
+    elseif stat == 'haste' then
+      if actual > 0 then
+        color = '{green}'
+        extra = ' {white}({whoCares}100% + {green}' .. math.round(actual * 100) .. '%{white})'
+      end
+      table.insert(pieces, '{whoCares}{bold}' .. label .. '{white}{normal}: ' .. color .. math.round((base + actual) * 100) .. '%' .. extra)
+    else
+      if base ~= actual then
+        color = '{green}'
+        extra = ' {white}({whoCares}' .. math.round(base) .. ' + {green}' .. math.round(actual - base) .. '{white})'
+      end
+      table.insert(pieces, '{whoCares}{bold}' .. label .. '{white}{normal}: ' .. color .. math.round(actual) .. extra)
+    end
+  end
+  table.insert(pieces, '')
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 
@@ -157,15 +186,6 @@ function Tooltip:setUpgradeTooltip(who, what)
     end
   end
 
-  return self:setTooltip(table.concat(pieces, '\n'))
-end
-
-function Tooltip:setShrujuTooltip(shruju)
-  if type(shruju) == 'string' then shruju = data.shruju[shruju] end
-  local pieces = {}
-  table.insert(pieces, '{title}' .. (shruju.effect and '{purple}' or '{white}') .. shruju.name .. '{normal}')
-  table.insert(pieces, '{whoCares}' .. shruju.description .. '{white}\n')
-  if shruju.effect then table.insert(pieces, '{purple}' .. shruju.effect.name .. ' - ' .. shruju.effect.description) end
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

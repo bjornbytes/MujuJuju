@@ -463,10 +463,15 @@ function HudUnits:mousemoved(mx, my)
     end
   end
 
-  -- Rune tooltips
+  -- Rune/Unit tooltips
   local units = self.geometry.units
   for i = 1, #units do
     local unit = units[i]
+    local size = .09 * ctx.hud.v * unit.scale
+    if math.inside(mx, my, unit.x - size / 2, unit.y + .096 * unit.scale * ctx.hud.v - size / 2, size, size) then
+      ctx.hud.tooltip:setUnitTooltip(p.deck[i].code)
+    end
+
     for j = 1, 3 do
       local rune = unit.runes[j]
       local w, h = data.atlas.hud:getDimensions('runeBgNormal')

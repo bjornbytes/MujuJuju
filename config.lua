@@ -35,7 +35,7 @@ return {
       attackSpeed = .03
     },
     flow = {
-      haste = .03,
+      haste = .2,
       spirit = 10
     }
   },
