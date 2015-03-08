@@ -394,7 +394,7 @@ function Unit:attackParticlePosition(target)
   if self.class.attackParticleBone then
     local bone = self.animation.spine.skeleton:findBone(self.class.attackParticleBone)
     local sign = self.animation.flipped and -1 or 1
-    x, y = self.x + bone.x * sign, self.y + bone.y
+    x, y = self.animation.spine.skeleton.x + bone.worldX, self.animation.spine.skeleton.y - bone.worldY
   end
   return x, y
 end
