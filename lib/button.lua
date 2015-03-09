@@ -55,7 +55,6 @@ function Button:render()
   local image = active and buttonActive or button
   local bgy = y + h
   local yscale = h / button:getHeight()
-  g.setColor(255, 255, 255)
   g.setColor(0, 0, 0, 85)
   g.rectangle('fill', x, y, w, h)
 

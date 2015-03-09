@@ -49,6 +49,7 @@ function Game:load(user, options, info)
 
   self.event:on('shrine.dead', function(data)
     self.youlose = ctx.sound:play('youlose')
+    ctx.sound:play('death')
     self.ded = true
     self:distribute()
   end)
@@ -147,7 +148,7 @@ function Game:distribute()
   end
 
   -- So the hud can draw them
-  self.rewards = {runes = {}, medals = {}}
+  self.rewards = {runes = {}, medals = {}, minions = {'xuju'}, hats = {}, highscore = false}
 
   local time = math.floor(self.timer * ls.tickrate)
   local bronze = time >= config.medals.bronze
@@ -161,6 +162,10 @@ function Game:distribute()
   end
 
   if silver and not ctx.user.campaign.medals[self.biome].silver then
+    local nextMinions = {forest = 'xuju', cavern = 'kuju', tundra = 'thuju'}
+    if nextMinions[self.biome] then
+      table.insert(self.rewards.minions, nextMinions[self.biome])
+    end
     table.insert(self.rewards.medals, 'silver')
     self.user.campaign.medals[self.biome].silver = true
   end

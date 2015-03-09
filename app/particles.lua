@@ -37,7 +37,7 @@ function Particles:draw()
 end
 
 function Particles:gui()
-  if ctx.ded or not self.active then return end
+  if not self.active then return end
   g.setColor(255, 255, 255)
   table.each(self.modes.gui, function(system, code)
     system:update(ls.dt)

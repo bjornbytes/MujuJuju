@@ -49,17 +49,19 @@ if love.graphics then
     if not rune then return end
 
     local atlas = data.atlas.hud
+    local _, _, _, a = g.getColor()
+    a = a or 255
 
     -- Stone
     local quad = 'runeBg' .. rune.background:capitalize()
     local w, h = atlas:getDimensions(quad)
     local scale = stoneSize / h
-    g.setColor(255, 255, 255)
+    g.setColor(255, 255, 255 * a)
     g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
 
     if glow then
       g.setBlendMode('additive')
-      g.setColor(255, 255, 255, 80)
+      g.setColor(255, 255, 255, 80 * a)
       g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
       g.setBlendMode('alpha')
     end
@@ -68,12 +70,13 @@ if love.graphics then
     local quad = 'rune' .. rune.image
     local w, h = atlas:getDimensions(quad)
     local scale = runeSize / h
-    g.setColor(config.runes.colors[rune.color])
+    local color = config.runes.colors[rune.color]
+    g.setColor(color[1], color[2], color[3], a)
     g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
 
     if glow then
       g.setBlendMode('additive')
-      g.setColor(255, 255, 255, 80)
+      g.setColor(255, 255, 255, 80 * a)
       g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
       g.setBlendMode('alpha')
     end
