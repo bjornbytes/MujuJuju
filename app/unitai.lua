@@ -33,8 +33,8 @@ function UnitAI:inRange(target)
 end
 
 function UnitAI:moveIntoRange(target)
-  local feared = self.unit.buffs:feared()
-  if feared then return self:runFrom(feared) end
+  local fear = self.unit.buffs:feared()
+  if fear then return self:runFrom(fear.target) end
 
   if self:inRange(target) then
     self.unit.animation:set('idle')
@@ -45,8 +45,8 @@ function UnitAI:moveIntoRange(target)
 end
 
 function UnitAI:moveTowards(target)
-  local feared = self.unit.buffs:feared()
-  if feared then return self:runFrom(feared) end
+  local fear = self.unit.buffs:feared()
+  if fear then return self:runFrom(fear.target) end
 
   if not target then
     self.unit.animation:set('idle')
@@ -72,8 +72,8 @@ function UnitAI:runFrom(target)
 end
 
 function UnitAI:startAttacking(target)
-  local feared = self.unit.buffs:feared()
-  if feared then return self:runFrom(feared) end
+  local fear = self.unit.buffs:feared()
+  if fear then return self:runFrom(fear.target) end
 
   if not self:inRange(target) or self.unit.buffs:stunned() then
     self.unit.animation:set('idle')
@@ -87,7 +87,7 @@ function UnitAI:startAttacking(target)
 end
 
 function UnitAI:useAbilities()
-  if self.unit.buffs:silenced() then return end
+  if self.unit.buffs:silenced() or ctx.tutorial.active then return end
 
   table.each(self.unit.abilities, function(ability)
     if ability:canUse() and love.math.random() < .5 then

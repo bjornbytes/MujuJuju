@@ -261,8 +261,7 @@ function UnitBuffs:ccImmunity()
 end
 
 function UnitBuffs:feared()
-  local fear = next(self:buffsWithTag('fear'))
-  return fear and fear.target
+  return next(self:buffsWithTag('fear'))
 end
 
 function UnitBuffs:potency()

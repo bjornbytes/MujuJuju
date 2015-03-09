@@ -67,13 +67,13 @@ function Unit:activate()
   self.channeling = false
   self.spawning = true
 
-  if self.player then
+  -- Add abilities
+  self.abilities = {}
+  table.each(self.class.startingAbilities, function(ability)
+    self:addAbility(ability)
+  end)
 
-    -- Add abilities
-    self.abilities = {}
-    table.each(self.class.startingAbilities, function(ability)
-      self:addAbility(ability)
-    end)
+  if self.player then
 
     -- Apply attributes
     table.each(config.attributes.list, function(attribute)
@@ -186,43 +186,6 @@ function Unit:draw()
 
   if not self.visible then return end
 
-  -- Decide on color
-  local r, gg, b = 0, 0, 0
-  r = self.team == ctx.player.team and 0 or 255
-  gg = self.team == ctx.player.team and 255 or 0
-  g.setColor(r, gg, b)
-
-  -- Render colored silhouette of unit to canvas
-  --[[local shader = data.media.shaders.colorize
-  local canvas = g.getCanvas()
-  self.backCanvas:clear(r, gg, b, 0)
-  g.setCanvas(self.canvas)
-  self.canvas:clear(r, gg, b, 0)
-  g.setShader(shader)
-  g.pop()
-  self.animation:draw(200, 200)
-
-  -- Blur canvas
-  data.media.shaders.horizontalBlur:send('amount', .0005 * lerpd.glowScale)
-  data.media.shaders.verticalBlur:send('amount', .0005 * lerpd.glowScale)
-  g.setColor(255, 255, 255)
-  for i = 1, 3 do
-    g.setCanvas(self.backCanvas)
-    g.setShader(data.media.shaders.horizontalBlur)
-    g.draw(self.canvas)
-    g.setCanvas(self.canvas)
-    g.setShader(data.media.shaders.verticalBlur)
-    g.draw(self.backCanvas)
-  end
-
-  g.setShader()
-  ctx.view:worldPush()
-  g.setCanvas(canvas)
-
-  -- Draw blurred outline
-  g.setColor(255, 255, 255, 255 * lerpd.alpha)
-  g.draw(self.canvas, x, y - (lerpd.knockup or 0), 0, 1, 1, 200, 200)]]
-
   -- Draw animation
   local noupdate = (ctx.player:hasShruju('distort') and ctx.player.dead) or ctx.paused or ctx.hud.upgrades.active
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = noupdate})
@@ -233,6 +196,11 @@ function Unit:draw()
     local image = data.media.graphics.spell.fear
     local scale = (40 / image:getHeight()) * (1 + math.cos(math.sin(tick) / 3) / 5)
     g.draw(image, self.x, self.y - self.height - 35, math.cos(tick / 3) / 6, scale, scale, 53, 83)
+  end
+
+  -- Stun icon
+  if self.buffs:stunned() then
+
   end
 end
 
