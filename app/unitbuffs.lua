@@ -271,3 +271,7 @@ function UnitBuffs:potency()
   end)
   return ratio
 end
+
+function UnitBuffs:frenzied()
+  return next(self:buffsWithTag('frenzy'))
+end
