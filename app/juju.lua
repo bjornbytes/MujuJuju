@@ -74,7 +74,7 @@ function Juju:update()
     self.x = self.x + math.dx(speed, direction)
     self.y = self.y + math.dy(speed, direction)
 
-		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
+		if math.distance(ghost.x, ghost.y, self.x, self.y) < ghost.radius then
 			ctx.sound:play('juju1')
 			self.dead = true
 		end

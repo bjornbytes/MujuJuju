@@ -141,6 +141,7 @@ function View:draw()
   if love.keyboard.isDown('`') then
     local stats = g.getStats()
     local str = 'fps: ' .. love.timer.getFPS() .. '\ndraw calls: ' .. stats.drawcalls .. '\ncanvas switches: ' .. stats.canvasswitches .. '\nvram: ' .. math.round((stats.texturememory / 1024) / 1024) .. 'MB\nimages: ' .. stats.images .. '\ncanvases: ' .. stats.canvases .. '\nfonts: ' .. stats.fonts
+    str = str .. '\nminenemyrate: ' .. ctx.units.minEnemyRate .. '\nmaxenemyrate: ' .. ctx.units.maxEnemyRate
     g.setColor(255, 255, 255)
     g.setFont('mesmerize', 10)
     g.printShadow(str, 0, 0)
