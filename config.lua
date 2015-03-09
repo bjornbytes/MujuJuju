@@ -395,7 +395,7 @@ return {
       levelScale = .75,
       maxElites = 1,
       maxEliteBuffCount = 1,
-      eliteLevelThreshold = 30,
+      eliteLevelThreshold = 50,
       types = {
         duju = 0,
         spuju = 360
@@ -409,28 +409,27 @@ return {
       maxEnemiesCoefficient = .08,
       levelScale = .85,
       maxElites = 1,
-      maxEliteBuffCount = 2,
-      eliteLevelThreshold = 20,
+      maxEliteBuffCount = 1,
+      eliteLevelThreshold = 50,
       types = {
         spuju = 0,
         vuju = 600
       }
     },
     tundra = {
-      level = 20,
       minEnemyRate = 9,
       maxEnemyRate = 11,
       minEnemyRateDecay = .01,
       maxEnemyRateDecay = .02,
       maxEnemiesCoefficient = .08,
-      levelScale = 1.1,
+      levelScale = .95,
       maxElites = 2,
-      maxEliteBuffCount = 3,
+      maxEliteBuffCount = 2,
       eliteLevelThreshold = 50,
       types = {
-        vuju = 240,
+        vuju = 300,
         spuju = 0,
-        duju = 120
+        duju = 0
       }
     },
     volcano = {
@@ -440,10 +439,10 @@ return {
       minEnemyRateDecay = .01,
       maxEnemyRateDecay = .02,
       maxEnemiesCoefficient = .08,
-      levelScale = 2,
+      levelScale = 1.5,
       maxElites = 3,
-      maxEliteBuffCount = 4,
-      eliteLevelThreshold = 80,
+      maxEliteBuffCount = 3,
+      eliteLevelThreshold = 100,
       types = {
         vuju = 240,
         spuju = 120,
@@ -451,15 +450,15 @@ return {
       }
     },
     survival = {
-      minEnemyRate = 10,
-      maxEnemyRate = 12,
-      minEnemyRateDecay = .05,
-      maxEnemyRateDecay = .05,
-      maxEnemiesCoefficient = .15,
-      levelScale = .75,
+      minEnemyRate = 9,
+      maxEnemyRate = 11,
+      minEnemyRateDecay = .01,
+      maxEnemyRateDecay = .02,
+      maxEnemiesCoefficient = .08,
+      levelScale = 1,
       maxElites = 3,
-      maxEliteBuffCount = 4,
-      eliteLevelThreshold = 20,
+      maxEliteBuffCount = 3,
+      eliteLevelThreshold = 50,
       types = {
         duju = 0,
         spuju = 0,

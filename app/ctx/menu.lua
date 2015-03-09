@@ -50,7 +50,6 @@ function Menu:load(user, options, info)
   self.user = user
   self.campaign.biome = info and info.biome
   self.page = info and info.page or 'start'
-  table.print(info and info.rewards)
   self.rewards = (info and info.rewards) or {}
   self.rewards.runes = self.rewards.runes or {}
 
