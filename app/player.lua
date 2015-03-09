@@ -65,6 +65,11 @@ function Player:activate()
       self.animation:set('idle', {force = true})
     end
   end)
+  self.animation:on('event', function(event)
+    if event.data.name == 'stepone' or event.data.name == 'steptwo' then
+      ctx.sound:play('footstep' .. love.math.random(1, 2), function(sound) sound:setPitch(.9 + love.math.random() * .3) end)
+    end
+  end)
 
   self.animation.spine.skeleton:setSkin(ctx.user.hat or 'nohat')
   self.animation.spine.skeleton:findBone('hat').scaleX = self.animation.scale

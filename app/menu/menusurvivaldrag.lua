@@ -67,7 +67,7 @@ function MenuSurvivalDrag:draw()
       lerpd[k] = math.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
 
-    g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * ctx.v, (lerpd.size - .015 * ctx.v) * .5)
+    g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * ctx.v, (lerpd.size - .015 * ctx.v) * .5, table.has(ctx.rewards.runes, rune))
 
     if self.trashTimer < 5 then
       local trash = math.ceil(self.trashTimer)

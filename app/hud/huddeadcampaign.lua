@@ -123,6 +123,6 @@ function HudDeadCampaign:keypressed(key)
 end
 
 function HudDeadCampaign:endGame()
-  Context:add(Menu, ctx.user, ctx.options, {page = ctx.mode, biome = ctx.biome, user = ctx.user})
+  Context:add(Menu, ctx.user, ctx.options, {page = ctx.mode, biome = ctx.biome, user = ctx.user, rewards = ctx.rewards})
   Context:remove(ctx)
 end
