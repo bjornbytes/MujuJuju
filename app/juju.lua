@@ -54,7 +54,7 @@ function Juju:update()
 	self.x = self.x + self.vx * ls.tickrate
 	self.y = self.y + self.vy * ls.tickrate
 	if self.vy > -.1 and ctx.tutorial:shouldFloatJuju() then
-		self.y = self.y - 10 * ls.tickrate
+		self.y = self.y - 12 * ls.tickrate
 	end
 
   if love.math.random() < 3 * ls.tickrate then
@@ -80,7 +80,7 @@ function Juju:update()
 		end
 	end
 
-	if self.y < -self.scale * data.media.graphics.juju:getWidth() then
+	if self.y < -300 then
 		ctx.jujus:remove(self)
 	end
 
