@@ -56,8 +56,8 @@ function Units:update()
     self.level = self.level + (ls.tickrate / 15) * self.levelScale
 
     if tick > self.nextSpike then
-      self.levelScale = self.levelScale * 3
-      self.nextSpike = self.nextSpike + (10 * 60 / ls.tickrate)
+      self.levelScale = self.levelScale * 2
+      self.nextSpike = self.nextSpike + (5 * 60 / ls.tickrate)
     end
   end
 
