@@ -155,7 +155,7 @@ return {
   medals = {
     bronze = 600,
     silver = 900,
-    gold = 1200
+    gold = 1500
   },
 
   runes = {
