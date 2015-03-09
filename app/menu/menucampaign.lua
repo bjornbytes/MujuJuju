@@ -274,6 +274,7 @@ function MenuCampaign:draw()
         for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
           lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
+        g.setColor(255, 255, 255)
         g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
       end
     end
@@ -375,6 +376,7 @@ function MenuCampaign:draw()
         lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
 
+      g.setColor(255, 255, 255)
       g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
     end
   end
