@@ -75,6 +75,7 @@ function Button:render()
       self.hoverY = my
       local d = math.distance
       self.hoverDistance = math.max(d(mx, my, x, y), d(mx, my, x + w, y), d(mx, my, x, y + h), d(mx, my, x + w, y + h))
+      ctx.sound:play('menuHover')
     end
 
     g.setColor(255, 255, 255)

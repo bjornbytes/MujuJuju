@@ -53,7 +53,7 @@ function Sound:setMute(muted)
 end
 
 function Sound:isMusic(sound)
-  return sound == data.media.sounds.riteOfPassage or sound == data.media.sounds.background
+  return sound == data.media.sounds.riteOfPassage or (ctx.biome and sound == data.media.sounds[ctx.biome])
 end
 
 function Sound:refreshVolumes()

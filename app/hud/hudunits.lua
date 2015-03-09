@@ -408,6 +408,8 @@ function HudUnits:mousereleased(mx, my, b)
         local nextLevel = upgrade.level + 1
         if ctx.upgrades.canBuy(who, what) and p:spend(upgrade.costs[nextLevel]) then
           ctx.upgrades.unlock(who, what)
+          ctx.sound:play('upgrade')
+          ctx.particles:emit('upgrade', mx, my, 10)
         else
           ctx.sound:play('misclick')
         end
@@ -427,6 +429,8 @@ function HudUnits:mousereleased(mx, my, b)
         if p:spend(cost) then
           class.attributes[attribute] = class.attributes[attribute] + 1
           class.cost = class.cost + 1
+          ctx.sound:play('upgrade')
+          ctx.particles:emit('upgrade', mx, my, 10)
         else
           ctx.sound:play('misclick')
         end

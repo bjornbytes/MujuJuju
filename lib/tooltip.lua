@@ -101,6 +101,8 @@ function Tooltip:setTooltip(str)
 
     g.setCanvas()
     g.setShader()
+
+    ctx.sound:play('menuHover')
   end
 
   self.active = true
