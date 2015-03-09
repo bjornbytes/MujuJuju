@@ -193,8 +193,7 @@ function Unit:draw()
   g.setColor(r, gg, b)
 
   -- Render colored silhouette of unit to canvas
-  --[[
-  local shader = data.media.shaders.colorize
+  --[[local shader = data.media.shaders.colorize
   local canvas = g.getCanvas()
   self.backCanvas:clear(r, gg, b, 0)
   g.setCanvas(self.canvas)
