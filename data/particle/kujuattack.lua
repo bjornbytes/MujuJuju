@@ -1,6 +1,6 @@
 local KujuAttack = class()
 KujuAttack.image = data.media.graphics.particles.smoke
-KujuAttack.max = 256
+KujuAttack.max = 128
 KujuAttack.blendMode = 'additive'
 
 KujuAttack.options = {}

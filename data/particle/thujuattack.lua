@@ -1,6 +1,6 @@
 local ThujuAttack = class()
 ThujuAttack.image = data.media.graphics.particles.smoke
-ThujuAttack.max = 256
+ThujuAttack.max = 32
 ThujuAttack.blendMode = 'additive'
 
 ThujuAttack.options = {}
