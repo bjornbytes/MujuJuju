@@ -123,6 +123,8 @@ end
 
 function Unit:update()
 
+  if not ctx.tutorial:shouldUpdateUnits() then return end
+
   -- For lerping
   self.prev.x = self.x
   self.prev.y = self.y
@@ -175,7 +177,7 @@ function Unit:update()
   end
 
   -- Health decay
-  if self.player then self:hurt(self.maxHealth * .02 * ls.tickrate, self, {'pure'}) end
+  if self.player and ctx.tutorial:shouldDecayHealth() then self:hurt(self.maxHealth * .02 * ls.tickrate, self, {'pure'}) end
 end
 
 function Unit:draw()
@@ -431,12 +433,14 @@ function Unit:initAnimation()
         self:abilityCall('die')
         self.buffs:die()
 
-        if not self.player or (self.player:hasShruju('relinquish') and love.math.random() < .5) then
+        if ctx.tutorial:shouldDropJuju() and (not self.player or (self.player:hasShruju('relinquish') and love.math.random() < .5)) then
           local juju = config.juju
           local minAmount = juju.minimum.base + (ctx.units.level ^ juju.minimum.exponent) * juju.minimum.coefficient
           local maxAmount = juju.maximum.base + (ctx.units.level ^ juju.maximum.exponent) * juju.maximum.coefficient
           local amount = love.math.random(minAmount, maxAmount) * (self.elite and config.elites.jujuModifier or 1)
           local jujus = love.math.random(1, 3)
+
+          if ctx.tutorial.active then jujus = 1 end
 
           if ctx.player:hasShruju('harvest') then amount = amount * 1.5 end
 

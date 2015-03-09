@@ -138,11 +138,13 @@ function View:draw()
   g.rectangle('fill', 0, fy + fh, w, h - (fy + fh))
   g.rectangle('fill', fx + fw, 0, w - (fx + fw), h)
 
-  local stats = g.getStats()
-  local str = 'fps: ' .. love.timer.getFPS() .. '\ndraw calls: ' .. stats.drawcalls .. '\ncanvas switches: ' .. stats.canvasswitches .. '\nvram: ' .. math.round((stats.texturememory / 1024) / 1024) .. 'MB\nimages: ' .. stats.images .. '\ncanvases: ' .. stats.canvases .. '\nfonts: ' .. stats.fonts
-  g.setColor(255, 255, 255)
-  g.setFont('mesmerize', 10)
-  g.printShadow(str, 0, 0)
+  if love.keyboard.isDown('`') then
+    local stats = g.getStats()
+    local str = 'fps: ' .. love.timer.getFPS() .. '\ndraw calls: ' .. stats.drawcalls .. '\ncanvas switches: ' .. stats.canvasswitches .. '\nvram: ' .. math.round((stats.texturememory / 1024) / 1024) .. 'MB\nimages: ' .. stats.images .. '\ncanvases: ' .. stats.canvases .. '\nfonts: ' .. stats.fonts
+    g.setColor(255, 255, 255)
+    g.setFont('mesmerize', 10)
+    g.printShadow(str, 0, 0)
+  end
 end
 
 function View:resize()

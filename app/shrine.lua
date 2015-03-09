@@ -10,7 +10,7 @@ Shrine.depth = -3.47
 
 function Shrine:init()
   self.x = ctx.map.width / 2
-	self.y = ctx.map.height - ctx.map.groundHeight - self.height - 7
+	self.y = ctx.map.height - ctx.map.groundHeight - self.height
 	self.health = self.maxHealth
   self.healthDisplay = self.health
   self.lastHurt = -math.huge
@@ -25,7 +25,9 @@ function Shrine:update()
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(math.lerp(2 * ls.tickrate, 1, 1 - (self.health / self.maxHealth)), 1))
 
   local p = ctx.player
-  self.highlight = math.lerp(self.highlight, p:atShrine() and 1 or 0, math.min((p:atShrine() and 10 or 5) * ls.tickrate, 1))
+  if ctx.tutorial:shouldHighlightShrine() then
+    self.highlight = math.lerp(self.highlight, p:atShrine() and 1 or 0, math.min((p:atShrine() and 10 or 5) * ls.tickrate, 1))
+  end
   self.hurtFactor = math.lerp(self.hurtFactor, (tick - self.lastHurt) * ls.tickrate < 5 and 1 or 0, math.min(4 * ls.tickrate, 1))
 
   if tick - self.lastHurt > 5 / ls.tickrate then
@@ -41,11 +43,11 @@ function Shrine:draw()
 
 	local scale = self.height / image:getHeight()
 	g.setColor(255, 255, 255)
-	g.draw(image, self.x + 10, self.y + self.height + 16, 0, scale, scale, image:getWidth() / 2, image:getHeight())
+	g.draw(image, self.x + 10, self.y + self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight())
 
 	g.setBlendMode('additive')
 	g.setColor(255, 255, 255, self.highlight * 100)
-	g.draw(image, self.x + 10, self.y + self.height + 16, 0, scale, scale, image:getWidth() / 2, image:getHeight())
+	g.draw(image, self.x + 10, self.y + self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight())
 	g.setColor(255, 255, 255, 255)
 	g.setBlendMode('alpha')
 end

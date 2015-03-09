@@ -38,7 +38,7 @@ function Manager:each(fn)
 end
 
 function Manager:filter(fn)
-  return table.filter(self.objects, fn)
+  return table.values(table.filter(self.objects, fn))
 end
 
 function Manager:count()

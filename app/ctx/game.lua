@@ -43,7 +43,8 @@ function Game:load(user, options, info)
   self.jujus = Jujus()
   self.achievements = Achievements(self.user)
 
-  if info.tutorial then self.tutorial = Tutorial() end
+  self.tutorial = Tutorial()
+  self.tutorial.active = info.tutorial
 
   Upgrades.clear()
 
@@ -67,6 +68,7 @@ function Game:update()
     self.units:paused()
     self.spells:paused()
     self.particles:update()
+    self.tutorial:update()
     return
   end
 
@@ -84,7 +86,7 @@ function Game:update()
   self.hud:update()
   self.effects:update()
   self.shrujus:update()
-  if self.tutorial then self.tutorial:update() end
+  self.tutorial:update()
 end
 
 function Game:unload()
@@ -109,7 +111,7 @@ function Game:keypressed(key)
   end
   self.hud:keypressed(key)
   self.players:keypressed(key)
-  if self.tutorial then self.tutorial:keypressed(key) end
+  self.tutorial:keypressed(key)
 end
 
 function Game:keyreleased(...)

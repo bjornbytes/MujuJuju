@@ -66,7 +66,7 @@ function Player:activate()
     end
   end)
 
-  self.animation.spine.skeleton:setSkin('santa')
+  self.animation.spine.skeleton:setSkin(ctx.user.hat or 'nohat')
   self.animation.spine.skeleton:findBone('hat').scaleX = self.animation.scale
   self.animation.spine.skeleton:findBone('hat').scaleY = self.animation.scale
 
@@ -97,7 +97,7 @@ function Player:update()
   if self.ghost then self.ghost:update() end
 
   -- Rots
-  self.deathTimer = timer.rot(self.deathTimer, function() self:spawn() end)
+  if ctx.tutorial:shouldDecayGhost() then self.deathTimer = timer.rot(self.deathTimer, function() self:spawn() end) end
   self.invincible = timer.rot(self.invincible)
 
   for i = 1, #self.deck do
@@ -119,7 +119,9 @@ function Player:update()
   end
 
   -- Health decay
-  self:hurt(self.maxHealth * .033 * ls.tickrate)
+  if ctx.tutorial:shouldDecayHealth() then
+    self:hurt(self.maxHealth * .033 * ls.tickrate)
+  end
 
   -- Lerp healthbar
   self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * ls.tickrate, 1))
@@ -152,7 +154,7 @@ function Player:keypressed(key)
   end
 
   -- Summon with space
-  if key == ' ' and not self.dead and not ctx.tutorial then
+  if key == ' ' and not self.dead and ctx.tutorial:shouldSummon() then
     self:summon()
   end
 
@@ -196,7 +198,7 @@ function Player:move()
 
   -- If we can't move then don't move
   local animation = self.animation.state.name
-  if self.dead or animation == 'summon' or animation == 'death' or animation == 'resurrect' then
+  if not ctx.tutorial:shouldPlayerMove() or self.dead or animation == 'summon' or animation == 'death' or animation == 'resurrect' then
     self.speed = 0
     return
   end
@@ -228,7 +230,7 @@ function Player:summon(options)
   local animation = self.animation.state.name
 
   -- Check if we can summon
-  if not options.force and not (not ctx.hud.upgrades.active and not ctx.paused and ctx.tutorial == nil and cooldown == 0 and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(cost)) then
+  if not options.force and not (not ctx.hud.upgrades.active and not ctx.paused and cooldown == 0 and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(cost)) then
     return ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
   end
 
@@ -281,6 +283,7 @@ function Player:spend(amount)
 end
 
 function Player:addJuju(amount)
+  if ctx.tutorial and ctx.tutorial.active then return end
   self.juju = self.juju + amount
   self.totalJuju = self.totalJuju + amount
 end

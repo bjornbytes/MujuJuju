@@ -100,6 +100,7 @@ function GhostPlayer:update()
 	if self.owner.deathDuration - self.owner.deathTimer < 1 then
 		scale = self.owner.deathDuration - self.owner.deathTimer
 	end
+  if ctx.tutorial.active then scale = 1 end
 	scale = .4 + scale * .4
 	self.radius = 40 * scale
   self.alpha = math.min(self.alpha + ls.tickrate, 1)
@@ -123,6 +124,7 @@ function GhostPlayer:draw()
 	if self.owner.deathDuration - self.owner.deathTimer < 1 then
 		scale = self.owner.deathDuration - self.owner.deathTimer
 	end
+  if ctx.tutorial.active then scale = 1 end
 	scale = .4 + scale * .4
 	local alphaScale = math.min(self.owner.deathTimer * 6 / self.owner.deathDuration, 1)
   local color = {128, 0, 255}

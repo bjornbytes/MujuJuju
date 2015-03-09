@@ -24,6 +24,8 @@ function HudStatus:init()
 end
 
 function HudStatus:update()
+  if not ctx.tutorial:shouldShowHudStatus() then return end
+
   for k in pairs(self.prev) do
     self.prev[k] = self[k]
   end
@@ -55,7 +57,7 @@ function HudStatus:update()
 end
 
 function HudStatus:draw()
-  if ctx.tutorial then return end
+  if not ctx.tutorial:shouldShowHudStatus() then return end
 
   local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.player
@@ -139,6 +141,8 @@ function HudStatus:draw()
 end
 
 function HudStatus:mousemoved(mx, my)
+  if not ctx.tutorial:shouldShowHudStatus() then return end
+
   local p = ctx.player
   self.jjpmHover = false
   if math.inside(mx, my, unpack(self.hitboxes.juju)) then

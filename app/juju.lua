@@ -16,6 +16,11 @@ function Juju:init(data)
 	self.alpha = 0
 	self.dead = false
 	table.merge(data, self)
+  if ctx.tutorial.active then
+    self.vx = 0
+    self.vy = -300
+    self.amount = 50
+  end
 end
 
 function Juju:update()
@@ -28,7 +33,7 @@ function Juju:update()
 		local tx, ty = 866, 18
 		self.x, self.y = math.lerp(self.x, tx, 10 * ls.tickrate), math.lerp(self.y, ty, 10 * ls.tickrate)
 		self.scale = math.lerp(self.scale, .1, 5 * ls.tickrate)
-		if math.distance(self.x, self.y, tx, ty) < 16 then
+		if math.distance(self.x, self.y, tx, ty) < 16 or ctx.tutorial.active then
 			ctx.jujus:remove(self)
       p:addJuju(self.amount)
       ctx.event:emit('juju.collected', {juju = self})
@@ -48,7 +53,7 @@ function Juju:update()
 	self.vy = math.lerp(self.vy, 0, 2 * ls.tickrate)
 	self.x = self.x + self.vx * ls.tickrate
 	self.y = self.y + self.vy * ls.tickrate
-	if self.vy > -.1 then
+	if self.vy > -.1 and ctx.tutorial:shouldFloatJuju() then
 		self.y = self.y - 10 * ls.tickrate
 	end
 

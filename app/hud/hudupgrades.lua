@@ -21,6 +21,7 @@ function HudUpgrades:update()
 end
 
 function HudUpgrades:keypressed(key)
+  if not ctx.tutorial:shouldAllowUpgradeToggling() then return end
   if key == 'tab' or key == 'e' then
     self.lastPress = tick
     self.active = not self.active
@@ -29,6 +30,7 @@ function HudUpgrades:keypressed(key)
 end
 
 function HudUpgrades:keyreleased(key)
+  if not ctx.tutorial:shouldAllowUpgradeToggling() then return end
   if key == 'tab' or key == 'e' or key == 'escape' then
     if (tick - self.lastPress) * ls.tickrate > self.maxTime then
       self.active = false

@@ -156,7 +156,7 @@ function HudHealth:debin(unit)
 end
 
 function HudHealth:draw()
-  if ctx.tutorial then return end
+  if not ctx.tutorial:shouldShowHealthbars() then return end
 
   local p = ctx.player
   local atlas = data.atlas.hud

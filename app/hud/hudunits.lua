@@ -152,7 +152,7 @@ function HudUnits:update()
 end
 
 function HudUnits:draw()
-  if ctx.ded then return end
+  if ctx.ded or not ctx.tutorial:shouldShowHudUnits() then return end
 
   local u, v = ctx.hud.u, ctx.hud.v
   local upgradeFactor, t = ctx.hud.upgrades:getFactor()
@@ -392,6 +392,7 @@ end
 
 function HudUnits:mousereleased(mx, my, b)
   if ctx.ded then return end
+  if not ctx.tutorial:shouldShowHudUnits() or not ctx.tutorial:shouldPurchaseUpgrade() then return end
   if b ~= 'l' then return end
 
   local p = ctx.player
@@ -435,6 +436,8 @@ function HudUnits:mousereleased(mx, my, b)
 end
 
 function HudUnits:mousemoved(mx, my)
+  if not ctx.tutorial:shouldShowHudUnits() then return end
+
   local p = ctx.player
 
   -- Attribute tooltips

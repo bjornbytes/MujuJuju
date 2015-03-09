@@ -49,7 +49,7 @@ function Units:createEnemy()
 end
 
 function Units:update()
-  if not ctx.tutorial then
+  if not ctx.tutorial.active then
     self.enemyCount = table.count(self:filter(function(u) return u.team == 0 end))
     self.nextEnemy = timer.rot(self.nextEnemy, f.cur(self.createEnemy, self))
 
