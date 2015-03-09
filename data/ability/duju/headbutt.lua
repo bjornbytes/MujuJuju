@@ -23,6 +23,11 @@ function Headbutt:activate()
           target:hurt(damage, self.unit, {'spell'})
         end
       end)
+
+      if self.unit.target then
+        local x, y = self.unit:attackParticlePosition(self.unit.target)
+        ctx.particles:emit(self.unit.class.code .. 'attack', x, y, self.unit.class.attackParticleCount or 5)
+      end
     end
   end)
 end

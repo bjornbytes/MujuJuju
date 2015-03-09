@@ -30,7 +30,7 @@ function Juju:update()
 	self.prevy = self.y
 
 	if self.dead then
-		local tx, ty = 866, 18
+		local tx, ty = 910, 18
 		self.x, self.y = math.lerp(self.x, tx, 10 * ls.tickrate), math.lerp(self.y, ty, 10 * ls.tickrate)
 		self.scale = math.lerp(self.scale, .1, 5 * ls.tickrate)
 		if math.distance(self.x, self.y, tx, ty) < 16 or ctx.tutorial.active then
@@ -54,7 +54,7 @@ function Juju:update()
 	self.x = self.x + self.vx * ls.tickrate
 	self.y = self.y + self.vy * ls.tickrate
 	if self.vy > -.1 and ctx.tutorial:shouldFloatJuju() then
-		self.y = self.y - 10 * ls.tickrate
+		self.y = self.y - 12 * ls.tickrate
 	end
 
   if love.math.random() < 3 * ls.tickrate then
@@ -74,13 +74,13 @@ function Juju:update()
     self.x = self.x + math.dx(speed, direction)
     self.y = self.y + math.dy(speed, direction)
 
-		if math.distance(ghost.x, ghost.y, self.x, self.y) < self.amount + ghost.radius then
+		if math.distance(ghost.x, ghost.y, self.x, self.y) < ghost.radius then
 			ctx.sound:play('juju1')
 			self.dead = true
 		end
 	end
 
-	if self.y < -self.scale * data.media.graphics.juju:getWidth() then
+	if self.y < -300 then
 		ctx.jujus:remove(self)
 	end
 

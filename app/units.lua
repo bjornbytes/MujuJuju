@@ -8,7 +8,7 @@ function Units:init()
   self.level = 0
   self.nextEnemy = 5
   self.enemyCount = 0
-  self.nextSpike = 5 * 60 / ls.tickrate
+  self.nextSpike = 10 * 60 / ls.tickrate
   table.merge(self.config, self)
 end
 
@@ -38,8 +38,8 @@ function Units:createEnemy()
       end
     end
 
-    self.minEnemyRate = math.max(self.minEnemyRate - self.minEnemyRateDecay * math.clamp((0.5 + self.minEnemyRate) / 10, .2, 1) ^ 1.5, 0.5)
-    self.maxEnemyRate = math.max(self.maxEnemyRate - self.maxEnemyRateDecay * math.clamp((1.0 + self.maxEnemyRate) / 10, .4, 1) ^ 1.5, 1.0)
+    self.minEnemyRate = math.max(self.minEnemyRate - self.minEnemyRateDecay * math.clamp((0.2 + self.minEnemyRate) / 8, .2, 1), 0.2)
+    self.maxEnemyRate = math.max(self.maxEnemyRate - self.maxEnemyRateDecay * math.clamp((0.2 + self.maxEnemyRate) / 8, .4, 1), 0.2)
     if self.maxEnemyRate < self.minEnemyRate then self.maxEnemyRate = self.minEnemyRate end
   else
     return .5
@@ -56,7 +56,7 @@ function Units:update()
     self.level = self.level + (ls.tickrate / 15) * self.levelScale
 
     if tick > self.nextSpike then
-      self.levelScale = self.levelScale * 1.5
+      self.levelScale = self.levelScale * 1.8
       self.nextSpike = self.nextSpike + (5 * 60 / ls.tickrate)
     end
   end

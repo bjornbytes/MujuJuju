@@ -43,8 +43,7 @@ function Game:load(user, options, info)
   self.jujus = Jujus()
   self.achievements = Achievements(self.user)
 
-  self.tutorial = Tutorial()
-  self.tutorial.active = info.tutorial
+  self.tutorial = Tutorial(info.tutorial)
 
   Upgrades.clear()
 
@@ -184,8 +183,8 @@ function Game:distribute()
     local maxLevel = config.runes.maxLevels[self.biome]
     local mu = 0
     if gold then mu = maxLevel
-    elseif silver then mu = maxLevel * .75
-    elseif bronze then mu = maxLevel * .25 end
+    elseif silver then mu = maxLevel * .8
+    elseif bronze then mu = maxLevel * .5 end
 
     local runeLevel = math.clamp(love.math.randomNormal(10, mu), 1, 100)
 
@@ -259,7 +258,7 @@ function Game:distribute()
   end
 
   -- Calculate highscores
-  if self.mode == 'surviva' and time > self.user.survival.bestTime then
+  if self.mode == 'survival' and time > self.user.survival.bestTime then
     self.user.survival.bestTime = time
     self.rewards.highscore = true
   end

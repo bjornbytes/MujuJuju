@@ -1,6 +1,6 @@
 local KujuAttackHit = class()
 KujuAttackHit.image = data.media.graphics.particles.linering
-KujuAttackHit.max = 256
+KujuAttackHit.max = 32
 KujuAttackHit.blendMode = 'additive'
 
 KujuAttackHit.options = {}

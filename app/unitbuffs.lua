@@ -219,6 +219,32 @@ function UnitBuffs:die()
   table.with(self.list, 'deactivate')
 end
 
+function UnitBuffs:emitParticles()
+
+  -- Frenzy particles
+  local frenzy = self:frenzied()
+  if frenzy and frenzy.frenzy > 0 then
+    for _, bone in pairs({'region_lefthand', 'region_righthand'}) do
+      bone = self.unit.animation.spine.skeleton:findBone(bone)
+      if bone then
+        local x, y = self.unit.animation.spine.skeleton.x + bone.worldX, self.unit.animation.spine.skeleton.y - bone.worldY
+        ctx.particles:emit('frenzy', x, y, 1)
+      end
+    end
+  end
+
+  -- Haste Particles
+  local haste = self:hasted()
+  if haste and haste.haste > 0 and love.math.random() < .3 then
+    ctx.particles:emit('haste', self.unit.x, ctx.map.height - ctx.map.groundHeight, 1, {direction = self.unit.animation.flipped and 0 or math.pi})
+  end
+
+  -- Slow Particles
+  if self:slowAmount() < 1 and love.math.random() < .3 then
+    ctx.particles:emit('slow', self.unit.x, ctx.map.height - ctx.map.groundHeight, 1, {direction = self.unit.animation.flipped and 0 or math.pi})
+  end
+end
+
 function UnitBuffs:slowed()
   return next(self:buffsWithTag('slow'))
 end
@@ -233,6 +259,10 @@ function UnitBuffs:slowAmount()
   if self:feared() then multiplier = multiplier / 2 end
 
   return multiplier
+end
+
+function UnitBuffs:hasted()
+  return next(self:buffsWithTag('haste'))
 end
 
 function UnitBuffs:taunted()
@@ -261,8 +291,7 @@ function UnitBuffs:ccImmunity()
 end
 
 function UnitBuffs:feared()
-  local fear = next(self:buffsWithTag('fear'))
-  return fear and fear.target
+  return next(self:buffsWithTag('fear'))
 end
 
 function UnitBuffs:potency()
@@ -271,4 +300,8 @@ function UnitBuffs:potency()
     ratio = ratio * potency.potency
   end)
   return ratio
+end
+
+function UnitBuffs:frenzied()
+  return next(self:buffsWithTag('frenzy'))
 end

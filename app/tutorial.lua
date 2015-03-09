@@ -2,7 +2,9 @@ local g = love.graphics
 local tween = require 'lib/deps/tween/tween'
 Tutorial = class()
 
-function Tutorial:init()
+function Tutorial:init(active)
+  self.active = active
+
   self.messages = {
     muju = 'This is Muju',
     move = 'You can move Muju with A and D',
@@ -79,9 +81,12 @@ function Tutorial:init()
   self.prevx, self.prevy = self.x, self.y
 
   self.moveTargetX = ctx.map.width * .62
-  ctx.player.x = ctx.map.width * .4
-  ctx.player.animation.flipped = true
-  ctx.player.juju = 100
+
+  if active then
+    ctx.player.x = ctx.map.width * .4
+    ctx.player.animation.flipped = true
+    ctx.player.juju = 100
+  end
 
   ctx.event:emit('view.register', {object = self, mode = 'gui'})
 end
@@ -130,7 +135,7 @@ function Tutorial:update()
   elseif self.message == 'resurrect' then
     x, y = ctx.view:screenPoint(ctx.player.x, ctx.player.y - 65)
   elseif self.message == 'status' then
-    x, y = u * .9, v * .1
+    x, y = u * .92, v * .1
   elseif self.message == 'hudminions' then
     x, y = u * .5, v * .25
   elseif self.message == 'cost' then

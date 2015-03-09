@@ -240,7 +240,7 @@ function MenuMap:isLocked(biome)
     tundra = 'cavern',
     volcano = 'tundra'
   }
-  return not ctx.user.campaign.medals[prevs[biome]].gold
+  return not ctx.user.campaign.medals[prevs[biome]].silver
 end
 
 function MenuMap:getHitbox(biome)

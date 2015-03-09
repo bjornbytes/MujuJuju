@@ -182,6 +182,7 @@ function MenuCampaign:draw()
   local atlas = data.atlas.hud
   local minion = config.biomes[self.biome].minion
 
+  -- Medals and rewards
   local detailsAlpha = 255
   local biome = self.biome
   local midx = self.geometry.play[1] + self.geometry.play[3] / 2
@@ -202,11 +203,6 @@ function MenuCampaign:draw()
       g.setColor(achieved and {255, 255, 255} or {0, 0, 0})
       g.draw(atlas.texture, atlas.quads.runeBgBroken, medalX, medalY + .14 * v, 0, scale, scale, qw / 2, qh / 2)
     elseif benchmark == 'silver' then
-      local image = data.media.graphics.hats.santa
-      local scale = (medalSize * 2 + (.02 * v) * math.sin(tick / 10) / 8) / image:getWidth()
-      g.setColor(achieved and {255, 255, 255} or {0, 0, 0})
-      g.draw(image, medalX, medalY + .14 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-    elseif benchmark == 'gold' then
       local nextMinions = {
         forest = 'xuju',
         cavern = 'kuju',
@@ -232,6 +228,11 @@ function MenuCampaign:draw()
         g.setColor(255, 255, 255)
         g.draw(ctx.unitCanvas, medalX, medalY + .17 * v, 0, scale, scale, cw / 2, ch / 2)
       end
+    elseif benchmark == 'gold' then
+      local image = data.media.graphics.hats.santa
+      local scale = (medalSize * 2 + (.02 * v) * math.sin(tick / 10) / 8) / image:getWidth()
+      g.setColor(achieved and {255, 255, 255} or {0, 0, 0})
+      g.draw(image, medalX, medalY + .14 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     end
 
     if not achieved then
@@ -273,7 +274,7 @@ function MenuCampaign:draw()
         for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
           lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
-        g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5)
+        g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
       end
     end
   end
@@ -374,7 +375,7 @@ function MenuCampaign:draw()
         lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
 
-      g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5)
+      g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
     end
   end
 

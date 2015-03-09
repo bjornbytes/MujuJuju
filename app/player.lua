@@ -52,6 +52,8 @@ function Player:init()
   self.cooldownSpeed = 1
   self.buffs = PlayerBuffs(self)
 
+  self.footstepIndex = 0
+
   -- joystick
   self.joystick = #love.joystick.getJoysticks() > 0 and love.joystick.getJoysticks()[1]
 end
@@ -63,6 +65,18 @@ function Player:activate()
   self.animation:on('complete', function(data)
     if data.state.name ~= 'death' and not data.state.loop then
       self.animation:set('idle', {force = true})
+    end
+  end)
+  self.animation:on('event', function(event)
+    if event.data.name == 'stepone' or event.data.name == 'steptwo' then
+      if self.footstepIndex < 2 then
+        self.footstepIndex = self.footstepIndex + 1
+      else
+        ctx.sound:play('footstep' .. love.math.random(1, 2), function(sound)
+          sound:setPitch(.9 + love.math.random() * .3)
+          sound:setVolume(.6)
+        end)
+      end
     end
   end)
 
@@ -212,6 +226,7 @@ function Player:move()
     self.speed = math.lerp(self.speed, maxSpeed, math.min(10 * ls.tickrate, 1))
   else
     self.speed = math.lerp(self.speed, 0, math.min(10 * ls.tickrate, 1))
+    self.footstepIndex = 0
   end
 
   -- Actually move
@@ -298,7 +313,7 @@ function Player:hurt(amount, source, kind)
 
     if amount > 5 then
       local sound = data.media.sounds['hit' .. love.math.random(1, 3)]
-      ctx.sound:play(sound)
+      ctx.sound:play(sound, function(sound) sound:setVolume(.75) end)
     end
 
     -- Die if we are dead

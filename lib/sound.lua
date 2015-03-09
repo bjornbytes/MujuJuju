@@ -7,6 +7,7 @@ function Sound:init(options)
   self.volumes = {master = options.master or 1.0, music = options.music or 1.0, sound = options.sound or 1.0}
 	self.sounds = {}
   self.tags = {sound = setmetatable({}, {__mode = 'kv'}), music = setmetatable({}, {__mode = 'kv'})}
+  self.baseVolumes = setmetatable({}, {__mode = 'k'})
 
   if ctx.event then
     ctx.event:on('sound.play', f.cur(self.play, self))
@@ -30,6 +31,7 @@ function Sound:play(sound, cb)
   local tag = isMusic and 'music' or 'sound'
   self.tags[tag] = self.tags[tag] or {}
   self.tags[tag][sound] = sound
+  self.baseVolumes[sound] = sound:getVolume()
   self:refreshVolumes()
   return sound
 end
@@ -56,10 +58,10 @@ end
 
 function Sound:refreshVolumes()
   table.each(self.tags.music, function(sound)
-    sound:setVolume(self.muted and 0 or self.volumes.master * self.volumes.music)
+    sound:setVolume(self.muted and 0 or self.volumes.master * self.volumes.music * (self.baseVolumes[sound] or 1))
   end)
 
   table.each(self.tags.sound, function(sound)
-    sound:setVolume(self.muted and 0 or self.volumes.master * self.volumes.sound)
+    sound:setVolume(self.muted and 0 or self.volumes.master * self.volumes.sound * (self.baseVolumes[sound] or 1))
   end)
 end

@@ -45,7 +45,7 @@ if love.graphics then
     f(what, x, y)
   end
 
-  function g.drawRune(rune, x, y, stoneSize, runeSize)
+  function g.drawRune(rune, x, y, stoneSize, runeSize, glow)
     if not rune then return end
 
     local atlas = data.atlas.hud
@@ -57,11 +57,25 @@ if love.graphics then
     g.setColor(255, 255, 255)
     g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
 
+    if glow then
+      g.setBlendMode('additive')
+      g.setColor(255, 255, 255, 80)
+      g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
+      g.setBlendMode('alpha')
+    end
+
     -- Rune
     local quad = 'rune' .. rune.image
     local w, h = atlas:getDimensions(quad)
     local scale = runeSize / h
     g.setColor(config.runes.colors[rune.color])
     g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
+
+    if glow then
+      g.setBlendMode('additive')
+      g.setColor(255, 255, 255, 80)
+      g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
+      g.setBlendMode('alpha')
+    end
   end
 end

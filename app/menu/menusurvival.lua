@@ -267,7 +267,7 @@ function MenuSurvival:draw()
           lerpd[k] = math.lerp(self.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
         h = lerpd.size
-        g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5)
+        g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
       end
     end
   end
@@ -319,7 +319,7 @@ function MenuSurvival:draw()
         for k, v in pairs(self.runeTransforms[rune]) do
           lerpd[k] = math.lerp(self.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
-        g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5)
+        g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
       end
     end
   end
@@ -374,7 +374,7 @@ function MenuSurvival:draw()
           for k, v in pairs(ctx.survival.runeTransforms[rune]) do
             lerpd[k] = math.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
           end
-          g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5)
+          g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
         end
       end
     end
