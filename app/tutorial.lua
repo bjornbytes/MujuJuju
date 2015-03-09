@@ -135,7 +135,7 @@ function Tutorial:update()
   elseif self.message == 'resurrect' then
     x, y = ctx.view:screenPoint(ctx.player.x, ctx.player.y - 65)
   elseif self.message == 'status' then
-    x, y = u * .9, v * .1
+    x, y = u * .92, v * .1
   elseif self.message == 'hudminions' then
     x, y = u * .5, v * .25
   elseif self.message == 'cost' then

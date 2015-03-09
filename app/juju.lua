@@ -30,7 +30,7 @@ function Juju:update()
 	self.prevy = self.y
 
 	if self.dead then
-		local tx, ty = 866, 18
+		local tx, ty = 910, 18
 		self.x, self.y = math.lerp(self.x, tx, 10 * ls.tickrate), math.lerp(self.y, ty, 10 * ls.tickrate)
 		self.scale = math.lerp(self.scale, .1, 5 * ls.tickrate)
 		if math.distance(self.x, self.y, tx, ty) < 16 or ctx.tutorial.active then

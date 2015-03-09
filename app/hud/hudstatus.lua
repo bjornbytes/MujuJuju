@@ -73,13 +73,13 @@ function HudStatus:draw()
   local scale = v * .07 / image:getHeight()
   local width, height = 425 * scale, 60 * scale
   g.setColor(255, 255, 255)
-  g.draw(image, u, 0, 0, scale, scale, image:getWidth(), 0)
+  g.draw(image, u + .05 * u, 0, 0, scale, scale, image:getWidth(), 0)
 
   -- Juju Icon
   local image = data.media.graphics.juju
   local scale = (height * .6) / image:getHeight()
   local s = scale * lerpd.jujuScale
-  local xx = u - width + (v * .035) + image:getWidth() / 2 * scale
+  local xx = u - width + (v * .035) + image:getWidth() / 2 * scale + .05 * u
   local hitboxX = xx - image:getWidth() / 2 * scale
   g.draw(image, xx, height / 2, lerpd.jujuAngle, s, s, image:getWidth() / 2, image:getHeight() / 2)
 
@@ -94,11 +94,11 @@ function HudStatus:draw()
   self.hitboxes.juju[3] = hitboxWidth
   self.hitboxes.juju[4] = height
 
-  xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .05)
+  xx = xx + math.max(v * .06, g.getFont():getWidth(str)) + (v * .07)
   local hitboxX = xx
 
   -- Population Icon
-  local image = data.media.graphics.hud.population
+  --[[local image = data.media.graphics.hud.population
   local scale = (height * .6) / image:getHeight()
   local s = scale * lerpd.populationScale
   xx = xx + image:getWidth() / 2 * scale
@@ -119,7 +119,7 @@ function HudStatus:draw()
 
   xx = xx + math.max(v * .05, g.getFont():getWidth(str)) + (v * .04)
   local hitboxX = xx
-  g.setColor(255, 255, 255)
+  g.setColor(255, 255, 255)]]
 
   -- Timer Icon
   local image = self.clockIcon
@@ -149,7 +149,7 @@ function HudStatus:mousemoved(mx, my)
     self.jjpmHover = true
     ctx.hud.tooltip:setTooltip('{white}{title}Juju{normal}\n{whoCares}Use it to summon minions and purchase upgrades.  Collect it in the juju realm.\n\n{green}' .. p.totalJuju .. ' {white}total juju ({green}' .. self.jjpm .. ' {white}per minute)')
   elseif math.inside(mx, my, unpack(self.hitboxes.population)) then
-    ctx.hud.tooltip:setTooltip('{white}{title}Population{normal}\n{whoCares}The maximum number of minions you may summon at once.\n\n{green}' .. p.totalSummoned .. ' {white}minion' .. (p.totalSummoned == 1 and '' or 's') .. ' summoned.')
+    --ooltip('{white}{title}Population{normal}\n{whoCares}The maximum number of minions you may summon at once.\n\n{green}' .. p.totalSummoned .. ' {white}minion' .. (p.totalSummoned == 1 and '' or 's') .. ' summoned.')
   elseif math.inside(mx, my, unpack(self.hitboxes.timer)) then
     local str = ''
     local time = ctx.timer * ls.tickrate

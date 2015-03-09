@@ -258,7 +258,7 @@ function Game:distribute()
   end
 
   -- Calculate highscores
-  if self.mode == 'surviva' and time > self.user.survival.bestTime then
+  if self.mode == 'survival' and time > self.user.survival.bestTime then
     self.user.survival.bestTime = time
     self.rewards.highscore = true
   end
