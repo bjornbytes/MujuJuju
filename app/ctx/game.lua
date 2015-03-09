@@ -183,7 +183,7 @@ function Game:distribute()
     local maxLevel = config.runes.maxLevels[self.biome]
     local mu = 0
     if gold then mu = maxLevel
-    elseif silver then mu = maxLevel * .75
+    elseif silver then mu = maxLevel * .8
     elseif bronze then mu = maxLevel * .5 end
 
     local runeLevel = math.clamp(love.math.randomNormal(10, mu), 1, 100)
