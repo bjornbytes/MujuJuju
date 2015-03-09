@@ -37,7 +37,7 @@ function Player:init()
   self.totalJuju = 0
   self.jujuTimer = config.player.jujuRate
   self.jujuRate = config.player.jujuRate
-  self:addJuju(config.player.baseJuju + 300)
+  self:addJuju(config.player.baseJuju)
 
   -- The current magic shruju
   self.shruju = nil

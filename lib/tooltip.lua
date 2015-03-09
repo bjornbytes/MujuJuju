@@ -102,7 +102,7 @@ function Tooltip:setTooltip(str)
     g.setCanvas()
     g.setShader()
 
-    ctx.sound:play('menuHover')
+    ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
   end
 
   self.active = true

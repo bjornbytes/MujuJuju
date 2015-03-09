@@ -37,6 +37,7 @@ end
 function Button:mousereleased(mx, my, b)
   if b == 'l' and self.gooey.hot == self and self:contains(mx, my) and not self.disabled then
     self:emit('click')
+    ctx.sound:play('juju1', function(sound) sound:setPitch(1) end)
   end
 end
 
@@ -55,14 +56,12 @@ function Button:render()
   local bgy = y + h
   local yscale = h / button:getHeight()
   g.setColor(255, 255, 255)
-  --g.draw(image, x, bgy, 0, w, yscale, 0, image:getHeight())
   g.setColor(0, 0, 0, 85)
   g.rectangle('fill', x, y, w, h)
 
   local fade = math.lerp(self.prevHoverFade, self.hoverFade, ls.accum / ls.tickrate)
   g.setColor(0, 0, 0, 200)
   g.setLineWidth(2)
-  --g.rectangle('line', math.round(x) + .5, math.round(y) + .5, w, h)
   local xx, yy = math.round(x) + .5, math.round(y) + .5
   w, h = math.floor(w), math.floor(h)
   g.line(xx, yy + h, xx + w, yy + h)
@@ -75,13 +74,11 @@ function Button:render()
       self.hoverY = my
       local d = math.distance
       self.hoverDistance = math.max(d(mx, my, x, y), d(mx, my, x + w, y), d(mx, my, x, y + h), d(mx, my, x + w, y + h))
-      ctx.sound:play('menuHover')
+      ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
     end
 
     g.setColor(255, 255, 255)
     g.setStencil(function()
-      --local y = active and y + diff * yscale or y
-      --local h = active and h - diff * yscale or h - diff * yscale
       g.rectangle('fill', x, y, w, h)
     end)
 
@@ -91,11 +88,6 @@ function Button:render()
     g.circle('fill', self.hoverX, self.hoverY, factor * self.hoverDistance)
     g.setBlendMode('alpha')
 
-    --[[g.setColor(255, 255, 255, 10)
-    g.setBlendMode('subtractive')
-    g.circle('fill', self.hoverX, self.hoverY, (factor ^ 2) * self.hoverDistance)
-    g.setBlendMode('alpha')]]
-
     g.setStencil()
 
     self.hoverActive = true
@@ -104,14 +96,11 @@ function Button:render()
   end
 
   -- Text
-  --if active then y = y + diff * yscale end
   if active then y = y + 2 end
   g.setFont('mesmerize', h * .55)
   g.setColor(0, 0, 0, 100)
-  --g.printCenter(text, x + w / 2 + 1, y + (h - diff * yscale) / 2 + 1)
   g.printCenter(text, x + w / 2 + 1, y + h / 2 + 1)
   g.setColor(255, 255, 255)
-  --g.printCenter(text, x + w / 2, y + (h - diff * yscale) / 2)
   g.printCenter(text, x + w / 2, y + h / 2)
 end
 
