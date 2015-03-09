@@ -417,6 +417,7 @@ return {
       }
     },
     tundra = {
+      level = 10,
       minEnemyRate = 9,
       maxEnemyRate = 11,
       minEnemyRateDecay = .01,
@@ -425,7 +426,7 @@ return {
       levelScale = .95,
       maxElites = 2,
       maxEliteBuffCount = 2,
-      eliteLevelThreshold = 50,
+      eliteLevelThreshold = 60,
       types = {
         vuju = 300,
         spuju = 0,
@@ -433,7 +434,7 @@ return {
       }
     },
     volcano = {
-      level = 40,
+      level = 30,
       minEnemyRate = 9,
       maxEnemyRate = 11,
       minEnemyRateDecay = .01,
