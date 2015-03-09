@@ -224,7 +224,7 @@ Bruju.upgrades = {
     y = 3,
     connectedTo = {'eruption'},
     values = {
-      [1] = '30% of the damage heals.',
+      [1] = '50% of the damage heals.',
     }
   },
 

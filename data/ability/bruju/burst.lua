@@ -16,7 +16,7 @@ function Burst:die()
 
   local damage = self.runeDamage + damages[burst] + self.spiritRatio * self.unit.spirit
   local range = self.runeRange + self.ranges[eruption]
-  local heal = sanctuary > 0 and damage * .3 or 0
+  local heal = sanctuary > 0 and damage * .5 or 0
 
   self:createSpell({
     damage = damage,
