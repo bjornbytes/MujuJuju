@@ -184,7 +184,7 @@ function Game:distribute()
     local mu = 0
     if gold then mu = maxLevel
     elseif silver then mu = maxLevel * .75
-    elseif bronze then mu = maxLevel * .25 end
+    elseif bronze then mu = maxLevel * .5 end
 
     local runeLevel = math.clamp(love.math.randomNormal(10, mu), 1, 100)
 
