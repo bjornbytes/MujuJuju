@@ -38,8 +38,8 @@ function Units:createEnemy()
       end
     end
 
-    self.minEnemyRate = math.max(self.minEnemyRate - self.minEnemyRateDecay * math.clamp((0.2 + self.minEnemyRate) / 10, .2, 1), 0.2)
-    self.maxEnemyRate = math.max(self.maxEnemyRate - self.maxEnemyRateDecay * math.clamp((0.2 + self.maxEnemyRate) / 10, .4, 1), 0.2)
+    self.minEnemyRate = math.max(self.minEnemyRate - self.minEnemyRateDecay * math.clamp((0.2 + self.minEnemyRate) / 8, .2, 1), 0.2)
+    self.maxEnemyRate = math.max(self.maxEnemyRate - self.maxEnemyRateDecay * math.clamp((0.2 + self.maxEnemyRate) / 8, .4, 1), 0.2)
     if self.maxEnemyRate < self.minEnemyRate then self.maxEnemyRate = self.minEnemyRate end
   else
     return .5
