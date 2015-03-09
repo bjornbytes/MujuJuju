@@ -201,7 +201,7 @@ function HudHealth:draw()
         -- Frame
         local alpha = (.5 + (false and .5 or 0)) * unit.alpha
         local framey = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], ls.accum / ls.tickrate)
-        self.spriteBatch:setColor(255, 255, 255, 120 * alpha)
+        self.spriteBatch:setColor(255, 255, 255, 160 * alpha)
         self.spriteBatch:add(atlas.quads.healthbarFrame, xx, framey, 0, scale, scale)
 
         -- Bar

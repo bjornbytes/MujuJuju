@@ -107,7 +107,7 @@ function Unit:activate()
   self:aiCall('activate')
 
   -- Misc
-  if ctx.player:hasShruju('mirror') and not self.player then
+  if ctx.player:hasShruju('mirror') and then
     self.buffs:add('mirror')
   end
 

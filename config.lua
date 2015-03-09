@@ -142,12 +142,12 @@ return {
   juju = {
     minimum = {
       base = 20,
-      exponent = .75,
+      exponent = .7,
       coefficient = 1
     },
     maximum = {
       base = 30,
-      exponent = .75,
+      exponent = .7,
       coefficient = 1.2
     }
   },
@@ -387,11 +387,11 @@ return {
 
   enemies = {
     forest = {
-      minEnemyRate = 10,
-      maxEnemyRate = 12,
-      minEnemyRateDecay = .04,
-      maxEnemyRateDecay = .04,
-      maxEnemiesCoefficient = .1,
+      minEnemyRate = 9,
+      maxEnemyRate = 11,
+      minEnemyRateDecay = .02,
+      maxEnemyRateDecay = .03,
+      maxEnemiesCoefficient = .08,
       levelScale = .75,
       maxElites = 1,
       maxEliteBuffCount = 1,
@@ -402,11 +402,11 @@ return {
       }
     },
     cavern = {
-      minEnemyRate = 8,
-      maxEnemyRate = 10,
-      minEnemyRateDecay = .03,
+      minEnemyRate = 9,
+      maxEnemyRate = 11,
+      minEnemyRateDecay = .02,
       maxEnemyRateDecay = .03,
-      maxEnemiesCoefficient = .1,
+      maxEnemiesCoefficient = .08,
       levelScale = .85,
       maxElites = 1,
       maxEliteBuffCount = 2,
@@ -418,11 +418,11 @@ return {
     },
     tundra = {
       level = 20,
-      minEnemyRate = 8,
-      maxEnemyRate = 10,
-      minEnemyRateDecay = .03,
+      minEnemyRate = 9,
+      maxEnemyRate = 11,
+      minEnemyRateDecay = .02,
       maxEnemyRateDecay = .03,
-      maxEnemiesCoefficient = .12,
+      maxEnemiesCoefficient = .08,
       levelScale = 1.1,
       maxElites = 2,
       maxEliteBuffCount = 3,
@@ -435,11 +435,11 @@ return {
     },
     volcano = {
       level = 40,
-      minEnemyRate = 10,
-      maxEnemyRate = 12,
+      minEnemyRate = 9,
+      maxEnemyRate = 11,
       minEnemyRateDecay = .02,
-      maxEnemyRateDecay = .02,
-      maxEnemiesCoefficient = .02,
+      maxEnemyRateDecay = .03,
+      maxEnemiesCoefficient = .08,
       levelScale = 2,
       maxElites = 3,
       maxEliteBuffCount = 4,
