@@ -219,12 +219,12 @@ Bruju.upgrades = {
     prerequisites = {burst = 1, eruption = 1},
     levelRequirement = 15,
     name = 'Sanctuary',
-    description = 'Burst also heals allies for half the damage dealt.',
+    description = 'Burst also heals allies for a portion of the damage dealt.',
     x = 0,
     y = 3,
     connectedTo = {'eruption'},
     values = {
-      [1] = '50% of the damage heals.',
+      [1] = '30% of the damage heals.',
     }
   },
 
