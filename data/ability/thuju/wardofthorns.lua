@@ -28,9 +28,11 @@ function WardOfThorns:prehurt(amount, source, kind)
     if melee then
       source:hurt(amount * reflect, self.unit)
       applyVigor()
+      ctx.particles:emit('damagereflect', self.unit.x, self.unit.y, 8)
     elseif self.unit:upgradeLevel('briarlance') > 0 then
       source:hurt(amount * reflect * .75, self.unit)
       applyVigor()
+      ctx.particles:emit('damagereflect', self.unit.x, self.unit.y, 8)
     end
   end
 end

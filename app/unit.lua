@@ -191,16 +191,24 @@ function Unit:draw()
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = noupdate})
 
   -- Fear icon
+  local buffY = self.y - self.height - 35
   if self.buffs:feared() then
-    g.setColor(255, 255, 255, 150 * lerpd.alpha)
+    local fear = self.buffs:feared()
+    g.setColor(255, 255, 255, 150 * lerpd.alpha * math.min(fear.timer * 2, 1))
     local image = data.media.graphics.spell.fear
     local scale = (40 / image:getHeight()) * (1 + math.cos(math.sin(tick) / 3) / 5)
-    g.draw(image, self.x, self.y - self.height - 35, math.cos(tick / 3) / 6, scale, scale, 53, 83)
+    g.draw(image, self.x, buffY, math.cos(tick / 3) / 6, scale, scale, 53, 83)
+    buffY = buffY - 50
   end
 
   -- Stun icon
   if self.buffs:stunned() then
-
+    local stun = self.buffs:stunned()
+    g.setColor(255, 255, 255, 150 * lerpd.alpha * math.min(stun.timer * 2, 1))
+    local image = data.media.graphics.spell.stun
+    local scale = (30 / image:getHeight())
+    g.draw(image, self.x, buffY, tick / 8, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+    buffY = buffY - 30
   end
 end
 
