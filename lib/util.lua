@@ -59,7 +59,7 @@ if love.graphics then
 
     if glow then
       g.setBlendMode('additive')
-      g.setColor(255, 255, 255, 60)
+      g.setColor(255, 255, 255, 80)
       g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
       g.setBlendMode('alpha')
     end
@@ -73,7 +73,7 @@ if love.graphics then
 
     if glow then
       g.setBlendMode('additive')
-      g.setColor(255, 255, 255, 60)
+      g.setColor(255, 255, 255, 80)
       g.draw(atlas.texture, atlas.quads[quad], x, y, 0, scale, scale, w / 2, h / 2)
       g.setBlendMode('alpha')
     end
