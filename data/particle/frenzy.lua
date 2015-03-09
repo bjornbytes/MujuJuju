@@ -1,12 +1,12 @@
-local DamageReflect = class()
-DamageReflect.image = data.media.graphics.particles.softCircle
-DamageReflect.max = 256
-DamageReflect.blendMode = 'additive'
+local Frenzy = class()
+Frenzy.image = data.media.graphics.particles.softCircle
+Frenzy.max = 256
+Frenzy.blendMode = 'additive'
 
-DamageReflect.options = {}
-DamageReflect.options.particleLifetime = {.4}
-DamageReflect.options.colors = {{255, 255, 220, 20}, {255, 255, 220, 0}}
-DamageReflect.options.sizes = {.4, .3}
-DamageReflect.options.areaSpread = {'normal', 2, 2}
+Frenzy.options = {}
+Frenzy.options.particleLifetime = {.4}
+Frenzy.options.colors = {{255, 255, 220, 20}, {255, 255, 220, 0}}
+Frenzy.options.sizes = {.4, .3}
+Frenzy.options.areaSpread = {'normal', 2, 2}
 
-return DamageReflect
+return Frenzy

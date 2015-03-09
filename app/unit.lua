@@ -155,16 +155,8 @@ function Unit:update()
 
   -- Update buffs
   self.buffs:update()
-  if self.buffs:frenzied() then
-    for _, bone in pairs({'region_lefthand', 'region_righthand'}) do
-      bone = self.animation.spine.skeleton:findBone(bone)
-      if bone then
-        local x, y = self.animation.spine.skeleton.x + bone.worldX, self.animation.spine.skeleton.y - bone.worldY
-        ctx.particles:emit('frenzy', x, y, 1)
-      end
-    end
-  end
 
+  self.buffs:emitParticles()
   -- Update AI
   if not self.spawning and not self.casting and not self.channeling then
     self:aiCall('update')
