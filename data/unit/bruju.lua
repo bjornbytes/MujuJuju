@@ -30,11 +30,11 @@ Bruju.upgrades = {
     x = -1,
     y = 0,
     values = {
-      [1] = '10% lifesteal',
-      [2] = '15% lifesteal',
-      [3] = '20% lifesteal',
-      [4] = '25% lifesteal',
-      [5] = '30% lifesteal',
+      [1] = '8% lifesteal',
+      [2] = '12% lifesteal',
+      [3] = '16% lifesteal',
+      [4] = '20% lifesteal',
+      [5] = '24% lifesteal',
     },
     bonuses = function()
       return data.ability.bruju.siphon:bonuses()
