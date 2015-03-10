@@ -193,12 +193,12 @@ Thuju.upgrades = {
     prerequisites = {fissure = 1},
     levelRequirement = 15,
     name = 'Staggering Entry',
-    description = 'Thuju has a 50% chance to cast tremor when he spawns at no cooldown.',
+    description = 'Thuju has a 50% chance to cast tremor at no cooldown when he spawns.',
     x = 1,
     y = 2,
     connectedTo = {'fissure'},
     values = {
-      [1] = '100% awesomeness',
+      [1] = '50% chance, 100% awesomeness',
     }
   },
 

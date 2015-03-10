@@ -30,9 +30,9 @@ Xuju.upgrades = {
     x = -1,
     y = 0,
     values = {
-      [1] = '200 range, 10 second cooldown',
-      [2] = '250 range, 8 second cooldown',
-      [3] = '300 range, 6 second cooldown'
+      [1] = '100 range, 12 second cooldown',
+      [2] = '200 range, 8 second cooldown',
+      [3] = '300 range, 4 second cooldown'
     },
     apply = function(self, unit)
       if self.level > 0 then

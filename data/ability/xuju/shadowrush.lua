@@ -1,6 +1,6 @@
 local ShadowRush = extend(Ability)
-ShadowRush.ranges = {200, 250, 300}
-ShadowRush.cooldowns = {10, 8, 6}
+ShadowRush.ranges = {100, 200, 300}
+ShadowRush.cooldowns = {12, 8, 4}
 
 function ShadowRush:update()
   local level = self.unit:upgradeLevel('shadowrush')
