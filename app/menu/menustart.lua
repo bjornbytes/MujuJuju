@@ -25,9 +25,10 @@ function MenuStart:init()
 
     tutorial = function()
       local u, v = ctx.u, ctx.v
+      local sx, sy, sw, sh = unpack(self.geometry.campaign)
       local w = u * .12
       local h = w * .28
-      return {u - w - v * .01, v - h - v * .01, w, h}
+      return {u * .5 - w / 2, sy + (sh + v * .01) * 2, w, h}
     end,
 
     options = function()
@@ -35,7 +36,7 @@ function MenuStart:init()
       local sx, sy, sw, sh = unpack(self.geometry.campaign)
       local w = u * .12
       local h = w * .28
-      return {u * .5 - sw / 2, sy + (sh + v * .01) * 2, w, h}
+      return {u * .5 - w * 1.5 - v * .01, sy + (sh + v * .01) * 2, w, h}
     end,
 
     quit = function()
@@ -43,7 +44,7 @@ function MenuStart:init()
       local sx, sy, sw, sh = unpack(self.geometry.campaign)
       local w = u * .12
       local h = w * .28
-      return {u * .5 + v * .01 - 1, sy + (sh + v * .01) * 2, w, h}
+      return {u * .5 + v * .01 - 1 + w * .5, sy + (sh + v * .01) * 2, w, h}
     end
   }
 
