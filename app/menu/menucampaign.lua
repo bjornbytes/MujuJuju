@@ -506,6 +506,8 @@ function MenuCampaign:mousereleased(mx, my, b)
         elseif b == 'r' then
           ctx.user.hat = nil
         end
+
+        saveUser(ctx.user)
       end
     end
   end
