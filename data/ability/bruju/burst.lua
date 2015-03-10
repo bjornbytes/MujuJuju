@@ -46,6 +46,7 @@ function Burst:bonuses()
   if self.runeRange > 0 then
     table.insert(bonuses, {'Runes', math.round(self.runeRange), 'range'})
   end
+
   return bonuses
 end
 

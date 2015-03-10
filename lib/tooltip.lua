@@ -193,6 +193,8 @@ function Tooltip:setUpgradeTooltip(who, what)
     end
   end
 
+  table.insert(pieces, '')
+
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

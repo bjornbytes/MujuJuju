@@ -32,7 +32,7 @@ function FrozenOrb:bonuses()
   local frozenorb = data.unit.kuju.upgrades.frozenorb.level
 
   local spirit = Unit.getStat('kuju', 'spirit')
-  if spirit > 0 and frozenorb > 0 then
+  if spirit > 0 then
     table.insert(bonuses, {'Spirit', math.round(spirit * self.spiritRatios[frozenorb]), 'damage'})
   end
 

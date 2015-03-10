@@ -50,15 +50,15 @@ Kuju.upgrades = {
     maxLevel = 5,
     costs = {100, 150, 200, 250, 300},
     name = 'Shiver Armor',
-    description = 'Kuju enchants Muju\'s robes with powerful cold magic for a period of time.  Whenever Muju is struck, he deals damage to the attacker.  10 second cooldown.',
+    description = 'Kuju passively enchants Muju\'s robes with powerful cold magic.  Whenever Muju is struck, he deals damage to the attacker.',
     x = 0,
     y = 0,
     values = {
-      [1] = '15 damage, 4 second duration',
-      [2] = '30 damage, 5 second duration',
-      [3] = '45 damage, 6 second duration',
-      [4] = '60 damage, 7 second duration',
-      [5] = '75 damage, 8 second duration',
+      [1] = '15 damage',
+      [2] = '30 damage',
+      [3] = '45 damage',
+      [4] = '60 damage',
+      [5] = '75 damage',
     },
     bonuses = function()
       return data.ability.kuju.shiverarmor:bonuses()
@@ -98,7 +98,7 @@ Kuju.upgrades = {
   shatter = {
     level = 0,
     maxLevel = 1,
-    costs = {350},
+    costs = {200},
     prerequisites = {frozenorb = 1},
     name = 'Shatter',
     description = 'Frozen Orb shatters on contact, damaging and chilling enemies behind the original target at 50% effectiveness.',
@@ -138,7 +138,7 @@ Kuju.upgrades = {
   tundra = {
     level = 0,
     maxLevel = 1,
-    costs = {350},
+    costs = {200},
     prerequisites = {frostbite = 1},
     name = 'Tundra',
     description = 'The area of effect of frostbite is doubled.',
@@ -153,7 +153,7 @@ Kuju.upgrades = {
   avalanche = {
     level = 0,
     maxLevel = 1,
-    costs = {350},
+    costs = {300},
     prerequisites = {shatter = 1},
     name = 'Avalanche',
     description = 'Frozen Orb is conjured with the force of an avalanche, knocking enemies back.',
@@ -179,7 +179,7 @@ Kuju.upgrades = {
     costs = {500},
     prerequisites = {crystallize = 1},
     name = 'Frost Nova',
-    description = 'If Muju dies while Shiver Armor is active, he will emit a powerful ring of frost that damages enemies for an amount equal to the current damage of Shiver Armor.',
+    description = 'Muju emits a powerful ring of frost when he dies, triggering Shiver Armor on all nearby enemies.',
     x = 0,
     y = 2,
     connectedTo = {'crystallize'},
@@ -191,7 +191,7 @@ Kuju.upgrades = {
   brainfreeze = {
     level = 0,
     maxLevel = 1,
-    costs = {350},
+    costs = {300},
     prerequisites = {tundra = 1},
     levelRequirement = 10,
     name = 'Brain Freeze',
