@@ -87,6 +87,7 @@ function MenuMap:init()
   self.prevNudge = self.nudge
   self.hovers = {}
   self.prevHovers = {}
+  self.dirtyHovers = {}
 end
 
 function MenuMap:update()
@@ -106,6 +107,12 @@ function MenuMap:update()
     local hover = math.inside(mx, my, self:getHitbox(biome))
     self.prevHovers[biome] = self.hovers[biome] or 0
     self.hovers[biome] = math.lerp(self.hovers[biome] or 0, (not self:isLocked(biome) and hover) and 1 or 0, math.min(10 * ls.tickrate, 1))
+    if not hover then
+      self.dirtyHovers[biome] = false
+    elseif not self.dirtyHovers[biome] and not self:isLocked(biome) then
+      ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
+      self.dirtyHovers[biome] = true
+    end
   end
 end
 
@@ -206,6 +213,7 @@ function MenuMap:mousereleased(mx, my, b)
     if not self:isLocked(v) and math.inside(mx, my, self:getHitbox(v)) then
       ctx.campaign:setBiome(v)
       self:setFocus(false)
+      ctx.sound:play('juju1', function(sound) sound:setPitch(1) end)
       return
     end
   end
