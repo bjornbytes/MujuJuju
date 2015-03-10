@@ -99,6 +99,7 @@ function Hud:mousemoved(x, y)
   self.status:mousemoved(x, y)
   self.units:mousemoved(x, y)
   self.shruju:mousemoved(x, y)
+  self.dead:mousemoved(x, y)
 end
 
 function Hud:resize()

@@ -145,7 +145,7 @@ function MenuCampaign:update()
       lerpRune(rune, 'y', y + h / 2)
       lerpRune(rune, 'size', h)
 
-      if math.inside(mx, my, x, y, w, h) then
+      if not self.map.focused and math.inside(mx, my, x, y, w, h) then
         ctx.tooltip:setRuneTooltip(rune)
       end
     end
@@ -161,7 +161,7 @@ function MenuCampaign:update()
       lerpRune(rune, 'y', y + h / 2)
       lerpRune(rune, 'size', h)
 
-      if math.inside(mx, my, x, y, w, h) then
+      if not self.map.focused and math.inside(mx, my, x, y, w, h) then
         ctx.tooltip:setRuneTooltip(rune)
       end
     end

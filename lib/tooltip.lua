@@ -108,11 +108,16 @@ function Tooltip:setTooltip(str)
   self.active = true
 end
 
-function Tooltip:setUnitTooltip(class)
+function Tooltip:setUnitTooltip(class, basic)
   if type(class) == 'string' then class = data.unit[class] end
   local pieces = {}
   table.insert(pieces, '{title}{white}' .. class.name .. '{normal}')
   table.insert(pieces, '{whoCares}' .. class.description .. '{white}')
+  if basic then
+    table.insert(pieces, '')
+    return self:setTooltip(table.concat(pieces, '\n'))
+  end
+
   table.insert(pieces, '')
   for _, stat in ipairs({'health', 'damage', 'attackSpeed', 'speed', 'spirit', 'haste'}) do
     local base = class[stat]
@@ -274,6 +279,13 @@ function Tooltip:setAttributeTooltip(attribute, unit)
 
   table.insert(pieces, '')
 
+  return self:setTooltip(table.concat(pieces, '\n'))
+end
+
+function Tooltip:setHatTooltip(hat)
+  local pieces = {}
+  table.insert(pieces, '{title}{white}' .. hat:capitalize())
+  table.insert(pieces, '')
   return self:setTooltip(table.concat(pieces, '\n'))
 end
 

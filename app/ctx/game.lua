@@ -148,7 +148,7 @@ function Game:distribute()
   end
 
   -- So the hud can draw them
-  self.rewards = {runes = {}, medals = {}, minions = {'xuju'}, hats = {}, highscore = false}
+  self.rewards = {runes = {}, medals = {}, minions = {}, hats = {}, highscore = false}
 
   local time = math.floor(self.timer * ls.tickrate)
   local bronze = time >= config.medals.bronze
@@ -256,9 +256,14 @@ function Game:distribute()
     rune.background = runeLevel < 30 and 'broken' or 'normal'
 
     -- Add to account
-    if #ctx.user.runes.stash < 32 then
-      table.insert(self.user.runes.stash, rune)
-      table.insert(self.rewards.runes, rune)
+    if table.count(ctx.user.runes.stash) < 32 then
+      for i = 1, 32 do
+        if not self.user.runes.stash[i] then
+          self.user.runes.stash[i] = rune
+          table.insert(self.rewards.runes, rune)
+          break
+        end
+      end
     end
   end
 
