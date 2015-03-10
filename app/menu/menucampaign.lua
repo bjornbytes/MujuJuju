@@ -89,7 +89,23 @@ function MenuCampaign:init()
 
     muju = function()
       local u, v = ctx.u, ctx.v
-      return {u * .75, v * .8}
+      local x, y = u * .72, v * .8
+      local res = {x, y, {}}
+      local hats = ctx.user.hats or {}
+      local hatSize = .04 * v
+      local hatInc = hatSize + .08 * v
+      local hatX = x + .12 * u
+      local hatY = .77 * v
+      for i = 1, math.min(#hats, 4) do
+        table.insert(res[3], {hatX, hatY, hatSize})
+        hatX = hatX + hatInc
+        if i % 2 == 0 then
+          hatX = x + .12 * u
+          hatY = hatY + hatInc
+        end
+      end
+
+      return res
     end
   }
 
@@ -114,6 +130,9 @@ function MenuCampaign:activate()
       self.prevRuneTransforms[rune] = {}
     end)
   end)
+
+  self.hatHoverFactors = {}
+  self.prevHatHoverFactors = {}
 
   self.map.active = true
   self.drag.active = true
@@ -164,6 +183,16 @@ function MenuCampaign:update()
       if not self.map.focused and math.inside(mx, my, x, y, w, h) then
         ctx.tooltip:setRuneTooltip(rune)
       end
+    end
+  end
+
+  local _, _, hats = unpack(self.geometry.muju)
+  for i = 1, #ctx.user.hats do
+    local hat = ctx.user.hats[i]
+    if hat and hats[i] then
+      local hover = math.insideCircle(mx, my, unpack(hats[i]))
+      self.prevHatHoverFactors[hat] = self.hatHoverFactors[hat] or 0
+      self.hatHoverFactors[hat] = math.lerp(self.hatHoverFactors[hat] or 0, hover and 1 or 0, math.min(10 * ls.tickrate, 1))
     end
   end
 
@@ -383,20 +412,46 @@ function MenuCampaign:draw()
 
   -- Muju
   local color = ctx.user and ctx.user.color or 'purple'
+  local animation = ctx.animations.muju
+
+  -- Muju Robe Color
   for _, slot in pairs({'robebottom', 'torso', 'front_upper_arm', 'rear_upper_arm', 'front_bracer', 'rear_bracer'}) do
-    local slot = ctx.animations.muju.spine.skeleton:findSlot(slot)
+    local slot = animation.spine.skeleton:findSlot(slot)
     slot.r, slot.g, slot.b = unpack(config.player.colors[color])
   end
+
+  -- Muju Hat
+  animation.spine.skeleton:setSkin(ctx.user.hat or 'santa')
+  animation.spine.skeleton:findSlot('hat').a = ctx.user.hat and 1 or 0
+  animation.spine.skeleton:findBone('hat').scaleX = animation.scale
+  animation.spine.skeleton:findBone('hat').scaleY = animation.scale
+
+  -- Draw Muju
   local cw, ch = ctx.unitCanvas:getDimensions()
   ctx.unitCanvas:clear(0, 0, 0, 0)
   ctx.unitCanvas:renderTo(function()
-    ctx.animations.muju:draw(cw / 2, ch / 2)
+    animation:draw(cw / 2, ch / 2)
   end)
   local scale = (.15 * v / cw) * 1 * 3
   g.setColor(255, 255, 255)
-  local x, y = unpack(self.geometry.muju)
+  local x, y, hats = unpack(self.geometry.muju)
   g.draw(ctx.unitCanvas, x, y, 0, scale, scale, cw / 2, ch / 2)
 
+  -- Hats
+  for i = 1, #hats do
+    local hat = ctx.user.hats[i]
+    if hat then
+      local image = data.media.graphics.hats[hat]
+      if image then
+        local x, y, r = unpack(hats[i])
+        local scale = r * 2 / math.max(image:getWidth(), image:getHeight())
+        local factor = math.lerp(self.prevHatHoverFactors[hat], self.hatHoverFactors[hat], ls.accum / ls.tickrate)
+        scale = scale * (.8 + .2 * factor)
+        g.setColor(255, 255, 255, 120 + (130 * (ctx.user.hat == hat and 1 or 0)))
+        g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+      end
+    end
+  end
 
   -- Modules
   self.play:draw()
@@ -424,6 +479,21 @@ function MenuCampaign:mousereleased(mx, my, b)
   if self.map.focused then return end
   if ctx.optionsPane.active then return end
   self.drag:mousereleased(mx, my, b)
+
+  local _, _, hats = unpack(self.geometry.muju)
+  for i = 1, #hats do
+    local hat = ctx.user.hats[i]
+    if hat then
+      local x, y, r = unpack(hats[i])
+      if math.insideCircle(mx, my, x, y, r) then
+        if b == 'l' then
+          ctx.user.hat = hat
+        elseif b == 'r' then
+          ctx.user.hat = nil
+        end
+      end
+    end
+  end
 end
 
 function MenuCampaign:gamepadpressed(gamepad, button)

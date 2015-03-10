@@ -81,6 +81,7 @@ function Player:activate()
   end)
 
   self.animation.spine.skeleton:setSkin(ctx.user.hat or 'nohat')
+  self.animation.spine.skeleton:findSlot('hat').a = ctx.user.hat and 1 or 0
   self.animation.spine.skeleton:findBone('hat').scaleX = self.animation.scale
   self.animation.spine.skeleton:findBone('hat').scaleY = self.animation.scale
 
