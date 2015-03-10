@@ -9,7 +9,7 @@ function SpujuSkull:activate()
   self.x = self.unit.x
   self.y = self.unit.y - self.unit.height / 2
   local targetx = self.target.x
-	local dx = math.abs(targetx + love.math.randomNormal(35) - self.x)
+	local dx = math.abs(targetx + love.math.randomNormal(30) - self.x)
 	local dy = -self.unit.height
 	local g = self.gravity
 	local v = 150 + 250 * (dx / self.unit.range) -- velocity
