@@ -12,7 +12,7 @@ function Tremor:activate()
     end
   end)
 
-  if self.unit:upgradeLevel('staggeringentry') > 0 then self:fire() end
+  if self.unit:upgradeLevel('staggeringentry') > 0 and love.math.random() < .5 then self:fire() end
 end
 
 function Tremor:use()

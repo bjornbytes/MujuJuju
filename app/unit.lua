@@ -183,7 +183,7 @@ function Unit:draw()
   if not self.visible then return end
 
   -- Draw animation
-  local noupdate = (ctx.player:hasShruju('distort') and ctx.player.dead) or ctx.paused or ctx.hud.upgrades.active
+  local noupdate = (ctx.player:hasShruju('distort') and ctx.player.dead) or ctx.paused or ctx.hud.upgrades.active or ctx.ded
   self.animation:draw(x, y - (lerpd.knockup or 0), {noupdate = noupdate})
 
   -- Fear icon

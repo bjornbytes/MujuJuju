@@ -151,133 +151,136 @@ function Game:distribute()
   self.rewards = {runes = {}, medals = {}, minions = {}, hats = {}, highscore = false}
 
   local time = math.floor(self.timer * ls.tickrate)
-  local bronze = time >= config.medals.bronze
-  local silver = time >= config.medals.silver
-  local gold = time >= config.medals.gold
 
-  -- Distribute medals
-  if bronze and not ctx.user.campaign.medals[self.biome].bronze then
-    table.insert(self.rewards.medals, 'bronze')
-    self.user.campaign.medals[self.biome].bronze = true
-  end
+  if self.mode == 'campaign' then
+    local bronze = time >= config.medals.bronze
+    local silver = time >= config.medals.silver
+    local gold = time >= config.medals.gold
 
-  if silver and not ctx.user.campaign.medals[self.biome].silver then
-    local nextMinions = {forest = 'xuju', cavern = 'kuju', tundra = 'thuju'}
-    if nextMinions[self.biome] then
-      table.insert(self.rewards.minions, nextMinions[self.biome])
+    -- Distribute medals
+    if bronze and not ctx.user.campaign.medals[self.biome].bronze then
+      table.insert(self.rewards.medals, 'bronze')
+      self.user.campaign.medals[self.biome].bronze = true
     end
-    table.insert(self.rewards.medals, 'silver')
-    self.user.campaign.medals[self.biome].silver = true
-  end
 
-  if gold and not ctx.user.campaign.medals[self.biome].gold then
-    table.insert(self.rewards.medals, 'gold')
-    self.user.campaign.medals[self.biome].gold = true
-
-    local hatPool = table.copy(config.hats)
-    for i = 1, #config.hats do
-      local index = love.math.random(1, #hatPool)
-      if table.has(self.user.hats, hatPool[index]) then
-        table.remove(hatPool, i)
-      else
-        local hat = hatPool[index]
-        table.insert(self.rewards.hats, hat)
-        table.insert(self.user.hats, hat)
-        self.user.campaign.hatHistory[self.biome] = hat
-        break
+    if silver and not ctx.user.campaign.medals[self.biome].silver then
+      local nextMinions = {forest = 'xuju', cavern = 'kuju', tundra = 'thuju'}
+      if nextMinions[self.biome] then
+        table.insert(self.rewards.minions, nextMinions[self.biome])
       end
-
-      if #hatPool == 0 then break end
+      table.insert(self.rewards.medals, 'silver')
+      self.user.campaign.medals[self.biome].silver = true
     end
-  end
 
-  -- Distribute runes
-  local runeCount = 0
-  if bronze then runeCount = runeCount + 1 end
-  if silver and love.math.random() < .3 then runeCount = runeCount + 1 end
-  if gold and love.math.random() < .2 then runeCount = runeCount + 1 end
+    if gold and not ctx.user.campaign.medals[self.biome].gold then
+      table.insert(self.rewards.medals, 'gold')
+      self.user.campaign.medals[self.biome].gold = true
 
-  for i = 1, runeCount do
+      local hatPool = table.copy(config.hats)
+      for i = 1, #config.hats do
+        local index = love.math.random(1, #hatPool)
+        if table.has(self.user.hats, hatPool[index]) then
+          table.remove(hatPool, i)
+        else
+          local hat = hatPool[index]
+          table.insert(self.rewards.hats, hat)
+          table.insert(self.user.hats, hat)
+          self.user.campaign.hatHistory[self.biome] = hat
+          break
+        end
 
-    -- Basics
-    local rune = {}
-    local maxLevel = config.runes.maxLevels[self.biome]
-    local mu = 0
-    if gold then mu = maxLevel
-    elseif silver then mu = maxLevel * .8
-    elseif bronze then mu = maxLevel * .5 end
+        if #hatPool == 0 then break end
+      end
+    end
 
-    local runeLevel = math.clamp(love.math.randomNormal(10, mu), 1, 100)
+    -- Distribute runes
+    local runeCount = 0
+    if bronze then runeCount = runeCount + 1 end
+    if silver and love.math.random() < .3 then runeCount = runeCount + 1 end
+    if gold and love.math.random() < .2 then runeCount = runeCount + 1 end
 
-    -- Generate prefix
-    local prefixes = config.runes.prefixes
-    local prefixLevel = math.clamp(runeLevel + love.math.random(-4, 4), 0, 100)
-    local prefix = prefixes[1 + math.round((prefixLevel / 100) * (#prefixes - 1))]
-    rune.name = prefix .. ' Rune'
+    for i = 1, runeCount do
 
-    -- Generate bonuses
-    local r = love.math.random()
-    if r < .33 then
+      -- Basics
+      local rune = {}
+      local maxLevel = config.runes.maxLevels[self.biome]
+      local mu = 0
+      if gold then mu = maxLevel
+      elseif silver then mu = maxLevel * .8
+      elseif bronze then mu = maxLevel * .5 end
 
-      -- Attributes
-      rune.attributes = {}
-      local attribute = tableRandom(config.attributes.list)
-      local attributeLevels = math.max(math.round((runeLevel / 100) * 8), 1)
-      local attributeLevelsDistributed = 0
-      local attributesDistributed = {attribute}
-      while attributeLevelsDistributed < attributeLevels do
-        local amount = love.math.random(1, attributeLevels - attributeLevelsDistributed)
-        rune.attributes[attribute] = (rune.attributes[attribute] or 0) + amount
-        attributeLevelsDistributed = attributeLevelsDistributed + amount
-        if #attributesDistributed < 2 and love.math.random() < .4 then
-          attribute = tableRandom(config.attributes.list)
-          if not table.has(attributesDistributed, attribute) then
-            table.insert(attributesDistributed, attribute)
+      local runeLevel = math.clamp(love.math.randomNormal(10, mu), 1, 100)
+
+      -- Generate prefix
+      local prefixes = config.runes.prefixes
+      local prefixLevel = math.clamp(runeLevel + love.math.random(-4, 4), 0, 100)
+      local prefix = prefixes[1 + math.round((prefixLevel / 100) * (#prefixes - 1))]
+      rune.name = prefix .. ' Rune'
+
+      -- Generate bonuses
+      local r = love.math.random()
+      if r < .33 then
+
+        -- Attributes
+        rune.attributes = {}
+        local attribute = tableRandom(config.attributes.list)
+        local attributeLevels = math.max(math.round((runeLevel / 100) * 8), 1)
+        local attributeLevelsDistributed = 0
+        local attributesDistributed = {attribute}
+        while attributeLevelsDistributed < attributeLevels do
+          local amount = love.math.random(1, attributeLevels - attributeLevelsDistributed)
+          rune.attributes[attribute] = (rune.attributes[attribute] or 0) + amount
+          attributeLevelsDistributed = attributeLevelsDistributed + amount
+          if #attributesDistributed < 2 and love.math.random() < .4 then
+            attribute = tableRandom(config.attributes.list)
+            if not table.has(attributesDistributed, attribute) then
+              table.insert(attributesDistributed, attribute)
+            end
           end
         end
+
+        table.sort(attributesDistributed)
+        rune.name = rune.name .. ' of ' .. tableRandom(config.runes.suffixes.attributes[table.concat(attributesDistributed)])
+      elseif r < .67 then
+
+        -- Stat bonuses
+        local stats = config.runes.stats
+        local stat = stats[love.math.random(1, #stats)]
+        local min, max = unpack(config.runes.statRanges[stat])
+        local mu, sigma = math.lerp(min, max, runeLevel / 100), (max - min) / 10
+        local amount = math.clamp(love.math.randomNormal(sigma, mu), min, max)
+        rune.stats = {[stat] = amount}
+
+        rune.name = rune.name .. ' of ' .. tableRandom(config.runes.suffixes.stats[stat])
+      else
+
+        -- Ability bonuses
+        local unit = tableRandom(table.keys(config.runes.abilities))
+        if self.mode == 'campaign' and love.math.random() < .5 then unit = config.biomes[ctx.biome].minion end
+        local ability = tableRandom(table.keys(config.runes.abilities[unit]))
+        local stat = tableRandom(table.keys(config.runes.abilities[unit][ability]))
+        local min, max = unpack(config.runes.abilities[unit][ability][stat])
+        local mu, sigma = math.lerp(min, max, runeLevel / 100), (max - min) / 10
+        local amount = math.clamp(love.math.randomNormal(sigma, mu), min, max)
+        rune.unit = unit
+        rune.abilities = {[ability] = {[stat] = amount}}
+
+        rune.name = rune.name .. ' of ' .. tableRandom(config.runes.suffixes.abilities[ability])
       end
 
-      table.sort(attributesDistributed)
-      rune.name = rune.name .. ' of ' .. tableRandom(config.runes.suffixes.attributes[table.concat(attributesDistributed)])
-    elseif r < .67 then
+      -- Generate appearance
+      rune.color = tableRandom(table.keys(config.runes.colors))
+      rune.image = love.math.random(1, config.runes.imageCount)
+      rune.background = runeLevel < 30 and 'broken' or 'normal'
 
-      -- Stat bonuses
-      local stats = config.runes.stats
-      local stat = stats[love.math.random(1, #stats)]
-      local min, max = unpack(config.runes.statRanges[stat])
-      local mu, sigma = math.lerp(min, max, runeLevel / 100), (max - min) / 10
-      local amount = math.clamp(love.math.randomNormal(sigma, mu), min, max)
-      rune.stats = {[stat] = amount}
-
-      rune.name = rune.name .. ' of ' .. tableRandom(config.runes.suffixes.stats[stat])
-    else
-
-      -- Ability bonuses
-      local unit = tableRandom(table.keys(config.runes.abilities))
-      if self.mode == 'campaign' and love.math.random() < .5 then unit = config.biomes[ctx.biome].minion end
-      local ability = tableRandom(table.keys(config.runes.abilities[unit]))
-      local stat = tableRandom(table.keys(config.runes.abilities[unit][ability]))
-      local min, max = unpack(config.runes.abilities[unit][ability][stat])
-      local mu, sigma = math.lerp(min, max, runeLevel / 100), (max - min) / 10
-      local amount = math.clamp(love.math.randomNormal(sigma, mu), min, max)
-      rune.unit = unit
-      rune.abilities = {[ability] = {[stat] = amount}}
-
-      rune.name = rune.name .. ' of ' .. tableRandom(config.runes.suffixes.abilities[ability])
-    end
-
-    -- Generate appearance
-    rune.color = tableRandom(table.keys(config.runes.colors))
-    rune.image = love.math.random(1, config.runes.imageCount)
-    rune.background = runeLevel < 30 and 'broken' or 'normal'
-
-    -- Add to account
-    if table.count(ctx.user.runes.stash) < 32 then
-      for i = 1, 32 do
-        if not self.user.runes.stash[i] then
-          self.user.runes.stash[i] = rune
-          table.insert(self.rewards.runes, rune)
-          break
+      -- Add to account
+      if table.count(ctx.user.runes.stash) < 32 then
+        for i = 1, 32 do
+          if not self.user.runes.stash[i] then
+            self.user.runes.stash[i] = rune
+            table.insert(self.rewards.runes, rune)
+            break
+          end
         end
       end
     end

@@ -560,7 +560,7 @@ function MenuSurvival:setBiome(biome)
 end
 
 function MenuSurvival:mujuDead()
-  ctx:startGame({mode = 'survival', biome = 'forest'})
+  ctx:startGame({mode = 'survival', biome = config.biomeOrder[love.math.random(1, #config.biomeOrder)]})
 end
 
 function MenuSurvival:refreshGutter()

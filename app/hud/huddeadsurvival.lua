@@ -114,6 +114,10 @@ function HudDeadSurvival:keypressed(key)
   end
 end
 
+function HudDeadSurvival:mousemoved(mx, my)
+
+end
+
 function HudDeadSurvival:endGame()
   Context:add(Menu, ctx.user, ctx.options, {page = ctx.mode, biome = ctx.biome, user = ctx.user})
   Context:remove(ctx)

@@ -23,7 +23,7 @@ Thuju.upgrades = {
   inspire = {
     level = 0,
     maxLevel = 3,
-    costs = {200, 400, 600},
+    costs = {200, 300, 400},
     levelRequirement = 1,
     name = 'Inspire',
     description = 'Thuju inspires allies when he spawns, buffing himself and nearby allies for 4 seconds.  Each level adds an additional effect.',
@@ -70,7 +70,7 @@ Thuju.upgrades = {
   tremor = {
     level = 0,
     maxLevel = 3,
-    costs = {200, 300, 400},
+    costs = {100, 200, 300},
     levelRequirement = 1,
     name = 'Tremor',
     description = 'Thuju slams the ground, damaging and stunning units in front of him.',
@@ -94,7 +94,7 @@ Thuju.upgrades = {
   briarlance = {
     level = 0,
     maxLevel = 1,
-    costs = {500},
+    costs = {300},
     prerequisites = {wardofthorns = 1},
     levelRequirement = 5,
     name = 'Briar Lance',
@@ -110,7 +110,7 @@ Thuju.upgrades = {
   vigor = {
     level = 0,
     maxLevel = 3,
-    costs = {300, 300, 300},
+    costs = {200, 300, 400},
     prerequisites = {wardofthorns = 1},
     levelRequirement = 3,
     name = 'Vigor',
@@ -136,7 +136,7 @@ Thuju.upgrades = {
   fissure = {
     level = 0,
     maxLevel = 3,
-    costs = {100, 200, 300},
+    costs = {100, 150, 200},
     prerequisites = {tremor = 1},
     levelRequirement = 3,
     name = 'Fissure',
@@ -171,7 +171,7 @@ Thuju.upgrades = {
   impenetrablehide = {
     level = 0,
     maxLevel = 3,
-    costs = {500, 500, 500},
+    costs = {300, 400, 500},
     prerequisites = {vigor = 1},
     levelRequirement = 10,
     name = 'Impenetrable Hide',
@@ -189,11 +189,11 @@ Thuju.upgrades = {
   staggeringentry = {
     level = 0,
     maxLevel = 1,
-    costs = {1000},
+    costs = {500},
     prerequisites = {fissure = 1},
     levelRequirement = 15,
     name = 'Staggering Entry',
-    description = 'Tremor is cast when Thuju spawns.',
+    description = 'Thuju has a 50% chance to cast tremor when he spawns at no cooldown.',
     x = 1,
     y = 2,
     connectedTo = {'fissure'},
@@ -205,7 +205,7 @@ Thuju.upgrades = {
   infusedcarapace = {
     level = 0,
     maxLevel = 1,
-    costs = {1500},
+    costs = {1000},
     levelRequirement = 20,
     name = 'Infused Carapace',
     description = 'Thuju takes 35% reduced damage from spells.',
@@ -221,21 +221,21 @@ Thuju.upgrades = {
     end
   },
 
-  taunt = {
+  intimidate = {
     level = 0,
     maxLevel = 1,
-    costs = {500},
+    costs = {1500},
     levelRequirement = 20,
-    name = 'Taunt',
-    description = 'Thuju taunts any enemies he attacks, forcing them to attack him.',
+    name = 'Intimidate',
+    description = 'When Thuju is brought into battle, he sharply lowers the attack of nearby enemies for 6 seconds.',
     x = 0,
     y = 3,
     values = {
-      [1] = 'Taunt enemies',
+      [1] = '50% less damage with attacks',
     },
     apply = function(self, unit)
       if self.level > 0 then
-        unit:addAbility('taunt')
+        unit:addAbility('intimidate')
       end
     end
   }

@@ -167,12 +167,12 @@ return {
     },
     stats = {'health', 'damage', 'speed', 'attackSpeed', 'spirit', 'haste'},
     statRanges = {
-      health = {10, 250},
-      damage = {3, 70},
-      speed = {5, 60},
-      attackSpeed = {.01, .15},
-      spirit = {5, 60},
-      haste = {.04, .2}
+      health = {10, 100},
+      damage = {3, 30},
+      speed = {3, 30},
+      attackSpeed = {.03, .3},
+      spirit = {10, 100},
+      haste = {.2, 1}
     },
     abilities = {
       bruju = {

@@ -113,7 +113,7 @@ Bruju.upgrades = {
   eruption = {
     level = 0,
     maxLevel = 3,
-    costs = {100, 200, 300},
+    costs = {100, 150, 200},
     prerequisites = {burst = 1},
     levelRequirement = 3,
     name = 'Eruption',

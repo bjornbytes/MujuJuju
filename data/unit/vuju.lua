@@ -14,9 +14,7 @@ Vuju.spirit = 0
 Vuju.haste = 1
 
 Vuju.healthScaling = {6, 1}
-Vuju.damageScaling = {.5, .5}
-
-Vuju.attackSpell = 'vujuattack'
+Vuju.damageScaling = {.5, .85}
 
 Vuju.startingAbilities = {'teleport', 'puppetize'}
 
