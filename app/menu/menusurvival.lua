@@ -319,6 +319,9 @@ function MenuSurvival:draw()
         for k, v in pairs(self.runeTransforms[rune]) do
           lerpd[k] = math.lerp(self.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
+        lerpd.x = lerpd.x or x
+        lerpd.y = lerpd.y or y
+        lerpd.size = lerpd.size or h
         h = lerpd.size
         g.setColor(255, 255, 255)
         g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
@@ -347,6 +350,9 @@ function MenuSurvival:draw()
       for k, v in pairs(ctx.animationTransforms[minion]) do
         lerpd[k] = math.lerp(ctx.prevAnimationTransforms[minion][k] or v, v, ls.accum / ls.tickrate)
       end
+      lerpd.x = lerpd.x or x
+      lerpd.y = lerpd.y or y
+      lerpd.scale = lerpd.scale or .75
       local scale = (2 * r / cw) * lerpd.scale * 3
       g.setColor(255, 255, 255)
       g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, scale, scale, cw / 2, ch / 2)
@@ -373,6 +379,9 @@ function MenuSurvival:draw()
         for k, v in pairs(self.runeTransforms[rune]) do
           lerpd[k] = math.lerp(self.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
+        lerpd.x = lerpd.x or x
+        lerpd.y = lerpd.y or y
+        lerpd.size = lerpd.size or h
         g.setColor(255, 255, 255)
         g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
       end
@@ -401,6 +410,9 @@ function MenuSurvival:draw()
       for k, v in pairs(ctx.animationTransforms[minion]) do
         lerpd[k] = math.lerp(ctx.prevAnimationTransforms[minion][k] or v, v, ls.accum / ls.tickrate)
       end
+      lerpd.x = lerpd.x or x
+      lerpd.y = lerpd.y or y
+      lerpd.scale = lerpd.scale or .75
       local scale = (2 * r / cw) * lerpd.scale * 3
       g.setColor(255, 255, 255)
       g.draw(ctx.unitCanvas, lerpd.x, lerpd.y, 0, scale, scale, cw / 2, ch / 2)
@@ -429,6 +441,9 @@ function MenuSurvival:draw()
           for k, v in pairs(ctx.survival.runeTransforms[rune]) do
             lerpd[k] = math.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
           end
+          lerpd.x = lerpd.x or x
+          lerpd.y = lerpd.y or y
+          lerpd.size = lerpd.size or h
           g.setColor(255, 255, 255)
           g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
         end

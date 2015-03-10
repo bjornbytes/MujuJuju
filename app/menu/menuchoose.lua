@@ -211,8 +211,6 @@ function MenuChoose:finished()
 
   saveUser(self.user)
   ctx.user = self.user
-
-  ctx:setPage(self.destination)
-  ctx.animations.muju:set('summon')
-  ctx.sound:play('summon2')
+  Context:add(Game, self.user, ctx.options, {mode = 'campaign', biome = 'forest', tutorial = true, destination = self.destination})
+  Context:remove(ctx)
 end

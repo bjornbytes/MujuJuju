@@ -2,8 +2,9 @@ local g = love.graphics
 local tween = require 'lib/deps/tween/tween'
 Tutorial = class()
 
-function Tutorial:init(active)
+function Tutorial:init(active, destination)
   self.active = active
+  self.destination = destination
 
   self.messages = {
     muju = 'This is Muju',
@@ -81,6 +82,8 @@ function Tutorial:init(active)
   self.prevx, self.prevy = self.x, self.y
 
   self.moveTargetX = ctx.map.width * .62
+  self.jujuX = 0
+  self.jujuY = 0
 
   if active then
     ctx.player.x = ctx.map.width * .4
@@ -132,6 +135,8 @@ function Tutorial:update()
     if ctx.player.ghost then
       x, y = ctx.view:screenPoint(ctx.player.ghost.x, ctx.player.ghost.y - 40)
     end
+  elseif self.message == 'goodjob' then
+    x, y = ctx.view:screenPoint((self.jujuX + ctx.player.ghost.x) / 2, (self.jujuY + ctx.player.ghost.y - 40) / 2)
   elseif self.message == 'resurrect' then
     x, y = ctx.view:screenPoint(ctx.player.x, ctx.player.y - 65)
   elseif self.message == 'status' then
@@ -201,8 +206,12 @@ function Tutorial:update()
     elseif self.message == 'death' and ctx.player.dead then
       self.opened = false
     elseif self.message == 'collect' then
-      if not next(ctx.jujus.jujus) then
+      local juju = next(ctx.jujus.jujus)
+      if not juju then
         self.opened = false
+      else
+        self.jujuX = juju.x
+        self.jujuY = juju.y
       end
     elseif self.message == 'goodjob' then
       self.delay = 1
@@ -210,7 +219,10 @@ function Tutorial:update()
     elseif self.message == 'resurrect' and not ctx.player.dead then
       self.delay = 2
       self.opened = false
-    elseif (self.message == 'status' or self.message == 'hudminions' or self.message == 'cost' or self.message == 'cooldown') and love.keyboard.isDown('return', ' ') then
+    elseif (self.message == 'status' or self.message == 'hudminions' or self.message == 'cost') and love.keyboard.isDown('return', ' ') then
+      self.opened = false
+    elseif (self.message == 'cooldown' and ctx.player.deck[1].cooldown == 0) then
+      self.delay = .25
       self.opened = false
     elseif self.message == 'upgrade' and ctx.hud.upgrades.active then
       self.opened = false
@@ -300,7 +312,7 @@ function Tutorial:exit(message)
     self.enemy:hurt(100000)
     self.enemy = nil
   elseif message == 'glhf' then
-    Context:add(Menu)
+    Context:add(Menu, ctx.user, ctx.options, {page = self.destination, biome = ctx.biome})
     Context:remove(ctx)
   end
 end

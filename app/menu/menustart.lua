@@ -23,20 +23,12 @@ function MenuStart:init()
       return {u * .5 - w / 2, v * .65 + h / 2 + .01 * v, w, h}
     end,
 
-    tutorial = function()
-      local u, v = ctx.u, ctx.v
-      local sx, sy, sw, sh = unpack(self.geometry.campaign)
-      local w = u * .12
-      local h = w * .28
-      return {u * .5 - w / 2, sy + (sh + v * .01) * 2, w, h}
-    end,
-
     options = function()
       local u, v = ctx.u, ctx.v
       local sx, sy, sw, sh = unpack(self.geometry.campaign)
       local w = u * .12
       local h = w * .28
-      return {u * .5 - w * 1.5 - v * .01, sy + (sh + v * .01) * 2, w, h}
+      return {u * .5 - sw / 2, sy + (sh + v * .01) * 2, w, h}
     end,
 
     quit = function()
@@ -44,7 +36,7 @@ function MenuStart:init()
       local sx, sy, sw, sh = unpack(self.geometry.campaign)
       local w = u * .12
       local h = w * .28
-      return {u * .5 + v * .01 - 1 + w * .5, sy + (sh + v * .01) * 2, w, h}
+      return {u * .5 + v * .01 - 1, sy + (sh + v * .01) * 2, w, h}
     end
   }
 
@@ -60,11 +52,6 @@ function MenuStart:init()
   self.survival.geometry = function() return self.geometry.survival end
   self.survival.text = 'Survival'
   self.survival:on('click', function() self:continue('survival') end)
-
-  self.tutorial = ctx.gooey:add(Button, 'menu.start.tutorial')
-  self.tutorial.geometry = function() return self.geometry.tutorial end
-  self.tutorial:on('click', function() self:loadTutorial() end)
-  self.tutorial.text = 'Tutorial'
 
   self.options = ctx.gooey:add(Button, 'menu.start.options')
   self.options.geometry = function() return self.geometry.options end
@@ -130,7 +117,6 @@ function MenuStart:draw()
 
   self.campaign:draw()
   self.survival:draw()
-  self.tutorial:draw()
   self.options:draw()
   self.quit:draw()
 
@@ -172,9 +158,4 @@ end
 function MenuStart:continue(destination)
   ctx:refreshBackground()
   ctx:setPage('select', destination)
-end
-
-function MenuStart:loadTutorial()
-  Context:remove(ctx)
-  Context:add(Game, config.defaultUser, ctx.options, {mode = 'campaign', biome = 'forest', tutorial = true})
 end

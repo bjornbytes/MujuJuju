@@ -6,7 +6,8 @@ local function backHandler()
 end
 
 local function quitHandler()
-  Context:add(Menu, ctx.user, ctx.options, {page = ctx.mode, biome = ctx.biome})
+  local page = ctx.tutorial.active and ctx.tutorial.destination or ctx.mode
+  Context:add(Menu, ctx.user, ctx.options, {page = page, biome = ctx.biome})
   Context:remove(ctx)
 end
 

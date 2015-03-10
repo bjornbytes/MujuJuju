@@ -136,7 +136,7 @@ function MenuMap:draw()
   g.draw(image, x, y, 0, xscale, yscale)
 
   for k, biome in ipairs(config.biomeOrder) do
-    local factor = math.lerp(self.prevHovers[biome], self.hovers[biome], ls.accum / ls.tickrate)
+    local factor = math.lerp(self.prevHovers[biome] or 0, self.hovers[biome] or 0, ls.accum / ls.tickrate)
     local hover = math.inside(mx, my, self:getHitbox(biome))
     local active = hover and love.mouse.isDown('l')
 
