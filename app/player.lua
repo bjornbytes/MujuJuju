@@ -35,8 +35,8 @@ function Player:init()
   -- Juju
   self.juju = 0
   self.totalJuju = 0
-  self.jujuTimer = config.player.jujuRate
-  self.jujuRate = config.player.jujuRate
+  self.jujuRate = config.player.jujuRate / (ctx.mode == 'survival' and 2 or 1)
+  self.jujuTimer = self.jujuRate
   self:addJuju(config.player.baseJuju)
 
   -- The current magic shruju
