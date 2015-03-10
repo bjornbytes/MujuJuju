@@ -106,6 +106,17 @@ function MenuCampaign:init()
       end
 
       return res
+    end,
+
+    hatsFrame = function()
+      local u, v = ctx.u, ctx.v
+      local x, y = unpack(self.geometry.muju)
+      local hatSize = .04 * v
+      local hatInc = hatSize + .08 * v
+      local hatX = x + .12 * u
+      local hatY = .77 * v
+      local padding = .04 * v
+      return {hatX - hatSize / 2 - padding, hatY - hatSize / 2 - padding, 2 * padding + 2 * hatSize + .08 * v, 2 * padding + 2 * hatSize + .08 * v}
     end
   }
 
@@ -437,6 +448,10 @@ function MenuCampaign:draw()
   local x, y, hats = unpack(self.geometry.muju)
   g.draw(ctx.unitCanvas, x, y, 0, scale, scale, cw / 2, ch / 2)
 
+  -- Hats Frame
+  g.setColor(0, 0, 0, 100)
+  g.rectangle('fill', unpack(self.geometry.hatsFrame))
+
   -- Hats
   for i = 1, #hats do
     local hat = ctx.user.hats[i]
@@ -447,7 +462,7 @@ function MenuCampaign:draw()
         local scale = r * 2 / math.max(image:getWidth(), image:getHeight())
         local factor = math.lerp(self.prevHatHoverFactors[hat], self.hatHoverFactors[hat], ls.accum / ls.tickrate)
         scale = scale * (.8 + .2 * factor)
-        g.setColor(255, 255, 255, 120 + (130 * (ctx.user.hat == hat and 1 or 0)))
+        g.setColor(255, 255, 255, 180 + (75 * (ctx.user.hat == hat and 1 or 0)))
         g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
       end
     end

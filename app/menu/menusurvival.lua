@@ -132,6 +132,17 @@ function MenuSurvival:init()
       end
 
       return res
+    end,
+
+    hatsFrame = function()
+      local u, v = ctx.u, ctx.v
+      local x, y = unpack(self.geometry.muju)
+      local hatSize = .04 * v
+      local hatInc = hatSize + .08 * v
+      local hatX = x + .12 * u
+      local hatY = y + .77 * v
+      local padding = .02 * v
+      return {hatX - padding, hatY - paddig, 2 * padding + 2 * hatInc, 2 * padding + 2 * hatInc}
     end
   }
 
