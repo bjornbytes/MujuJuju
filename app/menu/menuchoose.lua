@@ -164,6 +164,7 @@ function MenuChoose:keypressed(key)
   if not self.active then return end
   if key == 'backspace' then
     self.user.name = self.user.name:sub(1, -2)
+    ctx.sound:play('juju1', function(sound) sound:setPitch(.6) end)
   end
 end
 
@@ -177,19 +178,21 @@ end
 
 function MenuChoose:mousepressed(mx, my, b)
   if not self.active then return end
-  if b == 'l' and #self.user.name > 0 then
+  if b == 'l' then
     local minions = self.geometry.minions
     for i = 1, #minions do
       local x, y, r = unpack(minions[i])
-      if math.distance(mx, my, x, y) < r then
+      if self.selectedMinion ~= i and math.distance(mx, my, x, y) < r then
         self.selectedMinion = i
+        ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
       end
     end
 
     local colors = self.geometry.colors
     for i = 1, #colors do
-      if math.inside(mx, my, unpack(colors[i])) then
+      if self.user.color ~= config.player.colorOrder[i] and math.inside(mx, my, unpack(colors[i])) then
         self.user.color = config.player.colorOrder[i]
+        ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
       end
     end
   end
@@ -199,6 +202,7 @@ function MenuChoose:textinput(char)
   if not self.active then return end
   if #self.user.name < 16 and char:match('%a*%d*') then
     self.user.name = self.user.name .. char
+    ctx.sound:play('juju1', function(sound) sound:setPitch(.6) end)
   end
 end
 

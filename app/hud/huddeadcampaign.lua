@@ -118,10 +118,12 @@ function HudDeadCampaign:update()
     for _, medal in pairs({'bronze', 'silver', 'gold'}) do
       if math.floor(ctx.timer * self.prevTimeFactor * ls.tickrate) >= config.medals[medal] then
         local kinds = {bronze = 'rune', silver = 'minion', gold = 'hat'}
-        for i = 1, #self.rewards do
-          local reward = self.rewards[i]
-          if reward.kind == kinds[medal] then
-            countSoFar = countSoFar + 1
+        if self.rewards then
+          for i = 1, #self.rewards do
+            local reward = self.rewards[i]
+            if reward.kind == kinds[medal] then
+              countSoFar = countSoFar + 1
+            end
           end
         end
       end
@@ -138,12 +140,14 @@ function HudDeadCampaign:update()
         self.medalFactors[medal] = math.lerp(self.medalFactors[medal], 1, math.min(10 * ls.tickrate, 1))
 
         local kinds = {bronze = 'rune', silver = 'minion', gold = 'hat'}
-        for i = 1, #self.rewards do
-          local reward = self.rewards[i]
-          if reward.kind == kinds[medal] then
-            reward.prevx = reward.x
-            reward.x = math.lerp(reward.x, rewardX, 12 * ls.tickrate)
-            rewardX = rewardX + rewardInc
+        if self.rewards then
+          for i = 1, #self.rewards do
+            local reward = self.rewards[i]
+            if reward.kind == kinds[medal] then
+              reward.prevx = reward.x
+              reward.x = math.lerp(reward.x, rewardX, 12 * ls.tickrate)
+              rewardX = rewardX + rewardInc
+            end
           end
         end
       end
@@ -207,33 +211,35 @@ function HudDeadCampaign:draw()
     medalX = medalX + inc
   end
 
-  local rewardSize = .1 * v
-  for i = 1, #self.rewards do
-    local reward = self.rewards[i]
-    local medal = ({rune = 'bronze', minion = 'silver', hat = 'gold'})[reward.kind]
-    local factor = math.lerp(self.prevMedalFactors[medal], self.medalFactors[medal], ls.accum / ls.tickrate)
-    local x = math.lerp(reward.prevx, reward.x, ls.accum / ls.tickrate)
-    g.setColor(255, 255, 255, 255 * factor)
-    if reward.kind == 'rune' then
-      g.drawRune(reward.rune, reward.x, .63 * v, rewardSize, rewardSize * .5)
-    elseif reward.kind == 'minion' then
-      local canvas = self.canvas
-      local cw, ch = canvas:getDimensions()
-      canvas:clear(0, 0, 0, 0)
-      canvas:renderTo(function()
-        local animation = reward.animation
-        animation.spine.skeleton.a = factor
-        animation:draw(cw / 2, ch / 2)
-      end)
-      local scale = (rewardSize / cw) * 3
-      g.setColor(255, 255, 255)
-      g.draw(self.canvas, reward.x, .63 * v, 0, scale, scale, cw / 2, ch / 2)
-    elseif reward.kind == 'hat' then
-      local image = data.media.graphics.hats[reward.hat]
-      if image then
-        local scale = rewardSize / math.max(image:getWidth(), image:getHeight())
-        g.setColor(255, 255, 255, 255 * factor)
-        g.draw(image, reward.x, .63 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+  if self.rewards then
+    local rewardSize = .1 * v
+    for i = 1, #self.rewards do
+      local reward = self.rewards[i]
+      local medal = ({rune = 'bronze', minion = 'silver', hat = 'gold'})[reward.kind]
+      local factor = math.lerp(self.prevMedalFactors[medal], self.medalFactors[medal], ls.accum / ls.tickrate)
+      local x = math.lerp(reward.prevx, reward.x, ls.accum / ls.tickrate)
+      g.setColor(255, 255, 255, 255 * factor)
+      if reward.kind == 'rune' then
+        g.drawRune(reward.rune, reward.x, .63 * v, rewardSize, rewardSize * .5)
+      elseif reward.kind == 'minion' then
+        local canvas = self.canvas
+        local cw, ch = canvas:getDimensions()
+        canvas:clear(0, 0, 0, 0)
+        canvas:renderTo(function()
+          local animation = reward.animation
+          animation.spine.skeleton.a = factor
+          animation:draw(cw / 2, ch / 2)
+        end)
+        local scale = (rewardSize / cw) * 3
+        g.setColor(255, 255, 255)
+        g.draw(self.canvas, reward.x, .63 * v, 0, scale, scale, cw / 2, ch / 2)
+      elseif reward.kind == 'hat' then
+        local image = data.media.graphics.hats[reward.hat]
+        if image then
+          local scale = rewardSize / math.max(image:getWidth(), image:getHeight())
+          g.setColor(255, 255, 255, 255 * factor)
+          g.draw(image, reward.x, .63 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+        end
       end
     end
   end
@@ -251,18 +257,20 @@ function HudDeadCampaign:mousemoved(mx, my)
   local u, v = ctx.hud.u, ctx.hud.v
   local rewardSize = .1 * v
 
-  for _, medal in pairs({'bronze', 'silver', 'gold'}) do
-    if math.floor(ctx.timer * self.prevTimeFactor * ls.tickrate) >= config.medals[medal] then
-      local kinds = {bronze = 'rune', silver = 'minion', gold = 'hat'}
-      for i = 1, #self.rewards do
-        local reward = self.rewards[i]
-        if math.insideCircle(mx, my, reward.x, .63 * v, rewardSize / 2) and reward.kind == kinds[medal] then
-          if reward.kind == 'rune' then
-            ctx.hud.tooltip:setRuneTooltip(reward.rune)
-          elseif reward.kind == 'minion' then
-            ctx.hud.tooltip:setUnitTooltip(reward.minion, true)
-          elseif reward.kind == 'hat' then
-            ctx.hud.tooltip:setHatTooltip(reward.hat)
+  if self.rewards then
+    for _, medal in pairs({'bronze', 'silver', 'gold'}) do
+      if math.floor(ctx.timer * self.prevTimeFactor * ls.tickrate) >= config.medals[medal] then
+        local kinds = {bronze = 'rune', silver = 'minion', gold = 'hat'}
+        for i = 1, #self.rewards do
+          local reward = self.rewards[i]
+          if math.insideCircle(mx, my, reward.x, .63 * v, rewardSize / 2) and reward.kind == kinds[medal] then
+            if reward.kind == 'rune' then
+              ctx.hud.tooltip:setRuneTooltip(reward.rune)
+            elseif reward.kind == 'minion' then
+              ctx.hud.tooltip:setUnitTooltip(reward.minion, true)
+            elseif reward.kind == 'hat' then
+              ctx.hud.tooltip:setHatTooltip(reward.hat)
+            end
           end
         end
       end
