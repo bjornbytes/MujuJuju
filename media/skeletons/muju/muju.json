@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "n3X7tXsu/noSPmyGyXeqWBGx6b4", "spine": "2.1.17", "width": 111.06, "height": 177 },
+"skeleton": { "hash": "jNlM+ukkaFhArOECBJF3I/iNgUU", "spine": "2.1.17", "width": 111.06, "height": 177 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "robebottom", "parent": "root", "length": 62.59, "x": -1.41, "y": 84.35, "rotation": -94.5 },
@@ -156,13 +156,24 @@
 					},
 					{
 						"time": 0.4333,
-						"angle": -0.78,
-						"curve": [ 0.367, 0.46, 0.753, 1 ]
+						"angle": 1.31,
+						"curve": [ 0.25, 0, 0.75, 1 ]
 					},
 					{ "time": 1, "angle": 0 }
 				],
 				"translate": [
-					{ "time": 0, "x": 0, "y": 0, "curve": "stepped" },
+					{
+						"time": 0,
+						"x": 0,
+						"y": 0,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 0.2333,
+						"x": 1.21,
+						"y": 0.09,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
 					{ "time": 1, "x": 0, "y": 0 }
 				],
 				"scale": [
@@ -264,7 +275,16 @@
 			},
 			"head": {
 				"rotate": [
-					{ "time": 0, "angle": 0, "curve": "stepped" },
+					{
+						"time": 0,
+						"angle": 0,
+						"curve": [ 0.273, 0, 0.619, 0.4 ]
+					},
+					{
+						"time": 0.2666,
+						"angle": -12.69,
+						"curve": [ 0.337, 0.34, 0.757, 1 ]
+					},
 					{ "time": 1, "angle": 0 }
 				],
 				"translate": [
