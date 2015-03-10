@@ -110,7 +110,7 @@ function MenuSurvival:init()
       local frame = self.geometry.runesFrame
       local w, h = .2 * u, .13 * v
       local midx = (u + frame[1] + frame[3]) / 2
-      return {midx - w / 2, .07 * u - .02 * v, w, h}
+      return {midx - w / 2, .45 * v, w, h}
     end,
 
     muju = function()
@@ -140,9 +140,9 @@ function MenuSurvival:init()
       local hatSize = .04 * v
       local hatInc = hatSize + .08 * v
       local hatX = x + .12 * u
-      local hatY = y + .77 * v
-      local padding = .02 * v
-      return {hatX - padding, hatY - paddig, 2 * padding + 2 * hatInc, 2 * padding + 2 * hatInc}
+      local hatY = .77 * v
+      local padding = .04 * v
+      return {hatX - hatSize / 2 - padding, hatY - hatSize / 2 - padding, 2 * padding + 2 * hatSize + .08 * v, 2 * padding + 2 * hatSize + .08 * v}
     end
   }
 
@@ -275,6 +275,19 @@ function MenuSurvival:draw()
   local u, v = ctx.u, ctx.v
   local ps = love.window.getPixelScale()
   local atlas = data.atlas.hud
+
+  -- Best Time
+  local play = self.geometry.play
+  local x = play[1] + play[3] / 2
+  g.setFont('mesmerize', .08 * v)
+  g.setColor(255, 255, 255)
+  g.printShadow('Survival', x, .15 * v, true)
+  g.setFont('mesmerize', .05 * v)
+  local str = 'Best Time:\n' .. toTime(ctx.user.survival.bestTime, true)
+  g.setColor(0, 0, 0)
+  g.printf(str, x - .2 * u + 1, .26 * v + 1, .4 * u, 'center')
+  g.setColor(255, 255, 255)
+  g.printf(str, x - .2 * u, .26 * v, .4 * u, 'center')
 
   -- Rune Frame
   g.setColor(0, 0, 0, 100)
@@ -449,6 +462,10 @@ function MenuSurvival:draw()
   g.setColor(255, 255, 255)
   local x, y, hats = unpack(self.geometry.muju)
   g.draw(ctx.unitCanvas, x, y, 0, scale, scale, cw / 2, ch / 2)
+
+  -- Hats Frame
+  g.setColor(0, 0, 0, 100)
+  g.rectangle('fill', unpack(self.geometry.hatsFrame))
 
   -- Hats
   for i = 1, #hats do
