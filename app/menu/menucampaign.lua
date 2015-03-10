@@ -229,7 +229,7 @@ function MenuCampaign:draw()
         g.draw(ctx.unitCanvas, medalX, medalY + .17 * v, 0, scale, scale, cw / 2, ch / 2)
       end
     elseif benchmark == 'gold' then
-      local image = data.media.graphics.hats.santa
+      local image = data.media.graphics.hats[ctx.user.campaign.hatHistory[self.biome] or 'wizard']
       local scale = (medalSize * 2 + (.02 * v) * math.sin(tick / 10) / 8) / image:getWidth()
       g.setColor(achieved and {255, 255, 255} or {0, 0, 0})
       g.draw(image, medalX, medalY + .14 * v, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)

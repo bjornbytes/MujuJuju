@@ -173,6 +173,21 @@ function Game:distribute()
   if gold and not ctx.user.campaign.medals[self.biome].gold then
     table.insert(self.rewards.medals, 'gold')
     self.user.campaign.medals[self.biome].gold = true
+
+    local hatPool = table.copy(config.hats)
+    for i = 1, #config.hats do
+      local index = love.math.random(1, #hatPool)
+      if table.has(self.user.hats, hatPool[index]) then
+        table.remove(hatPool, i)
+      else
+        local hat = hatPool[index]
+        table.insert(self.user.hats, hat)
+        self.user.campaign.hatHistory[self.biome] = hat
+        break
+      end
+
+      if #hatPool == 0 then break end
+    end
   end
 
   -- Distribute runes

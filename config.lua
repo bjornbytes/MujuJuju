@@ -486,6 +486,12 @@ return {
         cavern = {},
         tundra = {},
         volcano = {}
+      },
+      hatHistory = {
+        forest = nil,
+        cavern = nil,
+        tundra = nil,
+        volcano = nil
       }
     },
     survival = {
