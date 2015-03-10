@@ -181,6 +181,7 @@ function Game:distribute()
         table.remove(hatPool, i)
       else
         local hat = hatPool[index]
+        table.insert(self.rewards.hats, hat)
         table.insert(self.user.hats, hat)
         self.user.campaign.hatHistory[self.biome] = hat
         break
