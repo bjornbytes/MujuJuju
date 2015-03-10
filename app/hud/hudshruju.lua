@@ -39,6 +39,22 @@ function HudShruju:draw()
     local scale = math.min((w - (.02 * v)) / (image:getHeight() - 8), (h - (.02 * v)) / (image:getWidth() - 8))
     g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
   end
+
+  ctx.shrujus:each(function(shruju)
+    local str = shruju.name
+    local font = g.setFont('mesmerize', .02 * v)
+    local x, y = ctx.view:screenPoint(shruju.x, shruju.y)
+    local w, h = atlas:getDimensions('title')
+    local padding = .01 * v
+    local xscale = (font:getWidth(str) + 2 * padding) / w
+    local yscale = (font:getHeight() + 2 * padding) / h
+    x = math.clamp(x, xscale * w / 2, u - xscale * w / 2)
+    y = y + .08 * v
+    g.setColor(255, 255, 255, 100)
+    g.draw(atlas.texture, atlas.quads.title, x, y + .002 * v, 0, xscale, yscale, w / 2, h / 2)
+    g.setColor(255, 255, 255, 200)
+    g.printShadow(str, x, y, true)
+  end)
 end
 
 function HudShruju:mousemoved(mx, my)

@@ -106,11 +106,6 @@ function Unit:activate()
   self.target = nil
   self:aiCall('activate')
 
-  -- Misc
-  if ctx.player:hasShruju('mirror') then
-    self.buffs:add('mirror')
-  end
-
   self.range = self.range + love.math.random(-10, 10)
 
   -- Register with View
@@ -418,7 +413,7 @@ function Unit:initAnimation()
 
           if ctx.tutorial.active then jujus = 1 end
 
-          if ctx.player:hasShruju('harvest') then amount = amount * 1.5 end
+          if ctx.player:hasShruju('harvest') then amount = amount * 1.3 end
 
           if self.elite and love.math.random() < .25 then
             ctx.shrujus:add(data.shruju[love.math.random(1, #data.shruju)], {x = self.x, juju = amount})

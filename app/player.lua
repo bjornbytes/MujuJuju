@@ -129,6 +129,7 @@ function Player:update()
     local ratio = self.health / self.maxHealth
     self.maxHealth = self.maxHealth + config.player.maxHealthPerMinute
     self.health = self.maxHealth * ratio
+    self.prevHealth = self.health
     self.maxHealthIncreaseTime = self.maxHealthIncreaseTime + 60
   end
 
@@ -173,13 +174,20 @@ function Player:keypressed(key)
   end
 
   if key == 'q' then
+    local picked = false
     ctx.shrujus:each(function(shruju)
       if shruju:playerNearby() then
         if self.shruju then self.shruju:drop() end
         shruju:pickup()
+        picked = true
         return true
       end
     end)
+
+    if not picked and self.shruju then
+      self.shruju:drop()
+      self.shruju = nil
+    end
   end
 end
 

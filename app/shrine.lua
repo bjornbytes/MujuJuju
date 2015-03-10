@@ -56,13 +56,17 @@ function Shrine:getHealthbar()
   return self.x, self.y, self.healthDisplay / self.maxHealth, self.healthDisplay / self.maxHealth
 end
 
-function Shrine:hurt(value)
-	self.health = math.max(self.health - value, 0)
+function Shrine:hurt(amount, source, kind)
+	self.health = math.max(self.health - amount, 0)
   self.lastHurt = tick
 	if self.health <= 0 and not ctx.ded then
     ctx.event:emit('shrine.dead', {shrine = self})
 		return true
 	end
+
+  if ctx.player:hasShruju('mirror') and source and kind and table.has(kind, 'attack') then
+    source:hurt(amount)
+  end
 end
 
 function Shrine:contains(x, y)
