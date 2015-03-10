@@ -11,16 +11,18 @@ function Dropdown:activate()
   self.prevHoverFactor = self.hoverFactor
   self.choiceHoverFactors = {}
   self.prevChoiceHoverFactors = {}
+  self.hoverDirty = false
 end
 
 function Dropdown:update()
   local mx, my = love.mouse.getPosition()
   local ox, oy = self:getOffset()
   mx, my = mx + ox, my + oy
+  local hover = self:contains(mx, my)
   self.prevFactor = self.factor
   self.prevHoverFactor = self.hoverFactor
   self.factor = math.lerp(self.factor, self:focused() and 1 or 0, math.min(16 * ls.tickrate, 1))
-  self.hoverFactor = math.lerp(self.hoverFactor, (self:focused() or self:contains(mx, my)) and 1 or 0, math.min(16 * ls.tickrate, 1))
+  self.hoverFactor = math.lerp(self.hoverFactor, (self:focused() or hover) and 1 or 0, math.min(16 * ls.tickrate, 1))
   if self:focused() then
     local hoverIndex = self:contains(mx, my)
     local hoverAmount = 1 + (love.mouse.isDown('l') and .5 or 0)
@@ -28,6 +30,24 @@ function Dropdown:update()
       self.prevChoiceHoverFactors[i] = self.choiceHoverFactors[i] or 0
       self.choiceHoverFactors[i] = math.lerp(self.prevChoiceHoverFactors[i], i == hoverIndex and hoverAmount or 0, math.min(16 * ls.tickrate, 1))
     end
+
+    if hover then
+      if self.hoverDirty ~= hoverIndex and hoverIndex ~= 0 and (not self.gooey.focused or self.gooey.focused == self) then
+        ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
+        self.hoverDirty = hoverIndex
+      end
+    else
+      self.hoverDirty = false
+    end
+  end
+
+  if hover then
+    if not self.hoverDirty and (not self.gooey.focused or self.gooey.focused == self) then
+      ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
+      self.hoverDirty = true
+    end
+  else
+    self.hoverDirty = false
   end
 end
 
@@ -96,6 +116,7 @@ function Dropdown:mousereleased(mx, my, b)
     if not self:focused() then
       if self.gooey.hot == self and self:contains(mx, my) then
         self.gooey:focus(self)
+        ctx.sound:play('juju1', function(sound) sound:setPitch(1) end)
       end
     else
       local hit = self.gooey.hot == self and self:contains(mx, my)
@@ -104,6 +125,7 @@ function Dropdown:mousereleased(mx, my, b)
       if hit then
         self.value = self.choices[hit] or self.value
         self:emit('change', {component = self})
+        ctx.sound:play('juju1', function(sound) sound:setPitch(1) end)
         return true
       end
     end

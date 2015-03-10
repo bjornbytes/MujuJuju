@@ -322,7 +322,7 @@ function Player:hurt(amount, source, kind)
 
     if amount > 5 then
       local sound = data.media.sounds['hit' .. love.math.random(1, 3)]
-      ctx.sound:play(sound, function(sound) sound:setVolume(.75) end)
+      ctx.sound:play(sound, function(sound) sound:setVolume(0) end)
     end
 
     -- Die if we are dead
@@ -339,7 +339,7 @@ function Player:die()
   self.buffs:die()
 
   self.animation:set('death')
-  ctx.sound:play('death', function(sound) sound:setVolume(.2) end)
+  ctx.sound:play('death', function(sound) sound:setVolume(.8) end)
 
   if self:hasShruju('reincarnation') then
     self:summon({force = true, nosound = true})

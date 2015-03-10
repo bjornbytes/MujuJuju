@@ -8,6 +8,7 @@ function Checkbox:activate()
   self.prevScale = self.scale
   self.factor = 0
   self.prevFactor = self.factor
+  self.hoverDirty = false
 end
 
 function Checkbox:update()
@@ -22,6 +23,15 @@ function Checkbox:update()
   self.scale = math.lerp(self.scale, hover and 1.15 or 1, math.min(16 * ls.tickrate, 1))
 
   self.factor = math.lerp(self.factor, self.value and 1 or 0, math.min(16 * ls.tickrate, 1))
+
+  if self:contains(mx, my) then
+    if not self.hoverDirty and not self.gooey.focused then
+      ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
+      self.hoverDirty = true
+    end
+  else
+    self.hoverDirty = false
+  end
 end
 
 function Checkbox:render()
@@ -54,7 +64,8 @@ end
 function Checkbox:mousereleased(mx, my, b)
   local ox, oy = self:getOffset()
   mx, my = mx + ox, my + oy
-  if b == 'l' and self:contains(mx, my) then
+  if b == 'l' and self:contains(mx, my) and not self.gooey.focused then
+    ctx.sound:play('juju1', function(sound) sound:setPitch(1) end)
     self:toggle()
   end
 end

@@ -13,6 +13,7 @@ function Slider:activate()
   self.prevFactor = self.factor
   self.hoverFactor = 0
   self.prevHoverFactor = self.hoverFactor
+  self.hoverDirty = false
 end
 
 function Slider:update()
@@ -35,6 +36,15 @@ function Slider:update()
   self.prevHoverFactor = self.hoverFactor
   local hover = (not self.gooey.hot and self:containsBar(mx, my)) or self.gooey.hot == self
   self.hoverFactor = math.lerp(self.prevHoverFactor, hover and 1 or 0, math.min(16 * ls.tickrate, 1))
+
+  if hover then
+    if not self.hoverDirty then
+      ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
+      self.hoverDirty = true
+    end
+  else
+    self.hoverDirty = false
+  end
 end
 
 function Slider:render()
