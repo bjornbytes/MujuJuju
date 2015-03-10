@@ -157,5 +157,6 @@ end
 
 function MenuStart:continue(destination)
   ctx:refreshBackground()
+  if ctx.optionsPane.active then ctx.optionsPane:toggle() end
   ctx:setPage('select', destination)
 end

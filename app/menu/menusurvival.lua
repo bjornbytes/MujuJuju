@@ -573,4 +573,5 @@ function MenuSurvival:refreshGutter()
       i = i + 1
     end
   end
+  table.clear(self.geometry)
 end

@@ -94,14 +94,14 @@ function MenuSurvivalDrag:draw()
 end
 
 function MenuSurvivalDrag:mousepressed(mx, my, b)
-  if b ~= 'l' then return end
+  if b ~= 'l' and b ~= 'r' then return end
 
   -- Rune Stash
   local runes = ctx.survival.geometry.runes
   for i = 1, #runes do
     local rune = ctx.user.runes.stash[i]
     local x, y, w, h = unpack(runes[i])
-    if i ~= #runes and rune and math.inside(mx, my, x, y, w, h) then
+    if b == 'l' and i ~= #runes and rune and math.inside(mx, my, x, y, w, h) then
       self.dragging = rune
       self.dragIndex = i
       self.dragSource = 'stash'
@@ -115,15 +115,21 @@ function MenuSurvivalDrag:mousepressed(mx, my, b)
     local minion = ctx.user.survival.minions[i]
     local x, y, r, runes = unpack(deck[i])
     if minion and math.insideCircle(mx, my, x, y, r) then
-      self.dragging = minion
-      self.dragIndex = i
-      self.dragSource = 'deck'
+      if b == 'l' then
+        self.dragging = minion
+        self.dragIndex = i
+        self.dragSource = 'deck'
+      elseif b == 'r' then
+        table.insert(ctx.survival.gutter, minion)
+        ctx.user.survival.minions[i] = nil
+        ctx.survival:refreshGutter()
+      end
     end
 
     if minion then
       for j = 1, #runes do
         local rune = ctx.user.runes[minion][j]
-        if rune and math.inside(mx, my, unpack(runes[j])) then
+        if b == 'l' and rune and math.inside(mx, my, unpack(runes[j])) then
           self.dragging = rune
           self.dragIndex = j
           self.dragSource = minion
@@ -137,7 +143,7 @@ function MenuSurvivalDrag:mousepressed(mx, my, b)
   for i = 1, #gutter do
     local minion = ctx.survival.gutter[i]
     local x, y, r, runes = unpack(ctx.survival.geometry.gutter[i])
-    if minion and math.insideCircle(mx, my, x, y, r) then
+    if b == 'l' and minion and math.insideCircle(mx, my, x, y, r) then
       self.dragging = minion
       self.dragIndex = i
       self.dragSource = 'gutter'
@@ -145,7 +151,7 @@ function MenuSurvivalDrag:mousepressed(mx, my, b)
 
     for j = 1, #runes do
       local rune = ctx.user.runes[minion][j]
-      if rune and math.inside(mx, my, unpack(runes[j])) then
+      if b == 'l' and rune and math.inside(mx, my, unpack(runes[j])) then
         self.dragging = rune
         self.dragIndex = j
         self.dragSource = minion
@@ -198,7 +204,7 @@ function MenuSurvivalDrag:mousereleased(mx, my, b)
     end
 
     for j = 1, #runes do
-      if self:isDraggingRune() and math.inside(mx, my, unpack(runes[j])) then
+      if minion and self:isDraggingRune() and math.inside(mx, my, unpack(runes[j])) then
         swapRune(source, index, minion, j)
         dirty = true
         break
@@ -279,7 +285,7 @@ function MenuSurvivalDrag:snap(mx, my, size)
       if dis < mindis then
         minx, miny, mindis, minsize = x, y, dis, .9
       end
-    elseif self:isDraggingRune() then
+    elseif minion and self:isDraggingRune() then
       for j = 1, #runes do
         local rune = ctx.user.runes[minion][j]
         local x, y, w, h = unpack(runes[j])
