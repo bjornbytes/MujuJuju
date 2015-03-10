@@ -74,7 +74,7 @@ function Player:activate()
       else
         ctx.sound:play('footstep' .. love.math.random(1, 2), function(sound)
           sound:setPitch(.9 + love.math.random() * .3)
-          sound:setVolume(.6)
+          sound:setVolume(.4)
         end)
       end
     end
