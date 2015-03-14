@@ -70,6 +70,8 @@ function MenuStart:init()
 
   self.sadAlpha = 0
   self.prevSadAlpha = 0
+
+  self.feedback = MenuFeedback()
 end
 
 function MenuStart:update()
@@ -85,6 +87,8 @@ function MenuStart:update()
 
   self.prevSadAlpha = self.sadAlpha
   self.sadAlpha = math.lerp(self.sadAlpha, ((love.keyboard.isDown('escape') and not ctx.optionsPane.active) or (self.quit:contains(love.mouse.getPosition()) and love.mouse.isDown('l'))) and 1 or 0, 4 * ls.tickrate)
+
+  self.feedback:update()
 end
 
 function MenuStart:draw()
@@ -120,6 +124,8 @@ function MenuStart:draw()
   self.options:draw()
   self.quit:draw()
 
+  self.feedback:draw()
+
   local sadAlpha = math.lerp(self.prevSadAlpha, self.sadAlpha, ls.accum / ls.tickrate)
   g.setColor(0, 0, 0, 255 * sadAlpha)
   g.rectangle('fill', 0, 0, u, v)
@@ -130,9 +136,19 @@ function MenuStart:draw()
   g.printCenter(str, u * .5, v * .5)
 end
 
+function MenuStart:keypressed(key)
+  if not self.active then return end
+  self.feedback:keypressed(key)
+end
+
 function MenuStart:keyreleased(key)
   if not self.active then return end
   if key == 'escape' then love.event.quit() end
+end
+
+function MenuStart:textinput(char)
+  if not self.active then return end
+  self.feedback:textinput(char)
 end
 
 function MenuStart:mousepressed(mx, my, b)
