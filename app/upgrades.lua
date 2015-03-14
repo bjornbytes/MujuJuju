@@ -27,6 +27,18 @@ Upgrades.clear = function()
       end
     end)
     data.unit[who].cost = data.unit[who].cost + config.units.upgradeCostIncrease
-    ctx.sound:play('menuHover', function(sound) sound:setVolume(2) end)
+  end
+
+  Upgrades.canBuyAttribute = function(who, what)
+    local unit = data.unit[who]
+    local p = ctx.player
+    return p.juju >= unit.attributeCosts[what]
+  end
+
+  Upgrades.unlockAttribute = function(who, what)
+    local unit = data.unit[who]
+    unit.attributes[what] = unit.attributes[what] + 1
+    unit.attributeCosts[what] = unit.attributeCosts[what] + config.attributes.costIncrease
+    unit.cost = unit.cost + config.units.attributeCostIncrease
   end
 end

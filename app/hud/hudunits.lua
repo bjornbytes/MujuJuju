@@ -421,14 +421,11 @@ function HudUnits:mousereleased(mx, my, b)
   local attributes = self.geometry.attributes
   for i = 1, #attributes do
     for j = 1, #attributes[i] do
-      local attribute = config.attributes.list[j]
+      local who, what = p.deck[i].code, config.attributes.list[j]
       local x, y, w, h = unpack(attributes[i][j])
       if math.inside(mx, my, x, y, w, h) then
-        local class = data.unit[p.deck[i].code]
-        local cost = 30 + 20 * class.attributes[attribute]
-        if p:spend(cost) then
-          class.attributes[attribute] = class.attributes[attribute] + 1
-          class.cost = class.cost + 1
+        if ctx.upgrades.canBuyAttribute(who, what) and p:spend(data.unit[who].attributeCosts[what]) then
+          ctx.upgrades.unlockAttribute(who, what)
           ctx.sound:play('upgrade')
           ctx.particles:emit('upgrade', mx, my, 10)
         else

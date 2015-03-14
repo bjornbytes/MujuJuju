@@ -274,7 +274,7 @@ function Tooltip:setAttributeTooltip(attribute, unit)
       end
       table.insert(pieces, '+' .. value .. ' ' .. stat .. ' per level {green}(' .. (total) .. '){white}')
     end)
-    local cost = 30 + 20 * level
+    local cost = unit.attributeCosts[attribute] or 30
     local color = p.juju >= cost and '{green}' or '{red}'
     table.insert(pieces, color .. cost .. ' juju')
   end

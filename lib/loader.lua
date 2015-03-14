@@ -92,8 +92,10 @@ data.load = function()
     end)
 
     unit.attributes = {}
+    unit.attributeCosts = {}
     table.each(config.attributes.list, function(attribute)
       unit.attributes[attribute] = 0
+      unit.attributeCosts[attribute] = config.attributes.baseCost
     end)
   end)
   load('data/spell', 'spell')

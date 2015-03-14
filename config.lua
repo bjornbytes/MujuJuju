@@ -18,6 +18,8 @@ return {
 
   attributes = {
     list = {'vitality', 'strength', 'agility', 'flow'},
+    baseCost = 30,
+    costIncrease = 20,
     descriptions = {
       vitality = 'Increases the health of your minion.',
       strength = 'Increases the damage that minions deal with attacks.',
@@ -382,7 +384,8 @@ return {
   units = {
     baseHealthScaling = 3,
     baseDamageScaling = 3,
-    upgradeCostIncrease = 2
+    upgradeCostIncrease = 2,
+    attributeCostIncrease = 1
   },
 
   enemies = {
