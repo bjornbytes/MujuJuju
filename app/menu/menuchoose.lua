@@ -143,15 +143,6 @@ end
 function MenuChoose:mousepressed(mx, my, b)
   if not self.active then return end
   if b == 'l' then
-    --[[local minions = self.geometry.minions
-    for i = 1, #minions do
-      local x, y, r = unpack(minions[i])
-      if self.selectedMinion ~= i and math.distance(mx, my, x, y) < r then
-        self.selectedMinion = i
-        ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
-      end
-    end]]
-
     local colors = self.geometry.colors
     for i = 1, #colors do
       if self.user.color ~= config.player.colorOrder[i] and math.inside(mx, my, unpack(colors[i])) then
@@ -178,6 +169,5 @@ function MenuChoose:finished()
   if #self.user.name == 0 then return end
   saveUser(self.user)
   ctx.user = self.user
-  Context:add(Game, self.user, ctx.options, {mode = 'campaign', biome = 'forest', tutorial = true, destination = self.destination})
-  Context:remove(ctx)
+  ctx:startGame({mode = 'campaign', biome = 'forest', tutorial = true, destination = self.destination})
 end

@@ -339,7 +339,7 @@ function Player:die()
   self.buffs:die()
 
   self.animation:set('death')
-  ctx.sound:play('death', function(sound) sound:setVolume(.8) end)
+  ctx.sound:play('death', function(sound) sound:setVolume(.5) end)
 
   if self:hasShruju('reincarnation') then
     self:summon({force = true, nosound = true})
