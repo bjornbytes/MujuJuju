@@ -1,5 +1,5 @@
 local ShadowRush = extend(Ability)
-ShadowRush.ranges = {100, 200, 300}
+ShadowRush.ranges = {150, 225, 300}
 ShadowRush.cooldowns = {12, 8, 4}
 
 function ShadowRush:update()
