@@ -116,10 +116,7 @@ function Menu:keyreleased(key)
   if self.choose:keyreleased(key) then return end
   if self.start:keyreleased(key) then return end
 
-  if key == 't' then
-    Context:remove(ctx)
-    Context:add(Game, config.defaultUser, self.options, {mode = 'campaign', biome = 'forest', tutorial = true})
-  elseif key == 'm' then
+  if key == 'm' then
     self.options.mute = not self.options.mute
     self.sound:setMute(self.options.mute)
     saveOptions(self.options)
