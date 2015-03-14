@@ -104,8 +104,7 @@ function Menu:draw()
 end
 
 function Menu:keypressed(key)
-  if self.choose:keypressed(key) then return
-  elseif self.start:keypressed(key) then return end
+  if self.choose:keypressed(key) then return end
 end
 
 function Menu:keyreleased(key)
@@ -168,7 +167,6 @@ end
 
 function Menu:textinput(char)
   self.choose:textinput(char)
-  self.start:textinput(char)
 end
 
 function Menu:resize()
