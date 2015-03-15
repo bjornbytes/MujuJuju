@@ -31,7 +31,7 @@ function Shrine:update()
   self.hurtFactor = math.lerp(self.hurtFactor, (tick - self.lastHurt) * ls.tickrate < 5 and 1 or 0, math.min(4 * ls.tickrate, 1))
 
   if tick - self.lastHurt > 5 / ls.tickrate then
-    self.health = math.min(self.health + (self.maxHealth * .002) * ls.tickrate, self.maxHealth)
+    self.health = math.min(self.health + (self.maxHealth * .003) * ls.tickrate, self.maxHealth)
   end
 
   self.health = math.min(self.health + math.max(self.regen, 0) * ls.tickrate, self.maxHealth)
