@@ -19,6 +19,8 @@ function Frostbite:activate()
   self.alpha = 1
   self.prevAlpha = self.alpha
 
+  ctx.sound:play(data.media.sounds.kuju.frostbite)
+
   ctx.event:emit('view.register', {object = self})
 end
 
@@ -54,6 +56,10 @@ function Frostbite:update()
         target:hurt(target.health * (.08 * wintersblight), unit, {'spell'})
       end
     end)
+
+    if #targets > 0 then
+      ctx.sound:play(data.media.sounds.kuju.frostbitetick)
+    end
 
     for k, v in pairs(self.damages) do
       if not touched[k] then

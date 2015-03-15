@@ -22,6 +22,7 @@ function Teleport:use()
   if self.unit.animation.state.name == 'teleport' then
     self.unit.casting = true
     self.timer = self.cooldown
+    ctx.sound:play(data.media.sounds.vuju.teleport)
   end
 end
 

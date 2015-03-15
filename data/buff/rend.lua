@@ -26,6 +26,7 @@ function Rend:preattack(target, amount)
 
     local x, y = self.unit:attackParticlePosition(target)
     ctx.particles:emit('crit', x, y, 10)
+    ctx.sound:play(data.media.sounds.xuju.crit)
 
     return amount * 2
   end

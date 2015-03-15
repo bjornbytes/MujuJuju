@@ -17,6 +17,8 @@ function FrozenOrb:activate()
   self.prevangle = self.angle
   self.angularVelocity = 4 + love.math.random()
 
+  ctx.sound:play(data.media.sounds.kuju.frozenorb)
+
   ctx.event:emit('view.register', {object = self})
 end
 
@@ -50,6 +52,7 @@ function FrozenOrb:update()
     local damage = ability.runeDamage + unit.spirit * spiritRatio
     target:hurt(damage, unit, {'spell'})
     ctx.particles:emit('frozenorb', self.x, self.y, 1)
+    ctx.sound:play(data.media.sounds.kuju.frozenorb)
 
     local wintersblight = unit:upgradeLevel('wintersblight')
     if wintersblight > 0 then

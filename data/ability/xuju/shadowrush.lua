@@ -14,8 +14,9 @@ function ShadowRush:fire()
   local level = self.unit:upgradeLevel('shadowrush')
   self.unit.animation:set('dash')
 
-  if self.unit.target and math.abs(self.unit.target.x - self.unit.x) < self.ranges[level] then
+  if self.unit.target and math.abs(self.unit.target.x - self.unit.x) < self.ranges[level] and math.abs(self.unit.target.x - self.unit.x) > 75 then
     self.unit.x = self.unit.target.x - (self.unit.target.width / 2 + self.unit.width / 2) * self:getUnitDirection()
+    ctx.sound:play(data.media.sounds.xuju.shadowrush)
   end
 end
 

@@ -6,6 +6,7 @@ function Puppetize:activate()
   self.unit.team = self.unit.team == 0 and ctx.player.team or 0
   self.unit.target = nil
   self.unit.animation:set('idle', {force = true})
+  self.sound = ctx.sound:loop(data.media.sounds.vuju.puppetize)
 end
 
 function Puppetize:deactivate()
@@ -16,6 +17,7 @@ function Puppetize:deactivate()
     self.owner.channeling = false
     self.owner.animation:set('idle', {force = true})
   end
+  if self.sound then self.sound:stop() end
 end
 
 return Puppetize
