@@ -106,7 +106,7 @@ Bruju.upgrades = {
     y = 1,
     connectedTo = {'siphon'},
     values = {
-      [1] = '2.00x lifesteal'
+      [1] = '200% lifesteal when low on health'
     }
   },
 
@@ -203,7 +203,7 @@ Bruju.upgrades = {
     y = 3,
     connectedTo = {'fortify'},
     values = {
-      [1] = '50% reduction.',
+      [1] = '50% reduction',
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -224,7 +224,7 @@ Bruju.upgrades = {
     y = 3,
     connectedTo = {'eruption'},
     values = {
-      [1] = '50% of the damage heals.',
+      [1] = '50% of the damage heals',
     }
   },
 
@@ -257,7 +257,7 @@ Bruju.upgrades = {
     x = 0,
     y = 4,
     values = {
-      [1] = '10% increased healing from all sources.',
+      [1] = '10% increased healing from all sources',
     },
     apply = function(self, unit)
       if self.level > 0 then
