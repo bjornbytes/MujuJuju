@@ -1,6 +1,6 @@
 local Ambush = extend(Ability)
 
-Ambush.cooldown = 7
+Ambush.cooldown = 8
 Ambush.damage = 50
 Ambush.spiritRatio = 1
 

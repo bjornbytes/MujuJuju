@@ -171,11 +171,11 @@ Xuju.upgrades = {
     maxLevel = 1,
     costs = {1000},
     name = 'Grim Reaper',
-    description = 'When Xuju dies, he resurrects for 5 seconds',
+    description = 'When Xuju dies, his void form seeks revenge on his attacker, killing them instantly.',
     x = -1,
     y = 3,
     values = {
-      [1] = 'Something cool'
+      [1] = 'Sweet revenge'
     },
     apply = function(self, unit)
       if self.level > 0 then
@@ -188,7 +188,7 @@ Xuju.upgrades = {
     level = 0,
     maxLevel = 1,
     prerequisites = {shadowrush = 1},
-    costs = {500},
+    costs = {300},
     name = 'Ambush',
     description = 'When Muju enters the Juju Realm, Xuju disappears and appears behind the closest enemy, dealing damage.',
     x = -1,

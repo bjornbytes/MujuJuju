@@ -49,7 +49,7 @@ function UnitBuffs:update()
   -- Apply DoTs
   local dots = self:buffsWithTag('dot')
   table.each(dots, function(dot)
-    self.unit:hurt(dot.dot * ls.tickrate)
+    self.unit:hurt(dot.dot * ls.tickrate, nil, {'dot'})
   end)
 
   -- Apply Knockups

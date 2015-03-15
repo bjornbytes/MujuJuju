@@ -16,7 +16,7 @@ function Rewind:update()
 end
 
 function Rewind:posthurt(amount, source, kind)
-  if love.math.random() < self.runeChance + .05 * self.unit:upgradeLevel('rewind') then
+  if (not kind or not table.has(kind, 'dot')) and love.math.random() < self.runeChance + .05 * self.unit:upgradeLevel('rewind') then
     self.amount = self.amount + amount
 
     if self.unit:upgradeLevel('impulse') > 0 then
