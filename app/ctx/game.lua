@@ -107,7 +107,10 @@ end
 function Game:keypressed(key)
   if not self.ded then
     if key == 'p' or (key == 'escape' and not self.hud:menuActive()) then self.paused = not self.paused
-    elseif key == 'm' then self.sound:mute() end
+    elseif key == 'm' then
+      -- self.options.mute = not self.options.mute
+      self.sound:mute()
+    end
   end
   self.hud:keypressed(key)
   self.players:keypressed(key)
