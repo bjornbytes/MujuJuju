@@ -14,7 +14,7 @@ function Shruju:activate()
   end)
 
   ctx.event:emit('view.register', {object = self})
-  ctx.sound:play(data.media.sounds.shrujuSpawn)
+  ctx.sound:play('shrujuSpawn')
 end
 
 function Shruju:update()
