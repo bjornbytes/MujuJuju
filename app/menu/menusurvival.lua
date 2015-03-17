@@ -560,6 +560,10 @@ function MenuSurvival:setBiome(biome)
 end
 
 function MenuSurvival:mujuDead()
+  local deck = ctx.user.survival.minions
+  if not deck[1] and not deck[2] then return end
+  if not deck[1] and deck[2] then table.remove(deck, 1) end
+  if #deck >= 3 then return end
   ctx:startGame({mode = 'survival', biome = config.biomeOrder[love.math.random(1, #config.biomeOrder)]})
 end
 
