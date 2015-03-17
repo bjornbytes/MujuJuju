@@ -10,9 +10,9 @@ function HudShruju:init()
   self.geometryFunctions = {
     shruju = function()
       local u, v = ctx.hud.u, ctx.hud.v
-      local size = .08 * v
+      local size = .075 * v
       local x = u * .5
-      local y = v - (size / 2) - .01 * v
+      local y = v - (size / 2) - .005 * v
       return {x - size / 2, y - size / 2, size, size}
     end
   }
@@ -38,6 +38,18 @@ function HudShruju:draw()
     local image = data.media.graphics.shruju['shruju' .. p.shruju.index]
     local scale = math.min((w - (.02 * v)) / (image:getHeight() - 8), (h - (.02 * v)) / (image:getWidth() - 8))
     g.draw(image, x + w / 2, y + h / 2, math.sin(tick / 10) / 10, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
+
+    local str = p.shruju.name
+    local font = g.setFont('mesmerize', .02 * v)
+    local qw, qh = atlas:getDimensions('title')
+    local padding = .01 * v
+    local xscale = (font:getWidth(str) + 2 * padding) / qw
+    local yscale = (font:getHeight() + 2 * padding) / qh
+    y = y - h / 2 - .005 * v - qh * yscale * .5
+    g.setColor(255, 255, 255, 100)
+    g.draw(atlas.texture, atlas.quads.title, x + w / 2, y + h / 2, 0, xscale, yscale, qw / 2, qh / 2)
+    g.setColor(255, 255, 255, 200)
+    g.printShadow(str, x + w / 2, y + h / 2, true)
   end
 
   ctx.shrujus:each(function(shruju)
@@ -54,6 +66,8 @@ function HudShruju:draw()
     g.draw(atlas.texture, atlas.quads.title, x, y + .002 * v, 0, xscale, yscale, w / 2, h / 2)
     g.setColor(255, 255, 255, 200)
     g.printShadow(str, x, y, true)
+
+    g.printShadow('Q', x, y + padding + g.getFont():getHeight(), true)
   end)
 end
 
