@@ -564,7 +564,19 @@ function MenuSurvival:mujuDead()
 end
 
 function MenuSurvival:refreshGutter()
-  self.gutter = table.copy(config.starters)
+  self.gutter = {config.biomes[config.biomeOrder[1]].minion}
+
+  for i = 1, #config.biomeOrder do
+    local biome = config.biomeOrder[i]
+    local nextBiome = config.biomeOrder[i + 1]
+    if nextBiome then
+      local minion = config.biomes[nextBiome].minion
+      if minion and ctx.user.campaign.medals[biome].silver then
+        table.insert(self.gutter, minion)
+      end
+    end
+  end
+
   local i = 1
   while i <= #self.gutter do
     if table.has(ctx.user.survival.minions, self.gutter[i]) then
