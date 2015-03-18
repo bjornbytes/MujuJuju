@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "aHNgUtxn3CJRbijI0UOa0WhM4j4", "spine": "2.1.16", "width": 107.99, "height": 108.99 },
+"skeleton": { "hash": "pjurdNu9y2C68Nkt9YKR84MRxP8", "spine": "2.1.18", "width": 107.99, "height": 108.99 },
 "bones": [
 	{ "name": "root" },
 	{ "name": "glow", "parent": "root", "length": 35.22, "x": 3.5, "y": 96, "rotation": -83.7 },
@@ -423,7 +423,7 @@
 			}
 		},
 		"events": [
-			{ "time": 0.4, "name": "deathjuju" }
+			{ "time": 0.2333, "name": "deathjuju" }
 		]
 	},
 	"fear": {
