@@ -274,6 +274,12 @@ function Tutorial:gui()
 
     g.setColor(255, 255, 255, 255 * alpha)
     g.printShadow(str, rx, ry, true)
+
+    if self.message == 'muju' then
+      local str = '(space)'
+      local font = g.setFont('mesmerize', .02 * v)
+      g.printShadow(str, rx - w / 2 - padding, ry + h / 2 + padding + 1)
+    end
   end
 end
 
