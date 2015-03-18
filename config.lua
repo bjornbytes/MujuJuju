@@ -437,7 +437,7 @@ return {
       }
     },
     volcano = {
-      level = 30,
+      level = 20,
       minEnemyRate = 9,
       maxEnemyRate = 11,
       minEnemyRateDecay = .025,
