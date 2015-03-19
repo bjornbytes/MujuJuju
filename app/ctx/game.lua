@@ -58,6 +58,14 @@ function Game:load(user, options, info)
   love.keyboard.setKeyRepeat(false)
 
   if self.options.mute then self.sound:mute() end
+
+  for i = 1, 8 * 60 / ls.tickrate do
+    self:update()
+    ctx.units:each(function(unit)
+      unit:hurt(1000000)
+    end)
+  end
+  ctx.player:addJuju(1200)
 end
 
 function Game:update()

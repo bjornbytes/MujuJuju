@@ -137,6 +137,16 @@ end
 function MenuUser:slotPicked(slot)
   if not self.slots[slot].empty then
     ctx.user = self.users[slot]
+    ctx.user.campaign.medals = {
+      forest = {bronze = true, silver = true, gold = true},
+      cavern = {bronze = true, silver = true, gold = true},
+      tundra = {bronze = true, silver = true, gold = true},
+      volcano = {bronze = true, silver = true, gold = true}
+    }
+    ctx.user.hats = {
+      'santa', 'horns', 'wizard', 'party'
+    }
+    ctx.user.color = config.player.colorOrder[love.math.random(1, #config.player.colorOrder)]
     ctx:setPage(self.destination or 'campaign')
   else
     ctx.choose.user.slot = slot
