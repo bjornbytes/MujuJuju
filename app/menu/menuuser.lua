@@ -143,9 +143,14 @@ function MenuUser:slotPicked(slot)
       tundra = {bronze = true, silver = true, gold = true},
       volcano = {bronze = true, silver = true, gold = true}
     }
-    ctx.user.hats = {
-      'santa', 'horns', 'wizard', 'party'
-    }
+    ctx.user.hats = {}
+    for i = 1, 4 do
+      local hat
+      while not hat or table.has(ctx.user.hats, hat) do
+        hat = config.hats[love.math.random(1, #config.hats)]
+      end
+      table.insert(ctx.user.hats, hat)
+    end
     ctx.user.color = config.player.colorOrder[love.math.random(1, #config.player.colorOrder)]
     ctx:setPage(self.destination or 'campaign')
   else
