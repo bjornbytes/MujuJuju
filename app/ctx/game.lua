@@ -74,7 +74,6 @@ function Game:update()
 
   self.timer = self.timer + 1
   ls.framerate = self.options.powersave and (love.system.getPowerInfo() == 'battery' and 30 or 60) or -1
-  ls.timescale = love.keyboard.isDown('lshift') and 3 or 1
 
   self.players:update()
   self.units:update()
