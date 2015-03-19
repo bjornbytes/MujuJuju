@@ -72,7 +72,7 @@ function HudDeadSurvival:draw()
     g.setColor(253, 238, 65, 255 * self.deadAlpha)
     g.setFont('mesmerize', smallFont)
     str = 'You Scored:'
-    g.printCenter(str, u * .5, v * .375)
+    g.printShadow(str, u * .5, v * .375, true)
 
     g.setColor(240, 240, 240, 255 * self.deadAlpha)
     str = tostring(toTime(ctx.timer * ls.tickrate, true))
