@@ -2,7 +2,10 @@ local Spined = extend(Buff)
 Spined.tags = {'elite'}
 
 function Spined:prehurt(amount, source, kind)
-  source:hurt(amount * self.reflect, self.unit)
+  if source then
+    source:hurt(amount * self.reflect, self.unit)
+  end
+  
   return amount
 end
 
