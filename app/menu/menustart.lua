@@ -73,7 +73,7 @@ function MenuStart:init()
   self.feedback.geometry = function() return self.geometry.feedback end
   self.feedback.text = 'Feedback'
   self.feedback:on('click', function()
-    love.system.openURL('http://mujujuju.com/feedback')
+    love.system.openURL('http://mujujuju.com/feedback.html')
   end)
 
   self.offsetX = 0
