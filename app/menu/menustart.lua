@@ -43,6 +43,12 @@ function MenuStart:init()
       local u, v = ctx.u, ctx.v
       local w, h = .1 * u, .05 * v
       return {0, v - h, w, h}
+    end,
+
+    credits = function()
+      local u, v = ctx.u, ctx.v
+      local w, h = .1 * u, .05 * v
+      return {u - w, v - h, w, h}
     end
   }
 
@@ -73,7 +79,14 @@ function MenuStart:init()
   self.feedback.geometry = function() return self.geometry.feedback end
   self.feedback.text = 'Feedback'
   self.feedback:on('click', function()
-    love.system.openURL('http://mujujuju.com/feedback')
+    love.system.openURL('http://mujujuju.com/feedback.html')
+  end)
+
+  self.credits = ctx.gooey:add(Button, 'menu.start.credits')
+  self.credits.geometry = function() return self.geometry.credits end
+  self.credits.text = 'Credits'
+  self.credits:on('click', function()
+    love.system.openURL('http://mujujuju.com/credits.html')
   end)
 
   self.offsetX = 0
@@ -133,6 +146,7 @@ function MenuStart:draw()
   self.options:draw()
   self.quit:draw()
   self.feedback:draw()
+  self.credits:draw()
 
   local sadAlpha = math.lerp(self.prevSadAlpha, self.sadAlpha, ls.accum / ls.tickrate)
   g.setColor(0, 0, 0, 255 * sadAlpha)

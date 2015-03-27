@@ -293,6 +293,14 @@ function MenuSurvival:draw()
   g.setColor(0, 0, 0, 100)
   g.rectangle('fill', unpack(self.geometry.runesFrame))
 
+  -- Notice
+  if #ctx.user.survival.minions == 0 then
+    g.setFont('mesmerize', .02 * v)
+    local x, y = unpack(self.geometry.deck[1])
+    g.setColor(255, 255, 255)
+    g.printShadow('Drag a minion here!', x, y, true)
+  end
+
   -- Rune Frames
   g.setColor(255, 255, 255)
   local runes = self.geometry.runes
