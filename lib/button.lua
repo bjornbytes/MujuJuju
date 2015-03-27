@@ -49,12 +49,6 @@ function Button:render()
   local active = hover and love.mouse.isDown('l') and self.gooey.hot == self
 
   -- Button
-  local button = data.media.graphics.menu.button
-  local buttonActive = data.media.graphics.menu.buttonActive
-  local diff = (button:getHeight() - buttonActive:getHeight())
-  local image = active and buttonActive or button
-  local bgy = y + h
-  local yscale = h / button:getHeight()
   g.setColor(0, 0, 0, 85)
   g.rectangle('fill', x, y, w, h)
 

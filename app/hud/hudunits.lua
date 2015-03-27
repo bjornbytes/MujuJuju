@@ -227,13 +227,11 @@ function HudUnits:drawBackground()
         g.setColor(val, val, val, 255 * upgradeAlphaFactor)
         self:batch('attributeFrame' .. i .. j, 'frame', x, y, 0, scale, scale)
 
-        local image = data.media.graphics.hud.icons[attribute]
-        if image then
-          local scale = math.min((w - (v * .03)) / image:getWidth(), (h - (v * .03)) / image:getHeight())
-          local code = 'attributeIcon' .. i .. j
-          g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
-          self:batch(code, attribute, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
-        end
+        local qw, qh = data.atlas.hud:getDimensions(attribute)
+        local scale = math.min((w - (v * .03)) / qw, (h - (v * .03)) / qh)
+        local code = 'attributeIcon' .. i .. j
+        g.setColor(255, 255, 255, 255 * upgradeAlphaFactor)
+        self:batch(code, attribute, x + w / 2, y + h / 2, 0, scale, scale, qw / 2, qh / 2)
       end
     end
 
