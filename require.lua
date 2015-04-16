@@ -14,6 +14,7 @@ ls = require 'lib/deps/lovestep/lovestep'
 
 require 'lib/deps/lutil/util'
 require 'lib/deps/spine/love/spine'
+require 'lib/deps/lume'
 load 'lib/deps/slam'
 
 load 'lib'
