@@ -15,7 +15,7 @@ function isa(instance, class)
 end
 
 function math.insideCircle(x, y, cx, cy, r)
-  return math.distance(x, y, cx, cy) < r
+  return lume.distance(x, y, cx, cy) < r
 end
 
 function toTime(x, format)
@@ -33,7 +33,7 @@ if love.graphics then
   local g = love.graphics
   function g.printCenter(what, x, y)
     local font = g.getFont()
-    g.print(what, x, y, 0, 1, 1, math.round(font:getWidth(what) / 2), math.round(font:getHeight(what) / 2))
+    g.print(what, x, y, 0, 1, 1, lume.round(font:getWidth(what) / 2), lume.round(font:getHeight(what) / 2))
   end
 
   function g.printShadow(what, x, y, center, shadowColor)

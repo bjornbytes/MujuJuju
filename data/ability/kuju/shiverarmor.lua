@@ -14,11 +14,11 @@ function ShiverArmor:bonuses()
 
   local spirit = Unit.getStat('kuju', 'spirit')
   if spirit > 0 then
-    table.insert(bonuses, {'Spirit', math.round(spirit * self.spiritRatio), 'damage'})
+    table.insert(bonuses, {'Spirit', lume.round(spirit * self.spiritRatio), 'damage'})
   end
 
   if self.runeDamage > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeDamage), 'damage'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeDamage), 'damage'})
   end
 
   return bonuses

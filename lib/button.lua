@@ -18,7 +18,7 @@ function Button:update()
   self.prevHoverFactor = self.hoverFactor
   self.prevHoverFade = self.hoverFade
   if self.hoverActive then
-    self.hoverFactor = math.lerp(self.hoverFactor, 1, math.min(8 * ls.tickrate, 1))
+    self.hoverFactor = lume.lerp(self.hoverFactor, 1, math.min(8 * ls.tickrate, 1))
     if self.hoverFactor > .999 then
       self.hoverFade = math.min(self.hoverFade + ls.tickrate, 1)
     end
@@ -52,10 +52,10 @@ function Button:render()
   g.setColor(0, 0, 0, 85)
   g.rectangle('fill', x, y, w, h)
 
-  local fade = math.lerp(self.prevHoverFade, self.hoverFade, ls.accum / ls.tickrate)
+  local fade = lume.lerp(self.prevHoverFade, self.hoverFade, ls.accum / ls.tickrate)
   g.setColor(0, 0, 0, 200)
   g.setLineWidth(2)
-  local xx, yy = math.round(x) + .5, math.round(y) + .5
+  local xx, yy = lume.round(x) + .5, lume.round(y) + .5
   w, h = math.floor(w), math.floor(h)
   g.line(xx, yy + h, xx + w, yy + h)
   g.line(xx + w, yy, xx + w, yy + h)
@@ -65,7 +65,7 @@ function Button:render()
     if not self.hoverActive then
       self.hoverX = mx
       self.hoverY = my
-      local d = math.distance
+      local d = lume.distance
       self.hoverDistance = math.max(d(mx, my, x, y), d(mx, my, x + w, y), d(mx, my, x, y + h), d(mx, my, x + w, y + h))
       ctx.sound:play('juju1', function(sound) sound:setPitch(.75) end)
     end
@@ -75,7 +75,7 @@ function Button:render()
       g.rectangle('fill', x, y, w, h)
     end)
 
-    local factor = math.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
+    local factor = lume.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
     g.setColor(255, 255, 255, 40 * (1 - fade))
     g.setBlendMode('alpha')
     g.circle('fill', self.hoverX, self.hoverY, factor * self.hoverDistance)

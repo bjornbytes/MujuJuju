@@ -209,8 +209,8 @@ function MenuOptions:update()
 
   local joysticks = love.joystick.getJoysticks()
   if #joysticks == 0 then
-    if self.targetScroll < 0 then self.targetScroll = math.lerp(self.targetScroll, 0, math.min(12 * ls.tickrate, 1))
-    elseif self.targetScroll > self.height - v then self.targetScroll = math.lerp(self.targetScroll, self.height - v, math.min(12 * ls.tickrate, 1)) end
+    if self.targetScroll < 0 then self.targetScroll = lume.lerp(self.targetScroll, 0, math.min(12 * ls.tickrate, 1))
+    elseif self.targetScroll > self.height - v then self.targetScroll = lume.lerp(self.targetScroll, self.height - v, math.min(12 * ls.tickrate, 1)) end
   else
     if self.targetScroll < 0 then self.targetScroll = 0
     elseif self.targetScroll > self.height -v then self.targetScroll = self.height - v end
@@ -222,7 +222,7 @@ function MenuOptions:update()
       local ox, oy = self.components[control]:getOffset()
       local mx, my = mx + ox, my + oy
       if self.controlDescriptions[control] and self.components[control]:contains(mx, my) and ctx.gooey.focused ~= self.components[control] and (not ctx.gooey.focused or not ctx.gooey.focused:contains(mx, my)) then
-        self.tooltipFactor = math.lerp(self.tooltipFactor, 1, math.min(6 * ls.tickrate, 1))
+        self.tooltipFactor = lume.lerp(self.tooltipFactor, 1, math.min(6 * ls.tickrate, 1))
         self.tooltipText = self.controlDescriptions[control]
         dirty = true
       end
@@ -230,7 +230,7 @@ function MenuOptions:update()
   end)
 
   if not dirty then
-    self.tooltipFactor = math.lerp(self.tooltipFactor, 0, math.min(1 * ls.tickrate, 1))
+    self.tooltipFactor = lume.lerp(self.tooltipFactor, 0, math.min(1 * ls.tickrate, 1))
   end
 end
 
@@ -245,7 +245,7 @@ function MenuOptions:draw()
     table.clear(self.geometry)
     self.height = self.geometry.options.height
   end
-  self.scroll = math.lerp(self.scroll, self.targetScroll, 8 * ls.dt)
+  self.scroll = lume.lerp(self.scroll, self.targetScroll, 8 * ls.dt)
   local scroll = self.scroll
 
   local x1 = u + self.offset
@@ -326,7 +326,7 @@ function MenuOptions:draw()
   g.pop()
 
   if self.tooltipFactor > .01 and self.tooltipText ~= '' then
-    local tooltipFactor = math.lerp(self.prevTooltipFactor, self.tooltipFactor, ls.accum / ls.tickrate)
+    local tooltipFactor = lume.lerp(self.prevTooltipFactor, self.tooltipFactor, ls.accum / ls.tickrate)
     tooltipFactor = math.clamp((tooltipFactor - .8) / .2, 0, 1)
     local str = self.tooltipText
     local font = g.setFont('mesmerize', .02 * v)

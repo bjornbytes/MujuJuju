@@ -36,15 +36,15 @@ function Burst:bonuses()
   end
 
   if spirit > 0 then
-    table.insert(bonuses, {'Spirit', math.round(spirit * self.spiritRatio), 'damage'})
+    table.insert(bonuses, {'Spirit', lume.round(spirit * self.spiritRatio), 'damage'})
   end
 
   if self.runeDamage > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeDamage), 'damage'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeDamage), 'damage'})
   end
 
   if self.runeRange > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeRange), 'range'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeRange), 'range'})
   end
 
   return bonuses

@@ -3,12 +3,12 @@ MenuCampaign = class()
 
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
-  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.animationTransforms[code][key] = lume.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 local function lerpRune(rune, key, val)
   ctx.campaign.prevRuneTransforms[rune][key] = ctx.campaign.runeTransforms[rune][key]
-  ctx.campaign.runeTransforms[rune][key] = math.lerp(ctx.campaign.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.campaign.runeTransforms[rune][key] = lume.lerp(ctx.campaign.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuCampaign:init()
@@ -48,7 +48,7 @@ function MenuCampaign:init()
       local y = v * .675
       local res = {}
       for i = 1, 33 do
-        table.insert(res, {math.round(x), math.round(y), size, size})
+        table.insert(res, {lume.round(x), lume.round(y), size, size})
         x = x + inc
         if i % 11 == 0 then y = y + inc x = ox end
       end
@@ -203,7 +203,7 @@ function MenuCampaign:update()
     if hat and hats[i] then
       local hover = math.insideCircle(mx, my, unpack(hats[i]))
       self.prevHatHoverFactors[hat] = self.hatHoverFactors[hat] or 0
-      self.hatHoverFactors[hat] = math.lerp(self.hatHoverFactors[hat] or 0, hover and 1 or 0, math.min(10 * ls.tickrate, 1))
+      self.hatHoverFactors[hat] = lume.lerp(self.hatHoverFactors[hat] or 0, hover and 1 or 0, math.min(10 * ls.tickrate, 1))
     end
   end
 
@@ -304,7 +304,7 @@ function MenuCampaign:draw()
     if i == 33 then
       local image = data.media.graphics.menu.trashcan
       local scale = (h - .025 * v) / image:getHeight()
-      local dragAlpha = math.lerp(self.drag.prevDragAlpha, self.drag.dragAlpha, ls.accum / ls.tickrate)
+      local dragAlpha = lume.lerp(self.drag.prevDragAlpha, self.drag.dragAlpha, ls.accum / ls.tickrate)
       g.setColor(255, 255, 255, 150 + 100 * dragAlpha)
       g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     else
@@ -312,7 +312,7 @@ function MenuCampaign:draw()
       if rune and not self.drag:isDragging('stash', i) then
         local lerpd = {}
         for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
-          lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+          lerpd[k] = lume.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
         g.setColor(255, 255, 255)
         g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * v, (lerpd.size - .015 * v) * .5, table.has(ctx.rewards.runes, rune))
@@ -397,7 +397,7 @@ function MenuCampaign:draw()
     g.setColor(255, 255, 255)
     g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
     if self.drag.dragSource == 'stash' and self.drag.dragAlpha > 0 then
-      local alpha = math.lerp(self.drag.prevDragAlpha, self.drag.dragAlpha, ls.accum / ls.tickrate)
+      local alpha = lume.lerp(self.drag.prevDragAlpha, self.drag.dragAlpha, ls.accum / ls.tickrate)
       g.setBlendMode('additive')
       g.setColor(255, 255, 255, 80 * alpha)
       g.draw(atlas.texture, atlas.quads.frame, x, y, 0, scale, scale)
@@ -413,7 +413,7 @@ function MenuCampaign:draw()
 
       local lerpd = {}
       for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
-        lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+        lerpd[k] = lume.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
       end
 
       g.setColor(255, 255, 255)
@@ -460,7 +460,7 @@ function MenuCampaign:draw()
       if image then
         local x, y, r = unpack(hats[i])
         local scale = r * 2 / math.max(image:getWidth(), image:getHeight())
-        local factor = math.lerp(self.prevHatHoverFactors[hat], self.hatHoverFactors[hat], ls.accum / ls.tickrate)
+        local factor = lume.lerp(self.prevHatHoverFactors[hat], self.hatHoverFactors[hat], ls.accum / ls.tickrate)
         scale = scale * (.8 + .2 * factor)
         g.setColor(255, 255, 255, 180 + (75 * (ctx.user.hat == hat and 1 or 0)))
         g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)

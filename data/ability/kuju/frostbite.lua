@@ -32,11 +32,11 @@ function Frostbite:bonuses()
   local bonuses = {}
 
   if self.runeDamage > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeDamage), 'damage'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeDamage), 'damage'})
   end
 
   if self.runeSize > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeSize * 100) .. '%', 'size'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeSize * 100) .. '%', 'size'})
   end
 
   return bonuses

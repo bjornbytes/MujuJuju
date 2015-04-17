@@ -31,7 +31,7 @@ end
 function Rewind:bonuses()
   local bonuses = {}
   if self.runeChance > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeChance * 100) .. '%', 'chance'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeChance * 100) .. '%', 'chance'})
   end
   return bonuses
 end

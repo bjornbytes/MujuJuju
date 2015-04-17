@@ -31,9 +31,9 @@ function Juju:update()
 
 	if self.dead then
 		local tx, ty = 910, 18
-		self.x, self.y = math.lerp(self.x, tx, 10 * ls.tickrate), math.lerp(self.y, ty, 10 * ls.tickrate)
-		self.scale = math.lerp(self.scale, .1, 5 * ls.tickrate)
-		if math.distance(self.x, self.y, tx, ty) < 16 or ctx.tutorial.active then
+		self.x, self.y = lume.lerp(self.x, tx, 10 * ls.tickrate), lume.lerp(self.y, ty, 10 * ls.tickrate)
+		self.scale = lume.lerp(self.scale, .1, 5 * ls.tickrate)
+		if lume.distance(self.x, self.y, tx, ty) < 16 or ctx.tutorial.active then
 			ctx.jujus:remove(self)
       p:addJuju(self.amount)
       ctx.event:emit('juju.collected', {juju = self})
@@ -49,8 +49,8 @@ function Juju:update()
 		return
 	end
 
-	self.vx = math.lerp(self.vx, 0, ls.tickrate)
-	self.vy = math.lerp(self.vy, 0, 2 * ls.tickrate)
+	self.vx = lume.lerp(self.vx, 0, ls.tickrate)
+	self.vy = lume.lerp(self.vy, 0, 2 * ls.tickrate)
 	self.x = self.x + self.vx * ls.tickrate
 	self.y = self.y + self.vy * ls.tickrate
 	if self.vy > -.1 and ctx.tutorial:shouldFloatJuju() then
@@ -74,7 +74,7 @@ function Juju:update()
     self.x = self.x + math.dx(speed, direction)
     self.y = self.y + math.dy(speed, direction)
 
-		if math.distance(ghost.x, ghost.y, self.x, self.y) < ghost.radius then
+		if lume.distance(ghost.x, ghost.y, self.x, self.y) < ghost.radius then
 			ctx.sound:play('juju1')
 			self.dead = true
 		end
@@ -85,8 +85,8 @@ function Juju:update()
 	end
 
 	self.angle = self.angle + (math.sin(tick * ls.tickrate) * math.cos(tick * ls.tickrate)) / love.math.random(9, 11)
-	self.scale = math.lerp(self.scale, .15 + (math.min(self.amount, 150) / 250), 2 * ls.tickrate)
-	self.alpha = math.lerp(self.alpha, p.dead and 1 or .5, 10 * ls.tickrate)
+	self.scale = lume.lerp(self.scale, .15 + (math.min(self.amount, 150) / 250), 2 * ls.tickrate)
+	self.alpha = lume.lerp(self.alpha, p.dead and 1 or .5, 10 * ls.tickrate)
 
 	self.x = math.clamp(self.x, self.amount * 2, ctx.map.width - self.amount * 2)
 end
@@ -94,7 +94,7 @@ end
 function Juju:draw()
 	local g = love.graphics
   local image = data.media.graphics.juju
-	local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+	local x, y = lume.lerp(self.prevx, self.x, ls.accum / ls.tickrate), lume.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
 	local wave = math.sin(tick * ls.tickrate * 4)
 
 	ctx.jujus.spriteBatch:setColor(255, 255, 255, 255 * self.alpha)

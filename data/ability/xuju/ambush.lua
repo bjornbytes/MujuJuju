@@ -44,7 +44,7 @@ function Ambush:bonuses()
   local bonuses = {}
   local spirit = Unit.getStat('xuju', 'spirit')
   if spirit > 0 then
-    table.insert(bonuses, {'Spirit', math.round(spirit * self.spiritRatio), 'damage'})
+    table.insert(bonuses, {'Spirit', lume.round(spirit * self.spiritRatio), 'damage'})
   end
   return bonuses
 end

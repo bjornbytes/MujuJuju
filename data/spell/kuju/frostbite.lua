@@ -75,7 +75,7 @@ end
 function Frostbite:draw()
   local image = data.media.graphics.spell.frostbite
   local scale = self.width / image:getWidth()
-  g.setColor(255, 255, 255, math.lerp(self.prevAlpha, self.alpha, ls.accum / ls.tickrate) * 255)
+  g.setColor(255, 255, 255, lume.lerp(self.prevAlpha, self.alpha, ls.accum / ls.tickrate) * 255)
   g.draw(image, self.x, self.y, 0, scale, scale, image:getWidth() / 2, image:getHeight() - 20)
 end
 

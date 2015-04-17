@@ -215,7 +215,7 @@ function Game:distribute()
       -- Generate prefix
       local prefixes = config.runes.prefixes
       local prefixLevel = math.clamp(runeLevel + love.math.random(-4, 4), 0, 100)
-      local prefix = prefixes[1 + math.round((prefixLevel / 100) * (#prefixes - 1))]
+      local prefix = prefixes[1 + lume.round((prefixLevel / 100) * (#prefixes - 1))]
       rune.name = prefix .. ' Rune'
 
       -- Generate bonuses
@@ -225,7 +225,7 @@ function Game:distribute()
         -- Attributes
         rune.attributes = {}
         local attribute = tableRandom(config.attributes.list)
-        local attributeLevels = math.max(math.round((runeLevel / 100) * 8), 1)
+        local attributeLevels = math.max(lume.round((runeLevel / 100) * 8), 1)
         local attributeLevelsDistributed = 0
         local attributesDistributed = {attribute}
         while attributeLevelsDistributed < attributeLevels do
@@ -248,7 +248,7 @@ function Game:distribute()
         local stats = config.runes.stats
         local stat = stats[love.math.random(1, #stats)]
         local min, max = unpack(config.runes.statRanges[stat])
-        local mu, sigma = math.lerp(min, max, runeLevel / 100), (max - min) / 10
+        local mu, sigma = lume.lerp(min, max, runeLevel / 100), (max - min) / 10
         local amount = math.clamp(love.math.randomNormal(sigma, mu), min, max)
         rune.stats = {[stat] = amount}
 
@@ -261,7 +261,7 @@ function Game:distribute()
         local ability = tableRandom(table.keys(config.runes.abilities[unit]))
         local stat = tableRandom(table.keys(config.runes.abilities[unit][ability]))
         local min, max = unpack(config.runes.abilities[unit][ability][stat])
-        local mu, sigma = math.lerp(min, max, runeLevel / 100), (max - min) / 10
+        local mu, sigma = lume.lerp(min, max, runeLevel / 100), (max - min) / 10
         local amount = math.clamp(love.math.randomNormal(sigma, mu), min, max)
         rune.unit = unit
         rune.abilities = {[ability] = {[stat] = amount}}

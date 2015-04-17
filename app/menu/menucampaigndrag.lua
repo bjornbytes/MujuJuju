@@ -3,7 +3,7 @@ MenuCampaignDrag = class()
 
 local function lerpRune(rune, key, val)
   ctx.campaign.prevRuneTransforms[rune][key] = ctx.campaign.runeTransforms[rune][key]
-  ctx.campaign.runeTransforms[rune][key] = math.lerp(ctx.campaign.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.campaign.runeTransforms[rune][key] = lume.lerp(ctx.campaign.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuCampaignDrag:init()
@@ -37,7 +37,7 @@ function MenuCampaignDrag:update()
   end
 
   self.prevDragAlpha = self.dragAlpha
-  self.dragAlpha = math.lerp(self.dragAlpha, rune and 1 or 0, math.min(10 * ls.tickrate, 1))
+  self.dragAlpha = lume.lerp(self.dragAlpha, rune and 1 or 0, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuCampaignDrag:draw()
@@ -53,7 +53,7 @@ function MenuCampaignDrag:draw()
 
     local lerpd = {}
     for k, v in pairs(ctx.campaign.runeTransforms[rune]) do
-      lerpd[k] = math.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+      lerpd[k] = lume.lerp(ctx.campaign.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
 
     g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * ctx.v, (lerpd.size - .015 * ctx.v) * .5, table.has(ctx.rewards.runes, rune))
@@ -158,7 +158,7 @@ function MenuCampaignDrag:snap(mx, my, size)
     local rune = ctx.user.runes.stash[i]
     local x, y, w, h = unpack(geometry[i])
     x, y = x + w / 2, y + h / 2
-    local dis = math.distance(x, y, mx, my)
+    local dis = lume.distance(x, y, mx, my)
     if dis < mindis then
       minx, miny, mindis, minsize = x, y, dis, h
     end
@@ -170,14 +170,14 @@ function MenuCampaignDrag:snap(mx, my, size)
     local rune = ctx.user.runes[minion][i]
     local x, y, w, h = unpack(geometry[i])
     x, y = x + w / 2, y + h / 2
-    local dis = math.distance(x, y, mx, my)
+    local dis = lume.distance(x, y, mx, my)
     if dis < mindis then
       minx, miny, mindis, minsize = x, y, dis, h
     end
   end
 
   if mindis < .05 * v then
-    return math.lerp(mx, minx, .5), math.lerp(my, miny, .5), math.lerp(size, minsize, .5)
+    return lume.lerp(mx, minx, .5), lume.lerp(my, miny, .5), lume.lerp(size, minsize, .5)
   end
 
   return mx, my, size

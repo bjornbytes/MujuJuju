@@ -16,7 +16,7 @@ end
 function GhostArmor:bonuses()
   local bonuses = {}
   if self.runeChance > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeChance * 100) .. '%', 'dodge chance'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeChance * 100) .. '%', 'dodge chance'})
   end
   return bonuses
 end

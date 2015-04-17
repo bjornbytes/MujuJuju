@@ -29,7 +29,7 @@ function Enemies:update()
 	end)
 
 	if not next(self.enemies) and self.level > 1 then
-		self.nextEnemy = math.max(.01, math.lerp(self.nextEnemy, 0, .75 * ls.tickrate))
+		self.nextEnemy = math.max(.01, lume.lerp(self.nextEnemy, 0, .75 * ls.tickrate))
 	end
 
 	table.with(self.enemies, 'update')

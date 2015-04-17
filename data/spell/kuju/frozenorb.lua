@@ -35,7 +35,7 @@ function FrozenOrb:update()
   self.x = self.x + self.direction * self.speed * ls.tickrate
   self.angle = self.angle + self.angularVelocity * ls.tickrate
 
-  ctx.particles:emit('kujuattack', math.lerp(self.prevx, self.x, love.math.random()), self.y, 1)
+  ctx.particles:emit('kujuattack', lume.lerp(self.prevx, self.x, love.math.random()), self.y, 1)
 
   local target, distance = ctx.target:closest(self, 'enemy', 'unit', 'player')
   if target and distance < self.radius then
@@ -62,7 +62,7 @@ function FrozenOrb:update()
     if unit:upgradeLevel('shatter') > 0 then
       local targets = ctx.target:inRange(self, 80, 'enemy', 'unit', 'player', 'shrine')
       table.each(targets, function(other)
-        if math.sign(other.x - target.x) == self.direction then
+        if lume.sign(other.x - target.x) == self.direction then
           if isa(other, Unit) then
             other.buffs:add('chilled', {exhaust = exhaust / 2, slow = slow / 2, timer = timer / 2})
             if unit:upgradeLevel('avalanche') > 0 then
@@ -91,7 +91,7 @@ end
 function FrozenOrb:draw()
 	local g = love.graphics
   local image = data.media.graphics.spell.frozenorb
-  local x = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate)
+  local x = lume.lerp(self.prevx, self.x, ls.accum / ls.tickrate)
   local angle = math.anglerp(self.prevangle, self.angle, ls.accum / ls.tickrate)
   local scale = self.radius * 2 / image:getWidth()
   g.setColor(255, 255, 255)

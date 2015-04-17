@@ -51,7 +51,7 @@ function HudUpgrades:gamepadreleased(gamepad, button)
 end
 
 function HudUpgrades:getFactor()
-  local t = math.lerp(self.prevTime, self.time, ls.accum / ls.tickrate)
+  local t = lume.lerp(self.prevTime, self.time, ls.accum / ls.tickrate)
   self.tween:set(t)
   return self.factor.value, t
 end

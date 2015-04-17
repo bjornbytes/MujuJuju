@@ -21,14 +21,14 @@ function Dropdown:update()
   local hover = self:contains(mx, my)
   self.prevFactor = self.factor
   self.prevHoverFactor = self.hoverFactor
-  self.factor = math.lerp(self.factor, self:focused() and 1 or 0, math.min(16 * ls.tickrate, 1))
-  self.hoverFactor = math.lerp(self.hoverFactor, (self:focused() or hover) and 1 or 0, math.min(16 * ls.tickrate, 1))
+  self.factor = lume.lerp(self.factor, self:focused() and 1 or 0, math.min(16 * ls.tickrate, 1))
+  self.hoverFactor = lume.lerp(self.hoverFactor, (self:focused() or hover) and 1 or 0, math.min(16 * ls.tickrate, 1))
   if self:focused() then
     local hoverIndex = self:contains(mx, my)
     local hoverAmount = 1 + (love.mouse.isDown('l') and .5 or 0)
     for i = 1, #self.choices do
       self.prevChoiceHoverFactors[i] = self.choiceHoverFactors[i] or 0
-      self.choiceHoverFactors[i] = math.lerp(self.prevChoiceHoverFactors[i], i == hoverIndex and hoverAmount or 0, math.min(16 * ls.tickrate, 1))
+      self.choiceHoverFactors[i] = lume.lerp(self.prevChoiceHoverFactors[i], i == hoverIndex and hoverAmount or 0, math.min(16 * ls.tickrate, 1))
     end
 
     if hover then
@@ -59,8 +59,8 @@ function Dropdown:render()
   mx, my = mx + ox, my + oy
   local hoverIndex = self:contains(mx, my)
   local choiceHoverFactors = table.interpolate(self.prevChoiceHoverFactors, self.choiceHoverFactors, ls.accum / ls.tickrate)
-  local hoverFactor = math.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
-  local factor = math.lerp(self.prevFactor, self.factor, ls.accum / ls.tickrate)
+  local hoverFactor = lume.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
+  local factor = lume.lerp(self.prevFactor, self.factor, ls.accum / ls.tickrate)
   local dropdownHeight = self:getDropdownHeight() * factor
   local font = g.setFont('mesmerize', h - .02 * v)
 
@@ -76,7 +76,7 @@ function Dropdown:render()
   end
 
   --[[g.setColor(255, 255, 255, 255)
-  g.rectangle('line', math.round(x) + .5, math.round(y) + .5, w, h)]]
+  g.rectangle('line', lume.round(x) + .5, lume.round(y) + .5, w, h)]]
 
   for i = 1, #self.choices do
     local factor = factor

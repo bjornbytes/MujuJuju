@@ -6,7 +6,7 @@ function Headbutt:activate()
 end
 
 function Headbutt:update()
-  local sign = math.sign(self.offset)
+  local sign = lume.sign(self.offset)
   local knockbackFactor = math.max(math.abs(self.offset) / self.base, .5) * 600 * ls.tickrate
   local amount = knockbackFactor
 
@@ -15,7 +15,7 @@ function Headbutt:update()
   local knockupFactor = 1 - (2 * math.abs(.5 - math.abs(self.offset / self.base)))
   self.knockup = knockupFactor * 25
 
-  self.offset = self.offset - math.min(math.abs(amount * sign), math.abs(self.offset)) * math.sign(self.offset)
+  self.offset = self.offset - math.min(math.abs(amount * sign), math.abs(self.offset)) * lume.sign(self.offset)
   if self.offset == 0 then self.unit.buffs:remove(self) end
 end
 

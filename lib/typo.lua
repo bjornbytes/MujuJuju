@@ -4,7 +4,7 @@ local setFont = love.graphics and love.graphics.setFont
 
 Typo.font = function(name, size)
   if not love.graphics then return nil end
-  size = math.round(size)
+  size = lume.round(size)
 
   if name == 'mesmerize' then name = 'rawengulk' end
 

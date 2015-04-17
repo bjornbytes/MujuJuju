@@ -20,20 +20,20 @@ local function bar(self, x, y, hard, soft, color, width, height)
   local atlas = data.atlas.hud
   local w, h = atlas:getDimensions('healthbarFrame')
   local scale = width / w
-  local xx = math.round(x - width / 2)
-  local yy = math.round(y)
+  local xx = lume.round(x - width / 2)
+  local yy = lume.round(y)
 
   self.spriteBatch:add(atlas.quads.healthbarFrame, xx, yy, 0, scale, scale)
 
-  xx = xx + math.round(3 * scale)
-  yy = yy + math.round(3 * scale)
+  xx = xx + lume.round(3 * scale)
+  yy = yy + lume.round(3 * scale)
 
   self.spriteBatch:setColor(color[1], color[2], color[3], 100)
-  self.spriteBatch:add(atlas.quads.healthbarBar, xx, yy, 0, hard * math.round(width - 6 * scale), scale)
+  self.spriteBatch:add(atlas.quads.healthbarBar, xx, yy, 0, hard * lume.round(width - 6 * scale), scale)
 
   if soft then
     self.spriteBatch:setColor(color[1], color[2], color[3], 50)
-    self.spriteBatch:add(atlas.quads.healthbarBar, xx, yy, 0, soft * math.round(width - 6 * scale), scale)
+    self.spriteBatch:add(atlas.quads.healthbarBar, xx, yy, 0, soft * lume.round(width - 6 * scale), scale)
   end
 end
 
@@ -114,7 +114,7 @@ function HudHealth:update()
   local scale = (80 * ctx.view.scale) / w
   ctx.units:each(function(unit)
     local _, yy = ctx.view:screenPoint(0, ctx.map.height - ctx.map.groundHeight - unit.height * 2)
-    local startY = math.round(yy + (h * scale) + .5)
+    local startY = lume.round(yy + (h * scale) + .5)
     self.unitBarY[unit] = self.unitBarY[unit] or startY
   end)
 
@@ -133,10 +133,10 @@ function HudHealth:update()
     end
 
     local _, yy = ctx.view:screenPoint(0, ctx.map.height - ctx.map.groundHeight - unit.height * 2)
-    local targetY = math.round(yy - (binIndex - 1) * (h * scale + .5))
+    local targetY = lume.round(yy - (binIndex - 1) * (h * scale + .5))
     targetY = targetY - (self.bins[unit.class.code][self.unitBins[unit]].offsetY or 0)
     self.unitBarPrevY[unit] = self.unitBarY[unit] or startY
-    self.unitBarY[unit] = self.unitBarY[unit] and math.lerp(self.unitBarY[unit], targetY, math.min(20 * ls.tickrate, 1)) or startY
+    self.unitBarY[unit] = self.unitBarY[unit] and lume.lerp(self.unitBarY[unit], targetY, math.min(20 * ls.tickrate, 1)) or startY
   end)
 end
 
@@ -187,11 +187,11 @@ function HudHealth:draw()
       local width = 80 * ctx.view.scale
       local w, h = atlas:getDimensions('healthbarFrame')
       local scale = width / w
-      local xx = math.round(x - width / 2)
-      local yy = math.round(y)
-      local barx = xx + math.round(3 * scale)
-      local bary = yy + math.round(3 * scale)
-      local barWidth = math.round(width - 6 * scale)
+      local xx = lume.round(x - width / 2)
+      local yy = lume.round(y)
+      local barx = xx + lume.round(3 * scale)
+      local bary = yy + lume.round(3 * scale)
+      local barWidth = lume.round(width - 6 * scale)
       local _, barHeight = atlas:getDimensions('healthbarBar')
 
       for j = 1, #bin.units do
@@ -200,12 +200,12 @@ function HudHealth:draw()
 
         -- Frame
         local alpha = (.5 + (false and .5 or 0)) * unit.alpha
-        local framey = math.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], ls.accum / ls.tickrate)
+        local framey = lume.lerp(self.unitBarPrevY[unit], self.unitBarY[unit], ls.accum / ls.tickrate)
         self.spriteBatch:setColor(255, 255, 255, 160 * alpha)
         self.spriteBatch:add(atlas.quads.healthbarFrame, xx, framey, 0, scale, scale)
 
         -- Bar
-        local y = self.unitBarY[unit] + math.round(3 * scale)
+        local y = self.unitBarY[unit] + lume.round(3 * scale)
         local _, _, hard, soft = unit:getHealthbar()
         self.spriteBatch:setColor(color[1], color[2], color[3], 150 * alpha)
         self.spriteBatch:add(atlas.quads.healthbarBar, barx, y, 0, hard * barWidth, scale)

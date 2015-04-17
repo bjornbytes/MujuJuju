@@ -49,13 +49,13 @@ function ShrujuPatch:update()
   end)
 
   self.prevHighlight = self.highlight
-  self.highlight = math.lerp(self.highlight, self:playerNearby() and 128 or 0, math.min(5 * ls.tickrate))
+  self.highlight = lume.lerp(self.highlight, self:playerNearby() and 128 or 0, math.min(5 * ls.tickrate))
 end
 
 function ShrujuPatch:draw()
   self.animation:draw(self.x, self.y)
 
-  local highlight = math.lerp(self.prevHighlight, self.highlight, ls.accum / ls.tickrate)
+  local highlight = lume.lerp(self.prevHighlight, self.highlight, ls.accum / ls.tickrate)
   table.each(self.animation.spine.skeleton.slots, function(slot)
     slot.a = highlight / 255
     slot.data.additiveBlending = true

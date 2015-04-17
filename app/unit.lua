@@ -138,8 +138,8 @@ function Unit:update()
     self.casting = false
     self.animation:set('death', {force = true})
     self.animation.speed = 1
-    self.healthDisplay = math.lerp(self.healthDisplay, 0, math.min(10 * ls.tickrate, 1))
-    self.alpha = math.lerp(self.alpha, 0, math.min(6 * ls.tickrate, 1))
+    self.healthDisplay = lume.lerp(self.healthDisplay, 0, math.min(10 * ls.tickrate, 1))
+    self.alpha = lume.lerp(self.alpha, 0, math.min(6 * ls.tickrate, 1))
     self.buffs:update()
     return
   end
@@ -158,9 +158,9 @@ function Unit:update()
   end
 
   -- Lerps
-  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * ls.tickrate, 1))
-  self.glowScale = math.lerp(self.glowScale, 1, math.min(6 * ls.tickrate, 1))
-  self.alpha = math.lerp(self.alpha, 1, math.min(6 * ls.tickrate, 1))
+  self.healthDisplay = lume.lerp(self.healthDisplay, self.health, math.min(10 * ls.tickrate, 1))
+  self.glowScale = lume.lerp(self.glowScale, 1, math.min(6 * ls.tickrate, 1))
+  self.alpha = lume.lerp(self.alpha, 1, math.min(6 * ls.tickrate, 1))
 
   -- Update animation speed
   if self.animation.state.name == 'attack' then
@@ -363,7 +363,7 @@ function Unit:upgradeLevel(code)
 end
 
 function Unit:attackParticlePosition(target)
-  local x, y = target.x + (target.width * .4 * -math.sign(target.x - self.x)), self.y + self.height * .4
+  local x, y = target.x + (target.width * .4 * -lume.sign(target.x - self.x)), self.y + self.height * .4
   if self.class.attackParticleBone then
     local bone = self.animation.spine.skeleton:findBone(self.class.attackParticleBone)
     local sign = self.animation.flipped and -1 or 1
@@ -381,7 +381,7 @@ function Unit:initAnimation()
     self.animation.flipped = not self.player.animation.flipped
   else
     local _, shrine = next(ctx.shrines:filter(function(s) return s.team == ctx.player.team end))
-    self.animation.flipped = math.sign(self.x - shrine.x) > 0
+    self.animation.flipped = lume.sign(self.x - shrine.x) > 0
   end
 
   self.animation:on('event', function(event)

@@ -2,7 +2,7 @@ local g = love.graphics
 
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
-  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.animationTransforms[code][key] = lume.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 MenuChoose = class()

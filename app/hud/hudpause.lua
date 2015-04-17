@@ -44,7 +44,7 @@ function HudPause:init(hud)
 end
 
 function HudPause:update()
-	self.alpha = math.lerp(self.alpha, ctx.paused and 1 or 0, 8 * ls.tickrate)
+	self.alpha = lume.lerp(self.alpha, ctx.paused and 1 or 0, 8 * ls.tickrate)
 end
 
 function HudPause:draw()

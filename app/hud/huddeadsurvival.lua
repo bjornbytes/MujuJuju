@@ -53,7 +53,7 @@ end
 
 function HudDeadSurvival:update()
   if not ctx.ded then return end
-  self.deadAlpha = math.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * ls.tickrate)
+  self.deadAlpha = lume.lerp(self.deadAlpha, ctx.ded and 1 or 0, 12 * ls.tickrate)
 end
 
 function HudDeadSurvival:draw()

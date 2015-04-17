@@ -12,10 +12,10 @@ function MenuMap:init()
     frame = function()
       local u, v = ctx.u, ctx.v
       local factor = self.factor
-      local width = math.lerp(.95 * u, .98 * u, factor ^ 4)
+      local width = lume.lerp(.95 * u, .98 * u, factor ^ 4)
       local height = width * (v / u)
-      local x = math.lerp(u * .5, u * .5, factor)
-      local y = math.lerp(-(height * .4), v * .5, factor)
+      local x = lume.lerp(u * .5, u * .5, factor)
+      local y = lume.lerp(-(height * .4), v * .5, factor)
       return {x - width / 2, y - height / 2, width, height}
     end,
 
@@ -97,16 +97,16 @@ function MenuMap:update()
   local mx, my = love.mouse.getPosition()
 
   self.prevAlpha = self.alpha
-  self.alpha = math.lerp(self.alpha, self.focused and 1 or 0, math.min(6 * ls.tickrate, 1))
+  self.alpha = lume.lerp(self.alpha, self.focused and 1 or 0, math.min(6 * ls.tickrate, 1))
 
   self.prevNudge = self.nudge
-  self.nudge = math.lerp(self.nudge, my < .08 * v and 1 or 0, math.min(6 * ls.tickrate, 1))
+  self.nudge = lume.lerp(self.nudge, my < .08 * v and 1 or 0, math.min(6 * ls.tickrate, 1))
   if self.focused then self.nudge = 0 end
 
   for k, biome in ipairs(config.biomeOrder) do
     local hover = math.inside(mx, my, self:getHitbox(biome))
     self.prevHovers[biome] = self.hovers[biome] or 0
-    self.hovers[biome] = math.lerp(self.hovers[biome] or 0, (not self:isLocked(biome) and hover) and 1 or 0, math.min(10 * ls.tickrate, 1))
+    self.hovers[biome] = lume.lerp(self.hovers[biome] or 0, (not self:isLocked(biome) and hover) and 1 or 0, math.min(10 * ls.tickrate, 1))
     if not hover then
       self.dirtyHovers[biome] = false
     elseif not self.dirtyHovers[biome] and not self:isLocked(biome) then
@@ -128,7 +128,7 @@ function MenuMap:draw()
     table.clear(self.geometry)
   end
 
-  local alpha = math.lerp(self.prevAlpha, self.alpha, ls.accum / ls.tickrate)
+  local alpha = lume.lerp(self.prevAlpha, self.alpha, ls.accum / ls.tickrate)
 
   g.setColor(0, 0, 0, 80 * alpha)
   g.rectangle('fill', 0, 0, u, v)
@@ -137,13 +137,13 @@ function MenuMap:draw()
   local image = data.media.graphics.worldmap.background
   local xscale = w / image:getWidth()
   local yscale = h / image:getHeight()
-  local nudge = math.lerp(self.prevNudge, self.nudge, ls.accum / ls.tickrate)
+  local nudge = lume.lerp(self.prevNudge, self.nudge, ls.accum / ls.tickrate)
   g.setColor(255, 255, 255)
   y = y + nudge * .1 * v
   g.draw(image, x, y, 0, xscale, yscale)
 
   for k, biome in ipairs(config.biomeOrder) do
-    local factor = math.lerp(self.prevHovers[biome] or 0, self.hovers[biome] or 0, ls.accum / ls.tickrate)
+    local factor = lume.lerp(self.prevHovers[biome] or 0, self.hovers[biome] or 0, ls.accum / ls.tickrate)
     local hover = math.inside(mx, my, self:getHitbox(biome))
     local active = hover and love.mouse.isDown('l')
 

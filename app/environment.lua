@@ -11,7 +11,7 @@ function Environment:init()
 end
 
 function Environment:update()
-	self.spiritAlpha = math.lerp(self.spiritAlpha, ctx.player.dead and 1 or 0, .6 * ls.tickrate)
+	self.spiritAlpha = lume.lerp(self.spiritAlpha, ctx.player.dead and 1 or 0, .6 * ls.tickrate)
 end
 
 function Environment:draw()
@@ -21,7 +21,7 @@ function Environment:draw()
 	g.draw(self.bg)
 
 	local alpha = self.spiritAlpha * 255
-	alpha = math.lerp(alpha, (1 - (ctx.player.healthDisplay / ctx.player.maxHealth)) * 255, .5)
+	alpha = lume.lerp(alpha, (1 - (ctx.player.healthDisplay / ctx.player.maxHealth)) * 255, .5)
 	g.setColor(255, 255, 255, alpha)
 	g.draw(self.bgSpirit)
 end

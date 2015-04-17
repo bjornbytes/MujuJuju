@@ -3,12 +3,12 @@ MenuSurvival = class()
 
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
-  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.animationTransforms[code][key] = lume.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 local function lerpRune(rune, key, val)
   ctx.survival.prevRuneTransforms[rune][key] = ctx.survival.runeTransforms[rune][key]
-  ctx.survival.runeTransforms[rune][key] = math.lerp(ctx.survival.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.survival.runeTransforms[rune][key] = lume.lerp(ctx.survival.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuSurvival:init()
@@ -83,7 +83,7 @@ function MenuSurvival:init()
       local y = v * .675
       local res = {}
       for i = 1, 33 do
-        table.insert(res, {math.round(x), math.round(y), size, size})
+        table.insert(res, {lume.round(x), lume.round(y), size, size})
         x = x + inc
         if i % 11 == 0 then y = y + inc x = ox end
       end
@@ -262,7 +262,7 @@ function MenuSurvival:update()
     if hat and hats[i] then
       local hover = math.insideCircle(mx, my, unpack(hats[i]))
       self.prevHatHoverFactors[hat] = self.hatHoverFactors[hat] or 0
-      self.hatHoverFactors[hat] = math.lerp(self.hatHoverFactors[hat] or 0, hover and 1 or 0, math.min(10 * ls.tickrate, 1))
+      self.hatHoverFactors[hat] = lume.lerp(self.hatHoverFactors[hat] or 0, hover and 1 or 0, math.min(10 * ls.tickrate, 1))
     end
   end
 
@@ -317,7 +317,7 @@ function MenuSurvival:draw()
     if i == 33 then
       local image = data.media.graphics.menu.trashcan
       local scale = (h - .025 * v) / image:getHeight()
-      local dragAlpha = math.lerp(self.drag.prevDragAlpha, self.drag.dragAlpha, ls.accum / ls.tickrate)
+      local dragAlpha = lume.lerp(self.drag.prevDragAlpha, self.drag.dragAlpha, ls.accum / ls.tickrate)
       g.setColor(255, 255, 255, 150 + 100 * (self.drag:isDraggingRune() and dragAlpha or 0))
       g.draw(image, x + w / 2, y + h / 2, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
     else
@@ -325,7 +325,7 @@ function MenuSurvival:draw()
       if rune and not self.drag:isDraggingRune('stash', i) then
         local lerpd = {}
         for k, v in pairs(self.runeTransforms[rune]) do
-          lerpd[k] = math.lerp(self.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+          lerpd[k] = lume.lerp(self.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
         lerpd.x = lerpd.x or x
         lerpd.y = lerpd.y or y
@@ -356,7 +356,7 @@ function MenuSurvival:draw()
       end)
       local lerpd = {}
       for k, v in pairs(ctx.animationTransforms[minion]) do
-        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[minion][k] or v, v, ls.accum / ls.tickrate)
+        lerpd[k] = lume.lerp(ctx.prevAnimationTransforms[minion][k] or v, v, ls.accum / ls.tickrate)
       end
       lerpd.x = lerpd.x or x
       lerpd.y = lerpd.y or y
@@ -385,7 +385,7 @@ function MenuSurvival:draw()
       if rune and not self.drag:isDraggingRune(minion, j) then
         local lerpd = {}
         for k, v in pairs(self.runeTransforms[rune]) do
-          lerpd[k] = math.lerp(self.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+          lerpd[k] = lume.lerp(self.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
         end
         lerpd.x = lerpd.x or x
         lerpd.y = lerpd.y or y
@@ -416,7 +416,7 @@ function MenuSurvival:draw()
       end)
       local lerpd = {}
       for k, v in pairs(ctx.animationTransforms[minion]) do
-        lerpd[k] = math.lerp(ctx.prevAnimationTransforms[minion][k] or v, v, ls.accum / ls.tickrate)
+        lerpd[k] = lume.lerp(ctx.prevAnimationTransforms[minion][k] or v, v, ls.accum / ls.tickrate)
       end
       lerpd.x = lerpd.x or x
       lerpd.y = lerpd.y or y
@@ -447,7 +447,7 @@ function MenuSurvival:draw()
 
           local lerpd = {}
           for k, v in pairs(ctx.survival.runeTransforms[rune]) do
-            lerpd[k] = math.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+            lerpd[k] = lume.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
           end
           lerpd.x = lerpd.x or x
           lerpd.y = lerpd.y or y
@@ -498,7 +498,7 @@ function MenuSurvival:draw()
       if image then
         local x, y, r = unpack(hats[i])
         local scale = r * 2 / math.max(image:getWidth(), image:getHeight())
-        local factor = math.lerp(self.prevHatHoverFactors[hat], self.hatHoverFactors[hat], ls.accum / ls.tickrate)
+        local factor = lume.lerp(self.prevHatHoverFactors[hat], self.hatHoverFactors[hat], ls.accum / ls.tickrate)
         scale = scale * (.8 + .2 * factor)
         g.setColor(255, 255, 255, 120 + (130 * (ctx.user.hat == hat and 1 or 0)))
         g.draw(image, x, y, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)

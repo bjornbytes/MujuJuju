@@ -28,7 +28,7 @@ function Tremor:fire()
   local stun = self.runeStun + 1 * level
   local width = 180 + (60 * self.unit:upgradeLevel('fissure'))
 
-  self:createSpell({damage = damage, width = width, stun = stun, spikeCount = math.round(width / 60)})
+  self:createSpell({damage = damage, width = width, stun = stun, spikeCount = lume.round(width / 60)})
 
   ctx.sound:play(data.media.sounds.thuju.tremor, function(sound) sound:setVolume(.5) end)
 end
@@ -38,15 +38,15 @@ function Tremor:bonuses()
 
   local spirit = Unit.getStat('thuju', 'spirit')
   if spirit > 0 then
-    table.insert(bonuses, {'Spirit', math.round(spirit * self.spiritRatio), 'damage'})
+    table.insert(bonuses, {'Spirit', lume.round(spirit * self.spiritRatio), 'damage'})
   end
 
   if self.runeDamage > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeDamage), 'damage'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeDamage), 'damage'})
   end
 
   if self.runeStun > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeStun * 10) / 10 .. 's', 'stun duration'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeStun, 10) .. 's', 'stun duration'})
   end
 
   return bonuses

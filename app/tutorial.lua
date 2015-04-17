@@ -157,8 +157,8 @@ function Tutorial:update()
 
   y = y - (yoffsets[self.pointerOrientations[self.message]] or yoffsets.default)
 
-  self.x = math.lerp(self.x, x, 12 * ls.tickrate)
-  self.y = math.lerp(self.y, y, 12 * ls.tickrate)
+  self.x = lume.lerp(self.x, x, 12 * ls.tickrate)
+  self.y = lume.lerp(self.y, y, 12 * ls.tickrate)
 
   if self.opened then
     self.delay = timer.rot(self.delay)
@@ -254,8 +254,8 @@ function Tutorial:gui()
     local str = self.messages[self.message]
     local factor, t = self:getFactor()
     local alpha = (t / self.maxTime) ^ 3
-    local x = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate)
-    local y = math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+    local x = lume.lerp(self.prevx, self.x, ls.accum / ls.tickrate)
+    local y = lume.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
     local rx, ry = x, y
 
     local w, h = font:getWidth(str), font:getHeight(str)
@@ -288,7 +288,7 @@ function Tutorial:keypressed(key)
 end
 
 function Tutorial:getFactor()
-  local t = math.lerp(self.prevTime, self.time, ls.accum / ls.tickrate)
+  local t = lume.lerp(self.prevTime, self.time, ls.accum / ls.tickrate)
   self.tween:set(t)
   return self.factor.value, t
 end

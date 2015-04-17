@@ -106,11 +106,11 @@ function MenuStart:update()
   local u, v = ctx.u, ctx.v
   local image = data.media.graphics.menu.titlescreen
   local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
-  self.offsetX = math.lerp(self.offsetX, (.5 - (love.mouse.getX() / u)) * (u * .04), 2 * ls.tickrate)
-  self.offsetY = math.lerp(self.offsetY, (.5 - (love.mouse.getY() / v)) * (v * .04), 2 * ls.tickrate)
+  self.offsetX = lume.lerp(self.offsetX, (.5 - (love.mouse.getX() / u)) * (u * .04), 2 * ls.tickrate)
+  self.offsetY = lume.lerp(self.offsetY, (.5 - (love.mouse.getY() / v)) * (v * .04), 2 * ls.tickrate)
 
   self.prevSadAlpha = self.sadAlpha
-  self.sadAlpha = math.lerp(self.sadAlpha, ((love.keyboard.isDown('escape') and not ctx.optionsPane.active) or (self.quit:contains(love.mouse.getPosition()) and love.mouse.isDown('l'))) and 1 or 0, 4 * ls.tickrate)
+  self.sadAlpha = lume.lerp(self.sadAlpha, ((love.keyboard.isDown('escape') and not ctx.optionsPane.active) or (self.quit:contains(love.mouse.getPosition()) and love.mouse.isDown('l'))) and 1 or 0, 4 * ls.tickrate)
 end
 
 function MenuStart:draw()
@@ -128,8 +128,8 @@ function MenuStart:draw()
   g.setShader(data.media.shaders.vignette)
   local image = data.media.graphics.menu.titlescreen
   local scale = math.max(u / image:getWidth(), v / image:getHeight()) * 1.05
-  local offsetX = math.lerp(self.prevOffsetX, self.offsetX, ls.accum / ls.tickrate)
-  local offsetY = math.lerp(self.prevOffsetY, self.offsetY, ls.accum / ls.tickrate)
+  local offsetX = lume.lerp(self.prevOffsetX, self.offsetX, ls.accum / ls.tickrate)
+  local offsetY = lume.lerp(self.prevOffsetY, self.offsetY, ls.accum / ls.tickrate)
   g.draw(image, u / 2 + offsetX, v / 2 + offsetY, 0, scale, scale, image:getWidth() / 2, image:getHeight() / 2)
   g.setShader()
 
@@ -148,7 +148,7 @@ function MenuStart:draw()
   self.feedback:draw()
   self.credits:draw()
 
-  local sadAlpha = math.lerp(self.prevSadAlpha, self.sadAlpha, ls.accum / ls.tickrate)
+  local sadAlpha = lume.lerp(self.prevSadAlpha, self.sadAlpha, ls.accum / ls.tickrate)
   g.setColor(0, 0, 0, 255 * sadAlpha)
   g.rectangle('fill', 0, 0, u, v)
   g.setColor(255, 255, 255, 255 * sadAlpha)

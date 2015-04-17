@@ -41,16 +41,16 @@ function Tooltip:update()
 
   self.prevCursorX = self.cursorX
   self.prevCursorY = self.cursorY
-  self.cursorX = math.lerp(self.cursorX, mx, 12 * ls.tickrate)
-  self.cursorY = math.lerp(self.cursorY, my, 12 * ls.tickrate)
+  self.cursorX = lume.lerp(self.cursorX, mx, 12 * ls.tickrate)
+  self.cursorY = lume.lerp(self.cursorY, my, 12 * ls.tickrate)
 end
 
 function Tooltip:draw()
   if not self.active then self.tooltipText = nil return end
 
   local u, v = self:getUV()
-  local mx = math.lerp(self.prevCursorX, self.cursorX, ls.accum / ls.tickrate)
-  local my = math.lerp(self.prevCursorY, self.cursorY, ls.accum / ls.tickrate)
+  local mx = lume.lerp(self.prevCursorX, self.cursorX, ls.accum / ls.tickrate)
+  local my = lume.lerp(self.prevCursorY, self.cursorY, ls.accum / ls.tickrate)
   local xx = math.min(mx + 16 * love.window.getPixelScale(), u - self.textWidth - 14)
   local yy = math.min(my + 16 * love.window.getPixelScale(), v - (self.textHeight + 9))
   g.setColor(255, 255, 255, 100)
@@ -129,22 +129,22 @@ function Tooltip:setUnitTooltip(class, basic)
       label = 'Attack Speed'
       if actual > 0 then
         color = '{green}'
-        extra = ' {white}({whoCares}' .. math.round(base * 100) / 100 .. ' + {green}' .. math.round(actual * 100) .. '%{white})'
+        extra = ' {white}({whoCares}' .. lume.round(base, .01) .. ' + {green}' .. lume.round(actual * 100) .. '%{white})'
       end
       local actual = math.max(base - (base * actual), .4)
-      table.insert(pieces, '{whoCares}{bold}' .. label .. '{white}{normal}: ' .. color .. math.round(actual * 100) / 100 .. extra)
+      table.insert(pieces, '{whoCares}{bold}' .. label .. '{white}{normal}: ' .. color .. lume.round(actual, .01) .. extra)
     elseif stat == 'haste' then
       if actual > 0 then
         color = '{green}'
-        extra = ' {white}({whoCares}100% + {green}' .. math.round(actual * 100) .. '%{white})'
+        extra = ' {white}({whoCares}100% + {green}' .. lume.round(actual * 100) .. '%{white})'
       end
-      table.insert(pieces, '{whoCares}{bold}' .. label .. '{white}{normal}: ' .. color .. math.round((base + actual) * 100) .. '%' .. extra)
+      table.insert(pieces, '{whoCares}{bold}' .. label .. '{white}{normal}: ' .. color .. lume.round((base + actual) * 100) .. '%' .. extra)
     else
       if base ~= actual then
         color = '{green}'
-        extra = ' {white}({whoCares}' .. math.round(base) .. ' + {green}' .. math.round(actual - base) .. '{white})'
+        extra = ' {white}({whoCares}' .. lume.round(base) .. ' + {green}' .. lume.round(actual - base) .. '{white})'
       end
-      table.insert(pieces, '{whoCares}{bold}' .. label .. '{white}{normal}: ' .. color .. math.round(actual) .. extra)
+      table.insert(pieces, '{whoCares}{bold}' .. label .. '{white}{normal}: ' .. color .. lume.round(actual) .. extra)
     end
   end
   table.insert(pieces, '')
@@ -208,15 +208,15 @@ end
 function Tooltip:setRuneTooltip(rune)
   local formatters = {
     percent = function(x, stat)
-      return '+' .. math.round(x * 100) .. '% ' .. stat
+      return '+' .. lume.round(x * 100) .. '% ' .. stat
     end,
 
     flat = function(x, stat)
-      return '+' .. math.round(x) .. ' ' .. stat
+      return '+' .. lume.round(x) .. ' ' .. stat
     end,
 
     time = function(x, stat)
-      return '+' .. math.round(x * 10) / 10 .. 's ' .. stat
+      return '+' .. lume.round(x, .1) .. 's ' .. stat
     end
   }
 
@@ -229,18 +229,18 @@ function Tooltip:setRuneTooltip(rune)
   elseif rune.stats then
     table.each(rune.stats, function(amount, stat)
       if stat == 'attackSpeed' then
-        table.insert(pieces, '+' .. math.round(amount * 100) .. '% to attack speed')
+        table.insert(pieces, '+' .. lume.round(amount * 100) .. '% to attack speed')
       elseif stat == 'haste' then
-        table.insert(pieces, '+' .. math.round(amount * 100) .. '% to haste')
+        table.insert(pieces, '+' .. lume.round(amount * 100) .. '% to haste')
       else
-        table.insert(pieces, '+' .. math.round(amount) .. ' to ' .. stat:capitalize())
+        table.insert(pieces, '+' .. lume.round(amount) .. ' to ' .. stat:capitalize())
       end
     end)
   elseif rune.unit and rune.abilities then
     table.insert(pieces, rune.unit:capitalize() .. ' only')
     local ability = next(rune.abilities)
     local stat, amount = next(rune.abilities[ability])
-    local str = '+' .. math.round(amount) .. ' to ' .. stat
+    local str = '+' .. lume.round(amount) .. ' to ' .. stat
     local formatter = config.runes.abilityFormatters
     formatter = formatter[rune.unit] and formatter[rune.unit][ability] and formatter[rune.unit][ability][stat]
     if formatter then

@@ -110,7 +110,7 @@ Xuju.upgrades = {
       local bonuses = {}
       local rend = data.buff.rend
       if rend.runePerStack > 0 then
-        table.insert(bonuses, {'Runes', math.round(rend.runePerStack * 100) .. '%', 'attack speed per stack'})
+        table.insert(bonuses, {'Runes', lume.round(rend.runePerStack * 100) .. '%', 'attack speed per stack'})
       end
       return bonuses
     end

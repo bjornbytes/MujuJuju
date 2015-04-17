@@ -3,12 +3,12 @@ MenuSurvivalDrag = class()
 
 local function lerpAnimation(code, key, val)
   ctx.prevAnimationTransforms[code][key] = ctx.animationTransforms[code][key]
-  ctx.animationTransforms[code][key] = math.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.animationTransforms[code][key] = lume.lerp(ctx.animationTransforms[code][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 local function lerpRune(rune, key, val)
   ctx.survival.prevRuneTransforms[rune][key] = ctx.survival.runeTransforms[rune][key]
-  ctx.survival.runeTransforms[rune][key] = math.lerp(ctx.survival.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
+  ctx.survival.runeTransforms[rune][key] = lume.lerp(ctx.survival.runeTransforms[rune][key] or val, val, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuSurvivalDrag:init()
@@ -48,7 +48,7 @@ function MenuSurvivalDrag:update()
   end
 
   self.prevDragAlpha = self.dragAlpha
-  self.dragAlpha = math.lerp(self.dragAlpha, self.dragging and 1 or 0, math.min(10 * ls.tickrate, 1))
+  self.dragAlpha = lume.lerp(self.dragAlpha, self.dragging and 1 or 0, math.min(10 * ls.tickrate, 1))
 end
 
 function MenuSurvivalDrag:draw()
@@ -64,7 +64,7 @@ function MenuSurvivalDrag:draw()
 
     local lerpd = {}
     for k, v in pairs(ctx.survival.runeTransforms[rune]) do
-      lerpd[k] = math.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
+      lerpd[k] = lume.lerp(ctx.survival.prevRuneTransforms[rune][k] or v, v, ls.accum / ls.tickrate)
     end
 
     g.drawRune(rune, lerpd.x, lerpd.y, lerpd.size - .015 * ctx.v, (lerpd.size - .015 * ctx.v) * .5, table.has(ctx.rewards.runes, rune))
@@ -85,7 +85,7 @@ function MenuSurvivalDrag:draw()
     end)
     local lerpd = {}
     for k, v in pairs(ctx.animationTransforms[minion]) do
-      lerpd[k] = math.lerp(ctx.prevAnimationTransforms[minion][k] or v, v, ls.accum / ls.tickrate)
+      lerpd[k] = lume.lerp(ctx.prevAnimationTransforms[minion][k] or v, v, ls.accum / ls.tickrate)
     end
     local scale = (2 * r / cw) * lerpd.scale * 3
     g.setColor(255, 255, 255)
@@ -268,7 +268,7 @@ function MenuSurvivalDrag:snap(mx, my, size)
       local rune = ctx.user.runes.stash[i]
       local x, y, w, h = unpack(geometry[i])
       x, y = x + w / 2, y + h / 2
-      local dis = math.distance(x, y, mx, my)
+      local dis = lume.distance(x, y, mx, my)
       if dis < mindis then
         minx, miny, mindis, minsize = x, y, dis, h
       end
@@ -281,7 +281,7 @@ function MenuSurvivalDrag:snap(mx, my, size)
     local minion = ctx.user.survival.minions[i]
     local x, y, r, runes = unpack(deck[i])
     if self:isDraggingMinion() then
-      local dis = math.distance(x, y, mx, my)
+      local dis = lume.distance(x, y, mx, my)
       if dis < mindis then
         minx, miny, mindis, minsize = x, y, dis, .9
       end
@@ -290,7 +290,7 @@ function MenuSurvivalDrag:snap(mx, my, size)
         local rune = ctx.user.runes[minion][j]
         local x, y, w, h = unpack(runes[j])
         x, y = x + w / 2, y + h / 2
-        local dis = math.distance(x, y, mx, my)
+        local dis = lume.distance(x, y, mx, my)
         if dis < mindis then
           minx, miny, mindis, minsize = x, y, dis, h
         end
@@ -304,7 +304,7 @@ function MenuSurvivalDrag:snap(mx, my, size)
     local minion = ctx.survival.gutter[i]
     local x, y, r, runes = unpack(ctx.survival.geometry.gutter[i])
     if self:isDraggingMinion() then
-      local dis = math.distance(x, y, mx, my)
+      local dis = lume.distance(x, y, mx, my)
       if dis < mindis then
         minx, miny, mindis, minsize = x, y, dis, .5
       end
@@ -313,7 +313,7 @@ function MenuSurvivalDrag:snap(mx, my, size)
         local rune = ctx.user.runes[minion][j]
         local x, y, w, h = unpack(runes[j])
         x, y = x + w / 2, y + h / 2
-        local dis = math.distance(x, y, mx, my)
+        local dis = lume.distance(x, y, mx, my)
         if dis < mindis then
           minx, miny, mindis, minsize = x, y, dis, h
         end
@@ -323,7 +323,7 @@ function MenuSurvivalDrag:snap(mx, my, size)
 
   local threshold = self:isDraggingMinion() and (.1 * v) or (.05 * v)
   if mindis < threshold then
-    return math.lerp(mx, minx, .5), math.lerp(my, miny, .5), math.lerp(size, minsize, .5)
+    return lume.lerp(mx, minx, .5), lume.lerp(my, miny, .5), lume.lerp(size, minsize, .5)
   end
 
   return mx, my, size

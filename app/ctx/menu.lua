@@ -69,7 +69,7 @@ function Menu:update()
   self.gooey:update()
 
   self.prevBackgroundAlpha = self.backgroundAlpha
-  self.backgroundAlpha = math.lerp(self.backgroundAlpha, 1, math.min(8 * ls.tickrate, 1))
+  self.backgroundAlpha = lume.lerp(self.backgroundAlpha, 1, math.min(8 * ls.tickrate, 1))
 
   self.start:update()
   self.select:update()
@@ -235,7 +235,7 @@ end
 
 function Menu:drawBackground()
   local u, v = self.u, self.v
-  local backgroundAlpha = math.lerp(self.prevBackgroundAlpha, self.backgroundAlpha, ls.accum / ls.tickrate)
+  local backgroundAlpha = lume.lerp(self.prevBackgroundAlpha, self.backgroundAlpha, ls.accum / ls.tickrate)
   g.setColor(255, 255, 255)
   g.draw(self.background2, 0, 0)
   g.setColor(255, 255, 255, backgroundAlpha * 255)

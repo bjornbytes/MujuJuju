@@ -14,7 +14,7 @@ end
 function Retaliation:bonuses()
   local bonuses = {}
   if self.runeFrenzy > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeFrenzy * 100) .. '%', 'attack speed'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeFrenzy * 100) .. '%', 'attack speed'})
   end
   return bonuses
 end

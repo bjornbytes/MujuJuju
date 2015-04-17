@@ -10,7 +10,7 @@ function DeathBlur:update()
   self.active = ctx.ded
 
 	if self.active then
-		self.amount = math.lerp(self.amount, 2, .25 * ls.tickrate)
+		self.amount = lume.lerp(self.amount, 2, .25 * ls.tickrate)
 	end
 end
 

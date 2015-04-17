@@ -93,7 +93,7 @@ function HudDeadCampaign:update()
   end
 
   self.prevBgAlpha = self.bgAlpha
-  self.bgAlpha = math.lerp(self.bgAlpha, 1, math.min(6 * ls.tickrate, 1))
+  self.bgAlpha = lume.lerp(self.bgAlpha, 1, math.min(6 * ls.tickrate, 1))
 
   if ctx.backgroundSound:isPlaying() then
     ctx.backgroundSound:setVolume(math.max(ctx.backgroundSound:getVolume() - 2 * ls.tickrate, 0))
@@ -105,10 +105,10 @@ function HudDeadCampaign:update()
   self.delay = timer.rot(self.delay)
   if self.delay == 0 then
     self.prevAlpha = self.alpha
-    self.alpha = math.lerp(self.alpha, 1, math.min(6 * ls.tickrate, 1))
+    self.alpha = lume.lerp(self.alpha, 1, math.min(6 * ls.tickrate, 1))
 
     self.prevTimeFactor = self.timeFactor
-    self.timeFactor = math.lerp(self.timeFactor, 1, 1 * ls.tickrate)
+    self.timeFactor = lume.lerp(self.timeFactor, 1, 1 * ls.tickrate)
 
     local inc = .2 * u
     local medalX = .5 * u - (inc * (3 - 1) / 2)
@@ -137,7 +137,7 @@ function HudDeadCampaign:update()
           ctx.sound:play('upgrade')
         end
         self.prevMedalFactors[medal] = self.medalFactors[medal]
-        self.medalFactors[medal] = math.lerp(self.medalFactors[medal], 1, math.min(10 * ls.tickrate, 1))
+        self.medalFactors[medal] = lume.lerp(self.medalFactors[medal], 1, math.min(10 * ls.tickrate, 1))
 
         local kinds = {bronze = 'rune', silver = 'minion', gold = 'hat'}
         if self.rewards then
@@ -145,7 +145,7 @@ function HudDeadCampaign:update()
             local reward = self.rewards[i]
             if reward.kind == kinds[medal] then
               reward.prevx = reward.x
-              reward.x = math.lerp(reward.x, rewardX, 12 * ls.tickrate)
+              reward.x = lume.lerp(reward.x, rewardX, 12 * ls.tickrate)
               rewardX = rewardX + rewardInc
             end
           end
@@ -172,10 +172,10 @@ function HudDeadCampaign:draw()
   local bigFont = .09 * v
   local smallFont = .05 * v
 
-  local alpha = math.lerp(self.prevAlpha, self.alpha, ls.accum / ls.tickrate)
-  local bgAlpha = math.lerp(self.prevBgAlpha, self.bgAlpha, ls.accum / ls.tickrate)
-  local timeFactor = math.lerp(self.prevTimeFactor, self.timeFactor, ls.accum / ls.tickrate)
-  if self.timeFactor ~= 1 and math.round(ctx.timer * ls.tickrate) == math.round(ctx.timer * ls.tickrate * timeFactor) then
+  local alpha = lume.lerp(self.prevAlpha, self.alpha, ls.accum / ls.tickrate)
+  local bgAlpha = lume.lerp(self.prevBgAlpha, self.bgAlpha, ls.accum / ls.tickrate)
+  local timeFactor = lume.lerp(self.prevTimeFactor, self.timeFactor, ls.accum / ls.tickrate)
+  if self.timeFactor ~= 1 and lume.round(ctx.timer * ls.tickrate) == lume.round(ctx.timer * ls.tickrate * timeFactor) then
     self.timeFactor = 1
     timeFactor = 1
     ctx.sound:play('juju1', function(sound) sound:setPitch(2) end)
@@ -201,7 +201,7 @@ function HudDeadCampaign:draw()
   local inc = .2 * u
   local medalX = .5 * u - (inc * (3 - 1) / 2)
   for _, medal in ipairs({'bronze', 'silver', 'gold'}) do
-    local factor = math.lerp(self.prevMedalFactors[medal], self.medalFactors[medal], ls.accum / ls.tickrate)
+    local factor = lume.lerp(self.prevMedalFactors[medal], self.medalFactors[medal], ls.accum / ls.tickrate)
     local size = .15 * v * (.8 + .2 * factor)
     local image = data.media.graphics.menu[medal]
     local scale = size / image:getHeight()
@@ -216,8 +216,8 @@ function HudDeadCampaign:draw()
     for i = 1, #self.rewards do
       local reward = self.rewards[i]
       local medal = ({rune = 'bronze', minion = 'silver', hat = 'gold'})[reward.kind]
-      local factor = math.lerp(self.prevMedalFactors[medal], self.medalFactors[medal], ls.accum / ls.tickrate)
-      local x = math.lerp(reward.prevx, reward.x, ls.accum / ls.tickrate)
+      local factor = lume.lerp(self.prevMedalFactors[medal], self.medalFactors[medal], ls.accum / ls.tickrate)
+      local x = lume.lerp(reward.prevx, reward.x, ls.accum / ls.tickrate)
       g.setColor(255, 255, 255, 255 * factor)
       if reward.kind == 'rune' then
         g.drawRune(reward.rune, reward.x, .63 * v, rewardSize, rewardSize * .5)

@@ -28,14 +28,14 @@ function Slider:update()
   end
 
   self.prevFactor = self.factor
-  self.factor = math.lerp(self.factor, (self.value - self.min) / (self.max - self.min), math.min(16 * ls.tickrate, 1))
+  self.factor = lume.lerp(self.factor, (self.value - self.min) / (self.max - self.min), math.min(16 * ls.tickrate, 1))
 
   self.prevScale = self.scale
-  self.scale = math.lerp(self.scale, self.gooey.hot == self and 1.15 or 1, math.min(16 * ls.tickrate, 1))
+  self.scale = lume.lerp(self.scale, self.gooey.hot == self and 1.15 or 1, math.min(16 * ls.tickrate, 1))
 
   self.prevHoverFactor = self.hoverFactor
   local hover = (not self.gooey.hot and self:containsBar(mx, my)) or self.gooey.hot == self
-  self.hoverFactor = math.lerp(self.prevHoverFactor, hover and 1 or 0, math.min(16 * ls.tickrate, 1))
+  self.hoverFactor = lume.lerp(self.prevHoverFactor, hover and 1 or 0, math.min(16 * ls.tickrate, 1))
 
   if hover then
     if not self.hoverDirty then
@@ -51,9 +51,9 @@ function Slider:render()
   local u, v = ctx.u, ctx.v
   local x, y, w, r = unpack(self.geometry())
 
-  local factor = math.lerp(self.prevFactor, self.factor, ls.accum / ls.tickrate)
-  local hoverFactor = math.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
-  local scale = math.lerp(self.prevScale, self.scale, ls.accum / ls.tickrate)
+  local factor = lume.lerp(self.prevFactor, self.factor, ls.accum / ls.tickrate)
+  local hoverFactor = lume.lerp(self.prevHoverFactor, self.hoverFactor, ls.accum / ls.tickrate)
+  local scale = lume.lerp(self.prevScale, self.scale, ls.accum / ls.tickrate)
   local radius = scale * r
 
   g.setFont('mesmerize', r * 1.4)
@@ -64,7 +64,7 @@ function Slider:render()
 
   g.setColor(255, 255, 255, 40 + 80 * hoverFactor)
   g.setLineWidth(2)
-  g.line(math.round(x) + .5, math.round(y) + .5, x + w, y)
+  g.line(lume.round(x) + .5, lume.round(y) + .5, x + w, y)
   g.setLineWidth(1)
 
   g.setColor(30, 30, 30)
@@ -101,7 +101,7 @@ end
 
 function Slider:setValue(value)
   local old = self.value
-  self.value = math.round(value / self.round) * self.round
+  self.value = lume.round(value, self.round)
   if self.value ~= old then self:emit('change', {component = self}) end
 end
 

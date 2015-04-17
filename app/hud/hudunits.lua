@@ -23,7 +23,7 @@ function HudUnits:init()
         local yy = v * .005
         res[i] = {x = xx, y = yy}
 
-        local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
+        local selectFactor = lume.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
         local scale = 1 + .6 * upgradeFactor + .1 * selectFactor
         local is = (.2 * scale * v) / h
         res[i].selectFactor = selectFactor
@@ -138,13 +138,13 @@ function HudUnits:update()
 
 	for i = 1, #self.selectFactor do
     self.prevSelectFactor[i] = self.selectFactor[i]
-		self.selectFactor[i] = math.lerp(self.selectFactor[i], p.deck[i].selected and 1 or (p.summonSelect == i and .5 or 0), math.min(8 * ls.tickrate, 1))
+		self.selectFactor[i] = lume.lerp(self.selectFactor[i], p.deck[i].selected and 1 or (p.summonSelect == i and .5 or 0), math.min(8 * ls.tickrate, 1))
     if self.selectFactor[i] > .01 and self.selectFactor[i] < .99 then table.clear(self.geometry) end
 	end
 
 	for i = 1, #self.cooldownPop do
     self.prevCooldownPop[i] = self.cooldownPop[i]
-		self.cooldownPop[i] = math.lerp(self.cooldownPop[i], 0, math.min(12 * ls.tickrate, 1))
+		self.cooldownPop[i] = lume.lerp(self.cooldownPop[i], 0, math.min(12 * ls.tickrate, 1))
 	end
 
   local _, t = ctx.hud.upgrades:getFactor()
@@ -184,7 +184,7 @@ function HudUnits:drawBackground()
     local unit = units[i]
     local xx, yy = unit.x, unit.y
     local deck = p.deck[i]
-    local selectFactor = math.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
+    local selectFactor = lume.lerp(self.prevSelectFactor[i], self.selectFactor[i], ls.accum / ls.tickrate)
     local alpha = .45 + selectFactor * .35
 
     -- Backdrop
@@ -221,7 +221,7 @@ function HudUnits:drawBackground()
         local attribute = config.attributes.list[j]
         local scale = w / data.atlas.hud:getDimensions('frame')
         local val = (p.juju >= 30 + 20 * data.unit[p.deck[i].code].attributes[attribute]) and 255 or 150
-        x, y = math.round(x), math.round(y)
+        x, y = lume.round(x), lume.round(y)
 
         -- Frame
         g.setColor(val, val, val, 255 * upgradeAlphaFactor)
@@ -253,8 +253,8 @@ function HudUnits:drawBackground()
               g.setColor(200, 0, 0, 200 * upgradeAlphaFactor ^ 2)
             end
             local xscale = .005 * v
-            local yscale = math.distance(unpack(points)) / 20
-            local angle = math.direction(unpack(points)) - math.pi / 2
+            local yscale = lume.distance(unpack(points)) / 20
+            local angle = lume.angle(unpack(points)) - math.pi / 2
             self:batch('upgradeConector' .. i .. j .. k, 'healthbarBar', points[1], points[2], angle, xscale, yscale, .5, 0)
           end)
         end
@@ -271,7 +271,7 @@ function HudUnits:drawBackground()
         local scale = w / data.atlas.hud:getDimensions('frame')
         local upgrade = data.unit[who].upgrades[what]
         local val = (upgrade.level > 0 or ctx.upgrades.canBuy(who, what)) and 255 or 150
-        x, y = math.round(x), math.round(y)
+        x, y = lume.round(x), lume.round(y)
 
         -- Frame
         g.setColor(val, val, val, 255 * upgradeAlphaFactor)
@@ -315,7 +315,7 @@ function HudUnits:drawForeground()
     local imageScale = unit.imageScale
 
     -- Cooldown
-    local cooldownPop = math.lerp(self.prevCooldownPop[i], self.cooldownPop[i], ls.accum / ls.tickrate)
+    local cooldownPop = lume.lerp(self.prevCooldownPop[i], self.cooldownPop[i], ls.accum / ls.tickrate)
     g.setBlendMode('additive')
     g.setColor(255, 255, 255, 200 * cooldownPop)
     g.draw(atlas.texture, atlas.quads.title, unpack(unit.title))
@@ -335,13 +335,13 @@ function HudUnits:drawForeground()
     local x, y, a, sx, sy, ox, oy = unpack(unit.title)
     local w, h = data.atlas.hud:getDimensions('title')
     local unit = data.unit[p.deck[i].code]
-    local font = g.setFont('mesmerize', math.round(.02 * scale * v))
+    local font = g.setFont('mesmerize', lume.round(.02 * scale * v))
     local str = unit.name
     if math.inside(mx, my, x - ox * sx, y, w * sx, h * sy) then
       str = string.format('%.2f', p.deck[i].cooldown)
     end
     g.setColor(255, 255, 255)
-    g.printShadow(str, math.round(xx), math.round(yy + (.025 * v * scale)), true)
+    g.printShadow(str, lume.round(xx), lume.round(yy + (.025 * v * scale)), true)
     g.printShadow(unit.cost, xx - (.091 * v * scale), yy + (.0975 * v * scale), true, {0, 100, 0, 200})
 
     local count = table.count(ctx.units:filter(function(u) return u.class.code == p.deck[i].code end))
@@ -357,7 +357,7 @@ function HudUnits:drawForeground()
         local x, y, w, h = unpack(attributes[i][j])
         local attribute = config.attributes.list[j]
         local level = data.unit[p.deck[i].code].attributes[attribute]
-        g.setFont('mesmerize', math.round(.0175 * v))
+        g.setFont('mesmerize', lume.round(.0175 * v))
         g.setColor(200, 200, 200, 255 * upgradeAlphaFactor)
         g.printShadow(level, x + .01 * v, y + .005 * v)
       end

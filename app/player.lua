@@ -140,7 +140,7 @@ function Player:update()
   end
 
   -- Lerp healthbar
-  self.healthDisplay = math.lerp(self.healthDisplay, self.health, math.min(10 * ls.tickrate, 1))
+  self.healthDisplay = lume.lerp(self.healthDisplay, self.health, math.min(10 * ls.tickrate, 1))
 
   -- Juju trickle
   self.jujuTimer = timer.rot(self.jujuTimer, function()
@@ -153,7 +153,7 @@ function Player:draw()
 
   -- Flash when invincible
   if math.floor(self.invincible * 4) % 2 == 0 then
-    local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+    local x, y = lume.lerp(self.prevx, self.x, ls.accum / ls.tickrate), lume.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
     love.graphics.setColor(255, 255, 255)
     self.animation:draw(x, y)
   end
@@ -230,17 +230,17 @@ function Player:move()
   local maxSpeed = self.walkSpeed
 
   if love.keyboard.isDown('left', 'a') or (self.joystick and self.joystick:getGamepadAxis('leftx') < -.5) then
-    self.speed = math.lerp(self.speed, -maxSpeed, math.min(10 * ls.tickrate, 1))
+    self.speed = lume.lerp(self.speed, -maxSpeed, math.min(10 * ls.tickrate, 1))
   elseif love.keyboard.isDown('right', 'd') or (self.joystick and self.joystick:getGamepadAxis('leftx') > .5) then
-    self.speed = math.lerp(self.speed, maxSpeed, math.min(10 * ls.tickrate, 1))
+    self.speed = lume.lerp(self.speed, maxSpeed, math.min(10 * ls.tickrate, 1))
   else
-    self.speed = math.lerp(self.speed, 0, math.min(10 * ls.tickrate, 1))
+    self.speed = lume.lerp(self.speed, 0, math.min(10 * ls.tickrate, 1))
     self.footstepIndex = 0
   end
 
   -- Actually move
   self.x = self.x + self.speed * ls.tickrate
-  self.direction = self.speed == 0 and self.direction or math.sign(self.speed)
+  self.direction = self.speed == 0 and self.direction or lume.sign(self.speed)
 
   -- Don't go outside map
   self.x = math.clamp(self.x, 0, ctx.map.width)
@@ -294,7 +294,7 @@ function Player:animate()
   -- Flip animation, set animation speed
   self.animation:set(math.abs(self.speed) > self.walkSpeed / 2 and 'walk' or 'idle')
   self.animation.speed = self.animation.state.name == 'walk' and math.max(math.abs(self.speed / Player.walkSpeed), .4) or 1
-  if self.speed ~= 0 then self.animation.flipped = math.sign(self.speed) > 0 end
+  if self.speed ~= 0 then self.animation.flipped = lume.sign(self.speed) > 0 end
 end
 
 function Player:spend(amount)
@@ -366,10 +366,10 @@ end
 -- Helper
 ----------------
 function Player:getHealthbar()
-  local x = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate)
-  local y = math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
-  local healthDisplay = math.lerp(self.prevHealthDisplay, self.healthDisplay, ls.accum / ls.tickrate)
-  local health = math.lerp(self.prevHealth, self.health, ls.accum / ls.tickrate)
+  local x = lume.lerp(self.prevx, self.x, ls.accum / ls.tickrate)
+  local y = lume.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+  local healthDisplay = lume.lerp(self.prevHealthDisplay, self.healthDisplay, ls.accum / ls.tickrate)
+  local health = lume.lerp(self.prevHealth, self.health, ls.accum / ls.tickrate)
   return x, y, health / self.maxHealth, healthDisplay / self.maxHealth
 end
 

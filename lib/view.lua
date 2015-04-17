@@ -62,7 +62,7 @@ function View:update()
 
   self:contain()
 
-  self.shake = math.lerp(self.shake, 0, 8 * ls.tickrate)
+  self.shake = lume.lerp(self.shake, 0, 8 * ls.tickrate)
 
   while #self.toRemove > 0 do
     local x = self.toRemove[1]
@@ -140,7 +140,7 @@ function View:draw()
 
   if false and love.keyboard.isDown('`') then
     local stats = g.getStats()
-    local str = 'fps: ' .. love.timer.getFPS() .. '\ndraw calls: ' .. stats.drawcalls .. '\ncanvas switches: ' .. stats.canvasswitches .. '\nvram: ' .. math.round((stats.texturememory / 1024) / 1024) .. 'MB\nimages: ' .. stats.images .. '\ncanvases: ' .. stats.canvases .. '\nfonts: ' .. stats.fonts
+    local str = 'fps: ' .. love.timer.getFPS() .. '\ndraw calls: ' .. stats.drawcalls .. '\ncanvas switches: ' .. stats.canvasswitches .. '\nvram: ' .. lume.round((stats.texturememory / 1024) / 1024) .. 'MB\nimages: ' .. stats.images .. '\ncanvases: ' .. stats.canvases .. '\nfonts: ' .. stats.fonts
     str = str .. '\nminenemyrate: ' .. ctx.units.minEnemyRate .. '\nmaxenemyrate: ' .. ctx.units.maxEnemyRate
     g.setColor(255, 255, 255)
     g.setFont('mesmerize', 10)
@@ -155,13 +155,13 @@ function View:resize()
   self.frame.x, self.frame.y, self.frame.width, self.frame.height = 0, 0, self.width, self.height
   if (self.width / self.height) > (w / h) then
     self.scale = w / self.width
-    local margin = math.max(math.round(((h - w * (self.height / self.width)) / 2)), 0)
+    local margin = math.max(lume.round(((h - w * (self.height / self.width)) / 2)), 0)
     self.frame.y = margin
     self.frame.height = h - 2 * margin
     self.frame.width = w
   else
     self.scale = h / self.height
-    local margin = math.max(math.round(((w - h * (self.width / self.height)) / 2)), 0)
+    local margin = math.max(lume.round(((w - h * (self.width / self.height)) / 2)), 0)
     self.frame.x = margin
     self.frame.width = w - 2 * margin
     self.frame.height = h
@@ -195,13 +195,13 @@ function View:convertZ(z)
 end
 
 function View:three(x, y, z)
-  local sx, sy = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+  local sx, sy = lume.lerp(self.prevx, self.x, ls.accum / ls.tickrate), lume.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
   z = self:convertZ(z)
   return x - (z * ((sx + self.width / 2 - x) / 500)), y - (z * ((sy + self.height / 2 - y) / 500))
 end
 
 function View:threeDepth(x, y, z)
-  return math.clamp(math.distance(x, y, self.x + self.width / 2, self.y + self.height / 2) * self.scale - 1000 - z, -4096, -16)
+  return math.clamp(lume.distance(x, y, self.x + self.width / 2, self.y + self.height / 2) * self.scale - 1000 - z, -4096, -16)
 end
 
 function View:contain()
@@ -210,24 +210,24 @@ function View:contain()
 end
 
 function View:worldPoint(x, y)
-  x = math.round(((x - self.frame.x) / self.scale) + self.x)
-  if y then y = math.round(((y - self.frame.y) / self.scale) + self.y) end
+  x = lume.round(((x - self.frame.x) / self.scale) + self.x)
+  if y then y = lume.round(((y - self.frame.y) / self.scale) + self.y) end
   return x, y
 end
 
 function View:screenPoint(x, y)
-  local vx, vy = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+  local vx, vy = lume.lerp(self.prevx, self.x, ls.accum / ls.tickrate), lume.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
   x = (x - vx) * self.scale
   if y then y = (y - vy) * self.scale end
   return x, y
 end
 
 function View:worldMouseX()
-  return math.round(((love.mouse.getX() - self.frame.x) / self.scale) + self.x)
+  return lume.round(((love.mouse.getX() - self.frame.x) / self.scale) + self.x)
 end
 
 function View:worldMouseY()
-  return math.round(((love.mouse.getY() - self.frame.y) / self.scale) + self.y)
+  return lume.round(((love.mouse.getY() - self.frame.y) / self.scale) + self.y)
 end
 
 function View:frameMouseX()

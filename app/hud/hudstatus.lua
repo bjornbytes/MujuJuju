@@ -31,10 +31,10 @@ function HudStatus:update()
   end
 
   local p = ctx.player
-	self.jujuScale = math.lerp(self.jujuScale, 1, 10 * ls.tickrate)
-  self.populationScale = math.lerp(self.populationScale, 1, 10 * ls.tickrate)
-  self.clockScale = math.lerp(self.clockScale, 1, 10 * ls.tickrate)
-  self.jujuAngle = math.lerp(self.jujuAngle, 2 * math.pi, math.min(3 * ls.tickrate, 1))
+	self.jujuScale = lume.lerp(self.jujuScale, 1, 10 * ls.tickrate)
+  self.populationScale = lume.lerp(self.populationScale, 1, 10 * ls.tickrate)
+  self.clockScale = lume.lerp(self.clockScale, 1, 10 * ls.tickrate)
+  self.jujuAngle = lume.lerp(self.jujuAngle, 2 * math.pi, math.min(3 * ls.tickrate, 1))
 
   local benchmark = 'Blue'
   local old = self.clockIcon
@@ -47,12 +47,12 @@ function HudStatus:update()
   end
 
   self.jjpmTimer = timer.rot(self.jjpmTimer, function()
-    self.jjpm = math.round((p.totalJuju / (ctx.timer * ls.tickrate / 60)) / .1) * .1
+    self.jjpm = lume.round((p.totalJuju / (ctx.timer * ls.tickrate / 60)), .1)
     if self.jjpmHover then ctx:mousemoved(love.mouse.getPosition()) end
     return .5
   end)
 
-  self.jujuDisplay = math.lerp(self.jujuDisplay, p.juju, 10 * ls.tickrate)
+  self.jujuDisplay = lume.lerp(self.jujuDisplay, p.juju, 10 * ls.tickrate)
   if math.abs(self.jujuDisplay - p.juju) < 1 then self.jujuDisplay = p.juju end
 end
 
@@ -65,7 +65,7 @@ function HudStatus:draw()
 
   local lerpd = {}
   for k in pairs(self.prev) do
-    lerpd[k] = math.lerp(self.prev[k], self[k], ls.accum / ls.tickrate)
+    lerpd[k] = lume.lerp(self.prev[k], self[k], ls.accum / ls.tickrate)
   end
 
   -- Status bar

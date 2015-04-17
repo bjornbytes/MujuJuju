@@ -27,7 +27,7 @@ end
 
 function ArcadeText:draw()
   local alpha = math.clamp(self.alpha, 0, 1) * 255
-  local x, y = math.lerp(self.prevx, self.x, ls.accum / ls.tickrate), math.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
+  local x, y = lume.lerp(self.prevx, self.x, ls.accum / ls.tickrate), lume.lerp(self.prevy, self.y, ls.accum / ls.tickrate)
   g.setFont('pixel', 8)
   g.setColor(255, 255, 255, alpha)
   g.printShadow(self.text, x, y, true)

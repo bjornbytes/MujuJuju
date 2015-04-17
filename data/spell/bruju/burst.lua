@@ -41,14 +41,14 @@ end
 function Burst:update()
   self.health = timer.rot(self.health, function() ctx.spells:remove(self) end)
   self.prevscale = self.scale
-  self.scale = math.lerp(self.scale, 1, math.min(20 * ls.tickrate, 1))
+  self.scale = lume.lerp(self.scale, 1, math.min(20 * ls.tickrate, 1))
 end
 
 function Burst:draw()
   local unit = self:getUnit()
 	g.setColor(130, 250, 100, self.health / self.maxHealth * 255)
 
-  local scale = math.lerp(self.prevscale, self.scale, ls.accum / ls.tickrate)
+  local scale = lume.lerp(self.prevscale, self.scale, ls.accum / ls.tickrate)
   scale = scale * ((self.range + 50) * 2 / self.image:getWidth())
 
 	g.draw(self.image, self.x, self.y, self.angle, scale, scale, self.image:getWidth() / 2, self.image:getHeight() / 2)

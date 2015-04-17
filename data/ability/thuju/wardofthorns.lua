@@ -40,7 +40,7 @@ end
 function WardOfThorns:bonuses()
   local bonuses = {}
   if self.runeReflect > 0 then
-    table.insert(bonuses, {'Runes', math.round(self.runeReflect * 100) .. '%', 'damage reflected'})
+    table.insert(bonuses, {'Runes', lume.round(self.runeReflect * 100) .. '%', 'damage reflected'})
   end
   return bonuses
 end

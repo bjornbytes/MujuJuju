@@ -21,7 +21,7 @@ function SpujuSkull:activate()
 		local a1, a2 = math.atan((v ^ 2 + root) / (g * dx)), math.atan((v ^ 2 - root) / (g * dx))
 		angle = math.max(a1, a2)
 	end
-	self.vx = math.cos(angle) * math.max(v - 10, 0) * math.sign(targetx - self.x)
+	self.vx = math.cos(angle) * math.max(v - 10, 0) * lume.sign(targetx - self.x)
 	self.vy = math.sin(angle) * -v
 	self.angle = love.math.random() * 2 * math.pi
   self.team = self.unit.team
@@ -38,12 +38,12 @@ function SpujuSkull:update()
   local image = data.media.graphics.spell.spujuSkull
 	if self.health then
 		self.health = timer.rot(self.health, function() ctx.spells:remove(self) end)
-		self.burstScale = math.lerp(self.burstScale, 2 * self.radius / data.media.graphics.spell.burst:getWidth(), 20 * ls.tickrate)
+		self.burstScale = lume.lerp(self.burstScale, 2 * self.radius / data.media.graphics.spell.burst:getWidth(), 20 * ls.tickrate)
 	else
 		self.x = self.x + self.vx * ls.tickrate
 		self.y = self.y + self.vy * ls.tickrate
 		self.vy = self.vy + self.gravity * ls.tickrate
-		self.angle = self.angle + math.sign(self.vx) * ls.tickrate
+		self.angle = self.angle + lume.sign(self.vx) * ls.tickrate
 
     if love.math.random() < 30 * ls.tickrate then
       ctx.particles:emit('spujuskulltrail', self.x, self.y, 1)

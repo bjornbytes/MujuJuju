@@ -21,7 +21,7 @@ function Map:init()
     draw = function()
       local alpha = 255 * self.spiritAlpha
       local p = ctx.player
-      alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .9)
+      alpha = lume.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .9)
 
       g.setColor(255, 255, 255)
       local image = data.media.graphics.map[ctx.biome .. 'Background']
@@ -56,7 +56,7 @@ function Map:init()
       g.draw(image, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight(), shearx)
       local alpha = self.spiritAlpha * 255
       local p = ctx.player
-      alpha = math.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .5)
+      alpha = lume.lerp(alpha, (1 - (p.healthDisplay / p.maxHealth)) * 255, .5)
       g.setColor(200, 200, 200, alpha)
       g.draw(data.media.graphics.map.spiritGrass, self.width / 2, self.height, 0, scale, scale, image:getWidth() / 2, image:getHeight(), shearx)
     end
@@ -67,7 +67,7 @@ function Map:init()
 end
 
 function Map:update()
-  self.spiritAlpha = math.lerp(self.spiritAlpha, ctx.player.dead and 1 or 0, .6 * ls.tickrate)
+  self.spiritAlpha = lume.lerp(self.spiritAlpha, ctx.player.dead and 1 or 0, .6 * ls.tickrate)
   if love.math.random() < 4 * ls.tickrate then
     ctx.particles:emit('firefly' .. love.math.random(1, 3), ctx.map.width / 2, ctx.map.height / 2, 1)
   end
