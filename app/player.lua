@@ -248,12 +248,14 @@ function Player:summon(options)
   local unitCount = #ctx.units:filter(function(u) return u.player end)
   local cost = data.unit[minion].cost * (unitCount == 0 and 0 or 1)
   local animation = self.animation.state.name
-  self:hurt(self.maxHealth * .1)
 
   -- Check if we can summon
   if not options.force and not (not ctx.hud.upgrades.active and not ctx.paused and cooldown == 0 and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(cost)) then
     return ctx.sound:play('misclick', function(sound) sound:setVolume(.3) end)
   end
+
+  -- Ow
+  self:hurt(self.maxHealth * .1)
 
   -- Create minion
   local unit = ctx.units:add(minion, {player = self, x = self.x + love.math.random(-20, 20)})
