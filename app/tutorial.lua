@@ -304,7 +304,7 @@ function Tutorial:enter(message)
     self.enemy = ctx.units:add('duju', {x = ctx.map.width * .75})
     self.enemy.damage = 35
   elseif message == 'cooldown' then
-    ctx.player.deck[1].cooldown = 3
+    ctx.player.deck[1].cooldown = 1
   end
 end
 

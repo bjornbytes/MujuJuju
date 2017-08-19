@@ -248,6 +248,7 @@ function Player:summon(options)
   local unitCount = #ctx.units:filter(function(u) return u.player end)
   local cost = data.unit[minion].cost * (unitCount == 0 and 0 or 1)
   local animation = self.animation.state.name
+  self:hurt(self.maxHealth * .1)
 
   -- Check if we can summon
   if not options.force and not (not ctx.hud.upgrades.active and not ctx.paused and cooldown == 0 and animation ~= 'dead' and animation ~= 'resurrect' and self:spend(cost)) then
@@ -392,7 +393,7 @@ function Player:initDeck()
       self.deck[code] = {
         runes = ctx.user.runes[code],
         cooldown = 0,
-        maxCooldown = 3,
+        maxCooldown = 2,
         code = code
       }
 
