@@ -6,7 +6,7 @@ Duju.description = 'Yay Duju.'
 -- Stats
 ----------------
 Duju.width = 75
-Duju.health = 100
+Duju.health = 200
 Duju.damage = 16
 Duju.range = 12
 Duju.attackSpeed = 1.15
