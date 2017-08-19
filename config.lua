@@ -384,7 +384,7 @@ return {
   units = {
     baseHealthScaling = 3,
     baseDamageScaling = 3,
-    upgradeCostIncrease = 2,
+    upgradeCostIncrease = 1,
     attributeCostIncrease = 1
   },
 

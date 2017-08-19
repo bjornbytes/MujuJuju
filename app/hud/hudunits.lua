@@ -339,12 +339,14 @@ function HudUnits:drawForeground()
     local unit = data.unit[p.deck[i].code]
     local font = g.setFont('mesmerize', math.round(.02 * scale * v))
     local str = unit.name
+    local unitCount = #ctx.units:filter(function(u) return u.player end)
+    local cost = unit.cost * (unitCount == 0 and 0 or 1)
     if math.inside(mx, my, x - ox * sx, y, w * sx, h * sy) then
       str = string.format('%.2f', p.deck[i].cooldown)
     end
     g.setColor(255, 255, 255)
     g.printShadow(str, math.round(xx), math.round(yy + (.025 * v * scale)), true)
-    g.printShadow(unit.cost, xx - (.091 * v * scale), yy + (.0975 * v * scale), true, {0, 100, 0, 200})
+    g.printShadow(cost, xx - (.091 * v * scale), yy + (.0975 * v * scale), true, {0, 100, 0, 200})
 
     local count = table.count(ctx.units:filter(function(u) return u.class.code == p.deck[i].code end))
     g.printShadow(count, xx + (.087 * v * scale), yy + (.1 * v * scale), true, {0, 100, 0, 200})

@@ -3,7 +3,7 @@ Player = class()
 Player.width = 45
 Player.height = 90
 Player.depth = -3.5
-Player.walkSpeed = 70
+Player.walkSpeed = 75
 
 ----------------
 -- Core
@@ -131,7 +131,7 @@ function Player:update()
     self.maxHealth = self.maxHealth + config.player.maxHealthPerMinute
     self.health = self.maxHealth * ratio
     self.prevHealth = self.health
-    self.maxHealthIncreaseTime = self.maxHealthIncreaseTime + 40
+    self.maxHealthIncreaseTime = self.maxHealthIncreaseTime + 60
   end
 
   -- Lerp healthbar
@@ -245,7 +245,8 @@ function Player:summon(options)
   options = options or {}
   local minion = self.deck[self.summonSelect].code
   local cooldown = self.deck[self.summonSelect].cooldown
-  local cost = data.unit[minion].cost
+  local unitCount = #ctx.units:filter(function(u) return u.player end)
+  local cost = data.unit[minion].cost * (unitCount == 0 and 0 or 1)
   local animation = self.animation.state.name
 
   -- Check if we can summon
