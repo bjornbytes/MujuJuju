@@ -140,7 +140,8 @@ function UnitBuffs:applyRunes(stat)
 end
 
 function UnitBuffs:getBaseSpeed()
-  local speed = math.max(self.unit.class.speed * (self.unit.health / self.unit.maxHealth) ^ .25, 20)
+  --local speed = math.max(self.unit.class.speed * (self.unit.health / self.unit.maxHealth) ^ .25, 20)
+  local speed = self.unit.class.speed
   if not self.unit.player then return speed end
 
   local agilityLevel = self.unit.class.attributes.agility
