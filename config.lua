@@ -38,7 +38,7 @@ return {
     },
     flow = {
       haste = .2,
-      spirit = 10
+      spirit = 12
     }
   },
 
@@ -59,7 +59,7 @@ return {
         duration = 1
       },
       parasitic = {
-        lifesteal = .5
+        lifesteal = .3
       },
       spined = {
         reflect = 1
@@ -130,7 +130,7 @@ return {
 
     tundra = {
       name = 'The Wild North',
-      description = ' A mountain',
+      description = 'A mountain',
       minion = 'kuju'
     },
 

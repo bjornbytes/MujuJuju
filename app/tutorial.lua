@@ -327,10 +327,6 @@ function Tutorial:shouldPlayerMove()
   return not self.active or self.message == 'move' or self.message == 'upgrade'
 end
 
-function Tutorial:shouldDecayHealth()
-  return not self.active or false
-end
-
 function Tutorial:shouldSummon()
   return not self.active or self.message == 'minion'
 end

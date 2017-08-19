@@ -3,7 +3,7 @@ Player = class()
 Player.width = 45
 Player.height = 90
 Player.depth = -3.5
-Player.walkSpeed = 65
+Player.walkSpeed = 70
 
 ----------------
 -- Core
@@ -131,12 +131,7 @@ function Player:update()
     self.maxHealth = self.maxHealth + config.player.maxHealthPerMinute
     self.health = self.maxHealth * ratio
     self.prevHealth = self.health
-    self.maxHealthIncreaseTime = self.maxHealthIncreaseTime + 60
-  end
-
-  -- Health decay
-  if ctx.tutorial:shouldDecayHealth() then
-    self:hurt(self.maxHealth * .033 * ls.tickrate)
+    self.maxHealthIncreaseTime = self.maxHealthIncreaseTime + 40
   end
 
   -- Lerp healthbar

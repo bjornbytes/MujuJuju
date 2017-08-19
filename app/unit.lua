@@ -171,9 +171,6 @@ function Unit:update()
   else
     self.animation.speed = 1
   end
-
-  -- Health decay
-  if self.player and ctx.tutorial:shouldDecayHealth() then self:hurt(self.maxHealth * .02 * ls.tickrate, self, {'pure'}) end
 end
 
 function Unit:draw()
