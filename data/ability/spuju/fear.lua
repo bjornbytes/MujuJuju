@@ -4,7 +4,7 @@ local Fear = extend(Ability)
 -- Stats
 ----------------
 Fear.cooldown = 12
-Fear.duration = 2
+Fear.duration = 1.75
 
 
 ----------------

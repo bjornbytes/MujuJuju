@@ -3,7 +3,7 @@ local Headbutt = extend(Ability)
 ----------------
 -- Data
 ----------------
-Headbutt.cooldown = 5
+Headbutt.cooldown = 7
 Headbutt.knockbackDistance = 100
 Headbutt.damageModifier = 1.25
 

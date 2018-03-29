@@ -420,7 +420,7 @@ return {
       }
     },
     tundra = {
-      level = 10,
+      level = 5,
       minEnemyRate = 9,
       maxEnemyRate = 11,
       minEnemyRateDecay = .025,
@@ -437,7 +437,7 @@ return {
       }
     },
     volcano = {
-      level = 20,
+      level = 10,
       minEnemyRate = 9,
       maxEnemyRate = 11,
       minEnemyRateDecay = .025,
